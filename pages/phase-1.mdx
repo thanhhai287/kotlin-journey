@@ -1,0 +1,220 @@
+# 📘 Giai đoạn 1 — Kotlin & Nền tảng (8 tuần)
+
+> **Mục tiêu cả giai đoạn:** Sau 8 tuần, bạn viết Kotlin trôi chảy, dùng Git/terminal thành thạo, và **hiểu rõ** HTTP/REST/JSON hoạt động ra sao — đủ nền để bước vào Spring Boot mà không thấy mọi thứ như "ma thuật".
+
+## Cách dùng tài liệu này
+- Mỗi tuần là một **cột mốc**, không phải hạn chót. Xong rồi mới qua tuần — chất lượng hơn tốc độ.
+- Đánh dấu `[x]` vào ô khi hoàn thành từng việc.
+- Cuối mỗi tuần có **Checkpoint** — đó là lúc gọi tôi để review.
+
+## Nhịp học gợi ý cho người làm ngoài giờ (~12–14h/tuần)
+- **3 buổi tối thường** × 1.5–2h → học khái niệm + bài tập nhỏ
+- **1–2 buổi cuối tuần** × 3–4h → làm dự án, phần cần tập trung sâu
+- Thà mỗi ngày một ít còn hơn dồn vào một buổi — não cần thời gian "ngấm".
+- Quy tắc 70/30: 70% gõ code, 30% đọc/xem.
+
+---
+
+## ✅ TUẦN 1 — Khởi động: Môi trường & công cụ
+
+**🎯 Mục tiêu:** Chạy được chương trình Kotlin đầu tiên và đưa code lên GitHub.
+
+**🌱 Phần gốc cần hiểu:**
+- JVM là gì — vì sao Kotlin "biên dịch ra bytecode chạy trên JVM". Đây chính là lý do một ngôn ngữ dùng được cho cả backend lẫn Android.
+- Phân biệt IDE, trình biên dịch (compiler), terminal — mỗi cái làm gì.
+- Git là gì và vì sao mọi lập trình viên đều dùng.
+
+**📋 Việc cần làm:**
+- [ ] Cài **JDK 21** (LTS) — tải Eclipse Temurin tại adoptium.net *(hoặc để IntelliJ tự tải khi tạo project)*
+- [ ] IntelliJ IDEA — *bạn đã có sẵn* ✓ · Git — *đã có sẵn* ✓
+- [ ] Làm quen terminal: `pwd`, `cd`, `ls`, `mkdir` — tự đi vào được thư mục `kotlin-journey`
+- [ ] Tạo tài khoản **GitHub**
+- [ ] Trong terminal tại thư mục này: chạy `git init`, rồi `git add .`, rồi `git commit` — commit đầu tiên của bạn
+- [ ] Tạo repo trên GitHub và `git push` lên
+- [ ] Tạo project Kotlin đầu tiên trong IntelliJ, viết `main()` in ra màn hình
+- [ ] Đọc: kotlinlang.org → "Get started" + "Basic syntax"
+
+**📦 Bằng chứng:** Repo `kotlin-journey` trên GitHub có commit đầu tiên + 1 file Kotlin chạy được.
+
+**🔍 Checkpoint:** Gửi tôi link GitHub repo. Tôi kiểm tra cấu trúc và xác nhận môi trường đã sẵn sàng.
+
+---
+
+## ✅ TUẦN 2 — Kotlin (1): Biến, kiểu, hàm, luồng điều khiển
+
+**🎯 Mục tiêu:** Viết thành thạo hàm và logic điều kiện/vòng lặp bằng Kotlin.
+
+**🌱 Phần gốc cần hiểu:**
+- `val` vs `var` — vì sao Kotlin khuyến khích bất biến (immutability).
+- Kiểu tĩnh + suy luận kiểu (type inference).
+- "Biểu thức" vs "câu lệnh" — trong Kotlin `if`/`when` *trả về giá trị*.
+
+**📋 Việc cần làm:**
+- [ ] `val`/`var`, kiểu cơ bản (Int, Double, Boolean, String), string template
+- [ ] `if`/`when` dùng như biểu thức; vòng lặp `for`/`while`; range (`1..10`)
+- [ ] Hàm: tham số mặc định, tham số đặt tên, hàm một biểu thức (`=`)
+- [ ] Kotlin Koans — phần "Introduction"
+- [ ] Bài tập: FizzBuzz · Đổi độ C↔F · Máy tính 4 phép tính chạy console
+- [ ] Commit từng bài lên GitHub (luyện thói quen commit nhỏ, thường xuyên)
+
+**📦 Bằng chứng:** 3 chương trình nhỏ trên GitHub.
+
+**🔍 Checkpoint:** Tôi review code 3 bài, chỉ ra chỗ chưa "đúng chất Kotlin".
+
+---
+
+## ✅ TUẦN 3 — Kotlin (2): Collections & lập trình hàm
+
+**🎯 Mục tiêu:** Xử lý được một tập dữ liệu bằng List/Map và chuỗi thao tác map/filter.
+
+**🌱 Phần gốc cần hiểu:**
+- Collection chỉ-đọc vs khả-biến (`listOf` vs `mutableListOf`).
+- Lambda là gì — một "hàm được dùng như một giá trị".
+- Hàm bậc cao (higher-order function).
+
+**📋 Việc cần làm:**
+- [ ] `List`, `Set`, `Map` — phân biệt read-only & mutable
+- [ ] Lambda & hàm bậc cao
+- [ ] `map`, `filter`, `reduce`/`fold`, `forEach`, `sortedBy`, `groupBy`, `sumOf`
+- [ ] Extension function — tự thêm hàm cho một kiểu có sẵn
+- [ ] Kotlin Koans — phần "Collections"
+- [ ] Bài tập: cho một list đối tượng, viết các thống kê (lọc, đếm, nhóm, trung bình)
+
+**📦 Bằng chứng:** 1 chương trình phân tích dữ liệu trên GitHub.
+
+**🔍 Checkpoint:** Tôi review — trọng tâm: bạn còn dùng `for` thủ công hay đã quen thao tác collection.
+
+---
+
+## ✅ TUẦN 4 — Kotlin (3): OOP, Null Safety + 🛠️ Dự án 1
+
+**🎯 Mục tiêu:** Mô hình hóa dữ liệu bằng class/data class, hiểu sâu null safety, hoàn thành **Dự án 1**.
+
+**🌱 Phần gốc cần hiểu:**
+- Null safety — vì sao Kotlin gần như loại bỏ `NullPointerException` ("lỗi tỷ đô" của Java).
+- `data class` khác class thường ở chỗ nào.
+- `sealed class` & `enum` — biểu diễn "một trong số hữu hạn trạng thái".
+
+**📋 Việc cần làm:**
+- [ ] `class`, constructor, property; `data class`; `enum class`; `sealed class` (nhập môn)
+- [ ] Null safety: `?`, `?.`, `?:` (Elvis), `!!`, `?.let { }`
+- [ ] Scope functions: `let`, `run`, `apply`, `also`, `with` — và *khi nào* dùng cái nào
+- [ ] Kotlin Koans — phần "Properties", "Classes"
+- [ ] **🛠️ Dự án 1 — Quản lý công việc (Todo CLI):** thêm/sửa/xóa/đánh dấu xong; dữ liệu trong bộ nhớ; menu console. Dùng `data class` cho Task, `enum` cho trạng thái.
+
+**📦 Bằng chứng:** Dự án 1 trên GitHub, có `README.md` mô tả cách chạy.
+
+**🔍 Checkpoint:** Tôi review Dự án 1 đầy đủ — cấu trúc, đặt tên, null safety, README.
+
+---
+
+## ✅ TUẦN 5 — 🌐 PHẦN GỐC: Internet, HTTP, REST, JSON
+
+**🎯 Mục tiêu:** Hiểu rõ một request đi từ client tới server rồi quay về như thế nào. **Tuần này gần như không viết Kotlin** — ta đào "phần gốc" mà sau này Spring Boot và Android đều đứng trên đó.
+
+**🌱 Phần gốc cần hiểu:**
+- Mô hình **client – server**.
+- **HTTP**: method (`GET`/`POST`/`PUT`/`DELETE`), status code (200/201/400/401/404/500), header, body.
+- **JSON** — định dạng dữ liệu mà API trả về.
+- **API** và nguyên tắc **REST**.
+
+**📋 Việc cần làm:**
+- [ ] Đọc tài liệu HTTP của MDN (developer.mozilla.org)
+- [ ] Mở **DevTools** trình duyệt → tab **Network**, vào một trang web và quan sát request thật
+- [ ] Cài **Bruno** (hoặc Postman) — gọi thử API công khai: GitHub API (`api.github.com/users/<tên>`), một API thời tiết miễn phí
+- [ ] Dùng `curl` trong terminal gọi lại các API đó
+- [ ] **Viết bằng lời của chính bạn** file `notes/http.md`: HTTP là gì, REST là gì, một request gồm những phần nào
+
+**📦 Bằng chứng:** File `notes/http.md` giải thích bằng ngôn ngữ của bạn + vài ảnh chụp Bruno/DevTools.
+
+**🔍 Checkpoint:** Tôi sẽ **hỏi bạn vài câu** để kiểm tra hiểu thật — ví dụ: "POST khác GET ở đâu?", "401 và 404 khác gì nhau?". Đây là tuần bản lề — không học vẹt.
+
+---
+
+## ✅ TUẦN 6 — Kotlin gặp HTTP: Gọi API thật + 🛠️ Dự án 2
+
+**🎯 Mục tiêu:** Viết một chương trình Kotlin gọi API thật, nhận JSON và hiển thị dữ liệu.
+
+**🌱 Phần gốc cần hiểu:**
+- Vì sao thao tác mạng phải **bất đồng bộ** (không "đơ" chương trình khi chờ phản hồi).
+- **Coroutine** & `suspend` — cách Kotlin xử lý bất đồng bộ.
+- **Serialization** — biến JSON ↔ object Kotlin.
+
+**📋 Việc cần làm:**
+- [ ] Coroutine nhập môn: `suspend`, `runBlocking`, `launch` — và *vì sao* cần chúng
+- [ ] Dùng **Ktor Client** để gửi HTTP request từ Kotlin
+- [ ] Dùng **kotlinx.serialization** để parse JSON thành `data class`
+- [ ] Thêm dependency vào project — làm quen file `build.gradle.kts`
+- [ ] **🛠️ Dự án 2 — Tra cứu thông tin từ API:** nhập tên một user GitHub → in thông tin; hoặc nhập thành phố → in thời tiết. Xử lý cả trường hợp lỗi (không tìm thấy).
+
+**📦 Bằng chứng:** Dự án 2 trên GitHub.
+
+**🔍 Checkpoint:** Tôi review — trọng tâm: bạn *hiểu* vì sao dùng `suspend`, hay chỉ chép theo mẫu.
+
+---
+
+## ✅ TUẦN 7 — Công cụ nền: Gradle, Git nâng cao, lỗi & file
+
+**🎯 Mục tiêu:** Hiểu một dự án Kotlin được "build" ra sao và dùng Git ở mức làm việc thật.
+
+**🌱 Phần gốc cần hiểu:**
+- **Build tool (Gradle)** & **dependency** là gì — vì sao không tự tải thư viện thủ công.
+- Cấu trúc **package**.
+- **Exception** — xử lý lỗi đúng cách thay vì để chương trình sập.
+
+**📋 Việc cần làm:**
+- [ ] Gradle: đọc hiểu `build.gradle.kts`, thêm dependency, chạy task
+- [ ] Git: tạo `branch`, `merge`, viết `.gitignore`, commit message tốt
+- [ ] Chơi learngitbranching.js.org — hiểu branch một cách trực quan
+- [ ] Xử lý lỗi: `try`/`catch`, `runCatching`/`Result`
+- [ ] Đọc & ghi file văn bản trong Kotlin
+- [ ] **🛠️ Dự án 3 — Nâng cấp Dự án 1:** lưu danh sách công việc xuống **file**, đọc lại khi mở app → dữ liệu không mất nữa. Phát triển trên một `branch` riêng rồi `merge`.
+
+**📦 Bằng chứng:** Dự án 1 phiên bản 2 (có lưu file) + lịch sử Git có branch & merge.
+
+**🔍 Checkpoint:** Tôi review cách bạn dùng branch và xử lý lỗi.
+
+---
+
+## ✅ TUẦN 8 — 🎓 Tổng hợp: Dự án tốt nghiệp Giai đoạn 1
+
+**🎯 Mục tiêu:** Gộp mọi thứ đã học vào một dự án hoàn chỉnh, tự đánh giá, sẵn sàng cho Giai đoạn 2.
+
+**📋 Việc cần làm:**
+- [ ] **🎓 Dự án tốt nghiệp** — chọn một: *Trình theo dõi thói quen (habit tracker)* hoặc *Quản lý tủ sách cá nhân*. Phải kết hợp: `data class` + OOP · thao tác collection · null safety · coroutine · gọi **1 API thật** · lưu **file** · xử lý lỗi.
+- [ ] Viết `README.md` chuẩn: mô tả, cách chạy, ảnh chụp màn hình
+- [ ] Dọn toàn bộ repo, push sạch sẽ lên GitHub
+- [ ] Tự chấm theo **Checklist năng lực** bên dưới
+
+**📦 Bằng chứng:** Dự án tốt nghiệp hoàn chỉnh + checklist tự đánh giá.
+
+**🔍 Checkpoint:** Tôi review tổng thể cả giai đoạn, cùng chốt điểm mạnh/yếu và **mở Giai đoạn 2 — Cơ sở dữ liệu**.
+
+---
+
+## 🏁 Checklist năng lực — Cuối Giai đoạn 1
+
+Đánh dấu khi bạn tự tin làm được **mà không cần tra cứu liên tục**:
+
+- [ ] Viết được hàm, `class`, `data class`, `enum` trong Kotlin
+- [ ] Hiểu và xử lý đúng null safety (`?`, `?:`, `?.let`)
+- [ ] Dùng thành thạo `map`/`filter`/`reduce` trên collection
+- [ ] Giải thích được một HTTP request/response gồm những gì
+- [ ] Phân biệt GET/POST/PUT/DELETE và các status code chính
+- [ ] Gọi được một API thật từ Kotlin và parse JSON
+- [ ] Giải thích được `suspend`/coroutine dùng để làm gì
+- [ ] Dùng Git: `commit`, `branch`, `merge`, `push` — và hiểu mình đang làm gì
+- [ ] Biết Gradle dùng để làm gì
+- [ ] Đọc/ghi file và xử lý exception
+
+> Còn ô nào chưa tự tin → nói với tôi, ta ôn lại trước khi sang Giai đoạn 2. **Không bỏ lại lỗ hổng nào.**
+
+---
+
+## 📚 Tài nguyên chính (miễn phí)
+- **Kotlin chính thống:** kotlinlang.org/docs · play.kotlinlang.org (chạy thử online)
+- **Kotlin Koans:** bài tập tương tác — kotlinlang.org/docs/koans.html
+- **Hyperskill (JetBrains):** lộ trình Kotlin có dự án — hyperskill.org
+- **Git trực quan:** learngitbranching.js.org
+- **HTTP:** trang tài liệu HTTP của MDN
+- **Gọi thử API:** Bruno — usebruno.com (mã nguồn mở, hiện đại)

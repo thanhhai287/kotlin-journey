@@ -1,0 +1,488 @@
+# 🗺️ Roadmap 2026 — Chi tiết tuần-by-tuần
+
+> **Master plan** cho hành trình 11 tháng. Đọc cùng với [README.md](/) (overview), [PHASE-1.md](/phase-1) (giai đoạn hiện tại), và [PROGRESS.md](/progress) (nhật ký).
+
+📅 **Bắt đầu:** 22/05/2026 · **Dự kiến hoàn thành:** ~03/2027
+🎯 **Portfolio xuyên suốt:** Expense Tracker (MoneyMind)
+📐 **Triết lý:** Depth > Dopamine — học fundamentals thật kỹ một lần
+
+---
+
+## 🧭 Tại sao roadmap được thiết kế thế này
+
+### Vì sao backend trước Android (5+ tháng không UI mobile)?
+
+1. **Mental model HTTP/REST từ phía "tạo ra".** Khi bạn build server, bạn quyết định status code, header, body schema. Khi consume bằng Retrofit, mọi thứ là "magic". Học backend trước → bạn biết Retrofit đang làm gì dưới capo.
+
+2. **SQL & database transfer trực tiếp sang Room.** Room (Android local DB) là ORM giống Exposed/JPA. Hiểu SQL + ORM trước → Room chỉ là "version Android của thứ đã biết".
+
+3. **Auth & security mindset.** JWT signing, password hashing, session, CORS — học từ server side mới hiểu sâu. Mobile auth có nhiều bẫy, nếu không hiểu server → security holes.
+
+4. **End-to-end debug.** Bug "app load chậm" có thể là N+1 query, missing index, response 500KB, cache miss, hay Android render chậm? Hiểu cả 2 đầu → debug đúng tầng.
+
+5. **KMP shared module thiết kế tốt hơn.** Phase 5b sẽ share business logic. Đã có Ktor backend → biết models nào reusable, validation nào cross-platform.
+
+### Vì sao Ktor trước Spring Boot?
+
+- **Ktor:** Kotlin-native, ít ceremony, dễ hiểu HTTP/routing thật sự làm gì
+- **Spring Boot:** enterprise standard, job market lớn nhưng learning curve dốc, nhiều magic
+- **Thứ tự:** Ktor → hiểu rõ cơ chế → Spring Boot → hiểu enterprise pattern → so sánh được
+
+### Vì sao có Phase 4 (Frontend) trước Phase 5 (Android)?
+
+- Web frontend dễ debug hơn (DevTools, hot reload nhanh)
+- TypeScript ecosystem mature, document tốt
+- Concepts (component, state, data fetching) transfer sang Compose
+- Cuối Phase 4 có web client gọi Ktor API → end-to-end fullstack đầu tiên → động lực vào Phase 5
+
+---
+
+## 🛠️ Portfolio: Expense Tracker (MoneyMind)
+
+App quản lý chi tiêu cá nhân, theo bạn từ tuần 4 đến cuối hành trình.
+
+### Vì sao chọn project này?
+- **Domain quen thuộc** — ai cũng cần track chi tiêu → bạn dùng thật được
+- **Đủ phức tạp** — auth, multi-currency, OCR, budget, sync, offline
+- **Data integrity matters** — bắt buộc dùng đúng BigDecimal (không float!), transaction, validation → kỹ năng senior
+- **Recruiter-friendly** — fintech-light, được đánh giá cao về depth
+
+### Feature progression theo tuần
+
+| Tuần | GĐ | Features cộng dồn |
+|---|---|---|
+| 4 | 1 | CLI: add/list/sum expense theo category, in-memory |
+| 7 | 1 | + lưu JSON file, branch+merge workflow Git |
+| 8 | 1 | + gọi exchange rate API (graduation project Phase 1) |
+| 11 | 2 | + chuyển sang PostgreSQL với Exposed ORM |
+| 12 | 2 | + Redis cache cho exchange rate |
+| 14 | 3a | + Ktor REST API (CRUD endpoints) |
+| 16 | 3a | + JWT auth (signup/login), password hashing |
+| 17 | 3a | + validation, error handling, OpenAPI docs (Swagger UI) |
+| 19 | 3a | + Docker + deploy Railway/Fly.io + Grafana metrics |
+| 22 | 3b | + Spring Boot alternative service (so sánh paradigm) |
+| 27 | 4 | + Next.js dashboard với charts (Recharts) |
+| 29 | 4 | + budget alerts (Server Actions) |
+| 30 | 4 | + deploy Vercel, custom domain |
+| 33 | 5 | + Android Compose UI cơ bản (CRUD) |
+| 35 | 5 | + Room local DB + offline-first sync |
+| 37 | 5 | + camera scan receipt (Google ML Kit OCR) |
+| 38 | 5 | + WorkManager background sync + notifications |
+| 39 | 5 | + Glance home screen widget |
+| 41 | 5b | + KMP shared module (money math, currency, validation) |
+| 42 | 5b | + polish, README, demo video, retrospective |
+
+---
+
+## 📅 Tổng quan 7 giai đoạn
+
+| GĐ | Tên | Tuần | Tổng | Outcome chính |
+|----|-----|------|------|---------------|
+| **1** | Kotlin & Nền tảng | 1–8 | 8w | Kotlin trôi chảy, Git, HTTP/REST/JSON |
+| **2** | Cơ sở dữ liệu (SQL) | 9–12 | 4w | Postgres, JOIN, transaction, Exposed |
+| **3a** | Backend Ktor | 13–19 | 7w | REST API Kotlin-native, deploy production |
+| **3b** | Spring Boot | 20–23 | 4w | Enterprise pattern, JPA, Spring Security |
+| **4** | Frontend Next.js | 24–30 | 7w | TypeScript + React 19 + Server Components |
+| **5** | Android Compose | 31–40 | 10w | Native Android với MVI + Hilt + Room |
+| **5b** | KMP bonus | 41–42 | 2w | Shared module backend ↔ Android |
+
+**Tổng: 42 tuần ≈ 11 tháng** (với 12–14h/tuần). Có buffer cho life events.
+
+---
+
+## 📘 Giai đoạn 1 — Kotlin & Nền tảng (Tuần 1–8)
+
+→ **Chi tiết đầy đủ ở [PHASE-1.md](/phase-1)**. Tóm tắt:
+
+| Tuần | Topic | Outcome |
+|---|---|---|
+| 1 | Setup môi trường, Git, GitHub | Repo `kotlin-journey` với commit đầu tiên |
+| 2 | Kotlin syntax — biến, kiểu, hàm, luồng điều khiển | FizzBuzz, máy tính console |
+| 3 | Collections + lập trình hàm | Chương trình phân tích dữ liệu |
+| 4 | OOP + Null safety + **🛠️ Expense CLI v1** | Expense Tracker in-memory |
+| 5 | HTTP/REST/JSON theory | `notes/http.md` viết bằng lời mình |
+| 6 | Coroutine + Ktor Client | Gọi API thật, parse JSON |
+| 7 | Gradle + Git nâng cao + **🛠️ Expense CLI v2** | Expense Tracker lưu JSON file |
+| 8 | **🎓 Tốt nghiệp Phase 1** | Expense CLI có exchange rate API |
+
+> 💡 **Override PHASE-1.md:** Thay vì "Todo CLI" / "Habit tracker" / "Book manager", **dùng Expense Tracker từ tuần 4** để bắt đầu portfolio xuyên suốt.
+
+---
+
+## 📗 Giai đoạn 2 — Cơ sở dữ liệu (Tuần 9–12)
+
+**Mục tiêu:** Hiểu sâu cách dữ liệu được lưu, truy vấn, liên kết. Chuyển Expense Tracker từ JSON file sang PostgreSQL.
+
+### Tuần 9 — SQL fundamentals
+- **Phần gốc:** Mô hình quan hệ (relational), set theory, vì sao SQL declarative
+- **Việc cần làm:**
+  - Cài PostgreSQL qua Docker (`docker run -d postgres:16`)
+  - Học SELECT/WHERE/JOIN/GROUP BY/HAVING/ORDER BY
+  - Làm 20+ exercises trên [pgexercises.com](https://pgexercises.com) hoặc PostgreSQL Tutorial
+- **Bằng chứng:** File `notes/sql-basics.md` + folder `sql-exercises/` với queries
+
+### Tuần 10 — Schema design + indexes
+- **Phần gốc:** Normalization (1NF/2NF/3NF), khi nào denormalize, B-tree index, `EXPLAIN ANALYZE`
+- **Việc cần làm:**
+  - Thiết kế schema cho Expense Tracker: `users`, `categories`, `expenses`, `currencies`, `budgets`
+  - Vẽ ERD (dùng dbdiagram.io hoặc DrawSQL)
+  - Viết DDL (`CREATE TABLE`), thêm index hợp lý
+  - Chạy `EXPLAIN ANALYZE` trên query phức tạp, hiểu output
+- **Bằng chứng:** `db/schema.sql` + `db/erd.png` + `notes/indexes.md` (khi nào đánh index)
+
+### Tuần 11 — Transaction + Exposed ORM
+- **Phần gốc:** ACID, isolation level (READ COMMITTED vs REPEATABLE READ), dirty read/phantom read, ORM trade-offs (DSL vs DAO)
+- **Việc cần làm:**
+  - Học Exposed (Kotlin ORM của JetBrains) — DSL mode trước, DAO mode sau
+  - Migrate Expense CLI từ JSON file sang Postgres
+  - Viết 1 use case có transaction (vd: transfer giữa categories)
+- **Bằng chứng:** Expense CLI v3 (Postgres-backed) trên GitHub branch `phase-2/postgres`
+
+### Tuần 12 — Redis + checkpoint
+- **Phần gốc:** Cache patterns (cache-aside, write-through, write-back), TTL, cache invalidation problem
+- **Việc cần làm:**
+  - Chạy Redis qua Docker
+  - Cache exchange rate API responses trong Redis (TTL 1h)
+  - Benchmark: thời gian gọi API cached vs uncached
+  - Học `flyway` để quản lý migration
+- **Bằng chứng:** Expense CLI v4 + `benchmark.md` so sánh thời gian
+
+### 🏁 Checkpoint cuối Phase 2
+- [ ] Viết được JOIN 3 bảng, hiểu INNER vs LEFT JOIN vs CROSS JOIN
+- [ ] Thiết kế được schema 3NF
+- [ ] Biết khi nào nên đánh index (cardinality, query pattern)
+- [ ] Hiểu transaction + isolation level + race condition
+- [ ] Dùng Exposed (DSL + DAO) thành thạo
+- [ ] Hiểu cache-aside pattern và cache invalidation problem
+
+---
+
+## 🚀 Giai đoạn 3a — Backend với Ktor (Tuần 13–19)
+
+**Mục tiêu:** Build và deploy 1 REST API production-grade với Ktor — Kotlin-native, ít ceremony.
+
+### Tuần 13 — Ktor setup + routing
+- **Phần gốc:** Plugin architecture của Ktor, request lifecycle, content negotiation
+- **Việc:** Setup Ktor project, routing cơ bản, JSON serialization (kotlinx.serialization)
+- **Bằng chứng:** `expense-api` project với `/health` endpoint trả JSON
+
+### Tuần 14 — CRUD endpoints
+- **Phần gốc:** RESTful resource design, HTTP method semantics (idempotency!), status code conventions
+- **Việc:** Implement `/expenses` (GET, POST, PUT, DELETE), `/categories`, `/users`
+- **Bằng chứng:** Postman/Bruno collection với 10+ requests + screenshot
+
+### Tuần 15 — Tích hợp Postgres + Exposed
+- **Phần gốc:** Connection pool (HikariCP), prepared statements, SQL injection prevention
+- **Việc:** Wire database vào Ktor, repository pattern, dependency injection bằng tay
+- **Bằng chứng:** API persist data vào Postgres, `notes/connection-pool.md`
+
+### Tuần 16 — Auth (JWT)
+- **Phần gốc:** Symmetric vs asymmetric crypto, JWT structure (header/payload/signature), BCrypt password hashing, refresh token rotation
+- **Việc:** Endpoint `/auth/signup`, `/auth/login`, middleware verify JWT, protect routes
+- **Bằng chứng:** Auth flow test trên Bruno + `notes/jwt-security.md`
+
+### Tuần 17 — Validation + OpenAPI
+- **Phần gốc:** Defense in depth, validation tầng nào (controller vs domain), OpenAPI spec
+- **Việc:**
+  - Validation với `kotlinx.serialization` + custom validators
+  - Error handling middleware (consistent error format)
+  - **Mobile-aware additions:**
+    - Pagination cursor-based (không offset!) cho `/expenses`
+    - Idempotency-Key header cho POST
+    - `ETag` + `If-None-Match` cho GET (cache)
+  - Generate OpenAPI spec, serve Swagger UI
+- **Bằng chứng:** Swagger UI screenshot + `notes/mobile-friendly-api.md`
+
+### Tuần 18 — Testing
+- **Phần gốc:** Test pyramid (unit > integration > e2e), Testcontainers (Postgres thật trong container)
+- **Việc:** JUnit 5, unit test cho service layer, integration test với Testcontainers
+- **Bằng chứng:** Coverage ≥ 70% (cài JaCoCo)
+
+### Tuần 19 — Docker + deploy + monitoring
+- **Phần gốc:** Container image best practices (multi-stage build, distroless), 12-factor app, observability (logs/metrics/traces)
+- **Việc:**
+  - Dockerfile multi-stage
+  - Deploy lên [Railway](https://railway.app) hoặc [Fly.io](https://fly.io)
+  - Cài Grafana + Prometheus metrics (Micrometer)
+  - Setup structured logging (JSON logs)
+- **Bằng chứng:** Live URL + Grafana dashboard URL + screenshot
+
+### 🏁 Checkpoint cuối Phase 3a
+- [ ] API deployed production, có domain riêng
+- [ ] Auth flow chuẩn (JWT, BCrypt, refresh token)
+- [ ] OpenAPI docs đầy đủ (Swagger UI render được)
+- [ ] Pagination cursor + idempotency key implemented
+- [ ] Test coverage ≥ 70% với Testcontainers
+- [ ] Grafana dashboard hiển thị request rate, latency, error rate
+
+---
+
+## 🍃 Giai đoạn 3b — Spring Boot crash course (Tuần 20–23)
+
+**Mục tiêu:** Hiểu Spring Boot paradigm để mở rộng job options. KHÔNG build lại từ đầu — refactor/port một phần Expense Tracker.
+
+### Tuần 20 — Spring Boot basics
+- **Phần gốc:** DI/IoC container, beans, scopes, profiles, Spring Boot auto-configuration "magic"
+- **Việc:** `spring init`, REST controller, `@Component`/`@Service`/`@Repository`
+- **Bằng chứng:** Hello world Spring + `notes/spring-vs-ktor.md` (so sánh setup)
+
+### Tuần 21 — Spring Data JPA
+- **Phần gốc:** JPA spec vs Hibernate impl, entity lifecycle, N+1 problem, lazy vs eager loading, Flyway migrations
+- **Việc:** Map entities cho Expense Tracker, repository pattern, JPQL queries, Flyway setup
+- **Bằng chứng:** Expense API phiên bản Spring (chạy parallel với Ktor version)
+
+### Tuần 22 — Spring Security
+- **Phần gốc:** Filter chain, authentication vs authorization, CSRF, CORS
+- **Việc:** JWT auth với Spring Security (more complex than Ktor!), method-level security
+- **Bằng chứng:** Auth flow tương tự Ktor version + `notes/spring-security-mental-model.md`
+
+### Tuần 23 — Testing + deploy + reflection
+- **Việc:**
+  - `@SpringBootTest`, `@DataJpaTest`, MockMvc
+  - Deploy Spring version (same host, different port hoặc path)
+  - Viết `reflection.md` — so sánh DX (developer experience), startup time, memory, code volume Ktor vs Spring
+- **Bằng chứng:** Cả 2 version live + reflection document
+
+### 🏁 Checkpoint cuối Phase 3b
+- [ ] Hiểu DI container, lifecycle, profiles
+- [ ] Map được entity phức tạp (1-N, N-N), tránh N+1
+- [ ] Setup Spring Security JWT đầy đủ
+- [ ] Reflection document so sánh Ktor vs Spring rõ ràng
+
+---
+
+## 🌐 Giai đoạn 4 — Frontend Next.js (Tuần 24–30)
+
+**Mục tiêu:** Build web client cho Expense Tracker, end-to-end fullstack thật.
+
+### Tuần 24 — TypeScript fundamentals
+- **Phần gốc:** Type system (structural vs nominal), generics, narrowing, utility types
+- **Việc:** TypeScript Handbook + exercises trên [Type Challenges](https://github.com/type-challenges/type-challenges) (easy tier)
+- **Bằng chứng:** 10 exercises completed
+
+### Tuần 25 — React 19 fundamentals
+- **Phần gốc:** Virtual DOM vs reconciliation, hooks (useState, useEffect, useReducer), component composition, Server Components concept
+- **Việc:** Build small components, hiểu re-render behavior
+- **Bằng chứng:** Mini app (counter, todo) với React thuần (Vite)
+
+### Tuần 26 — Next.js 15 App Router
+- **Phần gốc:** Server Components vs Client Components, file-based routing, layouts, Streaming
+- **Việc:** Next.js project setup, routing cho Expense Tracker pages
+- **Bằng chứng:** Multi-page app structure (login, dashboard, expenses, budgets)
+
+### Tuần 27 — Tailwind + shadcn/ui + charts
+- **Việc:** Setup Tailwind, install shadcn/ui components, build dashboard UI với chart (Recharts)
+- **Bằng chứng:** Dashboard có biểu đồ chi tiêu theo category (data mock)
+
+### Tuần 28 — Data fetching
+- **Phần gốc:** Server-side fetch vs client-side, TanStack Query (cache, refetch, optimistic update), Server Actions
+- **Việc:** Wire Next.js với Ktor API, login flow, fetch expenses
+- **Bằng chứng:** Web app gọi được API thật, render data thật
+
+### Tuần 29 — Forms + Server Actions + budget alerts
+- **Việc:** React Hook Form + Zod validation, Server Actions cho mutation, budget alert UI
+- **Bằng chứng:** Add/edit expense flow hoàn chỉnh
+
+### Tuần 30 — Deploy + polish
+- **Việc:** Deploy Vercel, custom domain, Lighthouse audit, accessibility check
+- **Bằng chứng:** Live URL + Lighthouse score ≥ 90
+
+### 🏁 Checkpoint cuối Phase 4
+- [ ] Hiểu Server Components vs Client Components
+- [ ] Auth flow end-to-end (browser → Next.js → Ktor)
+- [ ] Forms với validation client + server
+- [ ] Lighthouse Performance + Accessibility ≥ 90
+- [ ] Web app deployed production
+
+---
+
+## 📱 Giai đoạn 5 — Android Compose (Tuần 31–40)
+
+**Mục tiêu:** Build native Android app cho Expense Tracker, với mọi feature production-grade.
+
+### Tuần 31 — Compose fundamentals
+- **Phần gốc:** Declarative UI, composition vs inheritance, recomposition, state hoisting
+- **Việc:** Composable functions, Modifier, Row/Column/Box, basic state với `remember`
+- **Bằng chứng:** Mini app (counter, list) trên emulator
+
+### Tuần 32 — Material 3 + Navigation
+- **Việc:** Material 3 theming (dynamic color), Navigation Compose, type-safe routes
+- **Bằng chứng:** Multi-screen navigation (login → home → detail)
+
+### Tuần 33 — ViewModel + StateFlow + MVI
+- **Phần gốc:** Lifecycle-aware components, unidirectional data flow, MVI pattern (Intent → State)
+- **Việc:** ViewModel per screen, sealed class cho UI state, expose StateFlow
+- **Bằng chứng:** Login screen với loading/error/success states
+
+### Tuần 34 — Hilt DI
+- **Phần gốc:** Dagger codegen, scope (Singleton, ViewModelScoped), Hilt entry points
+- **Việc:** Setup Hilt, inject ViewModel, repository, network
+- **Bằng chứng:** Dependency graph diagram + working DI
+
+### Tuần 35 — Room database
+- **Phần gốc:** Migration strategy, Flow vs suspend trong DAO, type converters
+- **Việc:** Room schema cho local cache, offline-first read
+- **Bằng chứng:** App đọc được data offline (airplane mode)
+
+### Tuần 36 — Ktor Client + network layer
+- **Việc:** Ktor Client trên Android (consistent với backend!), interceptor cho auth header, error handling
+- **Bằng chứng:** Android app login + fetch data từ chính Ktor backend ở Phase 3a
+
+### Tuần 37 — Camera + ML Kit OCR
+- **Phần gốc:** CameraX architecture, ML Kit on-device inference
+- **Việc:** Capture receipt image, OCR text, parse amount + merchant
+- **Bằng chứng:** Demo video scan receipt thành expense entry
+
+### Tuần 38 — WorkManager + notifications
+- **Phần gốc:** Background work constraints, exponential backoff, notification channels
+- **Việc:** Sync queue (offline write → online), daily reminder notification
+- **Bằng chứng:** Tạo expense offline → bay vào Postgres khi online
+
+### Tuần 39 — Glance widget + animations
+- **Việc:** Home screen widget hiển thị tổng chi tiêu tháng (Glance), animation polish
+- **Bằng chứng:** Widget chạy + animation đẹp
+
+### Tuần 40 — Testing + Play Store internal
+- **Việc:** Unit test (kotest hoặc JUnit), Compose UI test, publish Play Store internal track
+- **Bằng chứng:** Coverage ≥ 60% + Play Store internal link
+
+### 🏁 Checkpoint cuối Phase 5
+- [ ] App hoàn chỉnh đầy đủ feature core
+- [ ] Offline-first hoạt động đúng (sync queue)
+- [ ] Camera receipt scan đúng ≥ 80% case
+- [ ] Material 3 + dark mode + dynamic color
+- [ ] Play Store internal track có app
+
+---
+
+## 🧬 Giai đoạn 5b — KMP bonus (Tuần 41–42)
+
+**Mục tiêu:** Share business logic giữa Android & Ktor backend.
+
+### Tuần 41 — Setup KMP shared module
+- **Phần gốc:** `expect`/`actual`, common code vs platform code, KMP compilation targets
+- **Việc:**
+  - Tạo `shared` module trong project
+  - Move ra common: `Money` class (BigDecimal wrapper), `Currency` enum, validation rules, categorization logic
+  - Import shared vào cả Ktor backend lẫn Android app
+- **Bằng chứng:** Cùng 1 logic chạy cả 2 platform, viết test cho shared module
+
+### Tuần 42 — Polish + retrospective
+- **Việc:**
+  - README đẹp cho project (architecture diagram, screenshots)
+  - Demo video 3-5 phút (post lên YouTube/LinkedIn)
+  - Retrospective document — học được gì, sai lầm gì, sẽ làm khác đi gì
+  - Plan tiếp theo (cụ thể: xin job? open source contribute? build sản phẩm khác?)
+- **Bằng chứng:** Repo public với README chuẩn portfolio + demo video
+
+### 🏁 Checkpoint cuối roadmap
+- [ ] Repo `expense-tracker` (hoặc `moneymind`) public với README chuẩn
+- [ ] Demo video 3-5 phút showcase full flow
+- [ ] Backend live (Ktor + Spring versions)
+- [ ] Web app live (Vercel)
+- [ ] Android app trên Play Store internal track
+- [ ] KMP shared module có test
+- [ ] Retrospective document có insight thật
+
+---
+
+## 🛡️ Anti-drift discipline (cực kỳ quan trọng)
+
+11 tháng là dài. Risk #1 không phải bỏ cuộc — mà là **học xong tuần 6 đã quên tuần 2**.
+
+### Hàng tuần
+- 1 commit lên `kotlin-journey` repo (kể cả chỉ là notes)
+- 5 dòng vào [PROGRESS.md](/progress): học gì, vướng gì, hiểu chưa
+- Nếu vướng quá 1 ngày → hỏi mentor (đừng google vô tận)
+
+### Cuối mỗi phase
+- Tự code lại 1 mini project KHÔNG nhìn code cũ → test recall thật sự
+- Update memory file của Claude (nói "tôi xong phase X")
+- Trả lời checklist năng lực của phase đó (không tự lừa mình)
+
+### Hàng tháng
+- Review tổng quan với mentor (mình)
+- Điều chỉnh tốc độ nếu cần — KHÔNG bỏ kiến thức gap
+- Nhìn lại retrospective ngắn (cái gì work, cái gì không)
+
+### "Visual feedback" thay thế cho backend phase
+
+Bạn không cần UI sớm, nhưng vẫn nên có "thứ nhìn được" sau mỗi sprint:
+
+| Phase | Visual proxy |
+|---|---|
+| 1 | Terminal output, commit graph GitHub |
+| 2 | TablePlus / pgAdmin xem data thật |
+| 3a-3b | Postman/Bruno collections, Swagger UI, Grafana dashboard |
+| 4 | Lighthouse score, Vercel deployments |
+| 5 | Compose Preview, emulator, Play Store internal |
+
+---
+
+## 📚 Tài nguyên chính (free hoặc affordable)
+
+### Phase 1-2 (Kotlin + DB)
+- [Kotlin docs chính thống](https://kotlinlang.org/docs/) + [Koans](https://kotlinlang.org/docs/koans.html)
+- [JetBrains Academy](https://www.jetbrains.com/academy/) — Kotlin track có project
+- [PostgreSQL Tutorial](https://www.postgresqltutorial.com)
+- [pgexercises.com](https://pgexercises.com) — SQL practice
+- Book: *SQL Antipatterns* (Bill Karwin) — sau khi xong cơ bản
+
+### Phase 3a-3b (Backend)
+- [Ktor docs](https://ktor.io/docs/welcome.html) — đặc biệt sample projects
+- [Spring Boot docs](https://docs.spring.io/spring-boot/index.html)
+- [Testcontainers docs](https://testcontainers.com)
+- Book: *Designing Data-Intensive Applications* (Martin Kleppmann) — đọc dần khi vào Phase 3
+
+### Phase 4 (Frontend)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
+- [Next.js Learn](https://nextjs.org/learn)
+- [Tailwind docs](https://tailwindcss.com/docs)
+- [Total TypeScript](https://www.totaltypescript.com) — Matt Pocock's content (free + paid)
+
+### Phase 5 (Android)
+- [Android Developers — Compose pathway](https://developer.android.com/courses/jetpack-compose/course)
+- [Now in Android](https://github.com/android/nowinandroid) — Google reference project, đọc code
+- [Philipp Lackner YouTube](https://www.youtube.com/@PhilippLackner) — Compose & Kotlin Android
+- [Kotlin Multiplatform docs](https://kotlinlang.org/docs/multiplatform.html)
+
+---
+
+## 🎓 Năng lực cuối roadmap
+
+Sau 42 tuần, bạn nên tự tin:
+
+### Backend
+- [ ] Build REST API từ đầu (Ktor hoặc Spring) deploy production
+- [ ] Design schema Postgres + index hợp lý
+- [ ] Implement auth chuẩn (JWT, BCrypt, refresh token rotation)
+- [ ] Viết test với Testcontainers (real DB)
+- [ ] Setup observability (logs + metrics + traces)
+
+### Frontend
+- [ ] Build Next.js app với Server Components + Server Actions
+- [ ] TypeScript thành thạo (generics, narrowing, utility types)
+- [ ] Data fetching + cache với TanStack Query
+- [ ] Form validation client + server với Zod
+- [ ] Deploy với CI/CD
+
+### Android
+- [ ] Build Compose app với MVI architecture
+- [ ] Hilt DI, Room, Ktor Client
+- [ ] Offline-first với WorkManager sync
+- [ ] Camera + ML Kit OCR
+- [ ] Glance widget, notifications
+- [ ] Publish Play Store
+
+### Cross-cutting
+- [ ] Coroutines & Flow ở mức intermediate-advanced
+- [ ] Git workflow chuẩn (branch, merge, conflict resolution)
+- [ ] Docker basics
+- [ ] KMP shared module
+- [ ] Đọc + viết được architecture decision record (ADR)
+
+---
+
+Bắt đầu thôi 💪
+
+*Last updated: 03/06/2026*
