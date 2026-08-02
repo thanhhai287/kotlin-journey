@@ -1,0 +1,198 @@
+# Hệ thống học & luật AI
+
+Trang này là hệ điều hành của cả 24 tháng: nhịp một buổi tối, lịch tuần theo vai trò, quy tắc khi mệt, và bản hợp đồng với AI. Mở lại nó mỗi khi lỡ lịch, mỗi khi định nhờ AI "giúp nhanh một chút" — vì lộ trình này nếu đổ thì đổ vì đúng một trong hai thứ: chuỗi ngày học bị đứt, hoặc AI viết hộ.
+
+---
+
+## Một buổi tối 2h
+
+Đơn vị cơ bản của lộ trình không phải tháng hay phase — là **một buổi tối 2 giờ**, cấu trúc 10/70/30/10 cố định:
+
+```text
+20:00–20:10  WARM-UP (10')      Active recall, KHÔNG mở note:
+                                • trả lời 3 câu tự kiểm của buổi trước
+                                • lướt 10–15 flashcard đến hạn
+20:10–21:20  DEEP WORK (70')    MỘT mục tiêu duy nhất, đã ghi sẵn từ hôm trước.
+                                Điện thoại ở phòng khác. Notification off.
+21:20–21:50  CONSOLIDATE (30')  Chốt bằng SẢN PHẨM: commit code (dù dở dang),
+                                cập nhật 1 note, tạo tối đa 5 flashcard mới
+21:50–22:00  JOURNAL (10')      5 dòng nhật ký + ghi MỤC TIÊU BUỔI SAU
+```
+
+**Dòng `NEXT:` là đòn bẩy lớn nhất của toàn bộ hệ thống.** 80% thời gian lãng phí của người học part-time là 15–20 phút đầu buổi loay hoay "hôm nay học gì nhỉ". Câu cuối journal mỗi buổi bắt buộc là `NEXT:` kèm việc cụ thể — mở file nào, làm gì. Có nó, buổi sau vào việc trong 2 phút. Không có nó, mỗi tuần bạn đốt gần 2 giờ chỉ để nhớ lại mình đang ở đâu — đúng bằng một buổi học trọn vẹn.
+
+Journal viết theo 5 trường cố định: **DID** (kèm link commit — bằng chứng, không phải cảm giác) · **AHA** (1 điều vừa hiểu ra) · **MURKY** (1 điều còn mơ hồ) · **FLASH** (số flashcard mới) · **NEXT**. MURKY nào sống quá 1 tuần sẽ bị lôi ra Concept clinic — xem bảng nghi thức định kỳ bên dưới.
+
+## Lịch tuần theo vai trò
+
+Mỗi ngày có một vai trò cố định. Bạn không phải quyết định "hôm nay làm loại việc gì" — chỉ quyết định nội dung cụ thể trong vai trò đó:
+
+| Ngày | Vai trò | Nội dung | Giờ |
+|---|---|---|---|
+| **T2** | INPUT | Lý thuyết mới + lab nhỏ ngay tại chỗ (gõ lại mọi example) | 2h |
+| **T3** | BUILD | Deep work vào project hiện tại | 2h |
+| **T4** | BUILD | Tiếp tục project. 15 phút cuối: recall lý thuyết T2 bằng cách áp vào code | 2h |
+| **T5** | READ CODE | Đọc source người khác theo câu hỏi định hướng. Ghi 1 note | 1.5–2h |
+| **T6** | LIGHT / BUFFER | 30 phút Friday Rebuild + flashcard/dọn note, hoặc nghỉ hẳn. Đây là van xả | 0–1h |
+| **T7** | LONG BUILD | Block 2–3h liền: phần khó nhất của project | 2–3h |
+| **CN** | REVIEW + PLAN | Weekly review với AI: quiz, review commit, kế hoạch tuần tới. Tối CN nghỉ tuyệt đối | 1.5h |
+
+**Tổng: 11–13h/tuần.** T6 là buffer chính thức — mất T6 không tính là lỡ lịch. Hai buổi BUILD (T3–T4) đứng ngay sau buổi INPUT duy nhất là cố ý: lý thuyết không được áp vào code trong vòng 48 giờ là lý thuyết sắp bốc hơi.
+
+## ⚠️ Quy tắc sống còn
+
+Thứ giết một lộ trình 24 tháng không phải tuần bận — mà là chuỗi *đứt → tội lỗi → né tránh → bỏ*. Các quy tắc sau cắt chuỗi đó ngay ở mắt xích đầu, và chúng không thương lượng được:
+
+| Tình huống | Quy tắc |
+|---|---|
+| Quá mệt hôm nay | **Ngày tối thiểu 20 phút**, không được về 0: 10 phút flashcard + 10 phút đọc lại journal. Giữ identity "mình là người đang học Kotlin" |
+| Lỡ 1 ngày | OK, không sao. **Never miss twice** — cấm 2 ngày liên tiếp |
+| Lỡ ≥3 ngày | **KHÔNG học bù.** Buổi tái nhập chỉ làm 3 việc: đọc journal 2 tuần → chạy lại project, đọc code của mình → 20 flashcard. Buổi sau mới quay lại `NEXT:` |
+| Lỡ ≥2 tuần | Chạy recalibrate với AI: co scope tuần tới còn 50% |
+| Mệt 5 buổi liên tiếp (năng lượng ≤2/5) | **Tuần deload tự động**, không thương lượng: không nội dung mới, chỉ polish + ôn |
+| Đang "vào flow" lúc 22:00 | **Hard stop.** Ghi dòng suy nghĩ dở vào `NEXT:` rồi tắt máy. Ngủ dưới 6 tiếng → hôm sau tự động là ngày tối thiểu |
+
+Học bù là cái bẫy: nó biến một tuần lỡ thành hai tuần kiệt sức. Hệ thống này thà mất vài buổi còn hơn mất người học.
+
+## 30 đọc và 70 gõ
+
+Trong máy bạn có cả một kho project do AI sinh ra, và bạn vẫn chưa tự build được app nào. Đó là bằng chứng sống của **reading–writing gap**: đọc hiểu và tự viết là hai cơ bắp khác nhau — tutorial, video và code AI chỉ tập cơ thứ nhất. Vì vậy tỷ lệ **30 đọc / 70 gõ** được đo theo tuần, bằng số liệu, không bằng cảm giác:
+
+| Loại nội dung | Đọc : Gõ |
+|---|---|
+| Syntax, API, framework mới | 20 : 80 |
+| Kiến trúc, concept | 40 : 60 |
+| Đọc source người khác (buổi T5) | 70 : 30 |
+
+**4 luật chống tutorial hell:**
+
+1. Video/tutorial chỉ mở khi *đang bí một thứ cụ thể*, không xem "cho biết". Không quá 20 phút liên tục mà không pause để tự gõ.
+2. **Closed-book rebuild:** mỗi tutorial dùng đúng 1 lần. Sau đó build một *biến thể* (đổi domain, thêm 1 tính năng) mà không mở lại. Không rebuild được = chưa học được gì từ nó.
+3. Không bao giờ có 2 buổi INPUT liên tiếp.
+4. Thước đo tuần: **dưới 4 ngày có commit = tuần đó đọc nhiều hơn làm** → tuần sau đảo tỷ lệ.
+
+## 🔒 Hợp đồng với AI
+
+Rủi ro lớn nhất của lộ trình này không phải độ khó — là AI. Hình dung đúng: AI là **huấn luyện viên phòng gym**. HLV chỉ cách nâng tạ, sửa tư thế, ra giáo án; thuê HLV nâng tạ hộ thì cơ không mọc mà tiền vẫn mất. Phần này viết từ góc nhìn của bạn: bạn được hỏi gì, không được hỏi gì, và vì sao.
+
+### Năm luật cứng
+
+**Luật 1 — không ai gõ code vào project ngoài bạn.** Trong Phase 0: tuyệt đối, không ngoại lệ, nài nỉ cũng vô ích. Từ Phase 1: AI vẫn không viết code cho bất kỳ khái niệm nào thuộc phase hiện tại hoặc chưa có bằng chứng `mastered`. Nếu AI buộc phải đưa ví dụ khi giải thích khái niệm, nghĩa vụ của bạn là đóng cửa sổ và gõ lại từ trí nhớ — gõ lại không nổi nghĩa là chưa hiểu.
+
+**Luật 2 — câu trả lời mặc định là câu hỏi ngược.** Hỏi về khái niệm hay bug, bạn sẽ nhận lại 1–2 câu định hướng trước. Vẫn tắc → AI chỉ vùng vấn đề + đúng section docs, không chỉ thẳng dòng lỗi. Chỉ khi bạn đã mô tả lại vấn đề bằng lời của mình mà vẫn tắc → pseudo-code hoặc ví dụ ở domain khác, không bao giờ là code của bài đang làm.
+
+**Luật 3 — 30 phút vật lộn trước khi hỏi về một lỗi.** AI từ chối debug hộ nếu bạn chưa trình đủ 3 thứ trong `notes/ERRORS.md`: giả thuyết của mình, 2 thí nghiệm đã thử, kết quả quan sát được của từng cái. Điểm của luật: mô tả được bug bằng lời thường tự ra đáp án trước khi kịp gửi câu hỏi.
+
+**Luật 4 — explain-back bắt buộc.** Sau mỗi lần được giải thích, bạn giải thích lại bằng lời của mình và chịu 2 tầng "tại sao" liên tiếp. Chưa đạt thì chưa được chuyển chủ đề — hiểu lơ mơ mà đi tiếp là vay nợ lãi kép.
+
+**Luật 5 — code review là câu hỏi, không phải bản sửa.** Review trả về danh sách BLOCKER / SHOULD / NIT toàn câu hỏi ("hàm này chạy trên thread nào?"), không có bản sửa. Bạn tự sửa, rồi nộp vòng 2.
+
+### Bạn được hỏi gì / không được hỏi gì
+
+| Được hỏi | Không được hỏi |
+|---|---|
+| "Giải thích vì sao Kotlin để class là `final` mặc định?" | "Sửa code này giúp tôi" |
+| "Ra cho tôi 5 test case ác cho hàm validate ngày" | "Viết hàm đọc CSV" |
+| "Review code tôi đã viết xong: chỉ 3 chỗ chưa idiomatic, giải thích, không viết lại hộ" | "Viết skeleton rồi tôi điền" |
+| "Đóng vai người phỏng vấn, hỏi tôi 5 câu về null-safety" | "Refactor giúp" |
+| "Soạn 15 chương trình có lỗi cài sẵn cho Error Zoo" | "Cho tôi xem lời giải mẫu để tham khảo" |
+
+Ngoài ra bạn được nhờ AI làm trực tiếp: sinh đề bài, quiz, flashcard draft, dữ liệu test ("tạo file CSV 200 dòng có 5 dòng hỏng"), dịch thuật ngữ, chỉ hướng tra cứu, và scaffold không liên quan mục tiêu học (`.gitignore`, CI yaml).
+
+### Vùng AI-free tuyệt đối
+
+- Mọi kata Tier 1 — bài warm-up 30 phút đầu buổi
+- Bài test đầu vào
+- Friday Rebuild
+- Tuần cuối của capstone Phase 0 — kể cả hỏi khái niệm
+- **AI autocomplete/Copilot trong IDE: tắt hoàn toàn suốt Phase 0** — chụp màn hình settings làm bằng chứng
+
+### AI log — không log là vi phạm
+
+Mỗi lần dùng AI, ghi 1 dòng vào `notes/AI-LOG.md`: ngày / hỏi gì / loại (khái niệm · ra đề · review · giải lỗi) / có vi phạm luật không. Chủ nhật đếm lại trong weekly review, kèm câu hỏi thẳng: *"Tuần này AI viết hộ bao nhiêu % code?"* — câu trả lời đúng duy nhất là **0%**.
+
+### Cái giá của hợp đồng — và vì sao đáng
+
+Giữ đủ 5 luật, tiến độ sẽ *cảm giác* chậm hơn khoảng 30% so với để AI code hộ. Phần "chậm" đó chính là **desirable difficulty** — nơi năng lực hình thành. Sau 24 tháng, người dùng AI làm reviewer thành dev thật; người dùng AI làm author thành người vận hành AI ở mức prompt. Thị trường trả lương rất khác nhau cho hai người đó.
+
+## Nghi thức định kỳ
+
+| Nghi thức | Khi nào | Bạn làm gì |
+|---|---|---|
+| **Session close** | Cuối mỗi buổi, 5 phút | Đọc lại journal vừa viết → trả lời 2–3 câu quiz active recall → xác nhận dòng `NEXT:` đủ cụ thể (có tên file, có hành động) |
+| **Weekly review** | Chủ nhật, 30–45 phút | Đọc journal tuần + `git log` → quiz 10 câu spaced (5 tuần này / 3 tuần trước / 2 tháng trước) → rà chỉ báo cảnh báo sớm → trả lời "AI viết hộ bao nhiêu %?" → chốt kế hoạch tuần vào `PROGRESS.md` |
+| **Concept clinic** | Khi có MURKY sống quá 1 tuần | Học lại khái niệm qua hỏi–đáp Socratic → tự viết note bằng lời mình → AI chấm độ chính xác |
+| **Code review** | Xong feature / trước khi tag project | Nhận danh sách câu hỏi BLOCKER / SHOULD / NIT → tự sửa → nộp vòng 2 |
+| **Monthly recalibrate** | Cuối tháng, 30 phút | So thực tế với kế hoạch phase → điều chỉnh scope/timeline → ghi quyết định kèm lý do vào `PROGRESS.md` |
+| **Examiner mode** | Cuối mỗi phase | Làm timed-test biến thể (không trùng đề cũ) → được chấm theo rubric → vấn đáp 15 phút về bài làm |
+| **Mock interviewer** | Từ tháng 12 | Phỏng vấn thử không giới hạn — vùng duy nhất được dùng AI thoải mái |
+
+Đầu mỗi phiên làm việc, AI mở đầu bằng **một câu recall từ buổi trước** — không phải câu chào xã giao. Trả lời được là warm-up đã xong một nửa.
+
+## Friday Rebuild
+
+Nghi thức phát hiện phụ thuộc AI — rẻ, đo được, đánh trúng tim vấn đề. Mỗi tối thứ Sáu, 30 phút đầu buổi:
+
+1. AI **chọn ngẫu nhiên** 1 hàm có nghĩa bạn đã viết trong tuần — AI chọn, để bạn không tự chọn bài dễ
+2. Xoá nó khỏi màn hình
+3. **Viết lại từ trí nhớ + hiểu biết** — không mở note, không mở git, không hỏi gì
+4. Ghi kết quả vào `PROGRESS.md`
+
+| Kết quả | Ý nghĩa |
+|---|---|
+| Viết lại được trong 15 phút | Tuần đó kiến thức là của bạn |
+| Không viết lại được | Tín hiệu đỏ: tuần đó đã "mượn" nhiều hơn "học" → tuần sau siết luật AI |
+
+Ba tuần cuối Phase 0, Friday Rebuild trở thành tiêu chí tốt nghiệp: 3/3 lần viết lại được trong 15 phút — xem [Tốt nghiệp Phase 0](/phase-0/tot-nghiep).
+
+## 🏁 Đo mình đang đi đúng không
+
+Cảm giác "mình đang tiến bộ" và cảm giác "mình đang giậm chân" đều không đáng tin. Hệ thống đo bằng ba tầng.
+
+### La bàn 3 tháng — mỗi cuối quý, 1 buổi 2h
+
+Trả lời 4 câu bằng **chứng cứ**, không cảm tính:
+
+1. **Bài test build "chay"** — tự build 1 feature đúng trình độ quý đó, bấm giờ, không AI, không copy. Q1: CLI tool nhỏ trong 3h · Q2: màn hình Compose có state trong 3h · Q3: màn hình gọi API + lưu Room trong 4h · Q4: mock interview 30 phút · Q5–Q6: endpoint Ktor mới + màn hình client trong 4h
+2. **Bài test giải thích** — nói 5 phút về 1 khái niệm của quý, không nhìn tài liệu. Người không biết gì nghe hiểu được = đạt
+3. **Số liệu hệ thống học** — tổng giờ đạt ≥85% kế hoạch? Never-miss-twice giữ được? Tỷ lệ code AI viết hộ ≈ 0%?
+4. **Chứng cứ công khai** — GitHub quý này có gì mới mà người lạ nhìn vào thấy tiến bộ?
+
+**Đạt ≥3/4 → đi tiếp. Đạt ≤2 → cắt phạm vi, chỉnh hệ thống — không chỉnh ý chí.**
+
+### Chỉ báo cảnh báo sớm
+
+| Dấu hiệu học vẹt | Dấu hiệu né phần khó |
+|---|---|
+| Flashcard đúng đều nhưng timed-test fail phần áp dụng | MURKY tồn tại quá 2 tuần không xử lý |
+| Đọc lại note thấy "quen quen" nhưng không viết lại được example từ trí nhớ | Project đứng ở "polish UI" quá 1 tuần trong khi DoD còn thiếu test |
+| Bị hỏi xoáy 2 tầng "tại sao" là tắc | Liên tục đổi đề tài/thư viện mới thay vì đóng project hiện tại |
+| Journal nhiều AHA nhưng DID toàn "đọc/xem", ít link commit | Tránh viết test; tránh mở Profiler/Debugger |
+
+### Ngưỡng hành động — AI kiểm mỗi weekly review
+
+| Chỉ báo | Ngưỡng đỏ | Hành động |
+|---|---|---|
+| Commit project | 0 commit / 7 ngày | Buổi kế tiếp bắt buộc BUILD, co scope task còn 30 phút |
+| MURKY tồn đọng | Quá 2 tuần | Đưa lên đầu buổi INPUT gần nhất, chạy Concept clinic |
+| Timed-test | Fail 2 lần liên tiếp | Dừng tiến độ mới 2 tuần, quay lại luyện nền |
+| Lệch lịch phase | Trễ quá 4 tuần | Recalibrate: cắt scope, KHÔNG cắt chất lượng, kéo dài timeline |
+
+## 🛠️ Thiết lập hệ thống
+
+Làm một lần trong Tuần 0, tick xong mới bắt đầu [Phase 0](/phase-0). Mỗi lần tick: sửa dòng tương ứng trong file này thành `- [x]` rồi commit — commit chính là bằng chứng.
+
+- [ ] Chốt khung giờ học cố định (đề xuất 20:00–22:00) + hard stop 22:00, đã báo với gia đình
+- [ ] Tắt hoàn toàn AI autocomplete/Copilot trong IDE — chụp màn hình settings làm bằng chứng
+- [ ] Cài Anki, tạo deck `kotlin`, thêm 5 thẻ đầu tiên
+- [ ] Tạo `notes/AI-LOG.md` với 4 cột: ngày / hỏi gì / loại / vi phạm?
+- [ ] Tạo `notes/ERRORS.md` trống — nó sẽ dày lên và thành trophy
+- [ ] Viết journal entry đầu tiên đủ 5 trường DID / AHA / MURKY / FLASH / NEXT
+- [ ] Đặt lịch weekly review cố định vào Chủ nhật, có reminder trên điện thoại
+- [ ] Mute các tài khoản mạng xã hội dev khiến bạn so sánh output — trong ít nhất 12 tuần
+- [ ] Chạy thử 1 "ngày tối thiểu 20 phút" giữa tuần, để biết nó trông ra sao trước khi cần đến nó thật
+- [ ] Đọc [Meta-skills](/phase-0/meta-skills) để biết IOSTV, quy trình đọc error, debug 6 bước, đọc docs và git recovery nằm ở đâu khi cần mở
+
+## → Tiếp theo
+
+Hệ thống chỉ chạy khi có nội dung để chạy. Mở [Tổng quan Phase 0](/phase-0) để biết 12 tuần đầu học gì, rồi bám [Lịch 12 tuần](/phase-0/lich-12-tuan) từng buổi. Toàn bộ quy trình kỹ thuật khi bí — IOSTV, đọc error message, debug 6 bước, đọc docs, git recovery — nằm ở [Meta-skills](/phase-0/meta-skills). Tiến độ tổng hợp ghi ở [Tiến độ](/progress).

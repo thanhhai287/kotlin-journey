@@ -1,0 +1,347 @@
+# Kotlin Core II — tuần 6–10
+
+Trang này sở hữu nửa sau của Kotlin Core (~72h): module 4.6–4.10, mở ra từ tuần 6 và đóng lại ngay trước capstone. Nửa đầu (4.1–4.5) nằm ở [Kotlin Core I](/phase-0/kotlin-core-1); tuần 7 vắng mặt trong bảng dưới vì dành trọn cho [Project 1 — Sổ Chi Tiêu CLI](/phase-0/projects).
+
+| Module | Nội dung | Giờ | Tuần |
+|---|---|---|---|
+| 4.6 | Extension function, lambda, higher-order, scope functions | 10h | 6 |
+| 4.7 | Generics đọc-hiểu, exception, `Result` | 6h | 8 |
+| 4.8 | OOP thực dụng kiểu Kotlin | 6h | 8 |
+| 4.9 | Coroutines nhập môn | 6h | 9 |
+| 4.10 | Ôn tổng hợp + kata tốc độ | 6h | 9–10 |
+
+## 4.6. Extension function, lambda, higher-order, scope functions — 10h, tuần 6
+
+**🎯 Sau module này bạn làm được**
+
+- [ ] Viết một higher-order function nhận lambda làm tham số cuối, gọi nó bằng cú pháp trailing lambda
+- [ ] Viết 2 extension function dùng lại được cho mọi project sau: `String.chuanHoaSdt()` và `Long.formatVnd()`
+- [ ] Cầm 20 dòng code Compose thật, khoanh đúng mọi trailing lambda trong đó
+- [ ] Nói được khi nào dùng `let`, khi nào dùng `apply` — và vì sao chưa được đụng `run`/`with`/`also`
+
+**🌱 Vì sao module này tồn tại**
+
+Ở C/Java kiểu trường học, muốn hàm đổi hành vi thì bạn truyền cờ boolean hoặc viết thêm một hàm gần giống. Kotlin coi **hàm là giá trị** — bạn truyền thẳng hành vi vào làm tham số. Nhưng lý do thật để học kỹ module này nằm ở Phase 1: **Compose viết bằng trailing lambda từ đầu đến cuối**. Giải mã được cú pháp này bây giờ thì tháng 4 bạn mở code Compose ra và *đọc được*; không thì Compose trông như một ngôn ngữ khác và bạn sẽ vỡ trận đúng chỗ roadmap đã cảnh báo.
+
+**Nội dung cốt lõi**
+
+- Function type: `(Int) -> Boolean` là một kiểu dữ liệu như `String` — biến giữ được, tham số nhận được
+- Lambda: `{ x -> x * 2 }` — khi chỉ có 1 tham số, dùng `it`
+- Higher-order function: hàm nhận hàm hoặc trả hàm
+- **Trailing lambda** — luật cú pháp: lambda là **tham số cuối** thì được kéo ra ngoài ngoặc; nếu là tham số duy nhất thì bỏ luôn ngoặc
+
+```kotlin
+val ten1 = dsKhach.map({ kh -> kh.ten })  // hợp lệ, nhưng không ai viết vậy
+val ten2 = dsKhach.map { it.ten }         // trailing lambda — dạng bạn gặp 100 lần/ngày
+```
+
+*Đóng trang này. Gõ lại hai đoạn trên từ trí nhớ. Gõ lại không nổi = chưa hiểu, đọc lại.*
+
+**Và đây là lý do thật để học kỹ chỗ này.** Gần như mọi dòng Compose bạn sẽ đọc ở Phase 1 đều có cùng hình dạng: một hàm, vài tham số đặt tên, rồi một lambda đứng **ngoài** ngoặc đơn làm nội dung. Không có cú pháp ma thuật nào cả — chỉ là trailing lambda, thứ bạn vừa học. Ở buổi Android field trip cuối tuần 6, khi nhìn code template, việc của bạn là **tự chỉ ra** đâu là tham số thường và đâu là trailing lambda, rồi trả lời: lambda cuối đó là tham số của hàm nào, tên tham số là gì?
+
+- Extension function: "mọc" hàm mới lên kiểu có sẵn, bên trong `this` là giá trị đứng trước dấu chấm. Nó không sửa class gốc — chỉ là hàm tĩnh được cú pháp hoá đẹp
+
+**Luật chống loạn scope function** — đây là **chính kiến**, không phải gợi ý:
+
+| Scope function | Phase 0 | Dùng khi |
+|---|---|---|
+| `let` | Dùng | Biến đổi giá trị nullable: `email?.let { ... }` |
+| `apply` | Dùng | Cấu hình object vừa tạo xong |
+| `run` / `with` / `also` | Chỉ đọc-hiểu | **Cấm chủ động dùng trong Phase 0** |
+
+Vì sao cấm: scope functions là nguồn code "ra vẻ Kotlin" khó đọc **số một** của người mới. Năm hàm gần giống nhau, chỉ khác ở chỗ `it` hay `this` và trả về cái gì — dùng lẫn lộn tạo ra chuỗi mà chính người viết đọc lại không giải thích nổi. Hai hàm `let` và `apply` phủ trên 90% nhu cầu thật. Thành thạo hai cái đó đã, ba cái còn lại chỉ cần đọc hiểu khi gặp trong code người khác.
+
+**⚠️ Bẫy**
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Nhồi scope function cho "ra vẻ Kotlin" | Code mẫu trên mạng dùng nhiều, tưởng đó là idiomatic | Chuỗi `.let`/`.apply` nhiều tầng; đọc lại không nói được `it` với `this` đang trỏ vào gì |
+| Nhầm `it` giữa hai lambda lồng nhau | Lambda trong che `it` của lambda ngoài | Compiler báo type không khớp ở chỗ "chắc chắn đúng" |
+| Viết extension cho mọi thứ | Mới học thấy hay, "xịn hoá" cả codebase | Extension chỉ được gọi đúng 1 lần, hoặc chứa logic nghiệp vụ lẽ ra thuộc về data class |
+
+**🛠️ Bài tập**
+
+- [ ] Viết lại 2 kata cũ thành extension: `String.chuanHoaSdt()` và `Long.formatVnd()` (`1250000` → `"1.250.000 ₫"`). Đạt khi: qua lại toàn bộ bộ test của kata gốc — 60 phút
+- [ ] Viết `fun List<GiaoDich>.locTheoThang(thang: Int): List<GiaoDich>` rồi refactor một chỗ trong Project 1 tuần sau để dùng nó. Đạt khi: chỗ gọi ngắn hơn và test vẫn xanh — 45 phút
+- [ ] Higher-order đầu tay: `retry(lanThu: Int, hanhDong: () -> Boolean)` — gọi `hanhDong` tối đa `lanThu` lần, dừng ngay khi trả `true`. Đạt khi: test được cả trường hợp luôn thất bại và trường hợp thất bại 2 lần rồi thành công — 45 phút
+- [ ] Lấy một đoạn code Compose thật ~20 dòng (template project của Android Studio, hoặc docs Compose) và ghi chú: mỗi trailing lambda là tham số của hàm nào. Đạt khi: không sót lambda nào — 30 phút
+
+**🏁 Bài tự kiểm**
+
+Xoá bản `Long.formatVnd()` vừa viết. Hôm sau viết lại từ trí nhớ, kèm 3 test: `0`, số âm, `1000000000`.
+
+- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤30)
+
+**📚 Đọc gì**
+
+- [Higher-order functions and lambdas](https://kotlinlang.org/docs/lambdas.html) — đặc biệt mục *Passing trailing lambdas*
+- [Extensions](https://kotlinlang.org/docs/extensions.html)
+- [Scope functions](https://kotlinlang.org/docs/scope-functions.html) — chỉ đọc bảng chọn hàm ở đầu trang, đừng cố thuộc cả 5
+
+**Explain-back** — tự trả lời bằng lời của bạn, rồi tôi sẽ hỏi xoáy 2 tầng "tại sao":
+
+1. Trailing lambda là gì? Vì sao nó khiến Compose trông như "ngôn ngữ riêng" dù chỉ là các lời gọi hàm?
+2. Extension function có thật sự thêm hàm vào class `String` không? Nếu không thì nó là gì?
+3. Vì sao truyền lambda tốt hơn truyền cờ boolean vào hàm?
+
+## 4.7. Generics đọc-hiểu + exception + Result — 6h, tuần 8
+
+**🎯 Sau module này bạn làm được**
+
+- [ ] Đọc một signature stdlib có `<T>` và dịch thành một câu tiếng Việt trọn nghĩa
+- [ ] Viết hàm generic cơ bản kiểu `fun <T> List<T>.giuaDanhSach(): T?`
+- [ ] Chặn input rác ngay cửa hàm bằng `require`/`check` thay vì if-return rải rác
+- [ ] Viết hàm trả `Result` để lỗi trở thành giá trị mà caller buộc phải xử lý
+
+**🌱 Vì sao module này tồn tại**
+
+Generics ở trường dạy để thi — wildcard, bounded type, vẽ sơ đồ. Phase 0 chỉ cần mức **đọc thông thạo, viết cơ bản**: không hoảng khi docs viết `Iterable<T>`, còn `in`/`out` chỉ cần nhận diện. Phần exception mới là trọng tâm tư duy: **"lỗi cũng là dữ liệu"** — nối thẳng về sealed class ở module 4.4. Một hàm đọc file có thể thành công hoặc thất bại; cả hai đều là kết quả hợp lệ cần được model, không phải quả bom chờ nổ.
+
+**Nội dung cốt lõi**
+
+- Đọc `fun <T> ...`: `T` là chỗ trống điền kiểu — một hàm viết một lần chạy cho mọi kiểu
+- `in`/`out`: mức nhận diện khi đọc docs (`out` = kiểu chỉ đi ra, `in` = kiểu chỉ đi vào). Không cần viết được
+- `try`/`catch`/`finally`, tự định nghĩa exception
+- `require` (validate **tham số**) và `check` (validate **trạng thái**) — thất bại sớm, thất bại to
+
+```kotlin
+fun rutTien(soTien: Long) {
+    require(soTien > 0) { "Số tiền phải dương, nhận: $soTien" }
+    // tới được đây nghĩa là hợp đồng đã được kiểm
+}
+```
+
+- `runCatching` và `Result` — bọc lỗi thành giá trị:
+
+```kotlin
+val ketQua: Result<Int> = runCatching { "12a".toInt() }
+// ketQua.isFailure == true — lỗi giờ là dữ liệu cầm được, không phải bom
+```
+
+*Đóng trang này. Gõ lại hai đoạn trên từ trí nhớ, đoán output trước khi chạy.*
+
+**Luật cứng của module: cấm nuốt exception bằng catch rỗng.** Mọi `catch` phải hoặc xử lý có nghĩa (trả giá trị mặc định *có chủ đích*, báo người dùng), hoặc log rồi rethrow. Catch rỗng không sửa bug — nó chôn bug xuống ba tầng đất, để dữ liệu sai âm thầm lan ra và phát nổ ở chỗ khác, khó lần hơn gấp mười. Khi chấm Project 2, catch rỗng bị trừ thẳng vào mục chất lượng code.
+
+**⚠️ Bẫy**
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Catch rỗng cho hết crash | Muốn chương trình "chạy được" nhanh | Chương trình không crash nhưng ra số sai; block `catch` trống trơn hoặc chỉ có comment |
+| Bọc `try` quanh cả 50 dòng | Không biết dòng nào có thể ném | Không trả lời được "exception này phát sinh từ dòng nào" |
+| Bỏ qua signature khi đọc docs | Đọc Reference như Tutorial | Kéo thẳng xuống example, gặp `<T>` là đóng tab |
+
+**🛠️ Bài tập**
+
+- [ ] Viết `fun <T> List<T>.giuaDanhSach(): T?` — trả phần tử giữa, `null` nếu rỗng. Đạt khi: có test cho list rỗng, 1 phần tử, số phần tử chẵn và lẻ — 30 phút
+- [ ] Dịch 5 signature stdlib (`filter`, `map`, `fold`, `firstOrNull`, `associateBy`) thành 5 câu tiếng Việt theo kỹ thuật đọc signature ở [Meta-skills](/phase-0/meta-skills). Đạt khi: mỗi câu nêu đủ receiver, tham số, kiểu trả về — 30 phút
+- [ ] Chọn một hàm trong Project 1 đang ném exception hoặc trả `null` mập mờ, refactor thành trả `Result`. Đạt khi: chỗ gọi xử lý cả hai nhánh thành công/thất bại một cách có chủ đích — 45 phút
+
+**🏁 Bài tự kiểm**
+
+Viết `fun docFileGiaoDich(path: String): Result<List<GiaoDich>>` xử lý tử tế cả 3 tình huống: file không tồn tại · dòng hỏng (bỏ qua, đếm số dòng lỗi) · số tiền không parse được.
+
+- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤45)
+
+**📚 Đọc gì**
+
+- [Generics](https://kotlinlang.org/docs/generics.html) — đọc đến hết phần variance ở mức nhận diện rồi dừng
+- [Exceptions](https://kotlinlang.org/docs/exceptions.html)
+- [Result — API reference](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/) — đọc như tra cứu, chạy example trong scratch file
+
+**Explain-back**
+
+1. "Lỗi cũng là dữ liệu" nghĩa là gì? `Result` khác gì ném exception, và khi nào chọn cái nào?
+2. `require` khác `check` chỗ nào? Vì sao "thất bại sớm" lại tốt hơn để lỗi lan xa rồi mới đổ?
+3. Kể một bug thật của bạn mà catch rỗng đã (hoặc sẽ) che mất nó.
+
+## 4.8. OOP thực dụng kiểu Kotlin — 6h, tuần 8
+
+**🎯 Sau module này bạn làm được**
+
+- [ ] Tách một project "dồn cục" thành các file model / logic / storage / main mà hành vi không đổi
+- [ ] Giải cùng một bài bằng kế thừa rồi refactor sang composition, chỉ ra bản nào dễ thay đổi hơn và vì sao
+- [ ] Dùng `object` / `companion object` đúng chỗ và nói được chúng khác class thường thế nào
+
+**🌱 Vì sao module này tồn tại**
+
+OOP thi cử đặt kế thừa làm trung tâm. Kotlin cố ý làm class `final` mặc định — ngôn ngữ đang nói thẳng với bạn: **kế thừa là ngoại lệ phải xin phép, không phải mặc định**. Module này gắn từ vựng OOP sẵn có của bạn (interface, override) vào mục đích thật: tách code để **đổi được từng phần mà không đụng phần còn lại** — đây chính là kỹ năng bạn cần ngay ở bài tự kiểm cuối module, và là nền của kiến trúc Android sau này.
+
+**Nội dung cốt lõi**
+
+- Interface = hợp đồng hành vi; class = một cách thực hiện hợp đồng
+- **Composition over inheritance** — không học thuộc khẩu hiệu, làm thật: giải một bài bằng kế thừa, refactor sang composition, đặt hai bản cạnh nhau so sánh
+- Delegation `by` — composition với chi phí gõ phím của kế thừa
+- `object` (singleton khai báo 1 dòng) và `companion object` (chỗ đứng của "static" trong Kotlin)
+- Visibility: `private` / `internal` / `public` — mặc định public, siết lại có chủ đích
+
+```kotlin
+interface NguonThoiGian {
+    fun homNay(): LocalDate
+}
+// Code dùng NguonThoiGian không biết — và không cần biết — ngày đến từ đâu.
+// Bản thật đọc đồng hồ máy; bản test trả về ngày cố định 29/02/2024.
+// Nhờ vậy test "năm nhuận" chạy được vào bất kỳ ngày nào trong năm.
+```
+
+Đây là ví dụ ở **domain khác** với bài tự kiểm bên dưới — cố ý. Nó minh hoạ một điều duy nhất: interface tách *cái gì* khỏi *bằng cách nào*, và chính chỗ tách đó là nơi test chen vào được. Khi áp lên project của bạn, phần khó không phải cú pháp `interface` mà là câu hỏi: **ranh giới nên cắt ở đâu?** Cắt sai chỗ thì có interface mà vẫn không test được.
+
+*Đóng trang này. Gõ lại đoạn trên từ trí nhớ, rồi tự viết thêm một class implement nó.*
+
+**⚠️ Bẫy**
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Kế thừa để tái sử dụng code | Trường dạy kế thừa là trung tâm OOP | Class cha tên `Base...` chung chung; class con override để *vô hiệu hoá* hành vi cha |
+| `object` thành biến toàn cục trá hình | Gọi đâu cũng được, đỡ truyền tham số | Không viết nổi test vì trạng thái dính từ test này sang test khác |
+| Tách file kiểu cắt cơ học | Tách theo số dòng, không theo trách nhiệm | Các file mới import chéo nhau lòng vòng; sửa 1 tính năng vẫn phải mở 4 file |
+
+**🛠️ Bài tập**
+
+- [ ] Bài "hai lần giải": hệ thống gửi thông báo qua email / SMS / push. Lần 1 model bằng kế thừa, lần 2 refactor sang composition + interface. Đạt khi: ở bản composition, thêm kênh Zalo không sửa một class cũ nào; viết 5 dòng so sánh hai bản — 90 phút
+- [ ] Delegation: viết class bọc một `MutableList` bằng `by`, chỉ thêm việc đếm số lần `add` được gọi. Đạt khi: không phải override thủ công bất kỳ hàm nào khác của `MutableList` — 30 phút
+
+**🏁 Bài tự kiểm**
+
+Tách Project 1 tuần 7 (đang dồn cục) thành các file model / logic / storage / main **mà không đổi hành vi**. Đạt khi: toàn bộ test cũ vẫn xanh, `main` không còn chứa logic tính toán, storage nằm sau một interface.
+
+- [ ] Đã làm — thời gian thực tế: ____ phút (ước lượng ~120)
+
+**📚 Đọc gì**
+
+- [Interfaces](https://kotlinlang.org/docs/interfaces.html)
+- [Delegation](https://kotlinlang.org/docs/delegation.html)
+- [Object declarations and expressions](https://kotlinlang.org/docs/object-declarations.html)
+- [Visibility modifiers](https://kotlinlang.org/docs/visibility-modifiers.html)
+
+**Explain-back**
+
+1. Vì sao Kotlin làm class `final` mặc định trong khi Java làm ngược lại? Hệ quả thực tế của mỗi lựa chọn?
+2. Composition cho bạn khả năng gì mà kế thừa không cho — nhất là lúc chương trình *đang chạy*?
+3. `object` và `companion object` khác nhau chỗ nào, mỗi cái dùng khi nào?
+
+## 4.9. Coroutines nhập môn — 6h, tuần 9
+
+**🎯 Sau module này bạn làm được**
+
+- [ ] Giải thích "code chặn (blocking)" là gì và vì sao app có UI bắt buộc cần async — bằng ví dụ đời thường
+- [ ] Chạy được chương trình console dùng `runBlocking`, `launch`, `delay`, `async`/`await`
+- [ ] Đọc một đoạn code có coroutine và kể lại đúng thứ tự thực thi
+- [ ] Nói đúng khác biệt giữa `delay` và `Thread.sleep`
+
+**🌱 Vì sao module này tồn tại**
+
+Mục tiêu module này **khiêm tốn có chủ đích**: đây là "học để không sợ", không phải "học để thành thạo". Lý do: điểm vỡ trận lớn nhất của cả lộ trình là tháng 5–6, khi lifecycle + Compose state + coroutines ập đến cùng lúc. Module này cho bạn gặp coroutine lần đầu **một mình, trong console yên tĩnh**, để đến Phase 1 nó là người quen chứ không phải quái vật. Chỉ mở cửa, không bước sâu.
+
+**Phạm vi chặn cứng:** Dispatchers, structured concurrency sâu, và toàn bộ Flow — **tuyệt đối để Phase 1–2**. Đọc docs mà thấy các trang đó thì bỏ qua, đừng sa đà. Đây là quyết định cắt có chủ đích của roadmap, không phải thiếu sót.
+
+**Nội dung cốt lõi**
+
+1. Vấn đề trước, công cụ sau: một dòng code chặn thread nghĩa là gì, và chuyện gì xảy ra nếu thread đó đang vẽ UI
+2. `suspend` = "hàm có thể **tạm dừng mà không chặn thread**" — thread được thả ra làm việc khác, hàm hẹn quay lại sau
+3. Chạy thật trong console: `runBlocking`, `launch`, `delay`, `async`/`await`
+4. Đọc hiểu một đoạn code có coroutine của người khác
+
+```kotlin
+suspend fun taiDuLieu(): String {
+    delay(1000)   // tạm dừng 1 giây mà KHÔNG chặn thread
+    return "xong"
+}
+```
+
+*Đóng trang này. Gõ lại từ trí nhớ. Rồi tự hỏi: nếu thay `delay` bằng `Thread.sleep` thì dòng comment còn đúng không?*
+
+**⚠️ Bẫy** — hai bẫy này phải biết **trước khi** gõ dòng coroutine đầu tiên:
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Tưởng `launch` xong là code trong đó đã chạy xong | Cả đời quen code tuần tự: dòng trên xong mới tới dòng dưới | Dòng in *sau* `launch` hiện ra *trước* nội dung trong `launch` — và bạn ngạc nhiên |
+| Quên `delay` khác `Thread.sleep` | Cả hai đều "dừng 1 giây", nhìn thay được cho nhau | Đổi `delay` thành `Thread.sleep` thì bản "đồng thời" chạy chậm ngang bản tuần tự |
+
+**🛠️ Bài tập**
+
+- [ ] Giả lập tải 3 "API", mỗi cái mất 1–2 giây (dùng `delay`): viết bản tuần tự và bản đồng thời với `async`/`await`, đo thời gian cả hai (gợi ý: `measureTimeMillis`). Đạt khi: giải thích được vì sao con số bản đồng thời xấp xỉ thời gian của việc *lâu nhất* chứ không phải *tổng* — 60 phút
+- [ ] Trò dự đoán: tự viết 3 chương trình nhỏ trộn `launch` + `delay` + in ra màn hình, **ghi dự đoán thứ tự in ra giấy trước khi chạy**. Đạt khi: 3/3 đoán đúng; đoán sai = mental model sai = quay lại đọc — 45 phút
+- [ ] Đọc một đoạn ~15 dòng trong trang Coroutines basics và kể lại bằng lời thứ tự thực thi cho chính mình nghe — 30 phút
+
+**🏁 Bài tự kiểm**
+
+Nhận một đoạn console có `runBlocking` + 2 `launch` + vài `delay` (nhờ AI sinh đề — được phép, đây là sinh đề, không phải sinh lời giải). Viết ra giấy thứ tự các dòng in, rồi chạy đối chiếu. Đạt khi: đúng 100%.
+
+- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤15)
+
+**📚 Đọc gì**
+
+- [Coroutines basics](https://kotlinlang.org/docs/coroutines-basics.html)
+- [Composing suspending functions](https://kotlinlang.org/docs/composing-suspending-functions.html) — chỉ mục về `async`
+- Các trang Dispatchers, Context, Flow trong cùng mục docs: **chưa phải bây giờ** — đánh dấu để dành cho Phase 1–2
+
+**Explain-back**
+
+1. `suspend` nghĩa là gì — giải thích mà không dùng chữ "coroutine"?
+2. `delay(1000)` và `Thread.sleep(1000)` khác nhau ở đâu? Vì sao khác biệt đó quyết định app đơ hay mượt?
+3. Vì sao dòng lệnh đứng *sau* `launch` có thể chạy *trước* code nằm trong `launch`?
+
+## 4.10. Ôn tổng hợp + kata tốc độ — 6h, tuần 9–10
+
+**🎯 Sau module này bạn làm được**
+
+- [ ] Làm lại 5 kata cũ nhanh hơn lần đầu — có bảng số liệu chứng minh, không phải cảm giác
+- [ ] Trả lời trôi chảy ≥8/10 câu vấn đáp trong buổi mock trước khi thi thật
+- [ ] Bước vào Project 2 mà không cần mở lại note
+
+**🌱 Vì sao module này tồn tại**
+
+Đây là module **đo**, không phải module học. Toàn bộ Phase 0 chống ảo tưởng năng lực bằng số liệu — module này sản xuất chính số liệu đó, ngay trước capstone. Tuần 10–12 bạn sẽ tự nghi ngờ mình ít nhất một lần; lúc đó thứ duy nhất cãi được cảm xúc là bảng số dưới đây.
+
+**Nội dung cốt lõi — cách chạy một kata có bấm giờ**
+
+1. Chọn kata theo danh sách dưới, **đóng mọi note và tài liệu** — kata là vùng AI-free tuyệt đối
+2. Bấm giờ **trước** khi đọc lại đề (đề đầy đủ ở [Bài tập & drill](/phase-0/bai-tap))
+3. Code đến khi qua đủ bộ test cũ của chính bài đó — "chạy được" chưa phải "xong"
+4. Dừng giờ, ghi số vào bảng dưới và vào `PROGRESS.md` trong workspace của bạn
+5. Chậm hơn lần đầu? Ghi luôn. Đó là dữ liệu, không phải bản án — thường nghĩa là lần đầu bạn đã "mượn" nhiều hơn nhớ
+
+**🛠️ Bài tập — 5 kata làm lại, có bấm giờ**
+
+- [ ] Tính tiền điện bậc thang EVN — lần đầu: ____ phút · lần này: ____ phút
+- [ ] Chuẩn hoá SĐT Việt Nam — lần đầu: ____ phút · lần này: ____ phút
+- [ ] Tính tiền gửi xe theo giờ — lần đầu: ____ phút · lần này: ____ phút
+- [ ] Đổi số tiền thành chữ — lần đầu: ____ phút · lần này: ____ phút
+- [ ] Validate ngày — lần đầu: ____ phút · lần này: ____ phút
+
+**Mock vấn đáp:** danh sách 10 câu công khai từ tuần 1 nằm ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) — trang này không lặp lại. Cách mock: nhờ AI đóng vai examiner (được phép — đóng vai người hỏi nằm trong whitelist), trả lời **bằng miệng, không nhìn tài liệu**; mỗi câu trả lời xong sẽ bị hỏi xoáy 2 tầng "tại sao".
+
+- [ ] Mock vấn đáp 10 câu với AI examiner — số câu trôi chảy: ____ /10 (thi thật cần ≥8)
+
+**⚠️ Bẫy**
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Chỉ ôn lại bài dễ | Não thích cảm giác thành thạo, né cảm giác vật lộn | "Đổi số tiền thành chữ" mãi chưa được làm lại |
+| Ôn bằng cách đọc lại bài giải cũ | Reading–writing gap: đọc hiểu tạo cảm giác biết | Đọc thấy "quen quen" nhưng bấm giờ vẫn chậm như cũ |
+| Mở note "xem một tí" giữa chừng | Tự nhủ chỉ kiểm tra một cú pháp | Số đo mất giá trị — không còn biết số đó đo cái gì |
+
+**🏁 Bài tự kiểm**
+
+Tổng duyệt trước tốt nghiệp: bài "đọc file CSV → `groupBy` → in báo cáo" trong 45 phút, **không Google, không AI** — đây chính là mục 1 trong tiêu chí tốt nghiệp ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep), làm trước ở đây để thi thật không bất ngờ.
+
+- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤45)
+
+**📚 Đọc gì**
+
+- [Kotlin Koans](https://kotlinlang.org/docs/koans.html) — mở lại đúng những bài từng sai ở tuần 1–3
+- Đề kata đầy đủ: [Bài tập & drill](/phase-0/bai-tap)
+- Chuẩn ra khỏi phase: [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)
+
+**Explain-back**
+
+1. Trong 10 module Kotlin Core, khái niệm nào còn MURKY với bạn? Gọi tên cụ thể — đó là đầu vào cho một buổi Concept clinic trước khi vào Project 2.
+2. Nhìn bảng số liệu kata: con số nào làm bạn ngạc nhiên nhất, và nó nói gì về cách bạn đã học module tương ứng?
+
+## → Tiếp theo
+
+Xong 4.10 nghĩa là phần "học" của Phase 0 đã đóng — từ đây đến hết phase chỉ còn **build và chứng minh**.
+
+- Đề bài chi tiết mọi kata và bài Tier 2: [Bài tập & drill](/phase-0/bai-tap)
+- Tuần 10–12 — capstone: [Project 2 "Flashcard Từ Vựng CLI"](/phase-0/projects)
+- Chuẩn đầu ra và 10 câu vấn đáp: [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)

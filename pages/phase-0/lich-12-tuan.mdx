@@ -1,0 +1,241 @@
+# Lịch 12 tuần — Phase 0
+
+Đây là trang điều hướng hằng ngày của Phase 0: mở đầu mỗi buổi để biết tuần này phải xong gì, làm xong việc nào thì sửa `- [ ]` thành `- [x]` rồi commit — mỗi lần tick là một commit, và commit chính là bằng chứng. Lý thuyết, đề bài và quy trình chi tiết nằm ở các trang được link; trang này chỉ trả lời một câu hỏi: **hôm nay làm gì**.
+
+## Bảng 12 tuần
+
+Tổng ~140h. Giờ mỗi tuần là giờ *thực học*, đã tính cả kata warm-up và nghi thức cuối buổi.
+
+| Tuần | Trọng tâm | Giờ | Trang cần mở |
+|---|---|---|---|
+| 1 | Test đầu vào · setup · Kotlin cơ bản (4.1–4.2) · git CLI ngày 1 | 12 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Tổng quan Phase 0](/phase-0) |
+| 2 | Null-safety (4.3) · Error Zoo · kata hằng ngày | 12 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Meta-skills](/phase-0/meta-skills) |
+| 3 | Modeling: data/sealed/when (4.4) · tuần Debugger · Bug Hunt 1 | 12 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Meta-skills](/phase-0/meta-skills) |
+| 4 | Collections I (4.5, "mỗi bài hai lần") · drill phân rã 1 · Git Disaster Recovery | 12 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Meta-skills](/phase-0/meta-skills) |
+| 5 | Collections II · JUnit nhập môn · Tier 2 bài 1–2 · benchmark lần 1 | 13 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Bài tập](/phase-0/bai-tap) |
+| 6 | Functions nâng cao + scope (4.6) · Tier 2 bài 3 · Android field trip 3h | 13 | [Kotlin Core II](/phase-0/kotlin-core-2) · [Bài tập](/phase-0/bai-tap) |
+| 7 | Project 1 "Sổ Chi Tiêu CLI" trọn tuần | 12 | [Hai project](/phase-0/projects) |
+| 8 | Generics + exceptions (4.7) · OOP thực dụng (4.8) · Bug Hunt 2 · benchmark lần 2 | 12 | [Kotlin Core II](/phase-0/kotlin-core-2) · [Meta-skills](/phase-0/meta-skills) |
+| 9 | Coroutines nhập môn (4.9) · thử thách tự học không tutorial | 12 | [Kotlin Core II](/phase-0/kotlin-core-2) · [Meta-skills](/phase-0/meta-skills) |
+| 10 | Project 2: ôn tổng hợp (4.10) + BACKLOG + walking skeleton | 12 | [Hai project](/phase-0/projects) |
+| 11 | Project 2: build các feature chính | 12 | [Hai project](/phase-0/projects) |
+| 12 | Project 2: **tuần AI-free** — hoàn thiện, test, README, demo + vấn đáp | 12 | [Hai project](/phase-0/projects) · [Tốt nghiệp](/phase-0/tot-nghiep) |
+
+Tuần 10–12 là một khối liền **tổng 36h** cho Project 2 capstone. Tuần 7 và tuần 10–12 không có nội dung mới — đó là chủ đích, không phải tuần "nhẹ".
+
+## ⚠️ Nếu Phase 0 của bạn là 10 tuần hoặc 8 tuần
+
+Độ dài Phase 0 do **điểm test đầu vào** quyết định: 0–8 điểm là 12 tuần · 9–16 là 10 tuần · 17–24 là 8 tuần. Nguyên tắc chung khi rút ngắn: **nén phần học Kotlin cơ bản, không đụng vào project và các bài đo lường.**
+
+**Cấm bỏ trong mọi biến thể:**
+
+- Cả 2 project — không ai được bỏ, kể cả điểm 24/24
+- Benchmark 2 lần (CSV → `groupBy` → báo cáo) và FizzBuzz đo lại — số liệu tiến bộ là thứ giữ bạn ở lại lộ trình
+- Bug Hunt 2 lần, Error Zoo, Git Disaster Recovery
+- Friday Rebuild hằng tuần và nghi thức 20 phút cuối buổi (checklist ở cuối trang này)
+- Tuần cuối của Project 2 **AI-free tuyệt đối**
+- Android field trip — vẫn đúng 1 buổi 3h, không hơn
+
+**Biến thể 10 tuần (9–16 điểm):** câu nào trong test đạt 2 điểm thì module tương ứng học *lướt* — làm ngay bài tự kiểm cuối module, đạt thì chỉ làm bài tập rồi qua, không đọc lại lý thuyết. Cách nén đề xuất: gộp tuần 1–2 thành một tuần (nếu fluency và null-safety đã vững), gộp tuần 8 vào tuần 9. Tuần 7 (Project 1) và tuần 10–12 (Project 2, co còn 10 tuần thì là 3 tuần cuối) giữ nguyên.
+
+**Biến thể 8 tuần (17–24 điểm):** nén toàn bộ Kotlin cơ bản, vào project sớm. Mapping đề xuất — điều chỉnh theo module nào bạn qua được bài tự kiểm:
+
+| Tuần | Nội dung |
+|---|---|
+| 1 | Test đầu vào · setup · 4.1–4.2 lướt · git CLI · Error Zoo bắt đầu |
+| 2 | 4.3–4.4 (tự kiểm trước, trượt mới học đủ) · tuần Debugger · Bug Hunt 1 |
+| 3 | 4.5 Collections trọn — module nặng nhất, **không được lướt** · JUnit · benchmark lần 1 |
+| 4 | 4.6 · Tier 2 · Android field trip 3h |
+| 5 | Project 1 "Sổ Chi Tiêu CLI" trọn tuần |
+| 6 | 4.7–4.9 · Bug Hunt 2 · benchmark lần 2 · thử thách tự học |
+| 7 | Project 2: BACKLOG + build |
+| 8 | Project 2: hoàn thiện — **AI-free** |
+
+Riêng **câu 12 (mức phụ thuộc AI) dưới 2 điểm**: áp bộ luật AI nghiêm nhất trong [Hệ thống học](/he-thong-hoc), bất kể tổng điểm và độ dài phase.
+
+## Chi tiết từng tuần
+
+Mỗi tuần: mục tiêu một câu → việc phải xong (tick vào file này rồi commit) → bằng chứng cuối tuần. Chi tiết đề bài luôn nằm ở trang được link, không nằm ở đây.
+
+### Tuần 1 — Khởi động và sản phẩm đầu tiên
+
+Mục tiêu: cuối tuần có một chương trình Kotlin **của mình 100%** chạy từ terminal, và biết chính xác Phase 0 của mình dài bao nhiêu tuần.
+
+- [ ] Làm bài test đầu vào (~2h, không AI, không Google), chấm điểm, chốt độ dài Phase 0 — xem [Tổng quan Phase 0](/phase-0)
+- [ ] Cài IntelliJ IDEA Community + JDK 21+, chạy Hello World từ IDE **và từ terminal** — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Tắt hoàn toàn AI autocomplete/Copilot trong IDE, chụp màn hình settings làm bằng chứng — luật trong [Hệ thống học](/he-thong-hoc)
+- [ ] Học module 4.1 + 4.2 (`val`/`var`, kiểu, hàm), làm bài tự kiểm 15 phút cuối module — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Tạo repo `kotlin-mastery` bằng git **CLI** (cấm GUI), commit mỗi buổi từ hôm nay
+- [ ] Bắt đầu kata Tier 1: mỗi buổi 1 bài warm-up 10 phút, AI-free — [Bài tập](/phase-0/bai-tap)
+- [ ] Làm FizzBuzz biến thể có bấm giờ — lần 1: ____ phút *(sẽ đo lại tuần 5)*
+
+**Bằng chứng cuối tuần:** điểm test đầu vào ghi trong `PROGRESS.md` · screenshot đã tắt Copilot · chương trình tuần 1 chạy từ terminal · ≥4 ngày có commit.
+
+### Tuần 2 — Null-safety và Error Zoo
+
+Mục tiêu: hết sợ màn hình đỏ — đọc được stack trace theo quy trình 4 bước và bắt đầu bộ sưu tập lỗi của riêng mình.
+
+- [ ] Học module 4.3 Null-safety, làm cả 2 bài tập (refactor 40 dòng kiểu Java, model form đăng ký) — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Nhờ AI soạn 15 chương trình lỗi cài sẵn cho Error Zoo *(đây là cách dùng AI đúng luật)* — quy trình ở [Meta-skills](/phase-0/meta-skills)
+- [ ] Thuần hoá ≥5 "con thú" Error Zoo (20 phút/buổi), mỗi con ghi 3 dòng vào `notes/ERRORS.md`
+- [ ] Áp quy trình đọc lỗi 4 bước cho **mọi** lỗi gặp trong tuần — [Meta-skills](/phase-0/meta-skills)
+- [ ] Kata Tier 1 mỗi buổi, tiếp tục — [Bài tập](/phase-0/bai-tap)
+
+**Bằng chứng cuối tuần:** `notes/ERRORS.md` có ≥5 entry · bài refactor null không còn chỗ nào dùng `!!`.
+
+### Tuần 3 — Modeling và tuần Debugger
+
+Mục tiêu: model được bài toán thật bằng `data class` + `sealed class`, và chuyển từ println debug sang debugger.
+
+- [ ] Học module 4.4, làm 3 bài (trạng thái đơn hàng shipper, đèn giao thông, refactor `int status`) — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Buổi học debugger 2h: breakpoint, Step Over/Into/Out, Watch, conditional breakpoint — [Meta-skills](/phase-0/meta-skills)
+- [ ] Bug Hunt Kata 1: 5 bug giấu sẵn, **cấm println, chỉ dùng debugger**, ghi giả thuyết trước khi sửa — kết quả: ____/5 trong ____ phút
+- [ ] Hoàn thành Error Zoo 15/15, `notes/ERRORS.md` đủ 15 entry
+- [ ] Bài tự kiểm module 4.4: nhận mô tả nghiệp vụ 5 câu, model trong 15 phút — thực tế: ____ phút
+
+**Bằng chứng cuối tuần:** kết quả Bug Hunt 1 ghi vào `PROGRESS.md` · từ tuần này mọi bug đều debug bằng breakpoint, không rắc println.
+
+### Tuần 4 — Collections I và phân rã bài toán
+
+Mục tiêu: bắt đầu chuyển hệ tư duy từ vòng lặp sang transform — và chấp nhận rằng tuần này sẽ thấy chững *(plateau tuần 3–5 nằm trong giáo án, không phải dấu hiệu bạn không hợp nghề)*.
+
+- [ ] Học Collections I theo luật **"mỗi bài hai lần"**: giải bằng vòng lặp trước, viết lại bằng operators, đặt hai bản cạnh nhau — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Làm các bài collections bối cảnh VN (sao kê CSV, điểm sinh viên, tần suất từ Truyện Kiều) — đề ở [Bài tập](/phase-0/bai-tap)
+- [ ] Decomposition drill 1: "Tool chia tiền ăn nhóm" — chỉ nộp bản phân rã IOSTV 30 phút, **không code** — quy trình ở [Meta-skills](/phase-0/meta-skills)
+- [ ] Git Disaster Recovery 1.5h: tự thoát cả 5 kịch bản (commit nhầm, amend, revert vs reset, conflict, reflog) — [Meta-skills](/phase-0/meta-skills)
+- [ ] Docs Quest tuần này (30–45 phút, chỉ dùng kotlinlang.org) — [Meta-skills](/phase-0/meta-skills)
+
+**Bằng chứng cuối tuần:** các cặp bài loop-vs-operators nằm cạnh nhau trong repo · bản phân rã đạt đủ tiêu chí (3 ví dụ I/O, có data class, ≥10 việc) · đã thoát 5/5 kịch bản git.
+
+### Tuần 5 — Collections II, test đầu tiên, và số liệu đầu tiên
+
+Mục tiêu: viết test có chủ đích và có con số benchmark đầu tiên để sau này so với chính mình.
+
+- [ ] Học Collections II: `groupBy`, `associateBy`, `partition`, `fold`/`reduce` — từ tuần này được đi thẳng vào operators — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] JUnit 5 nhập môn + công thức test 3 tầng (happy/edge/error). Luật từ nay: mọi hàm logic thuần có ≥1 test
+- [ ] Tier 2 bài 1: CLI thống kê sao kê ngân hàng — [Bài tập](/phase-0/bai-tap)
+- [ ] Tier 2 bài 2: máy tính tiền trà sữa — viết `BACKLOG.md` theo IOSTV **trước khi code**
+- [ ] **Benchmark lần 1**: bài "đọc CSV → `groupBy` → in báo cáo" có bấm giờ — thời gian: ____ phút *(đo lại tuần 8)*
+- [ ] Kata "đổi số tiền thành chữ" — bài khó nhất Tier 1, dành cho tuần này — [Bài tập](/phase-0/bai-tap)
+- [ ] Làm lại FizzBuzz biến thể — lần 2: ____ phút, so với tuần 1
+- [ ] Decomposition drill 2: "Tool nhắc hạn đóng tiền phòng trọ" — chỉ nộp bản phân rã
+
+**Bằng chứng cuối tuần:** hai con số FizzBuzz cạnh nhau trong `PROGRESS.md` · benchmark lần 1 đã ghi · các hàm logic tuần này đều có test.
+
+### Tuần 6 — Functions nâng cao và một buổi nếm thử Android
+
+Mục tiêu: giải mã trailing lambda (chìa khoá đọc Compose sau này) và cầm trong tay cái app đầu tiên trên điện thoại thật.
+
+- [ ] Học module 4.6: lambda, higher-order, extension functions, scope functions *(chỉ dùng `let` và `apply`)* — [Kotlin Core II](/phase-0/kotlin-core-2)
+- [ ] Làm 3 bài module 4.6: extension `locTheoThang`, hàm `retry` higher-order, đọc 20 dòng Compose thật chỉ ra trailing lambda
+- [ ] Tier 2 bài 3: Flashcard từ vựng CLI bản nhỏ — [Bài tập](/phase-0/bai-tap)
+- [ ] Decomposition drill 3: "Quản lý tủ quần áo cho thuê chụp ảnh" — chỉ nộp bản phân rã
+- [ ] **Android field trip** (3h, cuối tuần, kịch bản đóng sẵn): cài Android Studio, chạy template Compose, đổi text/màu, thêm Button đếm, **cài lên điện thoại thật** — rồi đóng Android Studio đến Phase 1
+- [ ] Demo 5 phút một bài Tier 2 cho một người không biết code
+
+**Bằng chứng cuối tuần:** app đếm số chạy trên điện thoại của bạn · Android Studio đã đóng — phần thưởng tiếp theo là [Phase 1](/phase-1), mở khoá bằng tốt nghiệp P0.
+
+### Tuần 7 — Project 1: Sổ Chi Tiêu CLI
+
+Mục tiêu: lần đầu tiên tự tay đi từ đề bài đến một chương trình hoàn chỉnh, trọn một tuần chỉ làm một việc.
+
+- [ ] Viết `BACKLOG.md` theo IOSTV, nộp **trước dòng code đầu tiên** — đề đầy đủ ở [Hai project](/phase-0/projects)
+- [ ] Walking skeleton chạy được ngay buổi đầu (menu in ra được, dù "chưa làm gì")
+- [ ] Build từng feature theo BACKLOG — mỗi feature một branch `feature/ten-viec`, `git diff` trước mọi commit
+- [ ] Viết ≥8 test, chạy pass — nhập bậy không crash (chữ vào ô số, ngày 32/13, xoá file giữa chừng)
+- [ ] README 5 mục + chạy ktlint lần đầu
+- [ ] Demo 5 phút cho một người không biết code
+
+**Bằng chứng cuối tuần:** `git log` ≥15 commit có nghĩa trên ≥4 branch · người lạ đọc `git log --oneline` kể lại được quá trình build.
+
+### Tuần 8 — Generics, OOP thực dụng, và đo lại chính mình
+
+Mục tiêu: xử lý lỗi như dữ liệu (`Result`), tách được code thành lớp có chủ đích, và có cặp số liệu chứng minh mình đã nhanh hơn.
+
+- [ ] Học module 4.7: generics đọc-hiểu, exception, `Result` — bài tự kiểm `docFileGiaoDich` 45 phút — [Kotlin Core II](/phase-0/kotlin-core-2)
+- [ ] Học module 4.8: composition over inheritance, delegation `by`, `object` — [Kotlin Core II](/phase-0/kotlin-core-2)
+- [ ] Bài tự kiểm 4.8: tách Project 1 thành các file model / logic / storage / main mà không đổi hành vi
+- [ ] Bug Hunt Kata 2: ____/5 trong ____ phút — so với Bug Hunt 1 tuần 3
+- [ ] **Benchmark lần 2**: bài CSV-`groupBy` — thời gian: ____ phút, đặt cạnh số của tuần 5
+- [ ] Decomposition drill 4: "Tool tra cứu điểm chuẩn đại học từ file dữ liệu" — chỉ nộp bản phân rã
+
+**Bằng chứng cuối tuần:** hai cặp số (Bug Hunt, benchmark) nằm trong `PROGRESS.md` — khi tự nghi ngờ, mở số ra xem.
+
+### Tuần 9 — Coroutines nhập môn và tự học không tutorial
+
+Mục tiêu: hết sợ hai thứ — từ khoá `suspend` và một thư viện không có tutorial tiếng Việt.
+
+- [ ] Học module 4.9 (mức "mở cửa, không bước sâu"): `runBlocking`, `launch`, `delay`, `async`/`await` — giả lập tải 3 "API" tuần tự vs đồng thời, đo thời gian — [Kotlin Core II](/phase-0/kotlin-core-2)
+- [ ] Thử thách tự học: chọn 1 trong `kotlinx-serialization` / `java.time` / `kotlinx-cli`, build tool nhỏ ~6h **chỉ dùng docs chính thức + source** — quy trình đọc docs ở [Meta-skills](/phase-0/meta-skills)
+- [ ] Viết `LEARNING.md`: bắt đầu từ đâu, bế tắc chỗ nào, gỡ bằng cách nào — đây là bằng chứng kỹ năng tự học
+- [ ] Bắt đầu module 4.10: làm lại 2–3 kata cũ có bấm giờ, ghi số
+- [ ] Đọc lại danh sách 10 câu vấn đáp tốt nghiệp *(công khai từ tuần 1)* và tự trả lời nháp — [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)
+
+**Bằng chứng cuối tuần:** tool tự học chạy được + `LEARNING.md` đã commit.
+
+### Tuần 10 — Project 2: phân rã và khung xương
+
+Mục tiêu: chốt xong ôn tập và bắt đầu capstone bằng một bản phân rã tử tế — chưa vội code nhiều.
+
+- [ ] Hoàn thành module 4.10: đủ 5 kata cũ bấm giờ + mock vấn đáp 10 câu, ghi kết quả
+- [ ] Đọc kỹ đề + rubric 100 điểm của Project 2 "Flashcard Từ Vựng" — [Hai project](/phase-0/projects)
+- [ ] Viết `BACKLOG.md` theo IOSTV, nộp **trước khi code** — ≥12 việc, không việc nào ước quá 30 phút
+- [ ] Walking skeleton chạy được: menu vòng lặp + đọc file từ vựng
+- [ ] Chốt thư viện tự học sẽ dùng trong project (kotlinx-serialization là ứng viên tự nhiên)
+
+**Bằng chứng cuối tuần:** commit `BACKLOG.md` đứng **trước** commit code đầu tiên trong `git log`.
+
+### Tuần 11 — Project 2: build phần lõi
+
+Mục tiêu: các flow chính chạy hết — gọi API, spaced repetition, lưu tiến độ — trước khi bước vào tuần AI-free.
+
+- [ ] Gọi API dictionary miễn phí lấy nghĩa/phát âm — **mất mạng không crash**, xử lý có chủ đích
+- [ ] Cài thuật toán spaced repetition (SM-2 rút gọn) cho việc chọn từ ôn
+- [ ] Persistence: lưu và đọc lại tiến độ giữa 2 lần chạy, file hỏng xử lý tử tế
+- [ ] Viết ≥12 test cho core logic — test behavior, không test implementation
+- [ ] Feature dùng thư viện tự học không tutorial hoạt động trong project
+- [ ] Rà `git log` giữa tuần: có khớp thứ tự trong BACKLOG không, message có nghĩa không
+
+**Bằng chứng cuối tuần:** mọi flow chính chạy được · test xanh · zero `!!`, zero catch rỗng.
+
+### Tuần 12 — Tuần AI-free: hoàn thiện và tốt nghiệp
+
+Mục tiêu: một mình hoàn toàn — không AI, kể cả hỏi khái niệm — đưa Project 2 qua rubric và chốt tốt nghiệp Phase 0.
+
+- [ ] Cả tuần **AI-free tuyệt đối** — khi bí chỉ mở docs, `notes/ERRORS.md` và playbook của chính mình
+- [ ] Hoàn thiện: thử ≥5 loại input ác, file hỏng, mất mạng giữa chừng — không crash
+- [ ] README 5 mục hoàn chỉnh, người lạ chạy được trong 3 lệnh, git history sạch, tag `v1.0`
+- [ ] Tự chấm rubric 100 điểm: ____/100 — đạt khi ≥70 và không mục nào 0 — [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)
+- [ ] Demo 5 phút trôi chảy + vấn đáp 10 câu: ____/10
+- [ ] Rà 10 tiêu chí tốt nghiệp, tick từng mục — cần ≥8/10, mục 1–4 bắt buộc — [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)
+
+**Bằng chứng cuối tuần:** điểm rubric + kết quả vấn đáp trong `PROGRESS.md` · AI log 2 tuần cuối có **0 lần AI sinh code** · Friday Rebuild 3 tuần cuối đạt 3/3.
+
+## Lịch mẫu một tuần — tuần 5
+
+Áp cấu trúc này cho mọi tuần, chỉ thay nội dung. Nghỉ hẳn thứ Bảy.
+
+| Buổi | Nội dung |
+|---|---|
+| **T2** (2h) | 10' kata warm-up → 80' học Collections II (đọc guide + scratch file) → 20' nghi thức cuối buổi |
+| **T3** (2h) | 10' kata → 100' bài tập sao kê CSV (áp dụng hôm qua) → 10' commit + note |
+| **T4** (2h) | 10' kata → 30' Error Zoo / Docs Quest → 70' tiếp bài tập → 10' note |
+| **T5** (2h) | 10' kata → 100' Tier 2 (trà sữa) phần 1 → 10' note |
+| **T6** (2h) | **30' Friday Rebuild** → 60' hoàn thiện Tier 2 → 30' tổng kết tuần: đọc AI log, cập nhật `PROGRESS.md` |
+| **CN** (2–3h) | Bài 1 buổi trọn vẹn hoặc phần project + weekly review với AI. **Nghỉ hẳn T7** |
+
+Friday Rebuild là nghi thức phát hiện phụ thuộc AI: viết lại từ trí nhớ một hàm mình đã viết trong tuần, 15 phút — chi tiết ở [Meta-skills](/phase-0/meta-skills). Không viết lại được là tín hiệu đỏ, tuần sau siết luật.
+
+## 🏁 Nghi thức 20 phút cuối mỗi buổi
+
+Chi tiết nhỏ nhưng quyết định: nó giúp buổi sau vào việc trong 2 phút thay vì mất 30 phút nhớ lại mình đang ở đâu. Chạy checklist này **mỗi buổi**, không có ngoại lệ:
+
+- [ ] `git diff` → commit, dù dở dang — WIP commit vẫn hơn không commit
+- [ ] Cập nhật hoặc tạo 1 note trong `notes/` của repo project
+- [ ] Tạo tối đa 5 flashcard mới, nếu có fact đáng nhớ
+- [ ] Viết journal entry 5 dòng: DID · AHA · MURKY · FLASH · NEXT
+- [ ] Dòng `NEXT:` phải cụ thể — **mở file nào, làm gì** — đây là đòn bẩy lớn nhất của người học buổi tối
+
+## → Tiếp theo
+
+Trước khi bắt đầu tuần 1, đọc [Meta-skills](/phase-0/meta-skills) để nắm quy trình IOSTV và cách đọc lỗi — đó là phần cốt lõi thật sự của Phase 0. Lý thuyết Kotlin bắt đầu tại [Kotlin Core I](/phase-0/kotlin-core-1), tiến độ tổng ghi ở [Tiến độ](/progress).

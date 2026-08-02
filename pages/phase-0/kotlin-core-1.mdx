@@ -1,0 +1,383 @@
+# Kotlin Core I — module 4.1–4.5
+
+Trang này là giáo trình chi tiết cho nửa đầu Kotlin Core: từ setup đến Collections, 40h trong tổng ~72h của Phase 0. Mở nó vào đầu mỗi buổi INPUT của tuần 1–5 và học đúng thứ tự — mỗi module đứng trên vai module trước.
+
+| Module | Nội dung | Giờ | Tuần |
+|---|---|---|---|
+| 4.1 | Setup + "Kotlin khác Java/C chỗ nào" | 4h | 1 |
+| 4.2 | `val`/`var`, kiểu, hàm | 6h | 1 |
+| 4.3 | Null-safety — cách nghĩ mới | 8h | 2 |
+| 4.4 | `data class`, `enum`, `sealed class` + `when` | 8h | 3 |
+| 4.5 | Collections + functional operators | 14h | 4–5 |
+
+Module 4.6–4.10 nằm ở [Kotlin Core II](/phase-0/kotlin-core-2). Kata warm-up 10 phút mỗi buổi chạy song song từ tuần 1 — đề ở [Bài tập & drill](/phase-0/bai-tap). Bài tập trong trang này là bài tập riêng của từng module: ngắn, bám sát khái niệm vừa học.
+
+---
+
+## 4.1. Setup + "Kotlin khác Java/C chỗ nào" — 4h, tuần 1
+
+### 🎯 Sau module này bạn làm được
+
+- [ ] Tạo project Kotlin trong IntelliJ IDEA Community và chạy cùng một chương trình bằng 2 đường: nút Run và lệnh terminal
+- [ ] Mở scratch file và kiểm chứng một dòng code bất kỳ trong dưới 30 giây
+- [ ] Kể được 4 khác biệt của Kotlin so với Java/C, kèm lý do thiết kế của từng cái
+
+### 🌱 Vì sao module này tồn tại
+
+Bạn không cần ai dạy "biến là gì" — module này làm hai việc khác. Một: dựng môi trường mà bạn *hiểu*, không phải môi trường "bấm nút là chạy" — chạy được từ terminal nghĩa là biết nút Run thực chất gọi gì hộ mình. Hai: treo Kotlin vào móc C/Java có sẵn trong đầu bạn — học ngôn ngữ mới nhanh nhất bằng câu hỏi "khác chỗ nào, và vì sao họ chọn khác".
+
+### Nội dung cốt lõi
+
+- **Công cụ:** IntelliJ IDEA Community + JDK 21+ (đã cài từ Tuần 0 — xem [Lịch 12 tuần](/phase-0/lich-12-tuan)). AI autocomplete/Copilot **tắt hoàn toàn** — kiểm tra lại trước buổi đầu tiên.
+- **Chạy 2 đường:** từ IDE và từ terminal. Terminal không phải nghi thức hành xác: nó phá hộp đen "IDE là ma thuật" — về sau mọi CI, mọi server đều chạy code bằng lệnh, không bằng nút.
+- **Scratch file:** phòng thí nghiệm cá nhân. Mọi câu "không biết dòng này ra gì" trong 12 tuần tới đều được trả lời ở đây — bằng thí nghiệm, không phải bằng cách hỏi AI.
+- **Tour khác biệt** — mỗi thứ gắn một lý do:
+
+| Khác biệt | Vì sao Kotlin chọn vậy |
+|---|---|
+| Không dấu chấm phẩy | Compiler tự biết câu kết thúc ở đâu — bớt nhiễu, không mất gì |
+| Type inference | Kiểu vẫn tĩnh, vẫn được kiểm tra lúc compile — compiler chỉ tự *suy* thay vì bắt bạn *gõ* |
+| String template `"Chào $name"` | Nối chuỗi bằng `+` là ổ lỗi và khó đọc — template diễn đạt thẳng ý định |
+| `fun` là công dân hạng nhất | Không phải gói mọi thứ vào class như Java — hàm đứng một mình được |
+| Mọi thứ là expression | `if`/`when` trả về giá trị — bớt biến tạm `var`, dữ liệu chảy một chiều |
+
+```kotlin
+val canhBao = if (pin < 20) "Sạc ngay" else "Ổn"
+println("Pin $pin% — $canhBao")
+```
+
+*Đóng trang này. Gõ lại đoạn trên từ trí nhớ. Gõ lại không nổi = chưa hiểu, đọc lại.*
+
+### ⚠️ Bẫy
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Viết "Java không dấu chấm phẩy" | 4 năm thói quen ở trường | Khai báo kiểu tường minh mọi nơi, nối chuỗi bằng `+`, `if` chỉ dùng làm câu lệnh |
+| Cả buổi setup không viết dòng code nào | Chỉnh theme/plugin cho cảm giác "đang làm việc" | Hết 2h đầu chưa có chương trình nào chạy |
+| Chỉ chạy bằng nút Run | Terminal lạ và chậm hơn | Không trả lời được "nút Run thực chất làm gì" |
+
+### 🛠️ Bài tập
+
+- [ ] **Hai đường chạy** — chạy một chương trình in một dòng bằng nút Run, rồi bằng terminal; ghi lệnh terminal vào note của bạn. Đạt khi: hôm sau gõ lại được lệnh mà không cần mở note. Ước lượng: 30 phút
+- [ ] **5 dự đoán scratch** — với mỗi biểu thức `10 / 3`, `"10" + 1`, `7 % 3`, `1_000_000`, `"a" + 1 + 2`: viết dự đoán ra giấy trước, chạy sau, khoanh chỗ đoán sai. Đạt khi: giải thích được từng chỗ mình đoán sai. Ước lượng: 20 phút
+- [ ] **Kotlin Koans — phần Introduction** — bắt đầu nhịp 5–10 bài/ngày, duy trì suốt tuần 1–3. Ước lượng: 20 phút/ngày
+
+### 🏁 Bài tự kiểm
+
+- [ ] Chương trình nhập tên + năm sinh, in tuổi và câu chào — viết và chạy **từ terminal**, trong 15 phút. Thời gian thực tế: ____ phút
+
+### 📚 Đọc gì
+
+- [Basic syntax](https://kotlinlang.org/docs/basic-syntax.html) — skim lượt 1, quay lại tra khi cần
+- [Get started with Kotlin/JVM](https://kotlinlang.org/docs/jvm-get-started.html)
+- [Kotlin command-line compiler](https://kotlinlang.org/docs/command-line.html)
+- [Kotlin Koans](https://kotlinlang.org/docs/koans.html)
+
+### Explain-back
+
+Tự trả lời thành lời của bạn — trong buổi review tôi sẽ hỏi xoáy thêm 2 tầng "tại sao":
+
+1. "Mọi thứ là expression" nghĩa là gì, và nó làm giảm loại biến nào trong code của bạn?
+2. Nút Run của IntelliJ thực chất làm những bước gì mà terminal bắt bạn tự làm?
+
+---
+
+## 4.2. `val`/`var`, kiểu, hàm — 6h, tuần 1
+
+### 🎯 Sau module này bạn làm được
+
+- [ ] Viết code mặc định bằng `val`, chỉ chuyển `var` khi compiler bắt — và nói được vì sao thứ tự đó, không phải ngược lại
+- [ ] Vẽ sơ đồ ô nhớ + mũi tên giải thích một biến tham chiếu bất kỳ
+- [ ] Thay một cụm 3 hàm overload kiểu Java bằng 1 hàm dùng default + named arguments
+
+### 🌱 Vì sao module này tồn tại
+
+Ở trường, "biến sinh ra để sửa" là mặc định — Kotlin lật ngược: **bất biến là mặc định, thay đổi là ngoại lệ phải khai báo**. Lý do không phải thẩm mỹ: code ít trạng thái thay đổi = ít chỗ để bug trốn = dễ debug. Mỗi `var` là một thứ bạn phải theo dõi trong đầu suốt vòng đời của nó; mỗi `val` là một thứ gán xong được phép quên. Module này còn cài bài học nền móng nhất của JVM: tham chiếu và giá trị khác nhau chỗ nào.
+
+### Nội dung cốt lõi
+
+| Từ khoá | Nghĩa chính xác | Hay bị hiểu nhầm thành |
+|---|---|---|
+| `val` | Cái **tên** chỉ gán một lần — không trỏ đi chỗ khác được | "Giá trị bất biến tuyệt đối" |
+| `var` | Cái tên được phép trỏ sang thứ khác | "Cách khai báo bình thường" |
+
+- **`val` khoá cái tên, không khoá cái ruột.** `val list = mutableListOf(1, 2)`: tên `list` bị đóng đinh vào một object, nhưng object đó tự nó cho phép `add`. Muốn ruột cũng đóng: dùng `listOf` (read-only). Đây là reference vs value — kiến thức con trỏ C của bạn dùng lại được nguyên xi.
+- **Type inference:** để compiler suy kiểu trong thân hàm; khai báo kiểu tường minh cho giá trị public hoặc khó đoán — signature là thứ người khác đọc.
+- **Hàm:** expression body cho hàm một biểu thức; default arguments + named arguments — một hàm thay cả chùm overload Java, và lời gọi tự tài liệu hoá chính nó.
+
+```kotlin
+fun taoVe(hang: String, gia: Long, giamGia: Int = 0): Long =
+    gia * (100 - giamGia) / 100
+
+val ve = taoVe(hang = "VIP", gia = 200_000)
+```
+
+*Đóng trang này. Gõ lại từ trí nhớ — rồi giải thích vì sao không cần viết 2 hàm `taoVe`.*
+
+### ⚠️ Bẫy
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Tin rằng `val` + `MutableList` là bất biến | Nhầm "không gán lại được" với "không sửa được" | Ngạc nhiên khi `add` chạy ngon lành |
+| Khai báo `var` theo quán tính | Thói quen C/Java | IDE gạch vàng "Variable is never modified"; file có `var` nhiều hơn `val` |
+| Suy diễn "inference = kiểu động" | Trông giống Python/JS | Bất ngờ khi compiler báo type mismatch dù "mình có khai báo kiểu đâu" |
+
+### 🛠️ Bài tập
+
+- [ ] **Đánh thức bài quen** — chọn một bài bạn từng làm bằng C/Java ở trường (tính điểm TB, xử lý mảng…), viết lại bằng Kotlin với luật: chỉ `val`; chỗ nào buộc phải `var` thì ghi 1 dòng comment lý do. Đạt khi: chạy đúng, số `var` đếm trên một bàn tay và cái nào cũng có lý do. Ước lượng: 45 phút
+- [ ] **Một hàm thay ba overload** — viết hàm 4 tham số (2 có default), gọi nó theo 4 cách khác nhau bằng named arguments. Đạt khi: đọc mỗi lời gọi hiểu ngay nghĩa, không cần mở signature. Ước lượng: 20 phút
+- [ ] **Hai tên, một object** — scratch file: hai `val` cùng trỏ một `mutableListOf`, sửa qua tên này, in qua tên kia. Viết dự đoán trước khi chạy. Đạt khi: kết quả không làm bạn ngạc nhiên — hoặc nếu có, bạn sửa lại được mental model và nói được sửa chỗ nào. Ước lượng: 15 phút
+
+### 🏁 Bài tự kiểm
+
+- [ ] Vẽ hình trên giấy (không gõ code) giải thích vì sao `val list = mutableListOf(1, 2)` vẫn `add` được: ô nhớ, mũi tên tham chiếu, cái gì bị khoá, cái gì không — 10 phút. Đạt khi một người không biết Kotlin nhìn hình hiểu được. Thời gian thực tế: ____ phút
+
+### 📚 Đọc gì
+
+- [Basic types](https://kotlinlang.org/docs/basic-types.html)
+- [Functions — default arguments](https://kotlinlang.org/docs/functions.html#default-arguments) — đọc cả phần named arguments ngay dưới
+- [Idioms](https://kotlinlang.org/docs/idioms.html) — lướt để nghe "giọng" Kotlin
+
+### Explain-back
+
+1. `val` khoá cái gì và không khoá cái gì? Vì sao Kotlin không khoá luôn cả ruột cho an toàn?
+2. Vì sao code nhiều `val` dễ debug hơn nhiều `var`? Tầng hai: khi đọc code lạ, một dòng `val` cho bạn quyền *bỏ qua* điều gì?
+3. Default arguments giải quyết cái giá nào của overload kiểu Java?
+
+---
+
+## 4.3. Null-safety — 8h, tuần 2
+
+### 🎯 Sau module này bạn làm được
+
+- [ ] Refactor 40 dòng code kiểu Java đầy `if (x != null)` lồng nhau thành bản idiomatic, zero `!!`
+- [ ] Nhìn một signature bất kỳ và nói ngay: tham số nào hứa "chắc chắn có", cái nào thú nhận "có thể không"
+- [ ] Thiết kế hàm mới với hợp đồng null có chủ đích — nullable ở biên, non-null trong lõi
+
+### 🌱 Vì sao module này tồn tại
+
+Đây không phải cú pháp mới — là **cách nghĩ mới**. Ở Java/C, "biến này có thể null không?" là câu bạn phải nhớ trong đầu, và trả giá lúc runtime bằng NPE hoặc segfault. Kotlin chuyển câu hỏi đó vào hệ thống kiểu: từ nay **kiểu là bản hợp đồng** — `String` là lời hứa "chắc chắn có", `String?` là lời thú nhận "có thể không", và compiler là công chứng viên không cho ai xé hợp đồng. Hệ quả lớn hơn mọi toán tử: **thiết kế hàm trở thành thiết kế hợp đồng.**
+
+### Nội dung cốt lõi
+
+**Đọc kiểu như đọc hợp đồng.** Signature `fun timKhachHang(id: String): KhachHang?` nói bốn điều mà không cần một dòng comment: id bắt buộc phải có; kết quả có thể không tồn tại; người gọi *bị ép* xử lý trường hợp không tồn tại; hàm không bao giờ phải phòng thủ id null. Ở Java, cả bốn điều đó nằm trong Javadoc — nếu ai đó nhớ viết, và nếu người gọi nhớ đọc.
+
+Bộ công cụ — học theo nghĩa, không học theo mặt chữ:
+
+| Công cụ | Nó nói gì |
+|---|---|
+| `?.` | "Nếu có thì đi tiếp, không thì cả cụm là null" — truyền sự vắng mặt xuôi dòng |
+| `?:` | "Kế hoạch B" — điểm kết thúc của sự vắng mặt: giá trị mặc định hoặc thoát sớm |
+| `!!` | "Tôi thề nó không null, sai thì crash" — lời thừa nhận thất bại trong 95% trường hợp |
+| smart cast | Compiler tự nhớ điều bạn đã kiểm tra: sau `if (x != null)`, trong block đó `x` là kiểu non-null |
+| `let` | Biến đổi giá trị nullable khi đi kèm `?.` — học sâu ở module 4.6, giờ chỉ cần đọc hiểu |
+| `lateinit` | "Hứa gán trước khi dùng" — cần biết để đọc code Android ở Phase 1, khuyên tránh trong code của bạn |
+
+**Nguyên tắc thiết kế quan trọng nhất module:** xử lý null ở **biên** (đọc input, đọc file, parse) để **lõi logic** chỉ làm việc với kiểu non-null. Hàm lõi nhận toàn tham số `?` rồi check null ở dòng đầu là hàm đẩy trách nhiệm cho mọi người gọi — hợp đồng tồi.
+
+```kotlin
+val dong: String? = docDongDauTien(duongDan)   // biên: có thể không có gì
+val doDai = dong?.trim()?.length ?: 0          // kế hoạch B tường minh
+```
+
+*Đóng trang này. Gõ lại từ trí nhớ, giải thích từng ký hiệu `?.` và `?:` đang nói gì.*
+
+### ⚠️ Bẫy
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Rắc `!!` cho hết gạch đỏ | Muốn compiler im nhanh nhất | Grep mã nguồn ra `!!` — bị cấm tuyệt đối trong project, chấm bài sẽ grep |
+| Chuỗi `?.let` lồng 3–4 tầng | Tưởng "càng nhiều toán tử càng Kotlin" | Chính bạn đọc lại mất hơn 30 giây; một `if` thường ngắn và rõ hơn |
+| Khai báo mọi thứ nullable "cho an toàn" | Hiểu ngược: nullable không an toàn hơn, chỉ *trung thực* hơn — và bắt mọi người gọi trả phí check | Hàm nhận toàn tham số `?` rồi check null hết ở dòng đầu |
+
+### 🛠️ Bài tập
+
+- [ ] **Refactor 40 dòng if-null** — nhờ AI sinh 40 dòng Kotlin "giọng Java": `if (x != null)` lồng 3 tầng, biến tạm, return null rải rác *(sinh đề là việc AI được phép làm — viết lời giải thì không)*. Refactor thành idiomatic. Đạt khi: hành vi giữ nguyên; zero `!!`; mỗi dấu `?` còn lại trong signature đều nói đúng sự thật. Ước lượng: 60 phút
+- [ ] **Model form đăng ký** — họ tên + email bắt buộc, số điện thoại + địa chỉ optional. Viết `data class` *(dùng như cái hộp chứa field — học kỹ ở 4.4)* + hàm validate trả **danh sách lỗi**. Đạt khi: kiểu của từng field tự nói bắt buộc hay optional, không cần comment; nhập thiếu email nhận đúng lỗi; nhập đủ nhận danh sách rỗng. Ước lượng: 90 phút
+
+### 🏁 Bài tự kiểm
+
+- [ ] **Audit hợp đồng** — mở lại code bạn viết tuần 1, chọn 10 hàm/biến, với mỗi cái trả lời: "có thể null không, và kiểu có đang nói đúng điều đó không?" Sửa mọi chỗ kiểu đang nói dối — 15 phút. Số chỗ phải sửa: ____ · Thời gian thực tế: ____ phút
+
+### 📚 Đọc gì
+
+- [Null safety](https://kotlinlang.org/docs/null-safety.html) — trang quan trọng nhất tuần này, đọc 3 lượt theo đúng quy trình đọc docs
+- [Type checks and casts](https://kotlinlang.org/docs/typecasts.html) — phần smart cast
+- [Scope functions](https://kotlinlang.org/docs/scope-functions.html#let) — chỉ đọc section `let`, phần còn lại thuộc module 4.6
+
+### Explain-back
+
+1. Vì sao nói `String?` là "lời thú nhận" còn `String` là "lời hứa"? Ai bị ép giữ lời hứa, và ép vào lúc nào — compile hay runtime?
+2. `!!` đúng nghĩa đen làm gì? Vì sao dùng nó gần như luôn là thua — và 5% trường hợp còn lại trông như thế nào?
+3. Vì sao dồn xử lý null ra biên làm lõi chương trình dễ đọc hơn? Tầng hai: điều đó liên quan gì đến việc viết test cho hàm lõi sau này?
+
+---
+
+## 4.4. `data class`, `enum`, `sealed class` + `when` — 8h, tuần 3
+
+### 🎯 Sau module này bạn làm được
+
+- [ ] Nhận mô tả nghiệp vụ 5 câu → model thành data/sealed class trong 15 phút
+- [ ] Refactor một class kiểu `int status` + hằng số 0/1/2/3 thành sealed class mà không đổi hành vi
+- [ ] Thêm một trạng thái mới vào hệ thống và để compiler chỉ ra **mọi** chỗ cần sửa — không dò bằng trí nhớ
+
+### 🌱 Vì sao module này tồn tại
+
+Đây là nơi OOP thi cử được thay bằng OOP thật: **class để mô tả dữ liệu và trạng thái của bài toán, không phải để vẽ sơ đồ kế thừa.** Câu hỏi trung tâm đổi từ "cái gì kế thừa cái gì" thành "dữ liệu bài toán gồm gì, mỗi thứ có những trạng thái nào" — chính là bước O của quy trình [IOSTV](/phase-0/meta-skills). Và nói thẳng về khoản đầu tư: **sealed class + `when` exhaustive chính xác là pattern bạn sẽ gặp lại nguyên xi ở Phase 1, dưới dạng UI state `Loading` / `Success` / `Error`** — mọi màn hình Android tử tế đều model kiểu này. Học kỹ ở đây là học trước Android, không phải học lý thuyết suông.
+
+### Nội dung cốt lõi
+
+Thang chọn công cụ — chọn theo hình dạng dữ liệu, không theo cảm tính:
+
+| Bài toán có dạng | Công cụ | Vì sao |
+|---|---|---|
+| "Một bản ghi gồm các field" | `data class` | `equals`/`copy`/`toString` miễn phí — so sánh theo **giá trị**, không theo địa chỉ ô nhớ |
+| "Một tập giá trị đóng, không dữ liệu kèm" | `enum` | Compiler biết đủ danh sách → `when` được ép exhaustive |
+| "Các trạng thái, mỗi trạng thái mang dữ liệu **khác nhau**" | `sealed class` | Trạng thái nào cần gì mang đúng cái đó — không còn field "chỉ có nghĩa khi…" |
+
+Vì sao `equals` theo giá trị quan trọng: hai giao dịch cùng nội dung phải bằng nhau khi so sánh, khi bỏ vào `Set`, khi làm key của `Map`. Class thường so theo địa chỉ — và âm thầm sai ở cả ba chỗ đó.
+
+**`when` exhaustive là hợp đồng với tương lai.** Khi `when` trên sealed/enum phủ đủ mọi nhánh, nó thành radar: thêm trạng thái mới là mọi `when` thiếu nhánh **tự đỏ lúc compile**, thay vì thành bug im lặng lúc runtime ba tuần sau.
+
+Cú pháp tối thiểu, chỉ đủ để nhận mặt — không phải khuôn để chép:
+
+```kotlin
+enum class MauDen { DO, VANG, XANH }
+```
+
+`enum` dùng khi mọi giá trị đều **rỗng như nhau**. Còn khi mỗi trạng thái cần mang theo dữ liệu *khác nhau* — cái này không cần gì, cái kia cần lý do, cái nọ cần thời điểm — thì `enum` hết đất và `sealed class` bắt đầu. Cú pháp khai báo `sealed class` bạn tra ở mục "Đọc gì" bên dưới; phần khó không nằm ở cú pháp.
+
+Phần khó là câu hỏi phải tự trả lời **trước khi** gõ dòng đầu tiên: trạng thái nào không cần mang gì? trạng thái nào cần mang theo gì, và vì sao đúng thứ đó chứ không phải thứ khác? Trả lời sai câu này thì cú pháp đúng cũng vô nghĩa.
+
+Và hình dạng bạn tìm ra ở đây, nguyên xi, là UI state bạn sẽ viết ở Phase 1 — cùng cấu trúc, đổi tên miền.
+
+**Luật cứng của module: cấm `else` khi `when` trên sealed/enum.** `else` là công tắc tắt radar: compiler thấy "mọi trường hợp lạ đã có người nhận" và không bao giờ báo bạn thiếu nhánh nữa. Bạn đã trả công model cẩn thận để mua exhaustiveness — đừng vứt nó đi để tiết kiệm một dòng.
+
+### ⚠️ Bẫy
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| `else` trong `when` trên sealed/enum | Compiler đòi đủ nhánh, `else` là cách làm nó im nhanh nhất | Thêm trạng thái mới mà không chỗ nào đỏ — radar đã tắt |
+| Một class 15 field + cờ boolean thay vì sealed | Thói quen model "cả bài toán = 1 class" từ bài tập lớn | Có field chỉ có nghĩa khi field khác mang giá trị nhất định — `tenTaiXe` chỉ có nghĩa khi đang giao |
+| Kế thừa vì "sách bảo OOP là kế thừa" | OOP thi cử | Lớp cha không có hành vi chung thật sự; Kotlin bắt bạn gõ thêm `open` — sự cưỡng lại đó chính là gợi ý của ngôn ngữ |
+
+### 🛠️ Bài tập
+
+- [ ] **Trạng thái đơn hàng shipper** — model `ChoLayHang`, `DangGiao(tenTaiXe)`, `DaGiao(thoiDiem)`, `ThatBai(lyDo, soLanThu)` + hàm `thongBaoChoKhach(trangThai): String` bằng `when`. Đạt khi: không `else`; thử thêm trạng thái `DangHoanTra`, xác nhận compiler chỉ đúng mọi chỗ cần sửa, rồi gỡ ra. Ước lượng: 60 phút
+- [ ] **Máy trạng thái đèn giao thông** — quy tắc đèn nào được chuyển sang đèn nào, hàm trả trạng thái kế tiếp. Đạt khi: một cú chuyển sai luật là **không thể viết ra được**; không `else`. Ước lượng: 45 phút
+- [ ] **Khai tử `int status`** — nhờ AI sinh một class "kiểu trường học" dùng `int status` + hằng số 0/1/2/3 và các so sánh `status == 2` rải rác; refactor thành sealed class. Đạt khi: hành vi giữ nguyên; mọi số ma thuật biến mất; trạng thái không hợp lệ (status bằng 7) không còn biểu diễn được. Ước lượng: 45 phút
+
+### 🏁 Bài tự kiểm
+
+- [ ] Nhờ AI sinh một mô tả nghiệp vụ 5 câu (domain bất kỳ, chưa gặp) → model thành data/sealed class — 15 phút, không tra cứu. Đạt khi: người đọc model đoán lại được nghiệp vụ. Thời gian thực tế: ____ phút
+
+### 📚 Đọc gì
+
+- [Data classes](https://kotlinlang.org/docs/data-classes.html)
+- [Sealed classes and interfaces](https://kotlinlang.org/docs/sealed-classes.html)
+- [Enum classes](https://kotlinlang.org/docs/enum-classes.html)
+- [Conditions and loops](https://kotlinlang.org/docs/control-flow.html) — phần `when`
+
+### Explain-back
+
+1. Vì sao hai `data class` cùng nội dung thì `==` ra true, còn hai class thường thì không? Tầng hai: điều này nối với bài học tham chiếu ở module 4.2 chỗ nào?
+2. Khi nào `enum` đủ, khi nào phải lên `sealed class`? Câu trả lời nằm ở đâu trong dữ liệu?
+3. Vì sao luật cấm `else` làm code **an toàn hơn**, dù trông như đang "bỏ phòng thủ"?
+
+---
+
+## 4.5. Collections + functional operators — 14h, tuần 4–5
+
+### 🎯 Sau module này bạn làm được
+
+- [ ] Trước mọi bài: chọn List/Map/Set **trước khi code** và nói lý do bằng một câu
+- [ ] Giải một bài bằng vòng lặp rồi dịch sang operators, đặt hai bản cạnh nhau và chỉ ra từng phép tương ứng
+- [ ] Đọc một chuỗi operators của người khác và kể lại dữ liệu biến đổi qua từng trạm
+
+### 🌱 Vì sao module này tồn tại
+
+Module nặng nhất Phase 0 — cố ý. Đây là cú chuyển hệ tư duy: từ **"làm thế nào từng bước"** (vòng lặp — bạn điều khiển máy) sang **"dữ liệu biến đổi qua các trạm"** (transform — bạn mô tả dòng chảy). Trực giác Big-O và List/Map/Set ngủ quên từ thời học DSA sẽ sống lại ở đây — mọi bài đều ép trả lời "cấu trúc dữ liệu nào, vì sao" trước khi viết dòng đầu, vì "đếm tần suất bằng 2 vòng for lồng nhau" chính là lỗ hổng điển hình số 2 trong [bản đồ lỗ hổng Phase 0](/phase-0). Plateau tuần 3–5 mà giáo án đã dự báo rơi đúng vào đây: thấy chững không phải tín hiệu dừng — là tín hiệu não đang tái cấu trúc.
+
+### Nội dung cốt lõi
+
+**Trình tự học — đúng thứ tự này, đừng nhảy cóc:**
+
+| Nhóm | Operators | Câu hỏi chúng trả lời |
+|---|---|---|
+| Biến đổi & lọc | `map`, `filter` | "Mỗi phần tử thành cái gì?" / "Giữ phần tử nào?" |
+| Gom về một số | `sumOf`, `count`, `any`, `all`, `none` | "Cả danh sách quy về một giá trị gì?" |
+| Sắp & cắt | `sortedBy`, `sortedByDescending`, `take`, `drop` | "Thứ tự nào, lấy bao nhiêu?" |
+| Gom nhóm | `groupBy`, `associateBy` | "Mỗi khoá ứng với **nhiều** phần tử hay đúng **một**?" — khác nhau sống còn |
+| Tổ hợp | `partition`, `flatMap`, `distinct`, `chunked`, `zip` | Thao tác trên hình dạng của danh sách |
+| Tích luỹ | `fold`, `reduce` — học cuối, kỹ nhất | "Vòng lặp có biến tích luỹ" viết gọn — khó nhất vì trừu tượng nhất |
+
+**Phương pháp bắt buộc — "mỗi bài hai lần".** Tuần 4: mọi bài giải bằng **vòng lặp trước**, rồi viết lại bằng operators, **đặt hai bản cạnh nhau**. Não cần nhìn thấy phép dịch giữa hai thế giới — bỏ bước này là học vẹt operators như học công thức. Tuần 5 mới được đi thẳng vào operators.
+
+Hai bản của cùng một câu hỏi — "tổng số phút các bài hát nhạc rock":
+
+```kotlin
+// Bản 1 — vòng lặp: ra lệnh cho máy từng bước
+var tongPhut = 0
+for (baiHat in danhSach) {
+    if (baiHat.theLoai == "rock") tongPhut += baiHat.soPhut
+}
+```
+
+```kotlin
+// Bản 2 — operators: mô tả các trạm dữ liệu đi qua
+val tongPhut = danhSach
+    .filter { it.theLoai == "rock" }
+    .sumOf { it.soPhut }
+```
+
+*Đóng trang này. Gõ lại cả hai bản từ trí nhớ — rồi chỉ ra: `if` của bản 1 biến thành trạm nào, `+=` biến thành trạm nào.*
+
+**Luật của module: quá 3 phép thì đặt tên cho kết quả giữa.** Chain 7 tầng không tên là kiêu ngạo — một `val` tên tử tế ở giữa vừa là tài liệu, vừa là chỗ đặt breakpoint khi kết quả sai.
+
+### ⚠️ Bẫy
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Chain 7 tầng không biến trung gian | Cảm giác "một dòng = trình cao" | Kết quả sai mà không biết trạm nào sai; chính mình đọc lại mất hơn một phút |
+| Nhầm `map` với `forEach` | Cả hai đều "làm gì đó với từng phần tử" | `map` mà vứt kết quả trả về; hoặc `forEach` chứa `add` vào list bên ngoài — `map` là biến đổi, `forEach` là side effect |
+| Dùng List cho bài tra cứu theo khoá | List quen tay từ thời C | Vòng lặp tìm kiếm nằm **trong** một vòng lặp khác — mùi của một cái `Map` bị bỏ lỡ |
+
+### 🛠️ Bài tập
+
+Bối cảnh Việt Nam, dữ liệu thật khi có thể. Nhờ AI sinh file dữ liệu test là đúng luật ("CSV 200 dòng, 5 dòng hỏng") — nhờ AI viết lời giải là phạm luật. Tuần 4: mọi bài nộp **hai bản** (vòng lặp + operators).
+
+- [ ] **Sao kê ngân hàng** — đọc file CSV (ngày, mô tả, số tiền, loại) → tổng thu/chi theo tháng, top 5 khoản chi lớn nhất, chi theo category. Dùng chính sao kê của bạn nếu xuất được từ app ngân hàng. Đạt khi: hai bản cạnh nhau cho từng báo cáo; có ghi 1 dòng "cấu trúc dữ liệu đã chọn + vì sao" trước khi code. Ước lượng: 2h
+- [ ] **Điểm sinh viên** — list điểm → điểm TB theo lớp, xếp loại từng sinh viên, đếm số lượng theo xếp loại (`groupBy` + `mapValues`). Đạt khi: bản operators không có vòng lặp lồng nhau. Ước lượng: 90 phút
+- [ ] **Tần suất từ Truyện Kiều** — đếm tần suất từ trong một đoạn, in top 10. Đạt khi: trả lời "vì sao Map thay List" **trước** khi code; chữ hoa/thường và dấu câu được xử lý có chủ đích. Ước lượng: 60 phút
+- [ ] **Nối đơn hàng với khách hàng** — hai danh sách, nối theo id (`associateBy` rồi tra). Đạt khi: giải thích được vì sao bài này dùng `associateBy` chứ không `groupBy` — và vì sao bài điểm sinh viên thì ngược lại. Ước lượng: 45 phút
+
+### 🏁 Bài tự kiểm
+
+Benchmark lặp lại — thước đo tiến bộ khách quan của cả Phase 0, cùng dạng với tiêu chí tốt nghiệp số 1 (45 phút, không Google, không AI — xem [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)):
+
+- [ ] Bài "đọc CSV → `groupBy` → in báo cáo" — lần 1 (tuần 4): ____ phút · lần 2 (tuần 8): ____ phút
+
+Ghi cả hai con số vào `PROGRESS.md` trong repo của bạn. Khi tự nghi ngờ "học mãi vẫn ngu", mở hai con số này ra — cảm xúc không cãi được số liệu.
+
+### 📚 Đọc gì
+
+- [Collections overview](https://kotlinlang.org/docs/collections-overview.html) — đọc trước khi vào tuần 4
+- [Collection transformation operations](https://kotlinlang.org/docs/collection-transformations.html)
+- [Grouping](https://kotlinlang.org/docs/collection-grouping.html) — đọc trước bài điểm sinh viên
+- [Aggregate operations](https://kotlinlang.org/docs/collection-aggregate.html) — phần `fold`/`reduce`, đọc cuối cùng
+
+### Explain-back
+
+1. `map` khác `forEach` chỗ nào? Tầng hai: vì sao trộn side effect vào giữa chuỗi transform làm hàm khó test hơn?
+2. `groupBy` và `associateBy` cùng nhận một selector — hai cái `Map` trả về khác nhau chỗ nào, và chọn nhầm thì bug trông như thế nào?
+3. `fold` là gì, kể bằng lời không dùng code? Tầng hai: vì sao nó được dạy cuối cùng, dù vòng lặp tích luỹ là thứ bạn viết từ năm nhất?
+
+---
+
+## → Tiếp theo
+
+Xong 5 module này là bạn đi hết tuần 5 của [lịch 12 tuần](/phase-0/lich-12-tuan). Nửa sau của Kotlin Core chờ ở trang kế:
+
+- **[Kotlin Core II — module 4.6–4.10](/phase-0/kotlin-core-2)**: extension functions + lambda (chìa khoá để đọc được Compose), generics đọc-hiểu, exceptions + `Result`, OOP thực dụng, coroutines nhập môn
+- Kata warm-up 10 phút mỗi buổi và bài Tier 2 chạy song song với các module — đề ở [Bài tập & drill](/phase-0/bai-tap)
+- Bí ở bất kỳ đâu: mở [Meta-skills](/phase-0/meta-skills) — IOSTV khi không biết bắt đầu từ đâu, quy trình 4 bước khi màn hình đỏ

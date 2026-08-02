@@ -1,88 +1,106 @@
-# 🚀 Hành trình Kotlin: Backend → Fullstack → Android
+# Hành trình 24 tháng: từ "biết cú pháp" đến Mobile Dev
 
-Không gian học tập của **Hải**. Mục tiêu: trở thành **Kotlin backend + fullstack + Android developer**, học ngoài giờ ~10–20 giờ/tuần.
-
-📅 **Bắt đầu:** 22/05/2026 · **Dự kiến hoàn thành:** ~03/2027 (42 tuần)
-📍 **Đang ở:** Giai đoạn 1 — Tuần 1
-🎯 **Portfolio xuyên suốt:** Expense Tracker (MoneyMind) — CLI → API → Web → Android
+Đây là cửa vào không gian học của Hải — lộ trình, luật chơi với AI, và bằng chứng tiến độ nằm ở đây. Mở trang này khi bạn mất phương hướng và cần nhớ mình đang đứng ở đâu trong 24 tháng.
 
 ---
 
-## 🗺️ Bản đồ lớn — 7 giai đoạn (42 tuần ≈ 11 tháng)
+## Toạ độ hiện tại
 
-| GĐ | Tên | Tuần | Kết quả đạt được |
-|----|-----|------|------------------|
-| **1** | Kotlin & Nền tảng | 1–8 | Thành thạo Kotlin, Git, **hiểu rõ** HTTP/REST |
-| **2** | Cơ sở dữ liệu (SQL) | 9–12 | PostgreSQL, JOIN, transaction, Exposed ORM |
-| **3a** | Backend với Ktor | 13–19 | REST API Kotlin-native, auth, deploy production |
-| **3b** | Spring Boot crash course | 20–23 | So sánh paradigm, hiểu enterprise standard |
-| **4** | Frontend Next.js | 24–30 | TypeScript + React 19 + Server Components |
-| **5** | Android Compose | 31–40 | Native Android app với MVI architecture |
-| **5b** | KMP bonus | 41–42 | Shared module giữa backend & Android |
+| Mục | Giá trị |
+|---|---|
+| Phase | **P0 — Nền móng** (tháng 1–3, ~125–140h) |
+| Tuần | **Tuần 0** — tuần setup, chưa tính vào 10–12 tuần học |
+| Ngày bắt đầu | **01/08/2026** |
+| Project đang làm | Chưa có. Project 1 "Sổ Chi Tiêu CLI" mở ở **tuần 7** |
+| Giờ mỗi tuần | **10–14h**, khung đề xuất 20:00–22:00 các buổi tối |
+| Độ dài Phase 0 | 8 / 10 / 12 tuần — chốt **sau khi chấm bài test đầu vào** |
 
-📘 **Roadmap chi tiết theo tuần** → [ROADMAP-2026.md](/roadmap)
-📗 **Kế hoạch chi tiết Giai đoạn 1** → [PHASE-1.md](/phase-1)
-📈 **Nhật ký tiến độ** → [PROGRESS.md](/progress)
+Chưa làm bài test đầu vào thì chưa biết Phase 0 của bạn dài bao nhiêu. Đó là việc số 2 trong checklist Tuần 0 bên dưới.
 
 ---
 
-## 🛠️ Portfolio project: Expense Tracker (MoneyMind)
+## ⚠️ Ba sự thật cần chấp nhận trước khi bắt đầu
 
-Một app quản lý chi tiêu cá nhân **theo bạn từ tuần 4 đến cuối hành trình**. Lớn dần qua từng giai đoạn:
+Ba điều này quyết định toàn bộ thiết kế phía sau. Không đồng ý thì nói ngay để chỉnh lộ trình, đừng đồng ý cho xong.
 
-- **GĐ 1** (CLI): Thêm/xem/tổng kết chi tiêu trên terminal, lưu file
-- **GĐ 2** (DB): Chuyển sang lưu PostgreSQL, query phức tạp
-- **GĐ 3a** (Ktor): REST API + JWT auth + deploy production
-- **GĐ 3b** (Spring): Refactor sang Spring Boot để so sánh paradigm
-- **GĐ 4** (Web): Dashboard, charts, budget alerts trên Next.js
-- **GĐ 5** (Android): Mobile app — quick add, camera scan receipt, widget
-- **GĐ 5b** (KMP): Share money math + validation giữa Android & backend
+**1. "6 tháng thành Android dev" chỉ đúng với người học full-time 40h/tuần.**
+Với 10–14h/tuần, từ điểm xuất phát chưa từng tự build một app hoàn chỉnh, con số trung thực là **12–14 tháng tới vòng phỏng vấn đầu tiên**. Vẫn nhanh hơn 90% người tự học không có hệ thống — vì phần lớn họ không bao giờ tới đích.
 
-→ Cuối hành trình bạn có **1 fullstack product hoàn chỉnh** đủ mạnh cho cả CV xin job lẫn dùng thật.
+**2. Quỹ giờ là tài nguyên khan hiếm nhất, không phải động lực.**
+10–14h/tuần × 24 tháng = **~1.135h thực tế**, đã trừ Tết, ốm, tuần vỡ kế hoạch, tuần nghỉ phục hồi. Mọi thứ không nhét vừa con số đó **đã bị cắt có chủ đích**: C/C++ và NDK, Spring Boot, XML View system, Fragment, LiveData, RxJava, Dagger thuần. Danh sách cắt kèm lý do nằm ở [Roadmap 24 tháng](/roadmap) — đọc để yên tâm rằng đó là quyết định, không phải thiếu sót.
 
----
+**3. Rủi ro lớn nhất của bạn không phải độ khó — mà là AI.**
+Bạn đã có bằng chứng: cả một monorepo ERP trong máy do AI sinh ra. **Đọc hiểu code không bằng viết được code.** Hiện tượng này có tên: **reading–writing gap** — đọc và viết là hai cơ bắp khác nhau, bạn mới chỉ tập một cái. Nếu tiếp tục để AI viết hộ, sau 24 tháng bạn sẽ có một GitHub đẹp và một cái đầu rỗng — và điều đó lộ ra trong 15 phút phỏng vấn đầu tiên. Toàn bộ bộ luật ở [Hệ thống học & luật AI](/he-thong-hoc) tồn tại để chống đúng điều này.
 
-## 🎯 Triết lý: Depth > Dopamine
-
-Bạn đã chọn **depth-first**: học fundamentals thật kỹ một lần thay vì optimize cho visual feedback sớm. Roadmap này phản ánh điều đó:
-
-- **5+ tháng backend trước khi chạm UI mobile.** Để hiểu HTTP/REST/DB/auth từ phía server thật sự, không phải qua Retrofit "magic".
-- **Visual proxy cho backend:** Postman/Bruno, pgAdmin, Swagger UI, Grafana → không thiếu kết quả "nhìn được", chỉ là không phải UI mobile.
-- **Mobile-aware backend từ tuần 13.** API thiết kế sẵn cho mobile (pagination cursor, batch endpoints, idempotency) để Phase 5 không phải refactor.
+Cảm giác "mình từng đọc hiểu cả hệ thống ERP mà giờ vật lộn với bài 30 phút" là bình thường và đã được dự báo. Thấy khó không phải vì bạn kém đi, mà vì lần đầu tiên bạn đo đúng cơ bắp cần đo.
 
 ---
 
-## 🤝 Cách chúng ta đồng hành
+## 🎯 Bản đồ 24 tháng
 
-1. **Mỗi tuần có một Checkpoint.** Khi học xong một tuần, mở Claude Code *trong thư mục này* và nói: *"Tuần X xong rồi, review giúp tôi"*. Tôi sẽ xem code, kiểm tra phần hiểu của bạn và điều chỉnh kế hoạch nếu cần.
+| Phase | Tháng | Giờ | Tên gọi | Đầu ra kiểm chứng được |
+|---|---|---|---|---|
+| **P0** | 1–3 | ~125h | Nền móng | Tự build tool console hoàn chỉnh, **không một dòng nào do AI viết** |
+| **P1** | 4–6 | ~150h | App Android đầu tiên | App Compose nhiều màn hình, lưu trữ local, sống sót xoay màn hình |
+| **P2** | 7–11 | ~245h | Chuẩn Junior | **App live trên Google Play Store**, có unit test, đúng bar JD Junior VN |
+| **P3** | 12–14 | ~135h | Săn việc | 30+ đơn apply, ≥3 phỏng vấn thật, giải được LeetCode medium |
+| **P4** | 15–20 | ~290h | Backend & sản phẩm riêng | Client + server chạy thật, **≥10 người dùng ngoài bản thân** |
+| **P5** | 21–24 | ~190h | Chuyên nghiệp hoá | CI/CD xanh, KMP shared module, crash-free ≥99% |
 
-2. **Khi bí — hỏi tôi.** Nhưng tôi sẽ **giải thích và gợi ý, KHÔNG làm hộ.** Mục tiêu là *bạn* hiểu phần gốc. Đừng bất ngờ nếu tôi hỏi ngược lại bạn — đó là cách kiểm tra bạn đã thật sự hiểu.
+**Tổng ~1.135h.** Không có phép màu ở đây, chỉ có kỷ luật cộng dồn.
 
-3. **Cập nhật [PROGRESS.md](/progress) mỗi tuần.** 5 dòng đủ: học gì, vướng gì, hiểu chưa. Đó là cách cả hai biết đang ở đâu, và chống drift.
+Ba điểm dễ hiểu sai, nói rõ luôn: **Mobile là dòng chính**, không phải backend-first. **Backend nằm ở P4, đặt sau mốc xin việc** — vì vòng tuyển Junior không hỏi backend, nó không được phép đứng chắn trước mốc apply. **Kiến thức CS được dạy just-in-time**, gắn vào đúng tuần Mobile cần nó.
 
-4. **Tôi có trí nhớ.** Kể cả ở một phiên làm việc hoàn toàn mới, tôi vẫn biết bạn đang ở tuần nào, đã học gì.
-
-5. **Quy tắc vàng:** 70% thời gian để **gõ code**, 30% để đọc/xem. Tránh "tutorial hell".
-
----
-
-## 🛡️ Anti-drift discipline
-
-11 tháng là dài. Risk lớn nhất không phải bỏ cuộc (bạn đã commit) — mà là **học xong tuần 6 đã quên tuần 2**. 3 lớp checkpoint:
-
-- **Hàng tuần:** 1 commit + 5 dòng PROGRESS.md
-- **Cuối mỗi phase:** code lại 1 mini project KHÔNG nhìn code cũ (recall test)
-- **Hàng tháng:** review tổng quan với mentor → điều chỉnh nếu cần
-
-Chi tiết ở [ROADMAP-2026.md § Anti-drift](/roadmap#-anti-drift-discipline-cực-kỳ-quan-trọng).
+Thang 11 project, tỷ lệ giờ từng trục, bản đồ điểm bỏ cuộc và danh sách "cắt trước khi chậm tiến độ" → [Roadmap 24 tháng](/roadmap).
 
 ---
 
-## ⚖️ Vài lời thành thật
+## Cách chúng ta làm việc
 
-- Đây là chặng đường ~11 tháng. **Sự đều đặn quan trọng hơn tốc độ.** Mỗi ngày một ít sẽ thắng những đợt học dồn rồi bỏ.
-- Các mốc tuần là **cột mốc, không phải hạn chót**. Tuần nào bận thì làm chậm lại — không sao cả, miễn là không bỏ lỗ hổng kiến thức.
-- Phần "khô khan" nhất: Tuần 5 (lý thuyết HTTP), Tuần 10 (schema design), Tuần 16 (auth/security), Tuần 24 (TypeScript). Vượt qua được thì phía sau dễ thở hơn nhiều.
-- Đừng so sánh với người khác. Mỗi người có context khác nhau — bạn part-time, có công việc, học để sâu chứ không nhanh.
+Hợp đồng giữa bạn và tôi, năm dòng:
 
-Bắt đầu thôi 💪
+- **Tôi là mentor / examiner / reviewer — không bao giờ là author.** Suốt Phase 0 tôi không gõ một dòng code nào vào project của bạn. Tuyệt đối, không ngoại lệ, kể cả khi bạn nài nỉ.
+- **Socratic là mặc định.** Bạn hỏi một khái niệm, tôi hỏi ngược 1–2 câu định hướng trước. Bí tiếp thì tôi chỉ *vùng* vấn đề và section docs cần đọc, không chỉ thẳng dòng lỗi.
+- **Luật 30 phút vật lộn.** Tôi từ chối debug hộ cho tới khi bạn trình ra ba thứ trong `notes/ERRORS.md`: giả thuyết của bạn, hai thí nghiệm đã thử, kết quả quan sát được của từng thí nghiệm.
+- **Explain-back bắt buộc.** Tôi giải thích xong, bạn nói lại bằng lời của bạn, rồi tôi hỏi xoáy hai tầng "tại sao". Code review của tôi trả về câu hỏi kèm nhãn `[BLOCKER]` / `[SHOULD]` / `[NIT]`, không trả về bản sửa.
+- **Friday Rebuild mỗi tối thứ Sáu, 30 phút.** Tôi chọn ngẫu nhiên một hàm bạn viết trong tuần; bạn xoá khỏi màn hình và viết lại từ trí nhớ. Viết lại được trong 15 phút = tuần đó kiến thức là của bạn. Không viết lại được = tuần đó bạn đã "mượn" nhiều hơn "học".
+
+Thêm một luật hạ tầng: **AI autocomplete và Copilot trong IDE phải tắt hoàn toàn suốt Phase 0.**
+
+Bộ luật đầy đủ, nhịp một buổi tối 10/70/30/10, tỷ lệ 30% đọc : 70% gõ, chỉ báo cảnh báo sớm và ngưỡng hành động → [Hệ thống học & luật AI](/he-thong-hoc).
+
+---
+
+## 🛠️ Việc cần làm Tuần 0
+
+Chín việc. Xong hết mới được tính là bước vào tuần 1. Tick bằng cách sửa file này rồi commit — mỗi lần tick là một commit, và commit chính là bằng chứng.
+
+- [ ] Đọc hết [Roadmap 24 tháng](/roadmap) và [Hệ thống học & luật AI](/he-thong-hoc) — không skim, đọc để trả lời được "vì sao backend đặt ở tháng 15"
+- [ ] Làm bài test đầu vào trong repo học (`progress/assessments/test-dau-vao.md`): 12 câu, ~2h, **không AI, không Google**. Ghi điểm để chốt Phase 0 dài 8, 10 hay 12 tuần
+- [ ] Cài IntelliJ IDEA Community + JDK 21+. Chạy được "Hello World" **từ terminal**, không phải từ nút Run của IDE
+- [ ] **Tắt hoàn toàn AI autocomplete/Copilot trong IDE** — chụp màn hình settings làm bằng chứng, lưu vào repo
+- [ ] Tạo tài khoản GitHub với ảnh và bio tử tế; tạo repo `kotlin-mastery` (có thể private) và repo cho Project 1 (public từ ngày đầu)
+- [ ] Chốt khung giờ học cố định (đề xuất 20:00–22:00) kèm hard stop, và **báo với gia đình** để không phải thương lượng lại mỗi tối
+- [ ] Cài Anki, tạo deck `kotlin` — deck rỗng cũng được, quan trọng là tồn tại trước buổi học đầu tiên
+- [ ] Viết journal entry đầu tiên vào `progress/journal/2026-08.md`, kết thúc bằng dòng `NEXT:` có tên file và hành động cụ thể
+- [ ] Đặt lịch weekly review đầu tiên vào **Chủ nhật này**, block 1.5h trong calendar
+
+---
+
+## 📚 Đọc gì trước
+
+| Trang | Mở khi nào |
+|---|---|
+| [Roadmap 24 tháng](/roadmap) | Ngay hôm nay. Sáu phase, thang 11 project, những gì đã bị cắt và vì sao |
+| [Hệ thống học & luật AI](/he-thong-hoc) | Ngay hôm nay, đọc cùng roadmap. Nhịp học, luật AI đầy đủ, cách đo tiến độ |
+| [Phase 0 — Nền móng](/phase-0) | Sau khi chấm xong bài test đầu vào. Đây là trang bạn sống cùng 10–12 tuần tới |
+| [Tiến độ](/progress) | Cuối mỗi buổi và mỗi Chủ nhật. Số liệu, benchmark, kết quả Friday Rebuild |
+| [Phase 1](/phase-1) | Khoá. Chỉ mở khi tốt nghiệp Phase 0 đạt ≥8/10 mục, trong đó mục 1–4 bắt buộc |
+
+---
+
+## → Tiếp theo
+
+Việc kế tiếp của bạn không phải là học Kotlin. Là **làm bài test đầu vào** — vì mọi thứ trong Phase 0 được cá nhân hoá theo điểm số đó, và làm sau khi đã học một tuần thì con số mất hết ý nghĩa.
+
+Xong test, mở [Phase 0 — Nền móng](/phase-0) và chốt lịch 12 tuần của bạn.

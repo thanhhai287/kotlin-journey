@@ -1,28 +1,145 @@
-# 📈 Nhật ký tiến độ
+# Tiến độ
 
-Cập nhật mỗi tuần. Đây là cách cả tôi và bạn biết mình đang ở đâu.
+Đây là bảng điểm của bạn — chỗ duy nhất trong site này chứa **số liệu thật**, không phải kế hoạch. Mở nó 5 phút cuối mỗi buổi học và 30 phút mỗi Chủ nhật; mọi ô còn trống là một câu hỏi chưa có câu trả lời.
 
-## Giai đoạn 1 — Kotlin & Nền tảng
+## Toạ độ hiện tại
 
-| Tuần | Bắt đầu | Trạng thái | Ghi chú / Khó khăn |
-|------|---------|-----------|---------------------|
-| 1 | 2026-05-22 | 🔵 Đang làm | Cài môi trường, Git, Kotlin đầu tiên |
-| 2 | | ⚪ Chưa tới | Biến, hàm, luồng điều khiển |
-| 3 | | ⚪ Chưa tới | Collections & lập trình hàm |
-| 4 | | ⚪ Chưa tới | OOP, Null safety — 🛠️ Dự án 1 |
-| 5 | | ⚪ Chưa tới | 🌐 Phần gốc HTTP/REST |
-| 6 | | ⚪ Chưa tới | Gọi API — 🛠️ Dự án 2 |
-| 7 | | ⚪ Chưa tới | Gradle, Git nâng cao — 🛠️ Dự án 3 |
-| 8 | | ⚪ Chưa tới | 🎓 Dự án tốt nghiệp |
+**Phase 0 — Nền móng** · Tuần 0/12 · Bắt đầu **01/08/2026**
 
-Chú thích: ⚪ chưa tới · 🔵 đang làm · ✅ xong
+Chưa học nội dung. Đang ở giai đoạn setup. Việc kế tiếp: làm bài test đầu vào — 2h, không AI, không Google.
 
----
+Độ dài Phase 0 **chưa chốt**. Nó phụ thuộc điểm test đầu vào (thang 24): 0–8 điểm thì 12 tuần · 9–16 thì 10 tuần · 17–24 thì 8 tuần. Bảng bên dưới đang dựng theo kịch bản 12 tuần — chấm điểm xong thì sửa lại.
 
-## 🗒️ Nhật ký buổi học
+Trước khi bấm giờ Tuần 1, những việc này phải xong:
 
-Ghi ngắn sau mỗi buổi: hôm nay học gì, hiểu được gì, còn vướng gì.
+- [ ] Chấm xong bài test đầu vào, ghi điểm từng câu vào `progress/assessments/`
+- [ ] IntelliJ IDEA Community + JDK 21+ cài xong, chạy được "Hello World" **từ terminal** (không phải từ nút Run của IDE)
+- [ ] AI autocomplete/Copilot tắt hoàn toàn trong IDE — có ảnh chụp màn hình settings làm bằng chứng
+- [ ] Tài khoản GitHub có ảnh + bio; repo `so-chi-tieu-cli` đã tạo, để public
+- [ ] Khung giờ học cố định đã chốt (đề xuất 20:00–22:00) và đã báo với gia đình
+- [ ] Anki cài xong, deck `kotlin` đã tạo
+- [ ] Journal entry đầu tiên đã viết, có dòng `NEXT:` cụ thể
+- [ ] Lịch weekly review Chủ nhật đã đặt trong lịch điện thoại
 
-### 2026-05-22
-- Bắt đầu hành trình. Đã có kế hoạch chi tiết Giai đoạn 1.
-- **Việc tiếp theo:** cài JDK 21, tạo tài khoản GitHub.
+## 12 tuần Phase 0
+
+| Tuần | Trọng tâm | Trạng thái | Bằng chứng |
+|---|---|---|---|
+| 1 | Test đầu vào · setup · Kotlin cơ bản (4.1–4.2) · git CLI ngay ngày đầu · đọc error nhập môn | ⬜ | — |
+| 2 | Null-safety (4.3) · Error Zoo · kata hằng ngày | ⬜ | — |
+| 3 | Modeling: data/sealed/when (4.4) · tuần Debugger · Bug Hunt Kata 1 | ⬜ | — |
+| 4 | Collections I (4.5, luật "mỗi bài hai lần") · decomposition drill 1 · Git Disaster Recovery | ⬜ | — |
+| 5 | Collections II · JUnit nhập môn · Tier 2 bài 1–2 · benchmark lần 1 | ⬜ | — |
+| 6 | Functions nâng cao + scope functions (4.6) · Tier 2 bài 3 · Android field trip 3h cuối tuần | ⬜ | — |
+| 7 | Project 1 "Sổ Chi Tiêu CLI" trọn tuần | ⬜ | — |
+| 8 | Generics + exception + Result (4.7) · OOP thực dụng (4.8) · Bug Hunt Kata 2 · benchmark lần 2 | ⬜ | — |
+| 9 | Coroutines nhập môn (4.9) · thử thách tự học thư viện không tutorial | ⬜ | — |
+| 10 | Project 2 capstone — nộp `BACKLOG.md` theo IOSTV trước khi viết dòng code đầu tiên | ⬜ | — |
+| 11 | Project 2 — build | ⬜ | — |
+| 12 | Project 2 — **AI-free hoàn toàn**: hoàn thiện, test, README, demo + vấn đáp | ⬜ | — |
+
+Chú thích: ⬜ chưa tới · 🔄 đang làm · ✅ xong
+
+Cột **Bằng chứng** điền link commit, tên file, hoặc số đo — không điền cảm giác. Một tuần không có bằng chứng nào là một tuần chưa xảy ra. Chi tiết nội dung từng tuần nằm ở [lịch 12 tuần](/phase-0/lich-12-tuan).
+
+## Số liệu theo tuần
+
+| Tuần | Giờ học | Ngày có commit | % AI viết hộ | Friday Rebuild | Ghi chú |
+|---|---|---|---|---|---|
+| 0 | — | — | — | — | Setup |
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+| 5 | | | | | |
+| 6 | | | | | |
+| 7 | | | | | |
+| 8 | | | | | |
+| 9 | | | | | |
+| 10 | | | | | |
+| 11 | | | | | |
+| 12 | | | | | |
+
+Cách đọc bốn cột giữa:
+
+| Cột | Ngưỡng đỏ | Làm gì khi chạm ngưỡng |
+|---|---|---|
+| Giờ học | Dưới 85% kế hoạch tuần | Không chỉnh ý chí, chỉnh scope: cắt việc trong tuần tới |
+| Ngày có commit | Dưới 4 ngày trong tuần | Tuần đó bạn đọc nhiều hơn làm — tuần sau đảo tỷ lệ đọc/gõ |
+| % AI viết hộ | Bất kỳ số nào lớn hơn 0 trong Phase 0 | Đọc lại luật AI, ghi rõ lần vi phạm ở cột Ghi chú |
+| Friday Rebuild | Không viết lại được trong 15 phút | Tín hiệu đỏ: tuần đó "mượn" nhiều hơn "học". Tuần sau siết luật |
+
+Con số ở đây chỉ có giá trị khi nó **thật**. Điền một số đẹp mà không có commit đối chứng thì bạn đang tự lừa chính mình, và bảng này mất toàn bộ tác dụng.
+
+## 🏁 Milestone Phase 0
+
+| Milestone | Trạng thái | Bằng chứng |
+|---|---|---|
+| Test đầu vào có điểm → cá nhân hoá lộ trình | ⬜ | — |
+| Kotlin core: null-safety, sealed class, collections | ⬜ | — |
+| Error Zoo: thuần hoá 15 loại lỗi | ⬜ | — |
+| Debug bằng debugger (không println) — Bug Hunt 5/5 | ⬜ | — |
+| Git Disaster Recovery: thoát 5 kịch bản | ⬜ | — |
+| Project 1: Sổ Chi Tiêu CLI đạt DoD | ⬜ | — |
+| Tự học 1 thư viện không tutorial | ⬜ | — |
+| Project 2: Flashcard Từ Vựng CLI (capstone P0) đạt rubric ≥70 điểm | ⬜ | — |
+| Vấn đáp 10 câu Kotlin ≥8/10 | ⬜ | — |
+| AI log 2 tuần cuối: 0 lần AI sinh code | ⬜ | — |
+
+Milestone không phải là tiêu chí tốt nghiệp. Tốt nghiệp Phase 0 là một bài kiểm tra riêng, có bấm giờ, gồm 10 mục trong đó mục 1–4 bắt buộc — xem [tiêu chí tốt nghiệp](/phase-0/tot-nghiep).
+
+## Nhật ký buổi học
+
+Năm dòng, viết trong 5 phút cuối mỗi buổi. Không viết dài hơn — dài hơn là đang kể chuyện thay vì ghi bằng chứng.
+
+```markdown
+## YYYY-MM-DD (T?) — ?h — Phase ? / Tuần ? — Năng lượng: ?/5
+DID:
+AHA:
+MURKY:
+FLASH:
+NEXT:
+```
+
+| Trường | Viết gì | Vì sao |
+|---|---|---|
+| **DID** | Việc đã làm, kèm hash commit | Bằng chứng, không phải cảm giác. Không có commit thì tự hỏi tối nay mình có gõ code không |
+| **AHA** | Đúng **1** điều hiểu ra | Sáu tháng sau đọc lại vẫn còn giá trị. Đây là nguyên liệu viết blog sau này |
+| **MURKY** | Đúng **1** điều còn mơ hồ, kèm ngày phát sinh | Nguồn cho warm-up buổi sau. Tồn tại quá 1 tuần thì chạy Concept clinic |
+| **FLASH** | Số thẻ flashcard mới tạo | Tối đa 10 thẻ mỗi ngày. Nhiều hơn là đang nhồi |
+| **NEXT** | Buổi sau mở file nào, làm gì | Dòng quan trọng nhất. "Học tiếp coroutines" là sai — phải chỉ được tên file và hành động |
+
+Entry thật, ngày đầu tiên:
+
+```markdown
+## 2026-08-01 (T7) — 0h — Phase 0 / Tuần 0 — Năng lượng: ?/5
+DID:   Nhận roadmap 24 tháng. Đọc 00-TONG-QUAN.md và CLAUDE.md.
+AHA:   (điền sau khi đọc)
+MURKY:
+FLASH: 0
+NEXT:  Làm bài test đầu vào (progress/assessments/test-dau-vao.md) — 2h, không AI,
+       không Google trừ câu 6. Chấm điểm xong báo cho AI để cá nhân hoá Phase 0.
+```
+
+Ba luật khi ghi:
+
+- Entry mới nhất đặt **trên cùng** file `progress/journal/YYYY-MM.md` — đọc lại tuần vừa rồi nhanh hơn.
+- Buổi nào không học cũng ghi, chỉ cần một dòng lý do. Chuỗi entry liền mạch là dữ liệu; chuỗi đứt quãng cũng là dữ liệu.
+- File journal là tiếng nói của bạn. AI đọc để ra quiz, không sửa.
+
+## Quyết định lộ trình (ADR)
+
+Mỗi lần đổi scope, đổi timeline, hoặc bỏ một thứ đã lên kế hoạch — ghi một dòng ở đây **kèm lý do**. Sáu tháng sau bạn sẽ không nhớ vì sao mình cắt, và sẽ cắt lại lần nữa hoặc tiếc nuối vô cớ.
+
+| Ngày | Quyết định | Lý do |
+|---|---|---|
+| 2026-08-01 | Lập roadmap 24 tháng; cắt C/C++ và Spring Boot; hoãn KMP đầy đủ sang v2 | Quỹ 10–14h/tuần chỉ đủ khoảng 1.135h. Ưu tiên mốc "đi làm được" trước mốc "biết nhiều thứ" — xem [roadmap](/roadmap) |
+| 2026-08-01 | Java học SAU Kotlin, 2 liều nhỏ tổng ~15h, chỉ ở mức đọc hiểu | Học Java trước sẽ nhiễm đúng những thói quen phải bỏ khi sang Kotlin: null tự do, mutable mặc định, getter/setter |
+
+Quy tắc ghi ADR: một dòng một quyết định, cột Lý do phải trả lời được câu "vì sao lúc đó chọn vậy", không phải mô tả lại quyết định bằng từ khác.
+
+## → Tiếp theo
+
+- Chưa làm bài test đầu vào thì mọi thứ khác đều là phỏng đoán — bắt đầu từ [tổng quan Phase 0](/phase-0).
+- Muốn biết tuần này học gì cụ thể: [lịch 12 tuần](/phase-0/lich-12-tuan).
+- Muốn biết vì sao trang này tồn tại và luật AI hoạt động thế nào: [hệ thống học & luật AI](/he-thong-hoc).

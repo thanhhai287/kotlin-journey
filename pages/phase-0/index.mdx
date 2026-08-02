@@ -1,0 +1,145 @@
+# Phase 0 — Nền móng: từ "biết cú pháp" đến "tự build được"
+
+Đây là cửa vào Phase 0 — tháng 1–3, 10–12 tuần, ~125–140h. Đọc trang này trước, làm bài test đầu vào, rồi mới mở các trang còn lại của mục Phase 0.
+
+## 🌱 Phase 0 dạy cái gì
+
+Phase 0 **không dạy kiến thức mới là chính**. Nó dạy **cách vật lộn có kiểm soát** (productive struggle).
+
+Bạn không thiếu thông tin. Trong máy bạn có cả kho project do AI sinh ra, bạn từng đọc hiểu cả hệ thống ERP. Thứ bạn thiếu là **trải nghiệm tự tay đi từ số 0 đến một chương trình chạy được** — và mọi quyết định trong phase này phục vụ đúng điều đó.
+
+Gọi tên hiện tượng ngay từ bây giờ: cảm giác "mình từng đọc hiểu cả hệ thống lớn mà giờ vật lộn với bài 30 phút" có tên là **reading–writing gap**. Đọc hiểu và tự viết là hai cơ bắp khác nhau — bạn mới chỉ tập một cái. Thấy khó không phải vì bạn kém đi, mà vì lần đầu tiên bạn đo đúng cơ cần đo.
+
+Đầu ra của phase: một người viết Kotlin trôi chảy, tự debug, tự phân rã bài toán, có kỷ luật git/test — và có **bằng chứng cụ thể** rằng "mình tự làm được", không phải cảm giác.
+
+Ba luật khung sống suốt phase:
+
+- Công cụ duy nhất: **IntelliJ IDEA Community + JDK 21+**. Android Studio chỉ xuất hiện đúng 1 buổi 3h cuối tuần 6 (xem bên dưới).
+- **AI autocomplete/Copilot tắt hoàn toàn trong IDE.** Toàn bộ luật AI nằm ở [Hệ thống học & luật AI](/he-thong-hoc).
+- Git bằng **CLI**, cấm GUI git trong suốt Phase 0.
+
+## 🎯 Bước 0: làm bài test đầu vào
+
+Trước khi học bất cứ gì: 12 câu, ~2h, **không AI, không Google** (trừ câu 6 được mở đúng một trang docs quy định). Đề bài nằm trong `progress/assessments/test-dau-vao.md` của workspace học. Đây không phải bài thi đánh trượt — đây là thước đo để cá nhân hoá lộ trình, gian lận chỉ hại chính mình.
+
+12 câu đo 12 thứ khác nhau:
+
+| Câu | Đo cái gì |
+|---|---|
+| 1 | Fluency cú pháp thật sự (FizzBuzz biến thể) |
+| 2 | Kỹ năng đọc stack trace — lỗ hổng rẻ nhất để lấp, lãi nhất khi lấp |
+| 3 | Bản năng debug — phần "mô tả cách tìm ra bug" quan trọng hơn phần tìm ra |
+| 4 | Git và terminal có phải công cụ thật của bạn chưa |
+| 5 | Phân rã đề mơ hồ thành đầu việc — lỗ hổng lớn nhất của hồ sơ này |
+| 6 | Đọc API reference tiếng Anh |
+| 7 | Chọn đúng cấu trúc dữ liệu, hay lồng 2 vòng for |
+| 8 | OOP là công cụ giải quyết vấn đề, hay từ vựng thi cử |
+| 9 | Hiểu null — nền cho module quan trọng nhất của Kotlin |
+| 10 | Kiến thức giải thuật trường lớp còn dùng được không |
+| 11 | Diễn đạt kỹ thuật — thứ quyết định điểm phỏng vấn nhiều hơn bạn nghĩ |
+| 12 | **Tự khai trung thực mức phụ thuộc AI** — câu quan trọng nhất bài |
+
+Mỗi câu chấm 0/1/2 điểm, tổng 24. **Kết quả quyết định độ dài Phase 0 của bạn:**
+
+| Điểm (trên 24) | Phase 0 dài | Điều chỉnh |
+|---|---|---|
+| 0–8 | **12 tuần** | Đầy đủ. Đây là điểm phổ biến nhất của hồ sơ này — không tủi thân |
+| 9–16 | **10 tuần** | Câu nào đạt 2 điểm → module tương ứng học lướt (làm bài tự kiểm cuối module, đạt thì qua) |
+| 17–24 | **8 tuần** | Nén phần Kotlin cơ bản. **Không ai được bỏ 2 project** |
+
+**Luật riêng cho câu 12:** dưới 2 điểm → áp bộ quy tắc AI nghiêm nhất trong [Hệ thống học & luật AI](/he-thong-hoc), **bất kể tổng điểm**. Câu 12 là câu duy nhất bạn có thể tự lừa mình — và cũng là câu đo đúng rủi ro lớn nhất của lộ trình này.
+
+Đánh dấu khi xong (sửa file này rồi commit — chính commit là bằng chứng):
+
+- [ ] Làm xong 12 câu trong ~2h, không AI, không Google (trừ câu 6) — ngày làm: ____
+- [ ] Chấm điểm từng câu theo thang 0/1/2 — tổng: ____/24
+- [ ] Chốt độ dài Phase 0 theo bảng trên: ____ tuần
+- [ ] Ghi điểm câu 12: ____/2 — nếu dưới 2, đã đọc lại toàn bộ luật AI ở [Hệ thống học & luật AI](/he-thong-hoc)
+- [ ] Báo kết quả cho AI mentor để chốt danh sách module học lướt / học kỹ
+
+## ⚠️ Mười lỗ hổng điển hình — và trang nào trong bộ tài liệu này lấp nó
+
+Đây là bản đồ những chỗ sinh viên CNTT Việt Nam thường hổng. Đối chiếu với kết quả test của bạn — cột cuối chỉ thẳng nơi lỗ hổng đó được lấp trong site này.
+
+| Lỗ hổng | Dấu hiệu | Cách lấp | Học ở đâu |
+|---|---|---|---|
+| **OOP thi cử** — thuộc định nghĩa nhưng không model được bài toán thật | Model "bãi giữ xe" thành 1 class 15 field, hoặc kế thừa vô nghĩa | Không dạy lại lý thuyết OOP. Dạy data modeling qua `data class` + `sealed class` | Module 4.4 trong [Kotlin Core I](/phase-0/kotlin-core-1) |
+| **DSA để thi** — giải trên giấy nhưng không biết khi nào dùng Map thay List | Đếm tần suất từ bằng 2 vòng for lồng nhau | Mọi bài Collections đều ép chọn cấu trúc dữ liệu trước khi code | Module 4.5 trong [Kotlin Core I](/phase-0/kotlin-core-1) |
+| **Không đọc error message** | Thấy đỏ là paste vào AI; chỉ đọc dòng đầu stack trace rồi bỏ | Error Zoo — 2 tuần luyện có chủ đích. Lỗ hổng rẻ nhất để lấp, lãi nhất khi lấp | [Meta-skills](/phase-0/meta-skills) |
+| **Chỉ biết println debug** | Chưa bao giờ đặt breakpoint | 1 buổi học debugger + 2 tuần bắt buộc dùng + Bug Hunt Kata | [Meta-skills](/phase-0/meta-skills) |
+| **Không biết chia nhỏ bài toán** | Đề mơ hồ → viết được 3 dòng chung chung | Quy trình IOSTV + decomposition drill hằng tuần. Lỗ hổng lớn nhất, lấp lâu nhất | [Meta-skills](/phase-0/meta-skills) + drill trong [Bài tập](/phase-0/bai-tap) |
+| **Git chưa dùng thật** | Chỉ clone/pull, commit hết lên main với message "update" | Git CLI từ tuần 1 + buổi Git Disaster Recovery | [Meta-skills](/phase-0/meta-skills) |
+| **Sợ docs tiếng Anh** | Chỉ tìm tutorial tiếng Việt/video | Docs Quest hằng tuần — docs chính thức trước, nguồn tiếng Việt chỉ để đối chiếu | [Meta-skills](/phase-0/meta-skills) |
+| **Nhầm "chạy được" với "đúng"** | Không nghĩ tới edge case, chưa từng viết test | Test 3 tầng happy/edge/error, bắt buộc từ tuần 5 | [Meta-skills](/phase-0/meta-skills) |
+| **Ảo tưởng năng lực do đọc code AI** | FizzBuzz 10 phút mà chật vật | Toàn bộ Phase 0 là thuốc; đo bằng benchmark và Friday Rebuild | [Hệ thống học & luật AI](/he-thong-hoc) + mục Tâm lý bên dưới |
+| **Terminal yếu** | Mọi thứ qua nút bấm IDE | 1 buổi tuần 1 + ép dùng git bằng CLI, cấm GUI | Tuần 1 trong [Lịch 12 tuần](/phase-0/lich-12-tuan) |
+
+## Kiến thức ở trường: giữ gì, bỏ gì
+
+**Dùng lại được ngay** — đánh thức bằng cách làm lại bài quen bằng Kotlin trong tuần 1–2:
+
+- Trực giác Big-O và List/Map/Set — sống lại ngay khi học Collections
+- Từ vựng OOP (class, interface, override) — chỉ cần gắn lại vào bài toán thật
+- Kinh nghiệm C con trỏ → giúp hiểu reference vs value, tại sao hai biến trỏ cùng một object
+- SQL cơ bản — ngủ đông đến Phase 2, không cần đánh thức bây giờ
+
+**Cần gỡ bỏ chủ động** — đây là những mental model sai phải tháo ra:
+
+- "Kế thừa là trung tâm của OOP" → thay bằng composition + data modeling. Kotlin cố ý làm class `final` mặc định — dùng chính điều đó để học lại
+- "Code viết một lần phải đúng luôn, sai là dốt" → thay bằng vòng lặp viết–chạy–sửa. **Lỗi là dữ liệu, không phải bản án**
+- "Chạy được là xong" → thay bằng checklist edge case + test
+- Nghìn dòng trong `main`, biến tên `a`, `b`, `tmp` — thói quen code bài tập lớn
+- Tooling lỗi thời (DevC++, Notepad++) → IntelliJ IDEA Community từ ngày 1
+
+## Tâm lý: những gì sẽ xảy ra — đọc trước để nhận ra khi tới
+
+**Dự báo trước plateau tuần 3–5.** Khoảng tuần 4 bạn sẽ thấy chững lại và muốn bỏ. Điều này **nằm trong giáo án** — ai cũng gặp. Nó là dấu hiệu não đang tái cấu trúc, không phải dấu hiệu bạn không hợp nghề. Khi tới điểm đó, mở lại đúng đoạn này.
+
+**Quy tắc so sánh:** chỉ được so **input** — giờ học, số bài, số commit, những thứ mình kiểm soát. **Cấm so output** với người khác. Mạng xã hội dev ("18 tuổi làm app triệu download") — mute trong 12 tuần.
+
+**Early wins không hy sinh nền tảng:**
+
+- Tuần 1 đã có sản phẩm chạy được — nhỏ, nhưng là "của mình 100%", cảm giác khác hẳn chạy code AI
+- Bài tập là tool dùng thật: thống kê chính sao kê ngân hàng của mình, tính chính hoá đơn điện nhà mình
+- Demo mỗi 2 tuần cho bạn bè/người thân — nói về code của mình cũng là kỹ năng phỏng vấn
+
+**Trophy hữu hình** — khi tự nghi ngờ, mở số ra xem, cảm xúc không cãi được số liệu:
+
+- `notes/ERRORS.md` dày lên — mỗi lỗi đã thuần hoá là một chiến tích nhìn thấy được
+- GitHub contribution graph xanh
+- Số liệu benchmark trong `PROGRESS.md`: FizzBuzz làm tuần 0 và tuần 5, bài CSV-groupBy làm tuần 4 và tuần 8 — **bấm giờ cả hai lần, ghi số**. Tiến bộ đo so với chính mình, không so với ai khác
+
+- [ ] Đã mute các kênh mạng xã hội dev gây so sánh output — giữ nguyên 12 tuần
+
+## Buổi Android field trip — đúng một buổi 3 giờ, cuối tuần 6
+
+Cả Phase 0 chỉ có console, nhưng động lực dài hạn cần neo vào hình ảnh cụ thể: "cái app trên điện thoại mình" mạnh gấp mười lần lời hứa "sau này sẽ được làm app". Vì thế có đúng **một buổi 3 giờ**, kịch bản đóng sẵn, không thương lượng:
+
+- [ ] Cài Android Studio bản Stable mới nhất
+- [ ] Chạy được template Compose mặc định
+- [ ] Đổi text thành tên mình, đổi màu
+- [ ] Thêm một `Button` đếm số lần bấm
+- [ ] Cài app lên **điện thoại thật**, cầm trong tay
+- [ ] Hết đúng 3 giờ: đóng Android Studio, không mở lại cho đến Phase 1 — kể cả đang dở tay
+
+Buổi này còn có tác dụng thứ hai: bạn sẽ tự thấy code Compose đầy lambda, sealed state, modifier chain — *chính những thứ đang học ở Phase 0* — biến "học Kotlin thuần" từ nghĩa vụ thành chuẩn bị có chủ đích.
+
+Vì sao chỉ một buổi? Rủi ro sa đà được xử lý bằng cơ chế, không bằng ý chí: timebox 3h, kịch bản cố định, và điều kiện mở khoá [Phase 1](/phase-1) là **tốt nghiệp Phase 0**. Android là phần thưởng, không phải cám dỗ.
+
+## 📚 Bản đồ bộ tài liệu Phase 0
+
+| Trang | Dùng khi nào |
+|---|---|
+| [Lịch 12 tuần](/phase-0/lich-12-tuan) | Đầu mỗi tuần — xem tuần này trọng tâm gì, bao nhiêu giờ, nhịp một buổi ra sao |
+| [Meta-skills](/phase-0/meta-skills) | Mở mỗi khi bí: IOSTV, đọc error, debug 6 bước, đọc docs, git, test 3 tầng |
+| [Kotlin Core I](/phase-0/kotlin-core-1) | Học các module Kotlin nửa đầu phase — từ setup đến collections |
+| [Kotlin Core II](/phase-0/kotlin-core-2) | Học các module nửa sau — từ lambda/extension đến coroutines nhập môn |
+| [Bài tập & drill](/phase-0/bai-tap) | Kata warm-up mỗi buổi, bài Tier 2, decomposition drill, Docs Quest |
+| [Hai project](/phase-0/projects) | Tuần 7 (Sổ Chi Tiêu CLI) và tuần 10–12 (Flashcard capstone) |
+| [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) | Đọc ngay tuần 1 để biết đích; quay lại tuần 10–12 để tự chấm |
+| [Hệ thống học & luật AI](/he-thong-hoc) | Trước khi mở AI ra hỏi bất cứ gì |
+| [Tiến độ](/progress) | Cuối mỗi buổi và weekly review Chủ nhật |
+
+## → Tiếp theo
+
+Làm bài test đầu vào trước (mục "Bước 0" phía trên) — không có điểm test thì chưa biết Phase 0 của bạn dài bao nhiêu tuần. Có điểm rồi → mở [Lịch 12 tuần](/phase-0/lich-12-tuan) và bắt đầu tuần 1.

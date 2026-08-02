@@ -1,0 +1,131 @@
+# Tốt nghiệp Phase 0
+
+Đây là cửa ra của Phase 0: mọi tiêu chí trên trang này đều đo được, bấm giờ được, và có chỗ ghi kết quả ngay trong trang. Luật tốt nghiệp: đạt **ít nhất 8/10 tiêu chí**, trong đó **mục 1–4 là bắt buộc** — thiếu bất kỳ mục nào trong bốn mục đó thì dù đạt 9/10 vẫn chưa qua.
+
+Mở trang này từ tuần 1, không phải tuần 12. Biết trước đích đến thay đổi cách bạn học từng tuần.
+
+## 🏁 Mười tiêu chí
+
+Mỗi tiêu chí là một bài kiểm tra có điều kiện đo được. Làm xong bài nào, ghi kết quả vào dòng đó, tick checkbox, commit — commit chính là bằng chứng. Không có khái niệm "chắc là đạt": chưa bấm giờ, chưa có số, là chưa đạt.
+
+- [ ] **1. (Bắt buộc)** Viết chương trình đọc file CSV, `groupBy`, in báo cáo — **45 phút, không Google, không AI**. Đo bằng: AI ra một file CSV mới và yêu cầu báo cáo biến thể, bấm giờ từ lúc đọc đề đến lúc output đúng. Kết quả: ____ phút
+- [ ] **2. (Bắt buộc)** Nhận một stack trace chưa từng thấy → chỉ đúng dòng lỗi thuộc code của mình + viết 1 câu giả thuyết nguyên nhân — **5 phút**. Đo bằng: AI đưa stack trace lạ, bạn trả lời miệng hoặc viết. Kết quả: ____ phút
+- [ ] **3. (Bắt buộc)** Tìm bug logic trong chương trình ~100 dòng người khác viết, **chỉ dùng debugger, cấm println** — **30 phút**. Đo bằng: AI sinh chương trình có bug cài sẵn (đây là vùng AI được phép làm), bạn ghi giả thuyết trước khi sửa. Kết quả: ____ phút
+- [ ] **4. (Bắt buộc)** Nhận một đề mơ hồ → giao ra `BACKLOG.md` chuẩn IOSTV **≥12 việc** — **30 phút**. Đạt khi có đủ 3 cặp ví dụ input → output, có `data class`, việc đầu tiên chạy được trong 30 phút, không việc nào ước quá 30 phút. Số việc: ____
+- [ ] **5.** Git bằng **CLI**: tạo repo mới, branch, commit, tự gây conflict rồi resolve — **15 phút**, không GUI. Kết quả: ____ phút
+- [ ] **6.** Nhận docs một API stdlib chưa từng dùng → dùng được nó đúng trong **60 phút**. Đo bằng: AI chọn API, bạn áp quy trình đọc docs 3 lượt và nộp một đoạn code chạy được. API được giao: ____________
+- [ ] **7.** Project 2 đạt **rubric ≥70/100, không mục nào 0 điểm** + demo nói trôi chảy **5 phút** cho người không biết code. Rubric chi tiết nằm ở [trang hai project](/phase-0/projects). Điểm: ____/100
+- [ ] **8.** Vấn đáp 10 câu Kotlin đạt **≥8/10** — danh sách câu hỏi ở section ngay dưới, AI hỏi và hỏi xoáy 2 tầng "tại sao". Điểm: ____/10
+- [ ] **9.** AI log 2 tuần cuối trong `notes/AI-LOG.md`: **0 lần AI sinh code**, 100% lượt hỏi đúng luật. Không log = tính là vi phạm. Số lần vi phạm: ____
+- [ ] **10.** Friday Rebuild 3 tuần cuối (tuần 10, 11, 12): **3/3 lần viết lại được trong 15 phút** — đối chiếu bảng log bên dưới. Kết quả: ____/3
+
+Chốt lại toàn phase:
+
+- [ ] **Tốt nghiệp Phase 0** — ngày: ____________ · tổng: ____/10 · mục 1–4 đủ cả bốn: ____
+
+## Vấn đáp 10 câu — công khai từ tuần 1
+
+Đây là 10 câu hỏi bạn sẽ trả lời miệng ở kỳ thi cuối phase. Chúng công khai từ tuần 1 **có chủ đích**: đây không phải bài thi đánh đố, mà là bản đồ những thứ Phase 0 muốn nằm trong đầu bạn. Thứ được kiểm tra không phải trí nhớ — AI sẽ hỏi xoáy 2 tầng "tại sao" sau mỗi câu trả lời, và câu trả lời học thuộc lòng chết ngay ở tầng thứ nhất.
+
+**Trang này cố ý không kèm đáp án.** Đáp án là thứ bạn tự xây qua 12 tuần code, sai, sửa, và ghi chú — đáp án đi mượn thì vấn đáp sẽ lộ trong 2 phút.
+
+1. Vì sao Kotlin cần null-safety? Nó giải quyết vấn đề gì mà Java để lại?
+2. `val` gán một `MutableList` — cái gì bất biến, cái gì vẫn đổi được? Vì sao?
+3. `data class` và `sealed class` — mỗi cái dùng khi nào?
+4. `map` khác `forEach` chỗ nào? Dùng nhầm cái nào cho việc của cái kia thì chuyện gì xảy ra?
+5. `fold` làm gì? Nó thay cho pattern vòng lặp quen thuộc nào?
+6. Extension function là gì? Nó có thật sự sửa class gốc không?
+7. `it` và `this` trong lambda khác nhau thế nào?
+8. `suspend` nghĩa là gì?
+9. Khi nào dùng `Map` thay `List`?
+10. Vì sao phải tránh `!!`?
+
+Tự kiểm mỗi tháng một lần: câu nào bạn chỉ trả lời được một tầng "tại sao" — ghi nó vào MURKY trong journal và xử lý trong tuần.
+
+## 📦 Benchmark: đo tiến bộ so với chính mình
+
+Hai bài, mỗi bài làm hai lần, **bấm giờ cả hai lần và ghi số vào đây**. Khoảng tuần 4 bạn sẽ chững lại và nghi ngờ bản thân — plateau đó nằm trong giáo án, ai cũng gặp. Khi nó đến, mở hai bảng này ra: cảm xúc không cãi được số liệu.
+
+**Bảng 1 — FizzBuzz biến thể + tổng** (chính là câu 1 bài test đầu vào; mục tiêu lần 2: ≤5 phút):
+
+| Lần | Thời điểm | Thời gian (phút) | Số lần chạy sai trước khi đúng |
+|---|---|---|---|
+| 1 | Tuần 0 — test đầu vào | ____ | ____ |
+| 2 | Tuần 5 | ____ | ____ |
+
+**Bảng 2 — Đọc CSV → `groupBy` → in báo cáo** (bài tự kiểm của module Collections, xem [bài tập và drill](/phase-0/bai-tap)):
+
+| Lần | Thời điểm | Thời gian (phút) | Ghi chú (bí ở đâu) |
+|---|---|---|---|
+| 1 | Tuần 4 | ____ | ____ |
+| 2 | Tuần 8 | ____ | ____ |
+
+**Vì sao cấm so sánh với người khác:** quy tắc của roadmap là chỉ được so **input** — giờ học, số bài, số commit, những thứ bạn kiểm soát được — và **cấm so output** với bất kỳ ai. Benchmark này so bạn-tuần-8 với bạn-tuần-4, đó là phép so duy nhất có ý nghĩa thống kê với cỡ mẫu bằng một. Mạng xã hội dev kiểu "18 tuổi làm app triệu download" — mute trong 12 tuần, đó là chỉ dẫn chính thức chứ không phải lời khuyên mềm.
+
+## Log Friday Rebuild — 12 tuần
+
+Nghi thức: mỗi tối thứ Sáu, AI chọn ngẫu nhiên một hàm có nghĩa bạn đã viết trong tuần; bạn xoá nó khỏi màn hình và viết lại từ trí nhớ trong 15 phút, không mở gì cả. Chi tiết luật nằm ở [hệ thống học và luật AI](/he-thong-hoc). Kết quả gốc ghi vào `PROGRESS.md` trong workspace — bảng dưới là bản tổng hợp để nhìn cả phase trên một màn hình.
+
+Tiêu chí tốt nghiệp số 10 chỉ tính 3 tuần cuối, nhưng log đủ 12 tuần: hai lần Trượt liên tiếp ở bất kỳ đâu là tín hiệu đỏ phải siết luật AI ngay tuần sau, không đợi đến cuối phase.
+
+| Tuần | Hàm được chọn | Kết quả (Đạt / Trượt) | Ghi chú |
+|---|---|---|---|
+| 1 | ____ | ____ | ____ |
+| 2 | ____ | ____ | ____ |
+| 3 | ____ | ____ | ____ |
+| 4 | ____ | ____ | ____ |
+| 5 | ____ | ____ | ____ |
+| 6 | ____ | ____ | ____ |
+| 7 | ____ | ____ | ____ |
+| 8 | ____ | ____ | ____ |
+| 9 | ____ | ____ | ____ |
+| 10 | ____ | ____ | ____ |
+| 11 | ____ | ____ | ____ |
+| 12 | ____ | ____ | ____ |
+
+## Examiner mode: chạy kỳ thi cuối phase với AI
+
+Chạy ở tuần 12, sau khi Project 2 đã nộp và tuần AI-free đã kết thúc. AI đóng vai giám khảo: ra đề, bấm giờ, chấm, vấn đáp — **không gợi ý, không sửa hộ, không hạ chuẩn**.
+
+Cách chạy:
+
+1. Mở một phiên AI mới trong workspace học của bạn.
+2. Gõ nguyên văn:
+
+```text
+Vào Examiner mode cuối Phase 0. Đọc CLAUDE.md và roadmap/phase-0.md mục 7.3.
+Ra đề timed-test cho các tiêu chí 1–6: mỗi đề là BIẾN THỂ MỚI, không trùng
+bất kỳ đề nào trong roadmap hoặc đề tôi đã từng làm. Với mỗi bài, nêu rõ
+giới hạn thời gian và tiêu chí chấm trước khi tôi bắt đầu. Trong lúc tôi
+làm bài: không gợi ý, không trả lời câu hỏi về cách giải. Chấm theo rubric.
+Sau khi chấm xong toàn bộ, vấn đáp 10 câu Kotlin theo danh sách công khai,
+hỏi xoáy 2 tầng "tại sao" sau mỗi câu. Cuối cùng, vấn đáp 15 phút về chính
+bài làm của tôi.
+```
+
+3. Luật khi làm bài: bấm giờ thật, không AI, không Google — trừ tiêu chí 6 được mở đúng trang docs mà đề chỉ định. Nộp bài xong mới nhận nhận xét.
+4. Ghi kết quả từng bài vào checkbox ở đầu trang, tick, commit.
+
+Vì sao đề phải là biến thể: bạn đã nhìn thấy mọi đề trong roadmap từ tuần 1. Thi lại đúng đề cũ chỉ đo trí nhớ; đề biến thể mới đo năng lực — và năng lực là thứ duy nhất Phase 0 quan tâm.
+
+Tiêu chí 7 (Project 2) chấm theo rubric riêng ở [trang hai project](/phase-0/projects). Tiêu chí 9 và 10 không cần thi — chúng được chấm bằng chứng cứ sẵn có: `notes/AI-LOG.md` và bảng Friday Rebuild ở trên.
+
+## 🔒 Bàn giao cho Phase 1
+
+Người tốt nghiệp Phase 0 mang theo năm thứ:
+
+- **Kotlin đủ dùng** — đặc biệt lambda, sealed class, collections: đó là ngôn ngữ mẹ đẻ của Compose ở Phase 1
+- **Quy trình IOSTV + debug 6 bước** đã thành phản xạ, không cần mở playbook
+- **Kỷ luật git và test** — branch theo feature, `git diff` trước mọi commit, test 3 tầng cho hàm logic
+- **Bộ luật AI đã nội hoá** — Phase 1 sẽ nới dần theo hướng "AI như đồng nghiệp", nhưng chỉ nới với người đã chứng minh không cần mượn
+- **Một project tự tay làm từ số 0 kèm bằng chứng số liệu** — chính là các bảng trên trang này cộng với repo Project 2
+
+Đó là định nghĩa vận hành của "tin rằng mình tự làm được".
+
+**Điều kiện mở khoá Phase 1:** commit cuối cùng của trang này tick đủ ≥8/10 với trọn bộ mục 1–4. Android Studio đã đóng từ sau buổi field trip tuần 6 — nó chỉ được mở lại khi checkbox "Tốt nghiệp Phase 0" ở trên chuyển thành đã tick. Android là phần thưởng, không phải cám dỗ.
+
+Chưa đủ 8/10? Không kéo dài vô hạn cũng không hạ chuẩn: chạy monthly recalibrate với AI, chọn đúng các tiêu chí trượt, luyện đúng chỗ đó 1–2 tuần rồi thi lại phần trượt — với đề biến thể mới.
+
+## → Tiếp theo
+
+[Phase 1 — App Android đầu tiên](/phase-1): Compose, state, lifecycle — và chiếc app đầu tiên chạy trên điện thoại của chính bạn. Trang đó đang khoá cho đến khi trang này xanh.
