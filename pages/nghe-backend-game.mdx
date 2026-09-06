@@ -1,0 +1,234 @@
+# Nghề backend game: làm gì, ở đâu, và vì sao đi đường vòng
+
+Trang này trả lời ba câu: backend game là làm gì, ở Việt Nam nó tồn tại ở đâu, và vì sao lộ trình này đi đường vòng qua backend chung thay vì nhắm thẳng studio. Mở nó **trước khi đọc roadmap** — và mở lại ở W45 (DP5) khi bạn tự đếm lại thị trường bằng tay.
+
+---
+
+## 🎯 Hai nhánh của một nghề
+
+"Backend game" không phải một nghề. Là hai nghề khác nhau về **bản chất**, không phải về mức độ.
+
+| | Nhánh 1 — Game Platform / Services Backend | Nhánh 2 — Realtime Authoritative Game Server |
+|---|---|---|
+| Làm gì | Account, session, inventory, ví/economy, IAP verify, leaderboard, matchmaking queue, live-ops, CS tooling | Tick loop 20–60Hz, state sync, snapshot/delta, prediction + reconciliation, lag compensation |
+| Tỉ trọng headcount game mobile | ~80–90% | ~10–20%, vài studio (Sky Mavis, Wolffun, một số team VNG) |
+| Bản chất kỹ thuật | Distributed systems + data: idempotency trên tiền ảo, transaction, cache, lock, outbox, observability | Fixed timestep, determinism, allocation-aware hot loop, binary protocol |
+| Tuyển Junior ở VN | Có (qua cửa backend chung) | Gần như không |
+| Tự học part-time kiểm chứng được | Cao — một máy, một Docker Compose, một script bắn tải | Trung bình ở mức demo |
+
+**Sự thật:** phần lớn game mobile doanh thu cao là async/PvE — match-3, idle, gacha, 4X. Không có tick loop nào cả. Cái quyết định doanh thu là economy, live-ops event, anti-cheat kinh tế. Đó là nhánh 1, và đó là distributed systems + data, không phải game math.
+
+**Quyết định của lộ trình:** nhắm nhánh 1. Nhánh 2 học **một lát mỏng nhưng thật** — tick server 20Hz authoritative có snapshot + reconnect, đo được tick jitter, determinism L1 — 40h ở P3, không bao giờ xuống 0. Vì sao không hơn: "realtime netcode engineer" trong 26 tháng part-time với nền CS ≈ 0 là số học, không phải ý kiến. Vì sao không ít hơn: không có số tick jitter của chính mình thì không trả lời được 5 câu netcode ở vòng phỏng vấn.
+
+---
+
+## Một ngày của backend game
+
+Bảng này để bạn biết mình đang học để làm **việc gì**, không phải học **môn gì**.
+
+| Nhánh | Việc thật trong ngày | Nó chạm vào kỹ năng nào |
+|---|---|---|
+| 1 | Account: đăng ký bằng install-id, session token, đăng nhập từ 2 thiết bị | Identity, token, `Postgres` |
+| 1 | Session: heartbeat, timeout, reconnect sau rớt mạng 30s | Protocol, state machine |
+| 1 | Inventory: client retry 3 lần thì vật phẩm không được nhân 3 | Idempotency key, transaction |
+| 1 | Ví/economy: ledger append-only, chuyển vàng nguyên tử, đối soát cuối ngày | Isolation level, `FOR UPDATE`, script đối soát |
+| 1 | IAP verify: nhận purchase token, chống replay, cấp vật phẩm đúng một lần | Unique index, state machine acknowledge |
+| 1 | Leaderboard: xếp hạng 100k người, đọc rank cá nhân dưới 20ms | Redis `ZSET`, cache invalidation |
+| 1 | Matchmaking queue: ghép theo bucket MMR, nới dải chờ theo thời gian | Queue, trade-off chờ lâu vs trận lệch — lộ trình **chỉ thiết kế ở 4.8, không xây** |
+| 1 | Live-ops: bật event, đổi config không deploy lại, A/B | Remote config, feature flag |
+| 1 | CS tooling: ban, cộng vàng có audit log, tra lịch sử giao dịch | Admin endpoint, audit trail |
+| 2 | Tick loop: chạy sim đúng 20Hz, đo tick jitter, không để tick miss vượt 1% | Fixed timestep, accumulator |
+| 2 | State sync: server giữ sự thật, client chỉ gửi input command | Authoritative validate, chống cheat |
+| 2 | Snapshot: đóng gói state 4 entity vào dưới 60 byte, gửi mỗi tick | Bit-packing, binary protocol |
+| 2 | Prediction: client tự đoán kết quả để không chờ server, rồi sửa lại khi server nói khác | Reconciliation |
+| 2 | Lag compensation: server "tua lại" thời gian để xử lý phát bắn của client ping 150ms | Lịch sử state, interpolation |
+
+Hai dòng cuối của nhánh 2 (prediction + reconciliation, lag compensation) nằm ở [trang mở rộng](/mo-rong), không nằm trong 839h Lõi. Bạn cần **biết chúng tồn tại** để trả lời phỏng vấn, không cần tự viết chúng trước khi có việc. Snapshot thì **có trong Lõi** — module 3.1–3.2 ở P3, ngưỡng "4 entity dưới 60 byte" là ngưỡng bắt buộc, không phải tuỳ chọn.
+
+---
+
+## ⚠️ Sự thật về thị trường Việt Nam
+
+**Không tồn tại cửa Junior game backend ở Việt Nam.** Ước lượng: dưới 5 vị trí toàn quốc, hầu hết đòi 2+ năm kinh nghiệm. Netcode thật (authoritative server, tick loop) chỉ có ở Sky Mavis, Wolffun, một số team VNG — và họ gần như không tuyển Junior.
+
+Số đếm tay ngày **06/09/2026** trên ITviec:
+
+| Truy vấn | Kết quả | Ghi chú |
+|---|---|---|
+| Tag `games` | **16 tin** | 9 art/design · 4 Unity/client · 1 QA · 2 backend/data = 16. Hai tin backend/data — **cả hai Middle** |
+| Tag `back end` | **117 tin** | Chưa tính tag ngôn ngữ |
+| Java / Kotlin / Golang / C# | **116 / 18 / 47 / 41** | Cộng thô `back end` + bốn tag ngôn ngữ = 117 + 116 + 18 + 47 + 41 = **339**. Đó là **cận trên tuyệt đối**, không phải kết quả: một tin Java backend gần như luôn mang cả hai tag |
+
+**Tổng các phần là cận trên; hợp thật luôn nhỏ hơn.** Trùng lặp `Java` × `back end` rất nặng, nên sau khi trừ trùng, ước **180–250 tin** backend Java/Kotlin/Go/C# toàn quốc.
+
+Ba chi tiết trong 16 tin `games` đáng giá hơn con số 16:
+
+- Tin backend **thuần** duy nhất là một **Middle Backend Developer (Golang)**. Ngôn ngữ của cửa game backend VN nhiều khả năng là Go, không phải Kotlin.
+- Cửa fresher trong game **có thật**, nhưng nằm ở **client Unity**, không ở server.
+- Nhìn thẳng vào hai con số ngôn ngữ: `kotlin` **18 tin** toàn quốc so với `java` **116 tin**. Kotlin không phải từ khoá tuyển dụng ở VN; nó đi kèm Java hoặc Android.
+
+**Đây là ước lượng đếm tay một lần, không phải số liệu công bố.** Ở **DP5 (W45)**, bốn tuần sau đợt apply 0 (W39–41), bạn tự đếm lại bằng đúng ba truy vấn trên và ghi vào đây:
+
+- [ ] Tag `games`: ____ tin, trong đó backend: ____, level thấp nhất: ____
+- [ ] Tag `back end`: ____ tin
+- [ ] Java / Kotlin / Golang / C#: ____ / ____ / ____ / ____
+
+Số của bạn khác số của tôi thì số của bạn đúng. Trục apply đổi theo số, không theo cảm tính.
+
+Studio Việt Nam có thật, để bạn biết mình đang nhắm vào đâu ở năm 3–4:
+
+| Nhóm | Studio | Backend của họ là gì | Tuyển level nào |
+|---|---|---|---|
+| Live-ops có server thật | Sky Mavis, VNG/ZingPlay, Wolffun | Netcode + platform | Middle/Senior, hiếm Junior |
+| Hypercasual / offline-first | Amanotes, OneSoft, Falcon, Topebox | Live-ops, config, analytics, IAP — không netcode | Middle |
+| Outsourcing có mảng game | Gameloft VN | Phần lớn client; backend là platform | Fresher–Senior, chủ yếu client |
+
+**Điểm cay đắng:** phần lớn "backend game" ở VN thực chất là backend web gắn vào game — account, shop, IAP, event, bảng xếp hạng, admin. Tức là nhánh 1. Tức là **cùng kỹ năng với backend chung, khác vỏ**.
+
+---
+
+## Bằng cấp lọc ở đâu
+
+Đây là bộ lọc CV lớn nhất và vô hình nhất ở VN. JD junior backend viết thẳng: "Tốt nghiệp đại học chuyên ngành CNTT, Khoa học Máy tính, Công nghệ Phần mềm, Hệ thống Thông tin hoặc lĩnh vực liên quan". Biết trước cửa nào đóng thì bạn không đốt đơn vào đó.
+
+| Cửa | Ở đâu | Vì sao |
+|---|---|---|
+| **Đóng** — bỏ qua, đừng tốn đơn | Fresher program tập đoàn, IT ngân hàng, doanh nghiệp nhà nước, công ty có vòng sàng lọc HR trước vòng kỹ thuật | Lọc cứng cả bằng cấp lẫn "mới tốt nghiệp trong 1 năm". Hồ sơ không tới tay người kỹ thuật, nên `bench/` của bạn không ai đọc |
+| **Mở** — dồn đơn vào đây | Công ty product nhỏ/startup, outsourcing có bài test kỹ năng trước CV, mọi công ty ra take-home | Take-home là bộ lọc **thay** bằng cấp — và đó đúng là vòng bạn có lợi thế nhất |
+| **Mở, đi vòng qua bộ lọc** | Giới thiệu nội bộ (referral) | Người giới thiệu bảo đảm thay hồ sơ. Đây là kênh duy nhất bỏ qua được bộ lọc bằng cấp |
+
+**Có** bằng CNTT: ghi rõ trên CV, một phần cửa "đóng" mở lại, và bạn đọc **cột trái** của bảng xác suất cuối trang. **Không có**: đừng đốt đơn vào cửa đóng, đọc **cột phải**, và bù bằng take-home cộng referral.
+
+---
+
+## Vì sao vào bằng cửa backend chung
+
+**Lập luận bằng số:** 2 cửa game backend (cả hai Middle) so với 180–250 cửa backend chung. Chênh **khoảng 100 lần**. Nhắm thẳng studio ở entry level là đặt cược vào thị trường có dưới 5 cửa, gần như tất cả đòi kinh nghiệm — kỳ vọng gần bằng 0 trong 26 tháng.
+
+**Lập luận bằng kỹ năng:** hai cửa này đòi gần hết cùng một thứ.
+
+| Kỹ năng JD backend chung đòi | JD game platform đòi | Trùng |
+|---|---|---|
+| Một ngôn ngữ JVM vững, Spring Boot | Java/Kotlin, thường ghi Spring Boot | Có |
+| SQL thật: schema, index, transaction, N+1, đọc `EXPLAIN` | Như nhau, thêm ledger tiền ảo | Có |
+| Redis: sorted set, hash, TTL, atomicity | Leaderboard `ZSET`, session, rate limit | Có |
+| Concurrency: race, lock, idempotency | Như nhau — đây là chỗ loại người nhiều nhất | Có |
+| Docker, Linux, Git, đọc log production | Như nhau | Có |
+| — | Vòng đời session, server-authoritative, "vì sao không tin client" | Chỉ game |
+
+Phần "chỉ game" là 5 câu netcode mức Junior cộng một tick server 20Hz đo được. Lộ trình này cho bạn cả hai bằng **cùng một sản phẩm** — CARO là leaderboard + inventory + session + tick loop, nộp vào cửa backend chung, nói được ngôn ngữ game khi gặp studio. (Matchmaking không có module nào xây: nó chỉ xuất hiện ở vòng system design 4.8. Đừng kể nó như một thứ bạn đã làm.)
+
+**Đường đi:** vào backend chung ở bất kỳ công ty nào tại VN → làm 12–18 tháng production thật → chuyển nội bộ sang team game (VNG có cả hai) hoặc nhảy sang studio ở mức Middle. Đây là con đường **duy nhất có người đi qua được** vào Sky Mavis/Wolffun. Không có đường tắt, và lộ trình này không giả vờ là có.
+
+---
+
+## Họ hỏi gì khi phỏng vấn
+
+Ước lượng theo pattern ngành, không phải số liệu công bố. Studio nhỏ và outsourcing vừa phần lớn **không** có vòng LeetCode; product company lớn (VNG, MoMo, VNPay, ZaloPay, Shopee, Grab, Tiki, NAVER) và công ty Hàn/Nhật/Sing thì **gần như luôn có** (easy/medium).
+
+| Vòng | Họ hỏi | Tần suất | Lộ trình chuẩn bị ở |
+|---|---|---|---|
+| CV screen | Có sản phẩm chạy được không, có số đo không | Loại 70% tại đây | `v0.1` W38, `v1.0` W67, repo Spring ghim #1 W103 |
+| Sơ lọc tiếng Anh | Đọc JD/tài liệu + giới thiệu bản thân 3 phút | ~100% outsourcing, ~40% product | Bản pitch CARO 3 phút, viết ra và tập nói 10 lần, xong **trước đợt 0 (W39)** — chuẩn bị ở 4.5 |
+| Online test / thuật toán | 1–2 bài easy/medium, 60–90', máy tự chấm, không có ai để giải thích | ~100% product company lớn và công ty Hàn/Nhật; ~30% outsourcing/SME; hiếm ở studio nhỏ | Warm-up DSA 20'/buổi từ W20 · drill online-test ở 4.7 |
+| SQL | Viết query, index, transaction, isolation, N+1 | **100% buổi** | 2.1 PostgreSQL · B2 mô hình dữ liệu + migration ở [/backend-core](/backend-core) |
+| Concurrency | Race condition, lock, idempotency, "2 request cùng lúc thì sao" | Chỗ loại người nhiều nhất | 0.5, 1.3, 2.5, 3.3 |
+| OOP / Design Patterns | 4 tính chất, SOLID, "kể tên pattern em đã dùng" | Gần 100% JD Java | Tờ ánh xạ pattern trong chính CARO, ở 4.5 hồ sơ |
+| Spring | `@Transactional` khi nào không hoạt động, JPA lazy, Security/JWT | 52% JD `back end` gắn tag Spring (61/117 tin, 06/09/2026), gần 100% JD Java | 4.1 `ledger-service` · B3 danh tính/JWT/OAuth2 ở [/backend-core](/backend-core) |
+| Docker/Linux | `docker compose up` chạy trong 5', đọc log, `ulimit` | Mặc định | 1.8, 1.9, 2.6 · S1–S4 process/memory/fd/`epoll`/cgroup ở [/nen-tang-he-thong](/nen-tang-he-thong) |
+| Take-home | "REST inventory + Redis + chống double-spend + docker-compose + test" | Trên 60% studio mid-size, 3–7 ngày | 4.6 take-home ×2 công khai |
+| System design rút gọn | Leaderboard 10M, matchmaking, inventory chống trùng, session/reconnect | Từ Middle; Junior hỏi bản ngắn | 4.8 |
+| Netcode Junior | 5 câu bên dưới | Khi gặp studio | 1.2, 3.1, 3.2 |
+
+**Tờ ánh xạ pattern** (4.5, gần như 0h học mới — code đã tồn tại, việc của bạn là **đặt tên**): state machine `sealed class` → State · room actor → Actor/Active Object · `caro-engine` không I/O sau interface → Strategy + Dependency Inversion · outbox 3.4 → Observer/Publisher · repository Postgres → Repository · builder của snapshot → Builder. Cộng một tờ SOLID trỏ vào đúng file trong repo. Không kể tên được pattern trong code của chính mình là trượt kiểu khó chịu nhất: bạn đã làm rồi mà không nói được.
+
+Năm câu netcode mức Junior — họ **không** hỏi rollback hay lag compensation:
+
+1. TCP khác UDP chỗ nào?
+2. Vì sao game realtime dùng UDP?
+3. Client gửi điểm số lên thì có tin không?
+4. Latency là gì?
+5. Tick rate là gì?
+
+**Luật sắt:** trả lời 5 câu này bằng **số của chính bạn** — bảng p50/p99 TCP vs UDP ở 1.2, tick jitter ở 3.2 — không bằng định nghĩa chép lại. Trả lời bằng tên thư viện là trượt.
+
+---
+
+## 🛠️ Stack thật sự dùng
+
+Stack đã chốt, không mở lại. Cột "Từ chối" quan trọng ngang cột "Chọn" — mỗi thứ bị từ chối là một hố giờ đã được nhìn thấy trước.
+
+| Tầng | Chọn | Vì sao | Từ chối |
+|---|---|---|---|
+| Ngôn ngữ | **Kotlin/JVM, JDK 21+** | Đã đầu tư; Pragma Engine (backend game thương mại) viết bằng Kotlin; virtual thread + coroutine đều có | Go/C#/C++ làm ngôn ngữ chính |
+| Framework | **Ktor**, `embeddedServer(Netty)`, raw NIO trước | Không giấu cơ chế: học `Selector` rồi mới để Ktor che nó | Spring Boot làm framework học đầu — quay lại 40h ở P4 |
+| CSDL | **PostgreSQL** nguồn sự thật | Kỷ luật transaction; JD VN | MongoDB cho economy |
+| Cache/derived | **Redis** (`ZSET`, TTL, rate limit) | Leaderboard, session; pub/sub **mất tin khi subscriber không đang kết nối** — fire-and-forget, không có replay. Đo ở 2.3: `kill -9` subscriber, publisher đếm tiếp seq, restart rồi đếm lỗ hổng | Redis làm source of truth; pub/sub cho thông báo lượt |
+| Transport | **WebSocket over TCP + TLS** | Transport thật của game mobile vì carrier NAT và firewall | Raw UDP/KCP — chỉ đọc |
+| Serialization | JSON platform; **binary tự đóng gói** cho ARENA | Hiểu byte trước khi dùng thư viện | Protobuf — đọc khi đi làm |
+| Kiến trúc | **Modular monolith** | Chia service sớm giết dự án cá nhân | Microservices, Kafka, gRPC |
+| Hạ tầng | **Docker Compose + 1 VPS + systemd + Caddy + GitHub Actions** | Đủ 300 CCU; cấu hình là nội dung học | K8s/Agones — 2h đọc |
+
+---
+
+## Lương tham chiếu
+
+| Bậc | Backend chung (ITviec — Báo cáo lương IT 2024–2025) |
+|---|---|
+| Fresher / Entry | **~12,4 triệu/tháng** — người mới tốt nghiệp trung bình ~10,8 triệu |
+| Junior | **~15–22 triệu/tháng** |
+| Middle | **~37,8 triệu/tháng** |
+
+Đây là **tham chiếu**, không phải cam kết. Không có bước nhảy 12,4 → 37,8: bậc kế tiếp của bạn là Junior, và Junior lên Middle thường mất 2–3 năm.
+
+**Lương game backend ở VN không có phần bù** so với backend chung. Đỉnh thang lương nằm ở fintech/ngân hàng số và công ty product nước ngoài, không ở studio game nội địa. Chọn studio là chọn **nội dung công việc**, không phải chọn tiền — và đó là thêm một lý do studio là đích năm 3–4, không phải đích của lộ trình này.
+
+**Luật nhận offer (DP8, áp dụng bất kỳ lúc nào):** ≥12tr và không bond → **NHẬN**. Có bond → ≥15tr và bond ≤6 tháng. Dưới 10tr → nhận nếu có **đủ hai** thứ: (1) code review trên PR của bạn bởi người có kinh nghiệm hơn, (2) một hệ thống đang chạy production thật. Product hay outsourcing không quan trọng; hai điều kiện trên mới quan trọng. Đọc điều khoản đào tạo trước khi ký.
+
+Có việc sớm là **THẮNG** — đi làm rút phần còn lại của lộ trình 2–3 lần. Giá trị của job đầu tiên là kinh nghiệm production, không phải một triệu chênh lệch.
+
+---
+
+## Mốc thời gian trung thực
+
+Giả định: commit đầu ≤21/09/2026; 94 tuần chạy ±10 (nhịp **8,9h/tuần chạy không đổi** so với bản 755h — lộ trình chỉ dài thêm 2 tháng vì +84h ba trục nền tảng [/nen-tang-he-thong](/nen-tang-he-thong), [/android-core](/android-core), [/backend-core](/backend-core)); hợp đồng AI giữ; thị trường backend VN không co hơn 20%; chấp nhận job 10–16tr, cả outsourcing, cả không-game (dưới 10tr xét theo hai điều kiện của DP8 ở trên).
+
+| Kịch bản | Điều kiện | Đợt 0 | Đợt 1 | **Job backend chung** | Job game backend |
+|---|---|---|---|---|---|
+| **P10** | ≥10h/tuần từ W9, ≥94 tuần chạy, ≥200 đơn tích luỹ đến tháng 22 | Tháng 9 (06/2027 — W39–41, ngay sau ship `v0.1` W38) | 21/02/2028 (tháng 18, rơi vào P3 — giữ ngày để bám sóng tuyển sau Tết) | **Tháng 21–24 (05–08/2028)** | Tháng 33–42, pivot nội bộ |
+| **P50** | 9h/tuần, 84–94 tuần chạy, áp bậc cắt 1–4 | Tháng 9 | Tháng 18–19 | **Tháng 24–29 (08/2028–01/2029)** — một phần nằm ngoài 26 tháng | Tháng 36–47 |
+| **P90** | Lặp lại mẫu 5 tuần vừa qua | — | — | Không | Không |
+
+Cột cuối không phải số riêng: nó là cột "Job backend chung" **cộng 12–18 tháng production thật** — đúng luật ở mục "Vì sao vào bằng cửa backend chung". Tháng ở đây đếm từ W1 (07/09/2026), tháng 26 kết thúc 05/11/2028.
+
+**Vì sao 200 đơn chứ không phải 100:** tỉ lệ phản hồi của kênh apply lạnh ở VN là 3–7% với người tự học không kinh nghiệm, nên 200 đơn mới sinh khoảng 10 lượt phản hồi. Con số thấp đó là **đặc điểm của kênh lạnh**, không phải dấu hiệu hồ sơ kém — referral và bài viết kỹ thuật công khai là hai kênh nâng tỉ lệ, không phải "học thêm cái mới".
+
+---
+
+## Chuỗi xác suất — đọc ở DP2 và DP5, không đọc ở W1
+
+Bảng này không có việc gì để làm ở tuần 1, và đọc nó ở tuần 1 chỉ tốn tinh thần. Nó dùng để **hiệu chỉnh** ở DP2 (cuối W14), DP5 (W45) và DP7 (W103), khi bạn đã có số của chính mình. Ước lượng, không có nguồn ngoài.
+
+| Bước | Có bằng CNTT | Không có bằng CNTT |
+|---|---|---|
+| Qua DP2 (tốt nghiệp P0, cuối W14) | ≈ 45% | ≈ 45% |
+| Trụ tới W103 (cuối P4, DP7), với điều kiện đã qua DP2 | ≈ 55% | ≈ 55% |
+| Có việc ≤ tháng 29, với điều kiện trụ và ≥200 đơn | ≈ 70% | ≈ 50% |
+| **P(việc) không điều kiện** | **≈ 17%** | **≈ 12%** |
+| P(việc) với điều kiện đã qua DP2 | ≈ 38% | ≈ 28% |
+| P(việc) với điều kiện đã tới P4 với ≥200 đơn | ≈ 70% | ≈ 50% |
+
+Hai cột chỉ tách ở dòng thứ ba. Bằng cấp không quyết định bạn có ngồi vào bàn hay không — nó chỉ đóng bớt cửa lúc nộp đơn, đúng như bảng ở mục "Bằng cấp lọc ở đâu". Đọc đúng cột của bạn: đừng tự dồn mình vào kịch bản xấu hơn thực tế, cũng đừng đọc cột trái nếu bạn không có bằng.
+
+**Không có con số 50–60% không điều kiện nào.** Job game backend trong 26 tháng: dưới 10% ở cả hai cột — lộ trình không tối ưu cho nó, nhưng không bỏ phần game.
+
+Đọc bảng này đúng cách: 12–17% là số của người **chưa làm gì**. Mỗi cổng bạn đi qua, số đổi. Rủi ro lớn nhất không nằm ở tháng 26 — nằm ở DP2, tức là ở 14 tuần đầu tiên. Và DP2 chỉ hỏi một thứ: bạn có ngồi vào bàn không.
+
+---
+
+## → Tiếp theo
+
+Bạn đã biết nghề này là gì và cửa vào nằm ở đâu. Giờ xem đường đi.
+
+1. Đọc [Roadmap 26 tháng](/roadmap) — 6 phase, 839h, thang 12 bậc, thứ tự cắt khi chậm, và DP0–DP8.
+2. Mở [Phase 0 — Kotlin viết được](/phase-0) — 14 tuần đầu, và việc duy nhất của Ngày 1: 90 phút, một file Kotlin chạy được, một commit, một tag.

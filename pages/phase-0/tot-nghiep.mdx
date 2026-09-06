@@ -1,33 +1,60 @@
 # Tốt nghiệp Phase 0
 
-Đây là cửa ra của Phase 0: mọi tiêu chí trên trang này đều đo được, bấm giờ được, và có chỗ ghi kết quả ngay trong trang. Luật tốt nghiệp: đạt **ít nhất 8/10 tiêu chí**, trong đó **mục 1–4 là bắt buộc** — thiếu bất kỳ mục nào trong bốn mục đó thì dù đạt 9/10 vẫn chưa qua.
+Trang này trả lời một câu: **bạn đã qua cổng P0 chưa** — bằng mười hiện vật người lạ clone về là kiểm được, không bằng lời tự khai. Mở nó từ tuần 1 — sau tag `v0.0.1`, không phải trước buổi đầu tiên: biết trước đích đến thay đổi cách bạn học từng buổi. Quay lại tick ở W14, khi DP2 hỏi "mở Phase 1 chưa?".
 
-Mở trang này từ tuần 1, không phải tuần 12. Biết trước đích đến thay đổi cách bạn học từng tuần.
+---
 
-## 🏁 Mười tiêu chí
+## 🏁 Mười tiêu chí — người lạ xác minh được
 
-Mỗi tiêu chí là một bài kiểm tra có điều kiện đo được. Làm xong bài nào, ghi kết quả vào dòng đó, tick checkbox, commit — commit chính là bằng chứng. Không có khái niệm "chắc là đạt": chưa bấm giờ, chưa có số, là chưa đạt.
+**Luật sắt:** đạt **ít nhất 8/10**, trong đó **mục 1–5 là bắt buộc** — thiếu bất kỳ mục nào trong năm mục đó thì dù 9/10 vẫn chưa qua. Không thương lượng, không cộng điểm bù.
 
-- [ ] **1. (Bắt buộc)** Viết chương trình đọc file CSV, `groupBy`, in báo cáo — **45 phút, không Google, không AI**. Đo bằng: AI ra một file CSV mới và yêu cầu báo cáo biến thể, bấm giờ từ lúc đọc đề đến lúc output đúng. Kết quả: ____ phút
-- [ ] **2. (Bắt buộc)** Nhận một stack trace chưa từng thấy → chỉ đúng dòng lỗi thuộc code của mình + viết 1 câu giả thuyết nguyên nhân — **5 phút**. Đo bằng: AI đưa stack trace lạ, bạn trả lời miệng hoặc viết. Kết quả: ____ phút
-- [ ] **3. (Bắt buộc)** Tìm bug logic trong chương trình ~100 dòng người khác viết, **chỉ dùng debugger, cấm println** — **30 phút**. Đo bằng: AI sinh chương trình có bug cài sẵn (đây là vùng AI được phép làm), bạn ghi giả thuyết trước khi sửa. Kết quả: ____ phút
-- [ ] **4. (Bắt buộc)** Nhận một đề mơ hồ → giao ra `BACKLOG.md` chuẩn IOSTV **≥12 việc** — **30 phút**. Đạt khi có đủ 3 cặp ví dụ input → output, có `data class`, việc đầu tiên chạy được trong 30 phút, không việc nào ước quá 30 phút. Số việc: ____
-- [ ] **5.** Git bằng **CLI**: tạo repo mới, branch, commit, tự gây conflict rồi resolve — **15 phút**, không GUI. Kết quả: ____ phút
-- [ ] **6.** Nhận docs một API stdlib chưa từng dùng → dùng được nó đúng trong **60 phút**. Đo bằng: AI chọn API, bạn áp quy trình đọc docs 3 lượt và nộp một đoạn code chạy được. API được giao: ____________
-- [ ] **7.** Project 2 đạt **rubric ≥70/100, không mục nào 0 điểm** + demo nói trôi chảy **5 phút** cho người không biết code. Rubric chi tiết nằm ở [trang hai project](/phase-0/projects). Điểm: ____/100
-- [ ] **8.** Vấn đáp 10 câu Kotlin đạt **≥8/10** — danh sách câu hỏi ở section ngay dưới, AI hỏi và hỏi xoáy 2 tầng "tại sao". Điểm: ____/10
-- [ ] **9.** AI log 2 tuần cuối trong `notes/AI-LOG.md`: **0 lần AI sinh code**, 100% lượt hỏi đúng luật. Không log = tính là vi phạm. Số lần vi phạm: ____
-- [ ] **10.** Friday Rebuild 3 tuần cuối (tuần 10, 11, 12): **3/3 lần viết lại được trong 15 phút** — đối chiếu bảng log bên dưới. Kết quả: ____/3
+**Sự thật:** bảng cũ có tiêu chí "≥30 ngày có commit" và "≥6,5h/tuần". Cả hai đã bị cắt vì farm được — commit rỗng và giờ ngồi máy không nói gì về việc bạn viết được Kotlin hay chưa. Chúng lùi về hàng phụ của bảng tuần trong `PROGRESS.md`, không phải cổng. Mọi tiêu chí dưới đây đều trả lời được câu "người lạ kiểm bằng cách nào" — cột thứ ba. Không trả lời được thì không có mặt trong bảng.
+
+| # | Tiêu chí | Người lạ xác minh bằng |
+|---|---|---|
+| 1* | Hai repo (Project 1 và Project 2) có tag `v1.0`; `./gradlew test` xanh trên một bản clone sạch | Clone vào thư mục mới trên máy khác — hoặc nhờ người chứng kiến clone — rồi chạy `./gradlew test`, không cài thêm gì ngoài JDK, không sửa file nào. Chỉ có một máy: xoá `~/.gradle/caches` trước khi clone và chạy |
+| 2* | `caro-engine` là module Gradle riêng, **0 dependency, 0 I/O**; test seed chạy 100 lần cho cùng hash bàn cờ | File test dùng `@RepeatedTest(100)` của JUnit5, chạy xanh; `grep -rn "println" src/` và `grep -rn "java.io" src/` trong module ra 0 dòng; đọc `build.gradle.kts` thấy không có `dependencies` ngoài stdlib và JUnit5 |
+| 3* | Blank-file test: **≥3/5 lần pass**, và lần W14 phải pass | Commit `rebuild/<ngày>-<tên>.kt` + diff so bản gốc, commit riêng — bảng log ở cuối trang |
+| 4* | 20 case biên win-check có test: mép bàn, góc, đường chéo ngược, overline, bàn đầy, ô đã có quân | File test — đếm được 20 case, đặt tên đọc hiểu |
+| 5* | Mốc ngoài #1: trang tĩnh **một file** trên Vercel đọc `the-co.json` do `caro-cli` xuất (commit cùng repo, trang fetch `./the-co.json`) và hiển thị "thế cờ hôm nay"; dựng ở **W13**, đã gửi link cho 3 người | URL còn sống + `the-co.json` có trong repo + 3 tên trong `PROGRESS.md` |
+| 6 | ≥1 commit race đỏ → xanh từ [Concurrency nhập môn](/phase-0/concurrency-nhap-mon): test lost update đỏ, sửa bằng **một trong ba cách** của module 0.5 (`synchronized` · `AtomicInteger` · tách dữ liệu không chia sẻ), xanh | 2 commit kế nhau: một đỏ, một xanh |
+| 7 | Project 1: 1.000 lần chuyển vật phẩm + vàng giữa hai túi, xen lỗi cố ý → tổng vàng bảo toàn, **0 lệch**, có test | Chạy file test, đọc assertion cuối |
+| 8 | README 5 mục ở cả hai repo; `BACKLOG.md` khoá tại `v1.0` — việc nào chưa làm ghi rõ "không làm", không xoá | Mở hai file |
+| 9 | `PROGRESS.md` trong repo public có **≥9/11** dòng bảng tuần (W4–W14), mỗi dòng được commit trong đúng tuần của nó | `git log --date=short -- PROGRESS.md` — đếm dòng bảng tuần, đối chiếu ngày commit với số tuần |
+| 10 | Vấn đáp 12 câu đạt **≥10/12**, AI hỏi xoáy 2 tầng "tại sao" — danh sách ở mục dưới | `notes/ai-sessions/<ngày>-van-dap.md` chứa bảng chấm AI in ra: 12 dòng đạt/trượt kèm câu đổi điều kiện |
+
+Dấu `*` = bắt buộc. Mục 1–5 là bốn hiện vật kỹ thuật cộng một mốc ngoài; thiếu mốc ngoài thì cả phase chưa có ai chạm vào thứ bạn làm.
+
+**Vì sao mục 3 bắt buộc:** hai project có thể được "hỗ trợ" tới mức bạn không viết lại nổi từ file trống. Blank-file là máy dò duy nhất cho chuyện đó. Lần W14 phải pass vì nó gần kỳ thi nhất.
+
+**Vì sao mục 5 dựng ở W13, không phải W14:** HTML/JS/Vercel không phải mục tiêu học của P0 và không có giờ riêng — 1,5h của nó nằm trong 20h của Project 2. Đặt ở W13 để nó nằm **ngoài** tuần AI-free: phần tài khoản Vercel và nối GitHub là "máy của bạn" (Luật 7 — AI hướng dẫn từng bước); phần HTML+JS dưới 40 dòng thì AI đưa một khung có **3 lỗi cố ý** để bạn tìm, sửa và giải thích, đúng dạng "server config". Cơ chế chốt sẵn, không phải tự nghĩ: `caro-cli` xuất `the-co.json`, bạn commit file đó vào cùng repo với trang, trang fetch `./the-co.json` cùng origin — không API, không backend.
+
+**Vì sao mục 9 không chấm người chứng kiến:** [hệ thống học và luật AI](/he-thong-hoc) nói rõ người cố định là mục tiêu, không phải điều kiện — không có ai thì đăng link công khai. Một cổng tốt nghiệp không được phụ thuộc vào việc người khác có rảnh trả lời hay không. Hiện vật là `PROGRESS.md` với commit rơi đúng tuần của nó; dòng xác nhận do người chứng kiến viết là **điểm cộng**, không phải tiêu chí. Link bảng tuần bắt đầu gửi từ W4 nên trần là 11 tuần (W4–W14), không phải 12.
+
+Ghi kết quả tại đây, tick, commit — commit chính là bằng chứng. Chưa có hiện vật là chưa đạt.
+
+- [ ] **1\*** `./gradlew test` xanh trên bản clone sạch, cả 2 repo — ngày chạy: ____________
+- [ ] **2\*** `caro-engine` 0 dependency, 0 I/O; hash 100 lần: ____________
+- [ ] **3\*** Blank-file pass: ____/5 · lần W14: ____
+- [ ] **4\*** Case biên win-check có test: ____/20
+- [ ] **5\*** URL Vercel: ____________ · `the-co.json` trong repo: ____ · 3 người đã nhận link: ____________
+- [ ] **6** Commit đỏ: ____________ · commit xanh: ____________
+- [ ] **7** 1.000 lần chuyển xen lỗi, lệch: ____ (phải = 0)
+- [ ] **8** README 5 mục ×2, BACKLOG khoá tại v1.0
+- [ ] **9** Dòng bảng tuần có commit đúng tuần: ____/11 · người chứng kiến xác nhận (điểm cộng): ____
+- [ ] **10** Vấn đáp: ____/12 · file bảng chấm: ____________
 
 Chốt lại toàn phase:
 
-- [ ] **Tốt nghiệp Phase 0** — ngày: ____________ · tổng: ____/10 · mục 1–4 đủ cả bốn: ____
+- [ ] **Tốt nghiệp Phase 0** — ngày: ____________ · tổng: ____/10 · mục 1–5 đủ cả năm: ____
 
-## Vấn đáp 10 câu — công khai từ tuần 1
+## Vấn đáp 12 câu — công khai từ tuần 1
 
-Đây là 10 câu hỏi bạn sẽ trả lời miệng ở kỳ thi cuối phase. Chúng công khai từ tuần 1 **có chủ đích**: đây không phải bài thi đánh đố, mà là bản đồ những thứ Phase 0 muốn nằm trong đầu bạn. Thứ được kiểm tra không phải trí nhớ — AI sẽ hỏi xoáy 2 tầng "tại sao" sau mỗi câu trả lời, và câu trả lời học thuộc lòng chết ngay ở tầng thứ nhất.
+Đây là 12 câu bạn trả lời miệng ở kỳ thi cuối phase. Chúng công khai từ tuần 1 **có chủ đích**: không phải bài thi đánh đố, mà là bản đồ những thứ Phase 0 muốn nằm trong đầu bạn. AI hỏi xoáy 2 tầng "tại sao" sau mỗi câu — câu trả lời học thuộc chết ngay ở tầng thứ nhất. Trả lời bằng tên thư viện thay vì cơ chế = trượt câu đó.
 
-**Trang này cố ý không kèm đáp án.** Đáp án là thứ bạn tự xây qua 12 tuần code, sai, sửa, và ghi chú — đáp án đi mượn thì vấn đáp sẽ lộ trong 2 phút.
+**Trang này cố ý không kèm đáp án.** Đáp án là thứ bạn tự xây qua 14 tuần code, sai, sửa, và ghi chú — đáp án đi mượn lộ trong 2 phút.
+
+Chín câu Kotlin:
 
 1. Vì sao Kotlin cần null-safety? Nó giải quyết vấn đề gì mà Java để lại?
 2. `val` gán một `MutableList` — cái gì bất biến, cái gì vẫn đổi được? Vì sao?
@@ -36,96 +63,120 @@ Chốt lại toàn phase:
 5. `fold` làm gì? Nó thay cho pattern vòng lặp quen thuộc nào?
 6. Extension function là gì? Nó có thật sự sửa class gốc không?
 7. `it` và `this` trong lambda khác nhau thế nào?
-8. `suspend` nghĩa là gì?
-9. Khi nào dùng `Map` thay `List`?
-10. Vì sao phải tránh `!!`?
+8. Khi nào dùng `Map` thay `List`?
+9. Vì sao phải tránh `!!`?
 
-Tự kiểm mỗi tháng một lần: câu nào bạn chỉ trả lời được một tầng "tại sao" — ghi nó vào MURKY trong journal và xử lý trong tuần.
+Ba câu concurrency — thay cho câu "`suspend` nghĩa là gì" cũ, vì ở P1 câu hỏi thật là chuyện gì xảy ra khi hai thứ chạy cùng lúc:
+
+10. Hai coroutine cùng sửa một `MutableList` thì chuyện gì xảy ra? Vì sao không phải lúc nào cũng thấy lỗi?
+11. Huỷ scope cha thì coroutine con ra sao? Cơ chế nào làm việc đó?
+12. Vì sao `Channel`, actor và `Dispatchers` được hoãn sang module 1.4? Kể tên và nói một câu mỗi thứ làm gì.
+
+Ngưỡng: **≥10/12**. Câu 10–12 trả lời ở mức nhập môn của module 0.5 là đủ — đúng *cái gì xảy ra* và *vì sao*, chưa cần biết API; riêng câu 12, bảng "Chỉ giới thiệu tên" của [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) cho bạn đúng một câu mỗi thứ, và "vì sao hoãn" nằm ngay dưới bảng đó. Tự kiểm mỗi tháng: câu nào chỉ trả lời được một tầng "tại sao" — ghi vào `notes/ERRORS.md`, hoặc vào dòng `NEXT:` của journal hôm đó, và xử lý trong tuần.
 
 ## 📦 Benchmark: đo tiến bộ so với chính mình
 
-Hai bài, mỗi bài làm hai lần, **bấm giờ cả hai lần và ghi số vào đây**. Khoảng tuần 4 bạn sẽ chững lại và nghi ngờ bản thân — plateau đó nằm trong giáo án, ai cũng gặp. Khi nó đến, mở hai bảng này ra: cảm xúc không cãi được số liệu.
+Hai bài, mỗi bài làm hai lần, **bấm giờ cả hai lần và ghi số vào đây**. Khoảng tuần 3–5, đỉnh ở W4 — rơi đúng vào DP1a — bạn sẽ chững lại và nghi ngờ bản thân; plateau đó nằm trong giáo án, ai cũng gặp. Đúng lúc đỉnh plateau thì hai bảng dưới vẫn trống — số đầu tiên của chúng rơi vào W5 và W7. Thứ mở ra đọc ngay ở W4 là ba dòng bấm giờ kata Tier 1 (W2, W3, W4) ở [bài tập và drill](/phase-0/bai-tap); hai bảng dưới là phép đo dài hơi, đọc lại ở W14 khi cả bốn ô đã đầy. Cảm xúc không cãi được số liệu. Ở W14, module 0.10 chạy 5 kata bấm giờ và đo lại trên cùng thang này.
 
-**Bảng 1 — FizzBuzz biến thể + tổng** (chính là câu 1 bài test đầu vào; mục tiêu lần 2: ≤5 phút):
+**Bảng 1 — FizzBuzz biến thể + tổng** (kata Tier 1 số 4 của [bài tập và drill](/phase-0/bai-tap); mục tiêu lần 2: ≤5 phút):
 
 | Lần | Thời điểm | Thời gian (phút) | Số lần chạy sai trước khi đúng |
 |---|---|---|---|
-| 1 | Tuần 0 — test đầu vào | ____ | ____ |
-| 2 | Tuần 5 | ____ | ____ |
+| 1 | W5 | ____ | ____ |
+| 2 | W14 | ____ | ____ |
 
-**Bảng 2 — Đọc CSV → `groupBy` → in báo cáo** (bài tự kiểm của module Collections, xem [bài tập và drill](/phase-0/bai-tap)):
+**Bảng 2 — Đọc file log nước đi → `groupBy` → in báo cáo** (lần 1 chính là bài Tier 2 ở W7 của [bài tập và drill](/phase-0/bai-tap), lần 2 nằm trong kata tốc độ của module 0.10 ở W14):
 
 | Lần | Thời điểm | Thời gian (phút) | Ghi chú (bí ở đâu) |
 |---|---|---|---|
-| 1 | Tuần 4 | ____ | ____ |
-| 2 | Tuần 8 | ____ | ____ |
+| 1 | W7 | ____ | ____ |
+| 2 | W14 | ____ | ____ |
 
-**Vì sao cấm so sánh với người khác:** quy tắc của roadmap là chỉ được so **input** — giờ học, số bài, số commit, những thứ bạn kiểm soát được — và **cấm so output** với bất kỳ ai. Benchmark này so bạn-tuần-8 với bạn-tuần-4, đó là phép so duy nhất có ý nghĩa thống kê với cỡ mẫu bằng một. Mạng xã hội dev kiểu "18 tuổi làm app triệu download" — mute trong 12 tuần, đó là chỉ dẫn chính thức chứ không phải lời khuyên mềm.
+**Vì sao cấm so sánh với người khác:** quy tắc của roadmap là chỉ được so **input** — giờ học, số bài, số commit, những thứ bạn kiểm soát được — và **cấm so output** với bất kỳ ai. Benchmark này so bạn-W14 với bạn-W5 và bạn-W7, phép so duy nhất có ý nghĩa thống kê với cỡ mẫu bằng một. Mạng xã hội dev kiểu "18 tuổi làm game server triệu CCU" — mute đến hết Phase 0 (W1–15), đó là chỉ dẫn chính thức, không phải lời khuyên mềm.
 
-## Log Friday Rebuild — 12 tuần
+## Log blank-file test — 5 lần
 
-Nghi thức: mỗi tối thứ Sáu, AI chọn ngẫu nhiên một hàm có nghĩa bạn đã viết trong tuần; bạn xoá nó khỏi màn hình và viết lại từ trí nhớ trong 15 phút, không mở gì cả. Chi tiết luật nằm ở [hệ thống học và luật AI](/he-thong-hoc). Kết quả gốc ghi vào `PROGRESS.md` trong workspace — bảng dưới là bản tổng hợp để nhìn cả phase trên một màn hình.
+Nghi thức bật từ W6, 2 tuần một lần, 45 phút đầu buổi T5 (thứ Năm) — W6 đã ở bậc 8h nên có buổi T5; nếu trượt DP1a và vẫn ở bậc 6h thì blank-file chiếm 45 phút đầu buổi T7. AI chọn ngẫu nhiên **một thành phần bạn đã viết** — một hàm, một `sealed class`, một bộ parser — bạn viết lại từ file trống, không internet, không AI. **Commit nguyên trạng**, kể cả không compile, vào `rebuild/<ngày>-<tên>.kt`, kèm diff so bản gốc trong commit riêng. Lỡ lượt → dồn sang tuần sau, không tính fail. Chi tiết luật ở [hệ thống học và luật AI](/he-thong-hoc).
 
-Tiêu chí tốt nghiệp số 10 chỉ tính 3 tuần cuối, nhưng log đủ 12 tuần: hai lần Trượt liên tiếp ở bất kỳ đâu là tín hiệu đỏ phải siết luật AI ngay tuần sau, không đợi đến cuối phase.
+**Luật sắt — chế độ sửa chữa:** fail **2 lượt liên tiếp** → 3 buổi kế tiếp mỗi buổi viết lại từ trống một thành phần đã fail; buổi thứ 3 thi lại. Pass → mở lại ngay. Fail lần 2 → hạ độ khó xuống nửa nhỏ hơn. Trần 2 tuần, hết trần thì mở lại và ghi một dòng vào `notes/ADR.md`.
 
-| Tuần | Hàm được chọn | Kết quả (Đạt / Trượt) | Ghi chú |
-|---|---|---|---|
-| 1 | ____ | ____ | ____ |
-| 2 | ____ | ____ | ____ |
-| 3 | ____ | ____ | ____ |
-| 4 | ____ | ____ | ____ |
-| 5 | ____ | ____ | ____ |
-| 6 | ____ | ____ | ____ |
-| 7 | ____ | ____ | ____ |
-| 8 | ____ | ____ | ____ |
-| 9 | ____ | ____ | ____ |
-| 10 | ____ | ____ | ____ |
-| 11 | ____ | ____ | ____ |
-| 12 | ____ | ____ | ____ |
+Bảng dưới là bản tổng hợp để nhìn cả phase trên một màn hình; kết quả gốc nằm ở cột "Rebuild pass" của bảng tuần trong `PROGRESS.md`.
+
+| Lần | Tuần | Thành phần được chọn | Kết quả (Pass / Fail) | File `rebuild/` |
+|---|---|---|---|---|
+| 1 | W6 | ____ | ____ | ____ |
+| 2 | W8 | ____ | ____ | ____ |
+| 3 | W10 | ____ | ____ | ____ |
+| 4 | W12 | ____ | ____ | ____ |
+| 5 | W14 | ____ | ____ | ____ |
+
+Pass = compile được, chạy đúng input mẫu, không lệch bản gốc về hành vi — lệch tên biến không tính. 5 file trong `rebuild/` nói nhiều hơn 14 dòng "AI: 0".
 
 ## Examiner mode: chạy kỳ thi cuối phase với AI
 
-Chạy ở tuần 12, sau khi Project 2 đã nộp và tuần AI-free đã kết thúc. AI đóng vai giám khảo: ra đề, bấm giờ, chấm, vấn đáp — **không gợi ý, không sửa hộ, không hạ chuẩn**.
+Chạy ở W14, sau khi `caro-cli` đã tag `v1.0` và blank-file #5 đã commit. AI đóng vai giám khảo và **người lạ**: kiểm hiện vật, rồi vấn đáp — **không gợi ý, không sửa hộ, không hạ chuẩn**.
 
 Cách chạy:
 
-1. Mở một phiên AI mới trong workspace học của bạn.
+1. Mở một phiên AI mới trong workspace học. Lưu nguyên văn prompt **và bảng chấm AI in ra** vào `notes/ai-sessions/<ngày>-van-dap.md` — ngoại lệ duy nhất của luật "`ai-sessions/` chỉ giữ prompt", vì tiêu chí 10 cần người lạ đọc được điểm.
 2. Gõ nguyên văn:
 
 ```text
-Vào Examiner mode cuối Phase 0. Đọc CLAUDE.md và roadmap/phase-0.md mục 7.3.
-Ra đề timed-test cho các tiêu chí 1–6: mỗi đề là BIẾN THỂ MỚI, không trùng
-bất kỳ đề nào trong roadmap hoặc đề tôi đã từng làm. Với mỗi bài, nêu rõ
-giới hạn thời gian và tiêu chí chấm trước khi tôi bắt đầu. Trong lúc tôi
-làm bài: không gợi ý, không trả lời câu hỏi về cách giải. Chấm theo rubric.
-Sau khi chấm xong toàn bộ, vấn đáp 10 câu Kotlin theo danh sách công khai,
-hỏi xoáy 2 tầng "tại sao" sau mỗi câu. Cuối cùng, vấn đáp 15 phút về chính
-bài làm của tôi.
+Vào Examiner mode cuối Phase 0. Đọc PLAYBOOK.md và README của hai repo
+của tôi, cùng trang /phase-0/tot-nghiep.
+Bước 1 — kiểm hiện vật như người lạ: với từng tiêu chí 1–9, nói tôi phải
+đưa bằng chứng gì (lệnh chạy, file, URL, commit hash), tôi đưa, bạn chấm
+đạt/trượt. Không chấp nhận lời kể thay bằng chứng.
+Bước 2 — vấn đáp 12 câu theo danh sách công khai trên trang đó, hỏi xoáy
+2 tầng "tại sao" sau mỗi câu, kèm một câu đổi điều kiện để dò copy-paste.
+Trả lời bằng tên thư viện thay vì cơ chế = trượt câu đó.
+Bước 3 — vấn đáp 15 phút về chính code của tôi: chọn ngẫu nhiên một hàm
+trong caro-engine, hỏi vì sao viết thế và đổi đề bài thì nó vỡ ở đâu.
+Chấm xong mới nhận xét. Ghi kết quả từng tiêu chí thành một bảng, và in
+riêng bảng chấm 12 câu vấn đáp (đạt/trượt + câu đổi điều kiện) để tôi lưu.
 ```
 
-3. Luật khi làm bài: bấm giờ thật, không AI, không Google — trừ tiêu chí 6 được mở đúng trang docs mà đề chỉ định. Nộp bài xong mới nhận nhận xét.
-4. Ghi kết quả từng bài vào checkbox ở đầu trang, tick, commit.
+3. Luật khi thi: không AI, không Google trong lúc trả lời; bằng chứng cho tiêu chí 1–9 phải có sẵn trong repo trước khi mở phiên — cấm vừa thi vừa vá.
+4. **Đối chiếu với tuần AI-free:** AI-free của W14 áp cho việc **BUILD `caro-cli`**; đúng ba phiên có tên được mở, Examiner mode là một trong ba. Luật đầy đủ ở [hệ thống học và luật AI](/he-thong-hoc).
+5. Ghi kết quả vào checkbox ở đầu trang, tick, commit. Đó là hiện vật DP2 đọc.
 
-Vì sao đề phải là biến thể: bạn đã nhìn thấy mọi đề trong roadmap từ tuần 1. Thi lại đúng đề cũ chỉ đo trí nhớ; đề biến thể mới đo năng lực — và năng lực là thứ duy nhất Phase 0 quan tâm.
+**Vì sao có câu đổi điều kiện:** bạn đã nhìn thấy 12 câu từ tuần 1. Hỏi đúng câu cũ chỉ đo trí nhớ; đổi điều kiện — "nếu `val` đó gán một `List` thay vì `MutableList` thì sao?" — mới đo năng lực.
 
-Tiêu chí 7 (Project 2) chấm theo rubric riêng ở [trang hai project](/phase-0/projects). Tiêu chí 9 và 10 không cần thi — chúng được chấm bằng chứng cứ sẵn có: `notes/AI-LOG.md` và bảng Friday Rebuild ở trên.
+Tiêu chí 1–9 không cần "thi" — chúng là hiện vật sẵn có. Examiner mode chỉ làm việc một người lạ sẽ làm trong 10 phút với repo của bạn. Bước 1 dài hơn 10 phút nghĩa là README chưa đạt mục 8.
+
+## 🌱 Cổng đầu tiên của sáu cổng
+
+Tốt nghiệp P0 chỉ là cổng đầu tiên. Cả 26 tháng có sáu tiêu chí G1–G6, mỗi cái là một hiện vật người lạ xác minh trong ≤10 phút — cấm "hiểu sâu", "code sạch", "server ổn định". Tiêu chí 6 của trang này là tiền thân trực tiếp của G1.
+
+| G | Tiêu chí | Bằng chứng | Đặt ở |
+|---|---|---|---|
+| G1 | Race thật (đỏ) → `Mutex`/`Channel` → xanh | 2 commit + 3 câu giải thích | P1 |
+| G2 | 100 CCU ARENA trên 1 node, tick 20Hz: tick jitter p99 dưới 5ms · ping-frame ngoài tick p99 dưới 10ms · input đến snapshot p99 dưới 75ms, sinh tải từ máy cùng vùng | Biểu đồ theo thời gian + CPU/RAM + 6 dòng giàn đo | P4 |
+| G3 | p99 gấp 10 lần p50 → 1 giả thuyết → sửa đúng 1 thứ → p99 giảm 40% | 2 file `bench/` + postmortem | Lite ở P2 (mức 5 lần), đủ ở P4 |
+| G4 | `kill -9` ở 100 CCU với ít nhất 30 trận dở → ít nhất 99% trận dở khôi phục đúng từng nước · ít nhất 99% session reconnect trong 30s không phải đăng nhập lại · trận đầu chơi tiếp được dưới 60s | Script đối soát | Lite ở P2 (50 CCU), đủ ở P4 |
+| G5 | 10.000 request mua, 20% trùng → lệch = 0 | Log + query | P3 |
+| G6 | Vẽ lại kiến trúc trong 10 phút, đúng ít nhất 90%, lặp lại sau 1 tháng | 2 ảnh | Lần 1 ở P4, lần 2 ở P5 |
+
+Bản gốc của bảng này — kèm ô ghi ngày đạt — nằm ở [Tiến độ](/progress); bản ở đây chép nguyên ngưỡng, không rút gọn. Đọc một lần rồi để đó. Việc của bạn trong 14 tuần tới là bảng 10 tiêu chí ở trên — nhưng mọi cổng sau đều cùng hình dạng với cổng này: số trước lời, hiện vật trước cảm giác. Chi tiết ở [Roadmap 26 tháng](/roadmap).
 
 ## 🔒 Bàn giao cho Phase 1
 
-Người tốt nghiệp Phase 0 mang theo năm thứ:
+Người tốt nghiệp Phase 0 mang theo năm thứ sang server:
 
-- **Kotlin đủ dùng** — đặc biệt lambda, sealed class, collections: đó là ngôn ngữ mẹ đẻ của Compose ở Phase 1
-- **Quy trình IOSTV + debug 6 bước** đã thành phản xạ, không cần mở playbook
-- **Kỷ luật git và test** — branch theo feature, `git diff` trước mọi commit, test 3 tầng cho hàm logic
-- **Bộ luật AI đã nội hoá** — Phase 1 sẽ nới dần theo hướng "AI như đồng nghiệp", nhưng chỉ nới với người đã chứng minh không cần mượn
-- **Một project tự tay làm từ số 0 kèm bằng chứng số liệu** — chính là các bảng trên trang này cộng với repo Project 2
+- **Kotlin đủ dùng cho Ktor và coroutine** — `sealed class` cho state machine phiên, lambda và extension để đọc routing DSL, `suspend`/`launch`/`runBlocking` đã chạm tay. Structured concurrency thật học ở module 1.4; P0 chỉ cần bạn không sợ chữ `suspend`.
+- **IOSTV + debug 6 bước đã thành phản xạ** — không cần mở playbook. Ở P1 lỗi không còn là stack trace đẹp mà là "gói tin đến muộn 500ms"; quy trình vẫn y nguyên.
+- **Kỷ luật git và test** — branch theo feature, `git diff` trước mọi commit, test 3 tầng cho hàm logic, `./gradlew test` xanh là điều kiện tag. Từ P1 thêm một tầng: mọi khẳng định hiệu năng phải có file `bench/`.
+- **Hợp đồng AI đã nội hoá** — vùng AI-free của P1 mở rộng sang vòng tick, protocol, session, shared state. Chỉ nới với người đã chứng minh không cần mượn: 5 file trong `rebuild/` là bằng chứng.
+- **Hai repo tag `v1.0`** — `caro-engine` đi thẳng vào server ở module 1.6: room actor nhúng engine của bạn, không viết lại. Domain Túi đồ & Ví quay lại ở P3 economy. Không project nào của P0 bị vứt.
 
 Đó là định nghĩa vận hành của "tin rằng mình tự làm được".
 
-**Điều kiện mở khoá Phase 1:** commit cuối cùng của trang này tick đủ ≥8/10 với trọn bộ mục 1–4. Android Studio đã đóng từ sau buổi field trip tuần 6 — nó chỉ được mở lại khi checkbox "Tốt nghiệp Phase 0" ở trên chuyển thành đã tick. Android là phần thưởng, không phải cám dỗ.
+**Điều kiện mở khoá Phase 1 — DP2, cuối W14:** commit cuối cùng của trang này tick đủ ≥8/10 với trọn bộ mục 1–5. Đạt → mở [Phase 1](/phase-1). Thiếu → kéo P0 tối đa 4 tuần (W15 là buffer sẵn có; 2 tuần lấy từ buffer đời sống của P1 — P1 chỉ có đúng 2 tuần đó, hai tuần buffer còn lại của nó là Tết, không dời được; tuần thứ tư lấy từ 5 tuần buffer của P2), và không mở trang mở rộng trong cả năm.
 
-Chưa đủ 8/10? Không kéo dài vô hạn cũng không hạ chuẩn: chạy monthly recalibrate với AI, chọn đúng các tiêu chí trượt, luyện đúng chỗ đó 1–2 tuần rồi thi lại phần trượt — với đề biến thể mới.
+Chưa đủ 8/10? Không kéo dài vô hạn, cũng không hạ chuẩn: chọn đúng tiêu chí trượt, luyện đúng chỗ đó 1–2 tuần, thi lại phần trượt với câu đổi điều kiện mới. Trượt là dữ liệu, không phải bản án.
 
 ## → Tiếp theo
 
-[Phase 1 — App Android đầu tiên](/phase-1): Compose, state, lifecycle — và chiếc app đầu tiên chạy trên điện thoại của chính bạn. Trang đó đang khoá cho đến khi trang này xanh.
+- [Phase 1 — Server đầu tiên, người thật chơi qua web](/phase-1): TCP thô, JMM, room actor, `wss://` public. Trang đó đang khoá cho đến khi trang này xanh.
+- Chưa tới W14? Quay lại [Lịch 14 tuần](/phase-0/lich-14-tuan) và [Hai project CLI](/phase-0/projects) — mười tiêu chí trên đều sinh ra từ đó.
+- Ghi kết quả vào [Tiến độ](/progress) để DP2 có hiện vật để đọc.

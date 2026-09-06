@@ -1,0 +1,421 @@
+# Nền tảng hệ thống — Linux, kernel & thread
+
+Trang này trả lời một câu: *con số hiệu năng bạn vừa đo ra được sinh từ cơ chế nào bên dưới JVM?* Mở lần đầu ở P1 ngay sau lab `Selector` của 1.2, rồi mở lại từng tầng khi server của bạn tự đẻ ra triệu chứng tương ứng — cột **Sau module** ở bảng dưới nói chính xác lúc nào, không sớm hơn.
+
+---
+
+## 🎯 Luận điểm trung tâm
+
+**Sự thật:** mọi con số bạn sẽ tạo ra từ P1 đến P4 — p99 của 1.7, bảng ba mô hình của 2.5, tick jitter của 3.2, GC pause, knee point của 4.2 — đều là hiện tượng bề mặt của đúng năm thứ: **thread**, **bộ nhớ ảo**, **file descriptor**, **socket TCP của kernel**, và **tiến trình**. JVM, Ktor, Netty, coroutine chỉ là các lớp vỏ xếp lên năm thứ đó. Không hiểu tầng dưới, bạn đọc được số mà không giải thích được số — và người phỏng vấn phân biệt hai loại người này bằng một câu "tại sao".
+
+Đây **không phải một phase mới**. Nó là một trục đan vào các module đã có, theo đúng luật symptom-first của lộ trình: học khái niệm tại điểm server của bạn vừa tự gây ra triệu chứng đó, không sớm hơn.
+
+| Tầng | Tên | Giờ biên | Đặt ở | Cạnh module | Sau module — mở đúng lúc này | Triệu chứng kích hoạt |
+|---|---|---|---|---|---|---|
+| **S1** | Tiến trình, thread, bộ lập lịch | 6 | P1 (3h) + P2 (3h) | 1.3 · 2.5 | Khái niệm 3h ngay sau `jstack` đầu tiên của 1.3; lab 3h nằm **trong** 2.5 (P2), khi đã có bot swarm 1.7 để đo | `jstack` có 40 thread mà bạn chỉ tạo 4; bảng ba mô hình 2.000 kết nối |
+| **S2** | Bộ nhớ | 8 | P2 | 2.5 · 4.3 | Sau lab 2.000 kết nối của 2.5; mở lại ở 4.3 | RSS gấp đôi `-Xmx`; container bị giết dù heap chưa đầy |
+| **S3** | File descriptor và `epoll` | 6 | P1 | 1.2 · 1.6 · 1.8 | Khái niệm 3h ngay sau lab `Selector` của 1.2; lab `strace` 3h sau khi có Ktor server ở 1.6, trước lab EMFILE 1.8 | `Too many open files`; `read()` trả ít byte hơn xin; `Selector` thật ra là gì |
+| **S3b** | Socket TCP nhìn từ kernel | 4 | P1 | 1.5 · 1.7 · 3.1 | Sau 1.5 (frame nhỏ gửi liên tiếp) và 1.7 (bot swarm connect hàng loạt); mở lại ở P3 cạnh 3.1/3.2, không thêm giờ | p99 kẹt quanh 40ms dù CPU rảnh; bot connect hàng loạt mất im lặng; máy sinh tải cạn cổng trước server |
+| **S4** | Signal, vòng đời tiến trình, container | 8 | P2 (3h) + P4 (5h) | 1.9 · 3.4 · 4.4 | Bảng signal và `systemd` đọc khi viết unit ở 1.9 (không tính giờ); 3h khi làm drain ở 3.4; 5h khi G4 đủ ở 4.4 | `docker stop` chờ 10 giây rồi giết; drain không sạch; `kill -9` mất trận |
+| | **Tổng** | **32** | | | | |
+
+**32h là giờ biên** — giờ mới so với bản 755h lộ trình sản phẩm, và **đã nằm trong 839h**: P1 13h (S1 3 + S3 6 + S3b 4) · P2 14h (S1 3 + S2 8 + S4 3) · P4 5h (S4), phân bổ ở bảng bổ sung 84h của [Roadmap](/roadmap). Phần trùng với module đã có không tính hai lần: lab 2.000 kết nối và phần virtual thread đã có trong 14h của 2.5, lab EMFILE đã có trong 1.8, drain `SIGTERM` đã có trong 3.4 — vì thế S1 chỉ cần 6h chứ không phải 10h, và 4h dôi ra trả cho S3b, tầng mà không module nào khác trả. Trục này chỉ trả tiền cho phần các module đó không trả: cơ chế bên dưới, phép đo phía OS, và câu giải thích.
+
+**Luật sắt:** mỗi tầng kết thúc bằng một phép đo trên chính server CARO, không phải trên ví dụ. Không có số ghi vào `bench/` thì tầng đó chưa xảy ra.
+
+**Gói cần cài trên VPS** (luật 7, máy mình — AI được hướng dẫn từng bước): `perf` (Ubuntu `linux-tools-$(uname -r)` — kernel cloud thì `linux-tools-aws`/`-gcp`…; Debian `linux-perf`; Fedora/RHEL `perf`), `strace`, `smem`, `sysstat` (`pidstat`), `websocat`; `ss` và `nstat` nằm trong `iproute2`, thường có sẵn. Các event `context-switches`, `cpu-migrations`, `task-clock`, `page-faults`, `minor/major-faults` là **software event**, chạy được trong KVM; event phần cứng (TLB, cache) trên phần lớn VPS trả `<not supported>` — không phải bạn cài sai.
+
+## S1 — Tiến trình, thread và bộ lập lịch · 6h · P1 3h cạnh 1.3 + P2 3h trong 2.5
+
+Mở khi 1.3 bắt bạn chạy `jstack` lần đầu và bạn thấy vài chục thread mình không tạo. Hai bảng khái niệm và khối lệnh bên dưới là 3h của P1. Lab 2.000 kết nối là 3h của P2 và nằm trong 2.5 — đừng kéo nó lên P1: lúc đó chưa có bot swarm 1.7, không có gì để đo, và tầng này sẽ vi phạm luật sắt.
+
+### Khái niệm, theo thứ tự phụ thuộc
+
+| # | Khái niệm | Một câu | Bạn thấy nó ở đâu |
+|---|---|---|---|
+| 1 | Tiến trình | Một không gian địa chỉ ảo + một bảng file descriptor + ít nhất một thread | `ps -ef`, `/proc/<pid>/` |
+| 2 | Thread | Một dòng thực thi trong tiến trình: stack riêng, register riêng, TLS riêng; **dùng chung** heap, fd, vùng `mmap`, signal handler | `/proc/<pid>/task/<tid>/`, `top -H`, `ps -eLf` (cột LWP, NLWP) |
+| 3 | `fork()` / `exec()` | `fork` nhân đôi tiến trình (copy-on-write, xem S2); `exec` thay ruột tiến trình bằng chương trình khác | `strace -f -e execve` khi chạy `java` |
+| 4 | `clone()` | Nguyên thuỷ thật của Linux. `fork` là `clone` không chia sẻ gì; **thread là `clone` với cờ `CLONE_VM`, `CLONE_FILES`, `CLONE_SIGHAND`, `CLONE_THREAD`** | `strace -f -e clone,clone3` khi JVM khởi động |
+| 5 | `task_struct` | Kernel không có khái niệm "thread"; mọi thứ nó lập lịch là một `task_struct`. PID trong kernel = TID của bạn; "PID" bạn thấy là TGID — TID của thread đầu tiên | `ls /proc/<pid>/task` |
+| 6 | Trạng thái task | R chạy hoặc chờ CPU · S ngủ ngắt được · D ngủ không ngắt được (I/O đĩa, không kill nổi) · Z zombie · T stopped | cột `stat` của `ps -eLo pid,tid,stat,wchan,comm` |
+| 7 | Bộ lập lịch | CFS (tới 6.5): task có `vruntime` nhỏ nhất chạy trước. EEVDF (từ 6.6 — VPS Ubuntu 24.04, Debian 13, RHEL 10 đều chạy nó): trong các task **eligible** (lag ≥ 0, chưa nhận quá phần công bằng của mình), task có **virtual deadline** sớm nhất chạy trước, deadline = `vruntime` + slice/weight — vì thế task xin slice ngắn được đáp ứng nhanh hơn dù cùng weight; `vruntime` vẫn còn nhưng chỉ để tính lag. `nice` vẫn đổi trọng số (mỗi bậc ≈ 1,25×). Không còn `sched_min_granularity_ns`/`sched_latency_ns`; lát cơ sở `base_slice` ≈ 0,75ms × (1 + log2 nCPU), khoảng 3ms trên 4 vCPU | `chrt -p <tid>`, `nice`, `renice`; `cat /sys/kernel/debug/sched/base_slice_ns` (cần root) |
+| 8 | Affinity | Ghim task vào nhân: `taskset -cp 2 <tid>`. `chrt -f` cho lớp real-time — cần quyền, để ở [Mở rộng](/mo-rong) | `taskset -p <pid>` |
+| 9 | Context switch | Kernel lưu register của task này, nạp của task kia, có thể đổi bảng trang → TLB lạnh, cache lạnh. Trực tiếp 1–5 µs; gián tiếp thường lớn hơn — đo, không đoán | `vmstat 1` cột `cs`; `perf stat -e context-switches,cpu-migrations` |
+| 10 | Voluntary vs involuntary | Voluntary: task tự nhường vì chờ I/O hoặc lock. Involuntary: bị kernel tước CPU vì hết lát hoặc có task ưu tiên hơn | `grep ctxt /proc/<pid>/task/<tid>/status` |
+
+**Sự thật:** trên Linux, thread và tiến trình là cùng một thứ nhìn từ kernel. Khác nhau duy nhất là bộ cờ đưa vào `clone()`. Điều này giải thích vì sao tạo 2.000 platform thread không "nhẹ" như tài liệu Java nói: mỗi thread là một `task_struct` kernel phải lập lịch, cộng một stack 1MB được đặt chỗ, commit theo trang chạm.
+
+### JVM nhìn thread khác kernel nhìn
+
+`jstack` in trạng thái theo JVM. Kernel in trạng thái theo `task_struct`. Hai bảng không trùng nhau, và chỗ lệch là nơi bạn hiểu sai server của mình.
+
+| Trạng thái JVM | Kernel thường thấy | Nghĩa thật |
+|---|---|---|
+| `RUNNABLE` | R **hoặc S** | Đang chạy Java, đang chờ CPU, **hoặc đang kẹt trong syscall** (`read`, `epoll_wait`, `accept`). JVM không phân biệt — nó chỉ biết thread không chờ monitor Java |
+| `BLOCKED` | S | Chờ vào `synchronized` — bên dưới là `futex` |
+| `WAITING` | S | `park`, `Object.wait`, `join` không timeout — bên dưới là `futex` |
+| `TIMED_WAITING` | S | Như trên, có timeout — `futex` có hạn |
+| không có | D | Chỉ kernel thấy: chờ block I/O — ghi log hoặc `fsync` khi đĩa VPS đang nghẽn (`io.max`, đĩa hàng xóm), page fault major khi swap, NFS treo. Đĩa **đầy** không tạo D — nó trả `ENOSPC` ngay. Nhận diện: cột `wchan` = `io_schedule`, `folio_wait_bit` |
+
+**Vì sao quan trọng:** một thread `RUNNABLE` đứng đầu `jstack` với `sun.nio.ch.EPoll.wait(Native Method)` không ăn CPU — nó đang ngủ trong kernel. Người đọc `jstack` theo chữ sẽ tối ưu nhầm chỗ. Đối chiếu: `nid=0x1f2a` trong `jstack` là TID hệ hex; `printf '%d\n' 0x1f2a` rồi tìm dòng đó trong `top -H`.
+
+```bash
+PID=$(pgrep -f caro-server)
+ls /proc/$PID/task | wc -l                       # số thread thật
+ps -eLo pid,tid,stat,pcpu,wchan:20,comm -p $PID  # trạng thái từng thread + ngủ ở hàm kernel nào
+top -H -p $PID                                   # mỗi dòng một thread
+vmstat 1 5                                       # cột cs = context switch/giây toàn máy
+perf stat -e context-switches,cpu-migrations,task-clock -p $PID -- sleep 10
+awk '/ctxt/{s[$1]+=$2} END{for(k in s) print k, s[k]}' /proc/$PID/task/*/status  # tổng voluntary / nonvoluntary — /proc/$PID/status chỉ đếm thread chính
+pidstat -w -t -p $PID 1                          # cswch/s và nvcswch/s theo từng thread (gói sysstat)
+jstack $PID > jstack-$(date +%s).txt
+```
+
+### LAB trung tâm — 2.000 kết nối, ba mô hình
+
+Lab này **là** lab của module 2.5, ở P2 — 3h của S1 nằm ở đây. S1 thêm ba cột đo phía OS mà 2.5 chưa đòi, và câu giải thích. Chạy trên VPS, 6 dòng giàn đo như 1.1, tải từ bot swarm 1.7.
+
+| Mô hình | Cách dựng | Dự đoán số task | Dự đoán RSS | Dự đoán `cs`/giây | Vì sao |
+|---|---|---|---|---|---|
+| Platform thread-per-connection | `Thread.ofPlatform()` mỗi socket, `read` blocking | ≈ 2.000 + JVM | Cao nhất | Cao nhất | 2.000 `task_struct`; mỗi gói đến đánh thức đúng một thread → một context switch mỗi gói |
+| Virtual thread (JEP 444) | `Thread.ofVirtual()` mỗi socket, cùng code blocking | ≈ số nhân + vài chục | Thấp | Thấp | Stack là object trên heap, mount lên carrier; `read` blocking được JDK đổi ngầm thành `epoll` |
+| Event loop | `Selector` hoặc Netty, N thread cố định | ≈ 2 × số nhân | Thấp nhất | Thấp nhất | Một `epoll_wait` gom nhiều fd sẵn sàng; thread không ngủ theo kết nối |
+
+Điền số dự đoán trước, rồi đo bằng đúng các lệnh ở khối trên khi 2.000 kết nối đang giữ (`ps -o nlwp,rss`, `perf stat` 30 giây); throughput lấy từ bot swarm 1.7 + HdrHistogram. Ghi cả hai vào `bench/`. Sai dự đoán không phải lỗi — không dự đoán mới là lỗi.
+
+**Ngưỡng đạt S1:**
+
+- Bảng ba mô hình có thêm ba cột `nlwp`, RSS, `cs`/giây, và một đoạn 5 câu giải thích bằng số vì sao mô hình thắng lại thắng — dùng từ `task_struct`, `futex`, `epoll`, không dùng từ "nhẹ".
+- Đọc một `jstack` của chính server: chỉ ra thread nào đang chờ cái gì (monitor nào, `Channel` nào, `epoll` nào), thread nào `RUNNABLE` mà thật ra ngủ trong kernel. Dump deadlock của 1.3 phải chỉ ra được vòng `waiting to lock` — `locked` bằng tay.
+
+## S2 — Bộ nhớ · 8h · P2, cạnh 2.5
+
+Mở khi bạn đặt `-Xmx512m` mà `ps` báo RSS 900MB, hoặc khi container bị giết mà `GC.heap_info` nói heap còn trống.
+
+### Khái niệm, theo thứ tự phụ thuộc
+
+| # | Khái niệm | Một câu | Bạn thấy nó ở đâu |
+|---|---|---|---|
+| 1 | Bộ nhớ ảo | Mỗi tiến trình thấy một không gian địa chỉ riêng; kernel ánh xạ từng trang 4KB sang RAM thật qua page table | `VmSize` trong `/proc/<pid>/status` |
+| 2 | Page fault | Truy cập trang chưa ánh xạ → kernel xử lý. **Minor**: trang đã có trong RAM (lần chạm đầu vào vùng anonymous, COW, page cache) — rẻ, cỡ µs. **Major**: phải đọc từ đĩa — đắt, cỡ ms | `perf stat -e minor-faults,major-faults`; `/usr/bin/time -v` |
+| 3 | TLB | Cache của page table trong CPU. Miss TLB = đi bộ bảng trang. Trang 2MB (transparent huge page) giảm số trang 512× | `perf stat -e dTLB-load-misses` — hardware event, trên VPS KVM thường `<not supported>`; chỉ đo được trên máy thật, trên VPS thay bằng đếm `minor-faults` (software) để suy ra số trang |
+| 4 | `mmap` | Ánh xạ file hoặc vùng anonymous vào không gian địa chỉ. JVM lấy heap bằng `mmap` anonymous, không bằng `malloc` | `pmap -x <pid>`; `strace -e mmap` |
+| 5 | Shared memory | Nhiều tiến trình ánh xạ cùng trang vật lý: `MAP_SHARED`, `/dev/shm`, Postgres `shared_buffers` | `RssShmem` |
+| 6 | **Copy-on-write** | `fork` không copy trang; đánh dấu read-only ở cả hai bên; ai ghi trước thì kernel copy trang đó cho người đó. Đây là lý do Zygote của Android fork mọi app từ một tiến trình đã nạp sẵn framework mà rẻ — xem [Android core](/android-core) | `strace -f -e clone` + `minor-faults` tăng khi con ghi |
+| 7 | RSS / VSZ / PSS | VSZ = tổng đã đặt chỗ, gồm trang chưa chạm. RSS = trang đang ở RAM, **đếm cả trang dùng chung** — cộng RSS của 10 tiến trình Postgres là đếm `shared_buffers` 10 lần. PSS = private + shared chia đều cho số người dùng chung — **con số đúng duy nhất** khi có chia sẻ | `/proc/<pid>/smaps_rollup`, `smem -P postgres` |
+| 8 | `free -m` | Page cache nằm ở cột `buff/cache`, **không** nằm trong `used` (procps-ng ≥ 3.3.10; từ 4.0 `used = total − available`). Bẫy thật là đọc cột `free` nhỏ rồi kết luận hết RAM — page cache thu hồi được. Cột **`available`** (= `MemAvailable` trong `/proc/meminfo`) = ước lượng RAM cấp được cho tiến trình mới mà không swap — cột duy nhất trả lời "còn chỗ không" | `free -m`, `grep MemAvailable /proc/meminfo` |
+| 9 | OOM killer | Kernel không đòi được trang → chọn nạn nhân theo `oom_score` (chủ yếu RSS + swap), điều chỉnh bằng `oom_score_adj` từ −1000 đến 1000. Trong cgroup: giết khi chạm `memory.max`, không cần máy hết RAM | `/proc/<pid>/oom_score`, `sudo dmesg -T` hoặc `journalctl -k` |
+| 10 | Page cache và dirty writeback (≈1h, lấy trong 8h) | `write()` chỉ chép vào page cache và đánh dấu trang **dirty**; kernel ghi xuống đĩa sau (`vm.dirty_expire_centisecs`, mặc định 30s) — hoặc ngay khi bạn gọi `fsync`/`fdatasync`. Tiến trình chết (`SIGKILL`) thì page cache **vẫn sống** và vẫn được ghi; mất điện thì mọi trang dirty chưa `fsync` **biến mất**. Postgres bền vì `synchronous_commit=on` gọi `fsync` WAL trước khi trả lời commit | `grep -E 'Dirty\|Writeback' /proc/meminfo`; `strace -f -e trace=fsync,fdatasync -p $(pgrep -f 'postgres: walwriter')` khi commit |
+
+### Bộ nhớ JVM nhìn từ phía OS
+
+**Sự thật:** `-Xmx` chỉ giới hạn **heap**. RSS của tiến trình `java` là heap cộng ít nhất sáu thứ khác. Container giới hạn RSS, không giới hạn heap. Vì thế server bị giết trong khi `GC.heap_info` nói còn 200MB trống.
+
+| Vùng | Giới hạn bằng | Cỡ điển hình trên CARO | Ai thấy |
+|---|---|---|---|
+| Heap | `-Xmx` hoặc `-XX:MaxRAMPercentage` | 256–512MB | `jcmd <pid> GC.heap_info` — committed khác used; G1 trả trang về OS chậm |
+| Metaspace | `-XX:MaxMetaspaceSize` (mặc định không giới hạn) | 40–80MB | NMT dòng `Class` |
+| Code cache | `-XX:ReservedCodeCacheSize` (mặc định đặt chỗ 240MB) | 20–60MB commit | NMT dòng `Code` |
+| Thread stack | `-Xss` (1MB) × số thread; commit theo trang chạm | 2.000 platform thread ≈ 100–300MB thật | NMT dòng `Thread`; `nlwp` |
+| Direct / off-heap | `-XX:MaxDirectMemorySize` (mặc định = `-Xmx`); Netty pool riêng | 30–200MB, tăng theo số kết nối | NMT dòng `Other`; Netty `PooledByteBufAllocator.metric()` |
+| Cấu trúc GC | — | G1: 5–20% heap (remembered set, card table) | NMT dòng `GC` |
+| glibc malloc arena | `MALLOC_ARENA_MAX=2` | Phân mảnh; RSS phình mà NMT không thấy | `pmap -x`: nhiều vùng `[anon]` 64MB |
+
+```bash
+java -XX:NativeMemoryTracking=summary -Xmx512m -jar caro.jar &
+PID=$!
+jcmd $PID VM.native_memory summary            # committed từng vùng
+jcmd $PID GC.heap_info
+grep -E 'VmRSS|VmSize|VmHWM|RssAnon|RssFile|Threads' /proc/$PID/status
+cat /proc/$PID/smaps_rollup                   # Pss, Private_Dirty
+```
+
+### LAB 1 — page-fault storm
+
+Viết một `main` Kotlin cấp `ByteArray(1 shl 30)` rồi chạm mỗi byte thứ 4.096. **Đo theo pha, không đo toàn tiến trình**: `main` in `minflt` (trường 10 của `/proc/self/stat`, xem `proc(5)`) ở bốn mốc — sau khởi động, sau cấp phát, sau vòng chạm, trước khi thoát — và chờ Enter trước khi cấp phát để bạn kịp gắn `perf` từ ngoài. Java zero-fill mảng ngay lúc cấp phát, nên toàn bộ fault xảy ra **trong** `ByteArray(1 shl 30)`; vòng chạm sau đó ≈ 0 — đó chính là bằng chứng bạn phải thấy.
+
+Tiền điều kiện: `cat /sys/kernel/mm/transparent_hugepage/enabled` và ghi kết quả vào `bench/` trước khi đo. Ubuntu/Debian mặc định `madvise`; **RHEL/Rocky/Alma mặc định `always`** — khi đó cấu hình "mặc định" đã ra vài nghìn fault chứ không phải 262k, và hàng 1 với hàng 3 gần trùng nhau.
+
+| Cấu hình | Khởi động | Cấp phát `ByteArray(1 shl 30)` | Vòng chạm | Vì sao |
+|---|---|---|---|---|
+| Mặc định (THP `madvise`/`never`) | vài nghìn | ≈ 262.144 (1GB ÷ 4KB) | ≈ 0 | JVM zero-fill mảng: mọi trang được chạm lần đầu ở đây, vòng chạm chỉ gặp trang đã ánh xạ |
+| `-Xms2g -Xmx2g -XX:+AlwaysPreTouch` | ≈ 524.288 (2GB ÷ 4KB) | ≈ 0 | ≈ 0 | JVM chạm trước **toàn bộ** heap lúc khởi động; chỉ có nghĩa khi `-Xms` = `-Xmx`. Tổng toàn tiến trình **gấp đôi** hàng 1, không phải bằng 0 — fault chỉ dời chỗ, và đó là điều ARENA cần |
+| `-XX:+UseTransparentHugePages` | vài nghìn | cỡ 1.000–2.000 | ≈ 0 | Trang 2MB: lý thuyết 512, thực tế lớn hơn vì kernel không cấp được 2MB liên tục cho mọi vùng; nhưng vẫn giảm hơn 100× |
+
+```bash
+cat /sys/kernel/mm/transparent_hugepage/enabled        # [always] madvise never — ghi lại trước
+# Cách 1 — đúng cửa sổ cấp phát, từ ngoài:
+java -Xmx2g -jar storm.jar & PID=$!
+perf stat -e minor-faults,major-faults -p $PID -- sleep 10   # nhấn Enter cho storm.jar trong 10 giây này
+# Cách 2 — toàn tiến trình, chỉ dùng để đối chiếu cột tổng:
+perf stat -e page-faults,minor-faults,major-faults java -Xmx2g -jar storm.jar
+```
+
+Số này giải thích vì sao ARENA 20Hz ở 3.2 phải cấp phát trước, không cấp trong vòng tick: một fault cỡ 1µs, 5.000 fault trong một tick là 5ms — đúng ngưỡng jitter của G2. `-Xms` = `-Xmx` + `AlwaysPreTouch` là cờ đầu tiên bạn bật ở 3.2, và bảng trên là lý do.
+
+### LAB 2 — ép OOM killer giết server, đọc `dmesg`, sửa
+
+```bash
+# không cần Docker: systemd tạo cgroup v2 cho bạn
+# quyền: không phải root thì thêm --user (user@.service đã delegate cpu io memory pids), hoặc sudo
+systemd-run --user --scope -p MemoryMax=256M -p MemorySwapMax=0 \
+  java -Xmx512m -jar caro.jar
+# bắn 200 bot (1.7) tới khi chết, rồi:
+# quyền: kernel.dmesg_restrict=1 (Ubuntu, Fedora) → dmesg không root báo Operation not permitted
+sudo dmesg -T | grep -iE 'out of memory|killed process'
+journalctl -k -o short-precise | grep -iE 'out of memory|killed process'   # không cần root
+# hoặc trong Docker:
+docker run --memory=256m --memory-swap=256m caro:latest
+docker inspect --format '{{.State.OOMKilled}} {{.State.ExitCode}}' <container>
+```
+
+Dòng bạn phải đọc được từng trường:
+
+```text
+Memory cgroup out of memory: Killed process 4127 (java) total-vm:3012344kB, anon-rss:261120kB, file-rss:18432kB, shmem-rss:0kB, pgtables:1240kB oom_score_adj:0
+```
+
+`total-vm` là VSZ — không phải lý do. `anon-rss` 255MB chạm `MemoryMax` 256MB — đó là lý do. Exit code 137 = 128 + 9: kernel dùng `SIGKILL`, không hook nào chạy.
+
+Sửa bằng hai cách, mỗi cách một commit: (1) `-XX:MaxRAMPercentage=60` để JVM tự tính heap từ `memory.max`, cộng `-XX:MaxDirectMemorySize` tường minh; (2) nâng `MemoryMax` theo NMT tổng committed + 20%. Cách nào cũng ghi số trước/sau.
+
+**Ngưỡng đạt S2:** một bảng trong `bench/` của chính server: `-Xmx`, heap committed, heap used, NMT tổng committed, RSS, PSS — sáu số, và một đoạn giải thích từng khoảng chênh bằng tên vùng. Nói được vì sao cộng RSS của Postgres là sai và số nào thay thế.
+
+## S3 — File descriptor và `epoll` · 6h · P1: 3h khái niệm sau 1.2, 3h lab `strace` sau 1.6
+
+Bảng khái niệm mở ngay sau lab `Selector` của 1.2 (3h). Lab `strace` bên dưới cần một Ktor server thật — làm nó sau 1.6, trên máy dev hoặc trên VPS của 1.9 (3h), và trước lab EMFILE của 1.8. 1.8 làm bạn gặp lỗi; S3 nói vì sao lỗi tồn tại.
+
+### Khái niệm, theo thứ tự phụ thuộc
+
+| # | Khái niệm | Một câu | Bạn thấy nó ở đâu |
+|---|---|---|---|
+| 1 | Mọi thứ là fd | File, socket, pipe, `eventfd`, `timerfd`, `signalfd`, cả instance `epoll` — đều là một số nguyên trỏ vào bảng fd của tiến trình | `ls -l /proc/<pid>/fd`; `lsof -p <pid>`; `ss -s`; `ss -tnp` |
+| 2 | Giới hạn | `ulimit -n` = `RLIMIT_NOFILE` mỗi tiến trình, có soft và hard. `/proc/sys/fs/nr_open` = trần của hard. `/proc/sys/fs/file-max` = toàn máy. systemd: `LimitNOFILE=` | `cat /proc/<pid>/limits` |
+| 3 | EMFILE vs ENFILE | EMFILE: tiến trình hết fd → `IOException: Too many open files`. ENFILE: cả máy hết. Trên Linux, HotSpot mặc định (`-XX:+MaxFDLimit`) **nâng soft limit lên bằng hard limit** ngay lúc khởi động, nên giới hạn thật của tiến trình `java` là **hard limit** — `ulimit -Hn`, hoặc `LimitNOFILE=` của systemd. Muốn tái hiện EMFILE ở 1.8 thì hạ **hard** limit (`ulimit -n 256` trong bash đặt cả soft lẫn hard), hoặc chạy với `-XX:-MaxFDLimit` để JVM giữ nguyên soft. Kiểm bằng `grep 'open files' /proc/<pid>/limits` trước và sau — hạ mỗi soft thì JVM nâng lại và lỗi không bao giờ xuất hiện | `ulimit -Hn`; `grep 'open files' /proc/<pid>/limits` |
+| 4 | Blocking vs non-blocking | Mặc định `read` ngủ tới khi có dữ liệu. `O_NONBLOCK` (`configureBlocking(false)`) → trả `EAGAIN` ngay nếu chưa có | `strace -e fcntl` |
+| 5 | Partial read / write | TCP là dòng byte, không phải gói. `read(fd, buf, 8192)` trả bất kỳ số nào từ 1 tới 8192 — kernel đưa cái đang có trong socket buffer. `write` non-blocking cũng ghi một phần khi send buffer đầy. **Đây là lý do framing length-prefix ở 1.5 và `flip`/`compact` ở 1.2 tồn tại** | Cột giá trị trả về trong `strace` |
+| 6 | `select` | Bitmap fd, trần `FD_SETSIZE` 1024, kernel quét O(n) mỗi lần gọi, user xây lại bitmap mỗi lần gọi | — |
+| 7 | `poll` | Mảng `pollfd`, bỏ trần 1024, vẫn copy + quét O(n) mỗi lần | — |
+| 8 | `epoll` | Đăng ký fd **một lần** bằng `epoll_ctl`; kernel giữ cây; `epoll_wait` chỉ trả fd sẵn sàng → chi phí theo số fd sẵn sàng, không theo tổng số fd | `strace -e epoll_ctl,epoll_wait` |
+| 9 | Level vs edge-triggered | LT (mặc định): còn dữ liệu là còn báo. ET (`EPOLLET`): chỉ báo lúc **chuyển trạng thái**. Bẫy kinh điển của ET: nó chỉ báo lại khi có dữ liệu **mới** đến. Đọc một lần không hết → phần còn lại nằm im cho tới gói kế tiếp; nếu peer đang chờ bạn trả lời thì không có gói kế tiếp → treo không lỗi (và "tự hết treo" khi client gửi thêm). Vì thế ET phải đọc tới `EAGAIN` | Java `Selector` dùng LT; Netty native epoll dùng ET và đọc tới `EAGAIN` |
+
+**Sự thật:** `java.nio.channels.Selector` trên Linux là lớp `EPollSelectorImpl`. `Selector.open()` là `epoll_create1`, `register` chỉ xếp key vào hàng đợi — `epoll_ctl` được gọi ở **đầu lần `select()` kế tiếp** (`processUpdateQueue`), `cancel` → `EPOLL_CTL_DEL` cũng trì hoãn như vậy; `select()` là `epoll_wait`, `wakeup()` là một `write` 8 byte vào `eventfd`. Không có phép màu; bạn chứng minh bằng `strace` ngay dưới đây.
+
+### LAB trung tâm — `strace` một vòng request trên chính Ktor server
+
+Đây là lab quan trọng nhất của S3. Chạy trên cổng `ws://` thô, không qua Caddy — TLS giải mã trong userspace, `strace` chỉ thấy byte đã mã hoá.
+
+```bash
+PID=$(pgrep -f caro-server)
+ls -l /proc/$PID/fd | awk '{print $NF}' | sed -E 's/:\[[0-9]+\]$//' | sort | uniq -c   # chỉ bỏ số inode
+#   → đếm socket / pipe / anon_inode:[eventpoll] / anon_inode:[eventfd]
+# quyền: Ubuntu mặc định kernel.yama.ptrace_scope=1 → strace -p vào tiến trình không phải con mình bị EPERM
+#        dù cùng user: dùng sudo strace, hoặc sudo sysctl -w kernel.yama.ptrace_scope=0 trong lúc lab
+sudo strace -f -tt -T -o /tmp/caro.strace \
+  -e trace=epoll_create1,epoll_ctl,epoll_wait,accept4,accept,fcntl,read,readv,write,writev,close \
+  -p $PID
+# từ máy khác: websocat ws://vps:8080/ws → gửi đúng một nước đi → đóng
+```
+
+Chuỗi bạn phải tìm thấy và chú thích từng dòng trong file `.strace`:
+
+| Bước | Syscall trong log | Nghĩa |
+|---|---|---|
+| 1 | `epoll_wait(...) = 1` trên fd listen | Có kết nối đến |
+| 2 | `accept4(...) = 57`, có thể kèm `fcntl(57, F_SETFL, O_NONBLOCK)` | fd 57 ra đời; đọc cờ để biết non-blocking đặt ở đâu |
+| 3 | `epoll_ctl(epfd, EPOLL_CTL_ADD, 57, ...)` | Đăng ký một lần. Tìm nó **ngay trước dòng `epoll_wait` kế tiếp**, không phải ngay sau `accept4` — JDK gom các `register`/`cancel` lại và gọi `epoll_ctl` ở đầu `select()`; giải thích vì sao gom như vậy rẻ hơn. Netty native epoll thì gọi tức thì trên event loop |
+| 4 | `epoll_wait(...) = 1` rồi `read(57, ..., N) = 143` | HTTP upgrade — số trả về có thể nhỏ hơn N |
+| 5 | `write(57, ...) = 129` | `101 Switching Protocols` |
+| 6 | `epoll_wait` rồi `read(57) = 27` | Frame WebSocket chứa nước đi |
+| 7 | `write(57, ...)` và `write(58, ...)` | State mới cho hai client — hai fd khác nhau |
+| 8 | `write(eventfd, 8 byte) = 8` | Thread khác gọi `Selector.wakeup()` — room actor vừa đẩy kết quả sang thread I/O |
+| 9 | `close(57)` | Client rời |
+
+Cờ `-T` cho thời gian nằm trong syscall: `epoll_wait` dài là thread ngủ, không phải chậm. `read` dài là dấu hiệu bạn dùng blocking nhầm chỗ.
+
+### Đường đi của một gói tin — NIC tới `ByteBuffer`
+
+| Chặng | Ở đâu | Syscall? |
+|---|---|---|
+| NIC nhận frame, DMA vào ring buffer | Phần cứng + driver | Không |
+| Hard IRQ → NAPI poll trong softirq | Kernel | Không |
+| IP → TCP: ghép segment, gửi ACK, xếp vào socket receive buffer | Kernel | Không |
+| `epoll` đánh dấu fd sẵn sàng, đánh thức thread đang ngủ | Kernel | **`epoll_wait` trả về** |
+| Thread gọi `read` — copy từ socket buffer sang buffer của bạn | Kernel → user | **`read`** |
+| `ByteBuffer` heap: JDK copy thêm một lần qua direct buffer tạm | JVM, userspace | Không — nhưng là lý do Netty dùng direct buffer |
+| `ByteBuf` → `ByteReadChannel` → decoder frame → DTO của bạn | JVM | Không |
+
+Hai syscall tối thiểu cho một message. Mọi thứ trước `epoll_wait` xảy ra khi thread của bạn chưa biết gì.
+
+**Chỉ nhắc tên, không học:** `io_uring` (nộp và nhận syscall theo lô qua ring dùng chung), `sendfile` và zero-copy (file → socket không qua userspace). Đều ở [Mở rộng](/mo-rong).
+
+**Ngưỡng đạt S3:** vẽ lại bảng đường đi trên không nhìn tài liệu, đánh dấu đúng hai chỗ là syscall; file `.strace` có chú thích 9 bước nằm trong repo; giải thích EMFILE của 1.8 bằng ba cấp giới hạn (soft, hard, và trần toàn máy `fs.file-max`) **và** nói được vì sao hạ mỗi soft thì không tái hiện được lỗi.
+
+## S3b — Socket TCP nhìn từ kernel · 4h · P1, sau 1.5 và 1.7; mở lại ở P3 cạnh 3.1
+
+S3 dừng ở fd và `epoll`. Giữa `write()` của bạn và dây mạng còn một tầng nữa — máy trạng thái TCP của kernel — và nó sinh ra năm triệu chứng mà **chắc chắn** sản phẩm này gặp. Không học tầng này, bạn sẽ đi tìm nguyên nhân ở GC và cgroup, vì đó là hai thứ bạn đã được dạy.
+
+| # | Triệu chứng | Cơ chế | Núm vặn | Lệnh quan sát |
+|---|---|---|---|---|
+| 1 | Frame nhỏ gửi liên tiếp, p99 kẹt quanh **40ms** dù CPU rảnh — ARENA 20Hz không đạt jitter dưới 5ms | **Nagle** giữ segment nhỏ lại khi còn dữ liệu chưa được ACK; bên nhận **delayed ACK** chờ tối đa 40ms để gộp ACK. Mẫu write-write-read khoá hai cơ chế vào nhau | `TCP_NODELAY` trên từng socket (`StandardSocketOptions.TCP_NODELAY`, Netty `ChannelOption.TCP_NODELAY`, Ktor engine config). Ktor/Netty thường bật sẵn — **kiểm, đừng tin** | `strace -f -e trace=setsockopt -p $PID` phải thấy `TCP_NODELAY, [1]` sau mỗi `accept4`; `ss -ti` cột `rtt`, `unacked` |
+| 2 | 300 bot connect cùng lúc: một phần **mất im lặng**, không exception ở server, client thấy connect chậm 1s, 3s | Hàng đợi accept đầy: `listen(fd, backlog)` bị trần `net.core.somaxconn` (4096 từ kernel 5.4, trước đó 128); Java NIO mặc định backlog **50**; Netty đọc `somaxconn`. Đầy thì kernel bỏ ACK cuối của handshake, client tưởng đã nối và retransmit | `bind(addr, backlog)` tường minh; `sysctl net.core.somaxconn`; đừng bật `tcp_abort_on_overflow` — nó chỉ đổi mất im lặng thành RST | `ss -lnt`: trên socket listen, `Recv-Q` = số đang chờ accept, `Send-Q` = backlog; `nstat -az TcpExtListenOverflows TcpExtListenDrops` trước và sau |
+| 3 | Reconnect storm ở G4: **máy sinh tải** chết trước server — `EADDRNOTAVAIL: Cannot assign requested address` | Bên đóng trước giữ **TIME_WAIT** 60s (hằng số kernel, `tcp_fin_timeout` không đổi được nó). Mỗi kết nối tới cùng ip:port server tốn một cổng ephemeral trong `ip_local_port_range` (32768–60999 = 28.232 cổng) | Trên máy sinh tải: nới `net.ipv4.ip_local_port_range`, `tcp_tw_reuse=1` (mặc định 2 = chỉ loopback), nhiều IP nguồn, tái dùng kết nối. Trên server: để **client đóng trước** khi có thể | `ss -s` dòng `timewait`; `ss -tan state time-wait \| wc -l`; `sysctl net.ipv4.ip_local_port_range` |
+| 4 | Peer mất sóng, `read` ngủ "vô hạn" — vô hạn là bao lâu? | `SO_KEEPALIVE` mặc định **tắt**; bật lên thì `tcp_keepalive_time` 7200s + 9 probe × 75s ≈ 2h15 mới báo. Dữ liệu chưa ACK thì retransmit theo `tcp_retries2` = 15 lần ≈ 15–30 phút rồi `ETIMEDOUT`. Keepalive TCP là **hop-by-hop**: qua Caddy nó chỉ dò được tới Caddy, không tới client; và nó chỉ phát hiện peer chết, không phát hiện app treo | `TCP_KEEPIDLE`/`TCP_KEEPINTVL`/`TCP_KEEPCNT` từng socket (`jdk.net.ExtendedSocketOptions`); nhưng heartbeat tầng ứng dụng ở 1.5 (ping/pong WebSocket, end-to-end) mới là câu trả lời đúng | `sysctl net.ipv4.tcp_keepalive_time net.ipv4.tcp_keepalive_intvl net.ipv4.tcp_keepalive_probes net.ipv4.tcp_retries2`; `ss -tio` cột `timer:(keepalive,…)` |
+| 5 | Một client 3G chậm, direct memory của server tăng dần rồi OOM (S2) | Send buffer của socket đó đầy (`net.ipv4.tcp_wmem` tự chỉnh tới 4MB); `write` non-blocking ghi một phần hoặc 0 byte; Netty đặt `isWritable()` = false. Nếu bạn vẫn xếp hàng state 20Hz cho nó, hàng đợi phình theo từng client chậm | Backpressure: `WRITE_BUFFER_WATER_MARK`, gộp hoặc bỏ frame state cũ (chỉ gửi state mới nhất), ngắt client quá chậm. Đây là quyết định giao thức của bạn, AI-free | `ss -tmi` dòng `skmem:(… tb… t…)` = send buffer và phần đang dùng; `cwnd`, `unacked`; `ss -tn` cột `Send-Q` |
+
+### LAB — hai con số, hai sysctl
+
+| Bước | Làm | Đo và ghi vào `bench/` |
+|---|---|---|
+| 1 | Bot swarm 1.7, 300 bot connect trong 1 giây, backlog mặc định | `nstat -az TcpExtListenOverflows TcpExtListenDrops` trước/sau; số bot connect thành công; p99 thời gian connect |
+| 2 | Nâng backlog trong code + `somaxconn`, chạy lại | Hai dòng `nstat` phải về 0; p99 connect giảm — giải thích bằng chữ **accept queue**, không bằng "server nhanh hơn" |
+| 3 | Ở P1: kênh 1.5, mẫu write-write-read (hai frame nhỏ liên tiếp rồi chờ trả lời) dưới `tc qdisc add dev eth0 root netem delay 20ms`, tắt rồi bật `TCP_NODELAY` | Hai p99 vào HdrHistogram. Ở P3 đo lại đúng bước này trên ARENA 3.2 dưới `tc netem` |
+| 4 | Máy sinh tải: 2.000 connect/disconnect liên tục trong 2 phút | `ss -s` dòng `timewait` mỗi 10 giây; thời điểm `EADDRNOTAVAIL` xuất hiện; so với 28.232 cổng ÷ 60s |
+
+**Ngưỡng đạt S3b:** giải thích được vì sao p99 ở bước 3 giảm bằng đúng hai chữ **Nagle** và **delayed ACK** — không phải "bật `NODELAY` là nhanh"; đọc được `Recv-Q`/`Send-Q` của socket listen và nói được chúng khác `Recv-Q`/`Send-Q` của socket đã nối chỗ nào; nói được hai điểm heartbeat tầng ứng dụng khác keepalive TCP (hop-by-hop qua Caddy; chỉ phát hiện peer chết, không phát hiện app treo). Nguồn: `tcp(7)`, `ss(8)`, TLPI ch. 61.
+
+## S4 — Signal, vòng đời tiến trình và container · 8h · P2 3h + P4 5h, cạnh 1.9 / 3.4 / 4.4
+
+Mở ba lần: 1.9 khi viết unit systemd; 3.4 khi làm graceful drain; 4.4 khi G4 đủ.
+
+### Signal
+
+| Signal | Số | Mặc định | Bắt được | JVM làm gì |
+|---|---|---|---|---|
+| `SIGINT` | 2 | Kết thúc | Có | Ctrl-C; chạy shutdown hook |
+| `SIGTERM` | 15 | Kết thúc | Có | `kill`, `systemctl stop`, `docker stop` gửi cái này; chạy shutdown hook — **drain phải bắt ở đây** |
+| `SIGKILL` | 9 | Kết thúc | **Không** | Kernel gỡ tiến trình thẳng; không dòng code nào của bạn chạy |
+| `SIGSEGV` | 11 | Core dump | Có | JVM tự dùng nó cho null check và safepoint; JVM crash thật → `hs_err_pid*.log` |
+| `SIGPIPE` | 13 | Kết thúc | Có | JVM ignore → `write` trả `EPIPE` → `IOException: Broken pipe` |
+| `SIGSTOP` | 19 | Dừng | **Không** | Treo toàn bộ tiến trình, kết nối TCP vẫn sống. **Lưu ý cho lab 2.3:** `kill -STOP` subscriber Redis **không** làm mất tin — tin dồn vào socket buffer rồi output buffer của Redis, chỉ bị cắt khi vượt `client-output-buffer-limit pubsub 32mb 8mb 60`; treo 10–30 giây rồi `kill -CONT` sẽ nhận đủ 100%. Mất tin đo bằng `kill -9` subscriber, publisher đếm seq tiếp, restart rồi đếm lỗ seq; hoặc treo hơn 60s với buffer vượt 8MB và đọc `CLIENT LIST` cột `omem`. Lab lock treo ở [Mở rộng](/mo-rong) |
+| `SIGCONT` | 18 | Tiếp tục | Có | Kernel luôn tiếp tục task trước, rồi mới chạy handler nếu có — shell, tmux dùng để biết mình vừa được đánh thức |
+
+**Vì sao `SIGKILL` không bắt được là điều tốt:** nếu tiến trình có thể từ chối chết, máy không có cách nào thu hồi tài nguyên. Nhưng `kill -9` **không** mô phỏng mất điện — nó chỉ giết tiến trình, page cache của kernel vẫn sống (S2 hàng 10). Có ba mức chết, và chúng để lại ba lượng dữ liệu khác nhau:
+
+| Mức | Cái gì chết | Còn lại trên đĩa | Cách tái hiện | Cổng |
+|---|---|---|---|---|
+| 1 | Exception, `SIGTERM`, `System.exit` | Mọi thứ — `finally`, shutdown hook, drain đều chạy | `kill -TERM` | Graceful drain ở 3.4 |
+| 2 | `SIGKILL`, OOM killer | Buffer **user-space** mất (`BufferedWriter` chưa flush, hàng đợi Netty, state trong RAM). Mọi byte đã qua `write()` — kể cả chưa `fsync` — **vẫn được kernel ghi xuống** | `kill -9`, lab OOM ở S2 | **G4 chứng minh mức này** |
+| 3 | Mất điện, VPS bị reset, node chết | Chỉ dữ liệu đã `fsync` — Postgres với `synchronous_commit=on` và WAL. Trang dirty chưa ghi biến mất | `echo b > /proc/sysrq-trigger` (root, máy reboot ngay) hoặc hard-reset VM từ panel | Lab tuỳ chọn ở 4.4, **không phải cổng** |
+
+Hệ quả: một server ghi bằng `write()` không `fsync`, hoặc Postgres đặt `synchronous_commit=off`/`fsync=off`, qua G4 100% mà vẫn mất trận khi VPS bị reset. Khi ghi "kill -9 không mất trận" vào `bench/`, ghi rõ **mức 2**. **Graceful drain là chuyện khác** — nó bắt `SIGTERM`, ngừng `accept`, hoàn tất và ghi bền trận đang dở, đóng session, thoát. Hai bài test, hai con số khác nhau.
+
+**`SIGPIPE` và socket đã đóng** — hai kịch bản khác nhau về bản chất, đừng trộn:
+
+- **Peer chết hẳn (mất sóng, rút pin, NAT hết hạn):** không FIN, không RST — gói tin bị bỏ rơi trong im lặng. `write` thành công vào send buffer cho tới khi buffer đầy; kernel retransmit theo `net.ipv4.tcp_retries2` (mặc định 15 lần ≈ 15–30 phút) rồi mới `ETIMEDOUT`; `read` blocking ngủ suốt thời gian đó; keepalive mặc định tắt và `tcp_keepalive_time` = 7200s. **Không bao giờ có `Broken pipe` sớm.** Server không có cách nào biết sớm hơn — đó là lý do heartbeat ở 1.5 tồn tại (S3b hàng 4).
+- **Peer đóng socket nhưng máy còn sống (app crash, `close()`):** `write` đầu vào send buffer, đầu kia trả RST, `write` kế tiếp nhận `SIGPIPE` → JVM đã ignore → `IOException: Broken pipe` (hoặc `Connection reset` khi `read`). Chỉ kịch bản này báo nhanh.
+
+Đo trước khi tin: `sysctl net.ipv4.tcp_retries2 net.ipv4.tcp_keepalive_time`.
+
+### Vòng đời tiến trình và PID 1
+
+| Khái niệm | Một câu | Bạn thấy nó ở đâu |
+|---|---|---|
+| Zombie | Con đã thoát, cha chưa gọi `wait` → còn một dòng trạng thái Z trong bảng tiến trình | `ps -eo pid,ppid,stat,comm` có `Z` |
+| Orphan | Cha chết trước con → con được gán cho PID 1 (hoặc subreaper) | `ppid` = 1 |
+| **PID 1 trong container** | PID 1 có hai đặc quyền: kernel **không** áp hành động mặc định của signal lên nó nếu chưa có handler, và nó phải reap mọi orphan. JVM chạy trực tiếp làm PID 1 có handler `SIGTERM` nên vẫn nhận — nhưng **shell-form** `CMD java -jar ...` đặt `/bin/sh` làm PID 1, `sh` không chuyển tiếp `SIGTERM` → `docker stop` chờ 10 giây rồi `SIGKILL`. JVM có reap con do chính nó tạo (`ProcessBuilder` → thread `process reaper` gọi `waitpid`), nhưng làm PID 1 nó **không** `wait` các orphan bị kernel gán về (con của shell/script gọi từ `ProcessBuilder`) → zombie tích luỹ, đụng `pids.max` | `docker exec <ctr> ps -eo pid,ppid,stat,comm` |
+| Sửa | Exec-form `CMD ["java", "-jar", ...]`; `docker run --init` (tini làm PID 1, chuyển signal, reap zombie); `--stop-timeout` lớn hơn thời gian drain | `docker inspect` mục `Config.Cmd` |
+
+### Namespace và cgroups v2 — Docker là hai thứ này cộng lại
+
+| Namespace | Cô lập cái gì | Hệ quả bạn gặp |
+|---|---|---|
+| `pid` | Cây tiến trình | Trong container server là PID 1 — mọi vấn đề PID 1 ở trên |
+| `net` | Interface, bảng route, cổng | Cần `-p 8080:8080`; `ss -tnp` trong container không thấy Caddy |
+| `mnt` | Cây thư mục | Log ghi vào `/var/log` của container mất khi container xoá → volume |
+| `uts` | Hostname | `hostname` trong log là hash 12 ký tự |
+| `ipc` | Shared memory System V | Không chia `/dev/shm` với host |
+| `user` | Ánh xạ uid | root trong container có thể là uid 100000 ngoài host |
+
+| cgroup v2 (`/sys/fs/cgroup/...`) | Giới hạn | Đọc số | Triệu chứng |
+|---|---|---|---|
+| `memory.max` | Trần cứng: anon + page cache + socket buffer + slab kernel của nhóm — với 2.000 kết nối, `memory.current` lớn hơn RSS của `java` | `memory.current`; `memory.events` dòng `oom_kill` | OOM kill — lab OOM ở S2 |
+| `memory.high` | Ngưỡng mềm: vượt thì kernel ép reclaim và **throttle** tiến trình, **không bao giờ giết** | `memory.events` dòng `high` tăng; `memory.stat` | Server chậm dần mà không chết. Dùng làm cảnh báo mềm dưới `max` 10–20%, đừng nhầm với `max` |
+| `cpu.max` | quota/period, ví dụ `150000 100000` = 1,5 nhân | `cpu.stat`: `nr_throttled`, `throttled_usec` | **Tick loop bị throttle giữa tick** → jitter p99 vọt dù CPU% trung bình thấp. Đây là nghi phạm số một cho jitter lạ ở 3.2 và 4.2 |
+| `io.max` | IOPS, bandwidth | `io.stat` | Ghi log, `pg_dump` chậm |
+| `pids.max` | Số task | `pids.current` | 2.000 platform thread đụng trần → `OutOfMemoryError: unable to create native thread` |
+
+`systemd` tạo cgroup cho mỗi service: `MemoryMax=`, `CPUQuota=`, `TasksMax=` trong unit file là cùng cơ chế — không cần Docker để có giới hạn.
+
+### JVM trong container
+
+**Sự thật:** trước JDK 10 và 8u191, JVM đọc `/proc/meminfo` và `/proc/cpuinfo` — số của **host**. Heap mặc định = ¼ RAM host; số GC thread = số nhân host. Container 512MB trên host 32GB → JVM tự đặt heap 8GB → OOM killer. Từ đó có `-XX:+UseContainerSupport` (mặc định bật; cgroup v2 từ JDK 15, backport 11.0.16 và 8u372).
+
+| JVM đọc | Từ đâu | Ảnh hưởng dây chuyền |
+|---|---|---|
+| RAM | `memory.max` | Heap mặc định = `MaxRAMPercentage` 25% của limit — với 768MB là 192MB, thường quá nhỏ; đặt tường minh 50–60% và chừa chỗ cho off-heap (S2) |
+| CPU | `cpu.max` làm tròn lên; `cpuset` | `availableProcessors()` → kích thước `Dispatchers.Default`, `ForkJoinPool.commonPool`, `ParallelGCThreads` của G1, số event loop Netty (2×). Quota 0,5 nhân → JVM thấy 1 → mọi pool co lại |
+
+```bash
+docker run --memory=768m --cpus=1.5 caro:latest java -Xlog:os+container=info -version
+java -XX:+PrintFlagsFinal -version | grep -E 'MaxHeapSize|MaxRAMPercentage|ActiveProcessorCount|UseContainerSupport'
+cat /sys/fs/cgroup/cpu.stat        # nr_throttled tăng trong lúc bot chạy = throttling
+```
+
+### `systemd` — nối vào 1.9
+
+Bản unit file bạn gõ ở 1.9 đi qua luật 7: AI đưa mẫu có chú thích và 3 lỗi cố ý. Ở đây chỉ có bảng nghĩa từng directive để bạn tìm ra 3 lỗi đó.
+
+| Directive | Nghĩa | Sai thường gặp |
+|---|---|---|
+| `Restart=on-failure` + `RestartSec=` | Khởi động lại khi thoát khác 0 hoặc bị signal; **không** khởi động lại khi drain thoát 0 | `Restart=always` che mất crash-loop |
+| `LimitNOFILE=65536` | `RLIMIT_NOFILE` cho tiến trình — 1.8 | Đặt ở `/etc/security/limits.conf`; systemd không đọc file đó |
+| `MemoryMax=`, `CPUQuota=`, `TasksMax=` | cgroup v2 của service | Quên `TasksMax` → trần mặc định của systemd (vài nghìn task, đổi theo phiên bản — đọc bằng `systemctl show -p DefaultTasksMax`) giết lab platform thread |
+| `KillSignal=SIGTERM`, `TimeoutStopSec=` | Signal gửi khi stop và thời gian chờ trước `SIGKILL` | `TimeoutStopSec` ngắn hơn thời gian drain |
+| `journalctl -u caro -f`, `-b`, `--since '10 min ago'` | Đọc log; phân biệt dòng `code=killed, status=9/KILL` với `code=exited, status=0/SUCCESS` | Chỉ nhìn log app, không nhìn systemd |
+
+### LAB — hai cách chết, hai con số
+
+Chạy trong cgroup có `MemoryMax` (lab OOM của S2 là nửa đầu). Nửa sau: 50 bot, ≥15 trận dở.
+
+| Bước | Lệnh | Đo |
+|---|---|---|
+| 1 | `kill -9 $PID` (mức 2 — `SIGKILL`), khởi động lại | Số trận dở khôi phục đúng từng nước (so move log); số trận có nước đã ack nhưng không có trên đĩa = **trận đứt**; thời gian client reconnect |
+| 2 | `kill -TERM $PID` sau khi server bắt `SIGTERM` | Server: đóng listen fd, gửi frame "đang tắt", chờ room actor ghi bền, đóng session, thoát 0 trong `TimeoutStopSec`. Trận đứt phải = 0 |
+| 3 | `docker stop --time 5` khi drain cần 12 giây | Chứng minh bị `SIGKILL` giữa drain: trận đứt lớn hơn 0 → sửa timeout |
+| 4 | `journalctl -u caro` | Hai dòng `status=9/KILL` và `status=0/SUCCESS` nằm cạnh nhau |
+
+**Ngưỡng đạt S4:** một file `bench/` có hai hàng — `kill -9` và `kill -TERM` — cùng cột "trận đứt", "trận khôi phục", "thời gian tới khi thoát", số khác nhau đo được trên chính server. Kèm dòng `dmesg` OOM và dòng `journalctl` tương ứng. Nói được vì sao `Restart=on-failure` không khởi động lại sau drain sạch, và vì sao hàng `kill -9` chỉ chứng minh mức 2 chứ không chứng minh chống mất điện.
+
+## 📚 Nguồn học
+
+| Nguồn | Dùng cho | Ghi chú |
+|---|---|---|
+| Michael Kerrisk — *The Linux Programming Interface* | **Nguồn chính.** Ch. 24–28 process và exec, 29–33 thread, 49 `mmap`, 61 socket nâng cao (S3b), 63 I/O đa kênh (`select`/`poll`/`epoll`), 20–22 signal | Đọc chương **sau** lab, không trước |
+| man7.org: `clone(2)`, `epoll(7)`, `tcp(7)`, `ss(8)`, `signal(7)`, `cgroups(7)`, `namespaces(7)`, `proc(5)` | Tra cứu tại chỗ; `tcp(7)` cho S3b | `proc(5)` là bản đồ của mọi file `/proc` trong trang này |
+| Brendan Gregg — *Systems Performance* ch. 6 CPU, 7 Memory; trang Flame Graphs | Phương pháp đo, USE method | Nối thẳng vào 4.3 |
+| LWN.net — "An EEVDF CPU scheduler for Linux" (2023), loạt bài cgroups v2; `Documentation/scheduler/sched-eevdf.rst` trong cây kernel | Bộ lập lịch và cgroup | Đọc khi cần giải thích `nr_throttled` hoặc trả lời "EEVDF chọn task thế nào" |
+| Julia Evans — zine *strace*, *Networking* | Cửa vào dễ nhất cho S3 | Đọc trước lab strace |
+| JEP 444 (virtual thread), JEP 425 | S1 — phần Motivation và Scheduling | 1.4 đã đọc phần Motivation |
+
+## Không học ở đây
+
+Cố ý để ngoài. Tất cả nằm ở [Mở rộng](/mo-rong), năm 3, và không module Lõi nào phụ thuộc chúng.
+
+| Bỏ ngoài | Vì sao |
+|---|---|
+| Viết kernel module, đọc source kernel | Không JD backend nào hỏi; 40h+ cho một câu tò mò |
+| `ftrace`, eBPF, `bpftrace` sâu | `perf stat`, `strace`, `/proc` đủ cho mọi triệu chứng của một VPS |
+| `io_uring` thực chiến | Netty và JDK chưa dùng mặc định; biết tên là đủ |
+| NUMA | VPS 1–2 vCPU không có |
+| Real-time scheduling (`SCHED_FIFO`, `chrt -f`) | Tick 20Hz với jitter dưới 5ms đạt được bằng cấp phát trước và không bị throttle |
+
+## 🔒 Hợp đồng AI cho trục này
+
+Theo mục [Đọc hiện vật](/he-thong-hoc#đọc-hiện-vật) và [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-thêm--bản-server) của hợp đồng AI. Trục này là vùng **đọc hiện vật**, và luật ở đó có hai vế.
+
+| AI được | AI không được |
+|---|---|
+| Dạy **cơ chế**: `clone` khác `fork` ở đâu, ET khác LT ở đâu, `oom_score` tính thế nào; giải thích một dòng man page | Nhìn `strace` log, `dmesg`, flame graph, `jstack` dump **của bạn** rồi nói nguyên nhân nằm ở đâu |
+| Sinh **hiện vật giả có bệnh cài sẵn**: 5 `jstack` có deadlock hoặc leak, 5 đoạn `strace` có partial read bị bỏ qua, 3 dòng `dmesg` OOM — bạn chẩn đoán, AI chấm | Viết code bắt `SIGTERM`, drain, shutdown hook, vòng `Selector`, đóng session — session/connection và shared state là vùng AI-free 26 tháng, kể cả pseudo-code |
+| Cài `perf`, `strace`, `smem` trên máy bạn (luật 7, máy mình) | Đưa unit file hoàn chỉnh không có 3 lỗi cố ý (luật 7, server) |
+| Hỏi đúng một câu về bug concurrency: "cái gì có thể chạy đồng thời với dòng này?" (luật 2+) | Nêu giả thuyết hộ bạn khi `HUNT.md` trống |
+
+Mọi phiên AI của trục này ghi nguyên văn prompt vào `notes/ai-sessions/` như thường lệ. Câu hỏi hiệu năng vẫn đi qua ngưỡng cửa luật 3: một phép đo trước, rồi mới hỏi.
+
+## → Tiếp theo
+
+- [Android core](/android-core) — copy-on-write và Zygote, tiến trình bị giết và process death: cùng kernel này nhìn từ phía client
+- [Roadmap 26 tháng](/roadmap) — 32h giờ biên của trục này (S1–S4 cộng S3b) nằm ở đâu trong bảng bổ sung 84h và bảng tuần, và điều gì bị cắt trước nó
+- [Mở rộng](/mo-rong) — eBPF, `io_uring`, real-time scheduling, lab treo bằng `kill -STOP`: năm 3, chỉ khi số cho phép

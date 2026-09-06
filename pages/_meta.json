@@ -1,8 +1,16 @@
 {
   "index": "Trang chủ",
-  "roadmap": "Roadmap 24 tháng",
+  "nghe-backend-game": "Nghề backend game",
+  "roadmap": "Roadmap 26 tháng",
   "he-thong-hoc": "Hệ thống học & luật AI",
-  "phase-0": "Phase 0 — Nền móng",
+  "phase-0": "Phase 0 — Kotlin viết được",
   "phase-1": "Phase 1 — 🔒 Chưa mở",
-  "progress": "Tiến độ"
+  "nen-tang-he-thong": "Nền tảng hệ thống — 🔒 từ P1",
+  "backend-core": "Backend core — 🔒 từ P1",
+  "android-core": "Android core — 🔒 từ P2",
+  "progress": "Tiến độ",
+  "mo-rong": {
+    "title": "Mở rộng",
+    "display": "hidden"
+  }
 }

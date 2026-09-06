@@ -1,0 +1,134 @@
+# Mở rộng — kho để dành
+
+Trang này liệt kê những thứ bị đẩy ra khỏi 26 tháng nhưng chưa bị vứt đi: cộng đúng từ ba bảng dưới là **363h** (219h danh mục gốc + 54h backend nâng cao + 90h tầng AOSP nặng), không nằm trong bất kỳ tổng nào của lộ trình. Mở nó khi — và chỉ khi — bảng tuần cho phép.
+
+**Chỉ mở khi bảng tuần cho phép** (≥10h thật 4 tuần liên tiếp **và** giờ tích luỹ ≥90% kế hoạch). **Không mở được không phải bạn dốt — là số chưa cho phép.**
+
+---
+
+## 🔒 Ba luật của trang này
+
+| Luật | Nội dung |
+|---|---|
+| **Không cộng vào tổng nào** | Lộ trình vẫn là **839h giờ đồng hồ tại bàn** = 680h nội dung + 132h nghi thức + 27h dự phòng, trên **94 tuần chạy** trong 113 tuần lịch. Trang này không thêm một phút nào vào con số đó, và không xuất hiện ở cột nào của bảng phase |
+| **Không module Lõi nào phụ thuộc đầu ra ở đây** | Không ngưỡng, không cổng kỹ thuật phase, không tiêu chí G1–G6 nào cần một dòng code sinh ra ở đây. Không bao giờ mở nó vẫn tốt nghiệp đủ 26 tháng |
+| **Ẩn khỏi thanh điều hướng** | Chỉ vào được bằng link trực tiếp. Cám dỗ được xử lý bằng cơ chế, không bằng ý chí |
+
+Điều kiện mở là **hai vế cùng đúng**, không phải một:
+
+- [ ] ≥10h thật, 4 tuần liên tiếp — số ở hàng phụ bảng tuần, tuần ____ đến tuần ____
+- [ ] Giờ tích luỹ ≥90% kế hoạch tính từ W1 — ____ h thật / ____ h kế hoạch
+
+Thêm một chốt nữa: nếu **DP2** (cuối W14) không đạt ≥8/10 bảng tốt nghiệp Phase 0, trang này đóng **cả năm đầu**, bất kể giờ đẹp đến đâu.
+
+---
+
+## 📦 Danh mục hạng mục
+
+Cột cuối là phần quan trọng nhất: mỗi dòng bị đẩy ra vì một lý do cụ thể, không phải vì hết chỗ.
+
+**Ký hiệu trong bảng:** `M1–M7` và `S1–S3` là các lát của module **3.2 ARENA** (P3), không phải bốn tầng `S1–S4` của [Nền tảng hệ thống](/nen-tang-he-thong) — hai dãy trùng chữ, khác nghĩa hoàn toàn.
+
+| Hạng mục | Giờ | Mảng | Vì sao ở đây chứ không ở Lõi |
+|---|---|---|---|
+| **ARENA v2** — M2, M6, M7 của 3.2 (prediction + reconciliation) | cap **60** | ARENA / netcode | Nếu để ARENA chạy đủ M2/M6/M7 thì riêng nó ngốn ~110h — bằng 16% của 680h nội dung, đổ vào kỹ năng dùng ở dưới 10% cơ hội việc làm. Lõi vì thế dừng ở 40h (sàn 32, cap 50). Cũng là chỗ hợp đồng AI được dự báo rò rỉ nặng nhất: client chạy cùng vòng sim với server |
+| M5 interpolation buffer của 3.2 | 8 | ARENA / netcode | Lõi dừng ở **M3 full snapshot** của cùng module 3.2. Nội suy là chất lượng hình ảnh, không phải tính đúng đắn của server |
+| Render 20Hz + joystick | 8 | Client ARENA | Client Lõi = tap ô đích, render state khi đến. Client là phương tiện, không phải bằng chứng |
+| Play internal testing + IAP Google thật + RTDN | 20 | Mobile services | `3.5` IAP offline đã ra ngưỡng. Bản thật là thủ tục + $25 + cần ≥12 tester tự nhiên — đúng nội dung **DP6** |
+| FCM | 6 | Mobile services | Không nằm trong ngưỡng nào của Lõi. Sideload đủ cho `v1.0` |
+| HikariCP pool theo Little's Law | 6 | Dữ liệu / hiệu năng | `2.2` chỉ cần pool chạy đúng. Chỉnh pool trước khi có knee point là chỉnh mù |
+| JMH — 3 cách sửa cùng một race | 6 | Đồng thời | **G1** đo bằng 2 commit đỏ→xanh, không bằng microbenchmark. JMH là công cụ của người đã có số |
+| CAS / SPSC ring buffer | 8 | Đồng thời | Lõi dùng `Channel` và room actor. Tự viết hàng đợi lock-free là tối ưu hoá trước khi có phép đo |
+| Grafana 6 panel + alert | 6 | Vận hành | Bậc cắt 3 nói thẳng: Grafana không có trong JD Junior. `2.10` giữ structured log + JFR + Micrometer ra Prometheus text |
+| Saga | 4 | Phân tán | Kiến trúc là modular monolith, một process. Outbox ở `3.4` đã đủ cho "trận kết thúc → ELO/vàng" |
+| Rolling deploy 2 instance sticky WS + lock `SET NX PX` + fencing token (ép treo bằng `kill -STOP`, không phải GC) | 12 | Vận hành / phân tán | Một VPS, một instance. Đây là bài của ngày có instance thứ hai — mà ngày đó nằm ở công ty, không ở đây |
+| Delta snapshot + bandwidth budget | 20 | ARENA / netcode | Full snapshot đủ cho 2–4 entity. Delta chỉ có nghĩa khi bandwidth là ràng buộc thật, đo được |
+| Hash ring | 10 | Phân tán | Sharding khi chưa có tải để shard là kiến trúc tưởng tượng |
+| Remote config / daily quest | 8 | Live-ops | Live-ops là việc của công ty. Không nhà tuyển dụng Junior nào hỏi |
+| Spring live-ops | 10 | Spring | `4.1` dừng ở Security/JWT + JPA + Flyway + OpenAPI — đúng phần JD hỏi. Sàn là Spring ≥32h có Security/JWT, không phải Spring rộng |
+| HTTP GET bằng socket thuần | 4 | Mạng thô | `1.2` đã có echo TCP/UDP/NIO + `tcpdump` + bảng p50/p99. Món này vui, không thêm ngưỡng nào |
+| MTU binary search + jitter theo RFC 3550 | 6 | Mạng thô | `3.1` đo HOL blocking dưới `tc netem` theo quy trình predict-then-measure là đủ để trả lời 5 câu netcode bằng số của mình |
+| Replay ×100 | 2 | Determinism | lát **S3 của module 3.2 (ARENA)** đã yêu cầu 10 lần replay hash khớp 100%. ×100 là con số đẹp hơn, không phải năng lực mới |
+| DSA thêm 40 bài | 15 | Nghề | Warm-up DSA của Lõi từ W20 — nhịp, số phút và chỗ ngồi của nó trong quỹ giờ do [Hệ thống học](/he-thong-hoc) chốt — đã chiếm hết phần DSA nằm trong 839h. Nó có giá đồng hồ thật, không phải giờ nhặt được: 40 bài thêm là giờ mới, ngoài quỹ. Ngưỡng DSA là ngưỡng của Lõi và đo bằng chất lượng (1 bài test 60' pass + 7/7 pattern rebuild), không đo bằng số bài — thêm 40 bài không đổi ngưỡng đó |
+| **Tổng bảng này** | **219** | | Cộng được — nhưng đây không phải phase thứ bảy |
+
+**Sự thật về cột giờ:** đó là ước lượng thô cho một trang không có ngân sách. Nó cộng được, và ba dòng tổng đã in ra: 219 + 54 + 90 = **363h**. Nhưng 363h đó không phải một phase thứ bảy — trang này không có phase, không có lịch, không có DP, và không trừ vào tuần nào trong 113 tuần lịch.
+
+---
+
+## 🧱 Backend nâng cao — năm 3 hoặc tháng đầu đi làm
+
+Khối này đến từ [Backend core](/backend-core): 24h bị đẩy ra khỏi Lõi có tên và lý do, cộng 30h backend nâng cao để đủ tầng. **54h**, nhãn **"năm 3 hoặc tháng đầu đi làm"** — không cộng vào tổng nào của lộ trình, và không mở trước khi có việc hoặc trước khi bảng tuần cho phép. Lý do chung cho cả bảng: những thứ này làm bạn thành senior chứ không quyết định bạn có được nhận hay không; ở công ty bạn gặp chúng trong codebase thật, có tải thật, có người review — học ở đó nhanh gấp nhiều lần so với tự dựng trên một VPS không có ai dùng.
+
+| Hạng mục | Giờ | Mảng | Vì sao không nằm trong Lõi |
+|---|---|---|---|
+| Job queue trên Postgres với `SKIP LOCKED` + DLQ | 8 | Dữ liệu / việc nền | Outbox ở `3.4` đã giải bài "trận kết thúc → ELO/vàng" bằng một bảng và một vòng lặp. Queue tổng quát — worker cạnh tranh, retry có đếm, dead-letter — là bài của ngày có việc nền thứ ba. CARO chưa có việc nền thứ hai |
+| Ports & adapters + ranh giới module của modular monolith | 8 | Kiến trúc | `caro-engine` 0 I/O đã là một port thật và là câu chuyện phỏng vấn đủ dùng. Kiến trúc đầy đủ chỉ có nghĩa trên codebase đủ lớn để ranh giới sai gây đau — codebase đó nằm ở công ty |
+| OpenTelemetry trace phân tán đầy đủ | 4 | Vận hành | `5.5` có một trace end-to-end qua WS → sim → outbox → Postgres. Sampling, propagation qua outbox, baggage, exporter production — khi có hơn một service |
+| Feature flag + canary / blue-green | 4 | Vận hành / CD | `4.4` có deploy tự động và rollback bằng tag. Canary cần instance thứ hai và lưu lượng thật để chia; flag cần người dùng đủ đông để bật theo phần trăm |
+| Kafka / NATS thực chiến | 10 | Phân tán / messaging | Stack chốt là modular monolith; pub/sub Redis đã bị đo mất tin ở `2.3` — mất khi subscriber **không còn kết nối** lúc `PUBLISH` (`kill -9` rồi restart, đếm được lỗ hổng số seq), không phải khi nó chỉ bị treo — và Streams đã được so. Broker thật chỉ đáng học khi có producer và consumer ở hai process khác nhau với tải khác nhau |
+| CQRS + event sourcing — đọc hiểu | 6 | Kiến trúc | Ví ledger append-only ở `3.3` đã là event sourcing thu nhỏ cho một aggregate. Bản đầy đủ — projection, replay, snapshot, versioning event — là quyết định kiến trúc mà junior không được giao |
+| Multi-tenancy + sharding ứng dụng | 8 | Dữ liệu | Một Postgres, một tenant. Shard key, cross-shard query, rebalance là bài của ngày có tải để shard — hash ring đã nằm ở bảng trên với cùng lý do |
+| gRPC + contract giữa service | 6 | API | OpenAPI ở `B1` đã dạy contract-first. gRPC thêm Protobuf, streaming, deadline propagation — cần ít nhất hai service để có "giữa" |
+| | **54** | | 24h từ Backend core + 30h nâng cao |
+
+Thứ tự gợi ý nếu đi làm ở công ty product: job queue → flag/canary → OTel → ports & adapters. Ở outsourcing hoặc fintech: gRPC → Kafka → multi-tenancy. Đọc CQRS/ES sau cùng, khi đã thấy ít nhất một hệ thống dùng nó sai.
+
+---
+
+## 🔧 Tầng AOSP nặng — ~90h, nhãn "năm 3"
+
+Phần tiếp nối của [Android core](/android-core). Trang đó dừng ở mức **đọc hiện vật và nối với server** — `ps`, `dumpsys meminfo`, trace ANR, log `lmkd`. Tầng này là mức **sờ vào máy**: build, flash, viết service, viết driver. Không hạng mục nào ở đây được mở trong 26 tháng, kể cả khi bảng tuần cho phép mở các hạng mục khác của trang này — nhãn "năm 3" là nhãn thời điểm, không phải nhãn độ khó.
+
+**Lý do chung, áp cho mọi dòng:** không hạng mục nào đổi được kết quả xin việc backend trong 26 tháng — không JD Junior nào hỏi, không cổng G1–G6 nào cần — và mỗi hạng mục đòi một **khối thời gian liền** (một cuối tuần trọn, hoặc nhiều buổi tối liên tiếp không đứt) mà lộ trình 20:00–22:00 không có. Build AOSP dở dang lúc 22:00 sáng mai không tiếp được; một buổi 2h không đủ để kernel module compile, nạp, panic, đọc log, sửa.
+
+| Hạng mục | Giờ | Vì sao không nằm trong Lõi |
+|---|---|---|
+| Tự build AOSP từ source, flash lên thiết bị hoặc chạy Cuttlefish | 25 | Đồng bộ source ~100GB, build lần đầu 4–8h trên máy mạnh, flash sai là mất máy. Kết quả là "tôi build được Android" — câu này không có trong bất kỳ JD backend nào. Cần một cuối tuần liền và ổ đĩa mà bạn không có lý do mua trước khi đi làm |
+| Viết một system service riêng qua AIDL, đăng ký với `ServiceManager`, gọi từ app | 12 | Đây là kỹ năng platform engineer, khoảng 1–2% thị trường Android VN và 0% thị trường backend. Cần build AOSP ở dòng trên làm nền — phụ thuộc dây chuyền, không tách ra làm lẻ được |
+| Đọc source Binder driver trong kernel (`drivers/android/binder.c`) và `libbinder` | 10 | Android core đã dạy đủ để trả lời "vì sao Binder treo UI" bằng cơ chế. Đọc 6.000 dòng C của driver cho thêm độ chính xác, không thêm câu trả lời phỏng vấn nào. Để dành cho ngày cần debug một vụ Binder thật ở công ty |
+| Viết một kernel module đơn giản, nạp bằng `insmod`, đọc `dmesg` | 10 | Cần kernel header đúng phiên bản, máy unlock hoặc máy ảo có kernel tự build; sai là panic. Lõi chỉ cần biết "Binder là driver kernel" — biết, không cần viết. Kernel module trên VPS cũng không phải việc của backend Junior |
+| ftrace, `simpleperf`, Perfetto trace phân tích sâu — scheduling, wakeup, lock contention | 12 | Android core mở Perfetto để nhìn main thread, thế là đủ. Phân tích sâu chỉ có nghĩa khi có hiệu năng thật cần chữa, và hiệu năng thật của bạn nằm trên server: G3 + `async-profiler` ở 4.3 là nơi đầu tư. Cùng kỹ năng đọc flame graph, nhưng trên hiện vật quyết định việc làm |
+| Viết SELinux policy cho service của mình (`.te`, `neverallow`, `sepolicy-analyze`) | 8 | Đọc `avc: denied` ở Android core là mức mọi kỹ sư cần. Viết policy là việc của ROM và OEM. Lại phụ thuộc dòng system service ở trên |
+| Custom ROM / thay thế một system app (launcher, SystemUI) | 8 | Vui, và là cách nhanh nhất mất một tuần. Không đổi một dòng nào trong CV backend |
+| `io_uring`, eBPF, NUMA, real-time scheduling trên server Linux | 5 | Đây là dòng duy nhất chạm server, và vẫn bị đẩy ra: 1.8 + Nền tảng hệ thống + `epoll` qua Netty đã đủ cho 300 CCU. `io_uring` chỉ có nghĩa khi `epoll` là nút thắt đo được — với 1 VPS 2 vCPU thì nút thắt là Postgres, không phải syscall. eBPF là công cụ của người vận hành hệ thống đã có tải |
+| | **90** | |
+
+**Sự thật về cột giờ:** ước lượng thô, như mọi dòng khác của trang này. Nếu có ngày bạn mở tầng này, mở theo đúng thứ tự trong bảng — dòng 1 là nền của dòng 2, 4, 6 — và mở bằng lương, không bằng buổi tối.
+
+Ba luật của trang này áp nguyên: không cộng vào tổng nào, không module Lõi nào phụ thuộc, ghi ADR trước khi mở.
+
+---
+
+## 🌱 Năm 3 trở đi
+
+Một tầng nữa, nằm ngoài cả trang này. Không phải "để dành" — là **từ chối trong 26 tháng**, kể cả khi có chuyên gia đề xuất:
+
+| Nhóm | Cụ thể |
+|---|---|
+| Netcode đầy đủ | Giáo trình netcode ~340h; UDP reliability layer tự viết; NAT punching; rollback / GGPO; deterministic lockstep; lag compensation; Area of Interest |
+| Ngôn ngữ | Go **viết được** (Lõi chỉ 4h đọc Nakama match handler); C/C++ = 0h |
+| Game engine | Unity, Godot, LibGDX, KorGE |
+| Hạ tầng lớn | Kubernetes / Agones (Lõi 2h đọc) |
+
+**Vì sao:** mỗi dòng đòi một nền không dựng nổi part-time trong 26 tháng song song với việc kiếm job đầu tiên. Chúng không sai — chúng **sai thời điểm**. Năm 3 bạn học chúng bằng lương, không bằng buổi tối.
+
+---
+
+## ⚠️ Nếu bạn thật sự mở
+
+Bốn luật, không thương lượng:
+
+1. Ghi một dòng vào `notes/ADR.md`: ngày mở, hạng mục, hai con số điều kiện, dự định bao nhiêu giờ.
+2. Mỗi hạng mục vẫn có **cap**. Chạm 80% cap → cờ vàng như mọi module Lõi. Hết cap → dừng, ghi mức đạt vào `bench/`.
+3. Vùng AI-free vẫn nguyên: vòng tick, gói tin, session/connection, mọi thứ chạm `Mutex`/`Channel`/`Atomic`/shared state, reconnect và state sync. Đây không phải vùng nới luật.
+4. Giờ tuần rơi xuống dưới ngưỡng → **đóng lại ngay**, giữa chừng cũng đóng. Lõi được ưu tiên tuyệt đối.
+
+Cấm dùng trang này để né một module Lõi đang khó. Đo bằng chứng cứ, không đo bằng cảm tính: bảng tuần chưa xanh 4 tuần liên tiếp thì câu trả lời là không.
+
+---
+
+## → Tiếp theo
+
+- Quay lại bản đồ, thứ tự cắt và sàn không bao giờ cắt: [Roadmap 26 tháng](/roadmap)
+- Hai con số điều kiện nằm ở bảng tuần: [Tiến độ](/progress)

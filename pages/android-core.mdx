@@ -1,0 +1,426 @@
+# Android core — Binder, Zygote, ART và vòng đời tiến trình
+
+Trang này trả lời một câu: *client Android của bạn chết như thế nào — và vì sao server phải biết điều đó trước khi viết dòng reconnect đầu tiên.* Mở ở P2 (tháng 9–16, W39–67), sau 2.5 — khi S2 (copy-on-write) của Nền tảng hệ thống đã học và 2.2 đã giữ được trận qua restart. Riêng bảng 6 kịch bản ở phần F thì **viết nháp trước ngày đầu của 2.4** (chỉ đọc F, chưa lab) và kiểm lại bằng lab sau khi học xong trang này — module reconnect tồn tại vì những gì nằm ở đây.
+
+---
+
+| Mục | Giá trị |
+|---|---|
+| Module | 2.8 — Android core. Thay và mở rộng trọn module "Android tối thiểu" 8h cũ |
+| Giờ | **30h** — thay trọn module 8h cũ, tức **+22h** mới so với bản 755h; đã nằm trong 839h, phân bổ ở bảng bổ sung của [Roadmap](/roadmap). Slot T4 + T7, T5 đọc source AOSP |
+| Khi | P2, W39–67 (31/05–19/12/2027), sau 2.5. Bảng 6 kịch bản (F) viết nháp trước ngày đầu của 2.4, kiểm lại bằng lab sau khi xong trang này |
+| Đứng trước | 1.8 Linux giới hạn một máy · 2.2 persistence · 2.4 reconnect bản đầu (dùng bảng nháp F) · 2.5 và [Nền tảng hệ thống](/nen-tang-he-thong) S2 (copy-on-write, học cạnh 2.5) + S3 (`epoll`) |
+| Dẫn tới | 2.4 reconnect — bản kiểm lại của bảng 6 kịch bản quay về sửa 2.4 · 2.9 Compose client v1 (16h Lõi, cap 20h) · 3.2 ARENA tick loop |
+| Máy | Một điện thoại Android thật (**Android 11 trở lên** — `dumpsys activity exit-info` ở lab E và F chỉ có từ 11), cáp USB, `adb`. Máy ảo chỉ khi cần `adb root` |
+| Không phải | Trang học Android developer. Compose sâu đã bị cắt ở mục 8 spec |
+
+## 🎯 Vì sao một backend engineer học Android core
+
+Bạn không học Android core để làm Android developer. Cửa đó đóng rồi. Bạn học nó vì ba lý do — cả ba là lý do server.
+
+**1. Client của bạn là Android, và nó chết theo luật.** Process death, Doze, giới hạn chạy nền từ Android 8, một cuộc gọi Binder chặn main thread — đó không phải "lỗi mạng ngẫu nhiên". Đó là hệ điều hành thi hành chính sách. Bốn thứ này là **nguyên nhân**; reconnect, session token, `seq` + replay buffer, state sync trên server là **hệ quả**. Không biết client chết như thế nào thì bạn thiết kế reconnect theo tưởng tượng — và tưởng tượng phổ biến nhất ("rớt mạng rồi vào lại") chỉ là 1 trong 6 kịch bản ở phần F.
+
+**2. Server của bạn chạy Linux — và Android core là Linux.** Zygote là `fork()` cộng copy-on-write. Binder là một kernel driver, cửa vào là `ioctl`. Looper là vòng `epoll_wait` trên vài file descriptor. `lmkd` là daemon nhận điểm từ `system_server` rồi ghi vào `/proc/<pid>/oom_score_adj`; khi áp lực bộ nhớ (PSI) vượt ngưỡng, nó đọc lại điểm đó để chọn tiến trình giết. Cả trang [Nền tảng hệ thống](/nen-tang-he-thong) được học lại một lần nữa — trên một hệ thống thật, có source đọc được từng dòng, chạy trên máy trong túi bạn.
+
+**3. Looper/MessageQueue và tick loop của game server là cùng một cấu trúc.** Một thread, một hàng đợi, một nhịp, và luật tuyệt đối: thread đó không được block. Main thread có 16,7ms cho một khung hình ở 60Hz (11,1ms ở 90Hz, 8,3ms ở 120Hz — xem tần số máy mình bằng `adb shell dumpsys display | grep -i refresh`) và 5 giây trước khi `system_server` tuyên bố ANR. Tick thread ARENA có 50ms. Hiểu vì sao ANR là 5 giây — ai đếm, đếm cái gì, hết thì sao — là hiểu vì sao tick miss là hỏng, không phải "hơi chậm".
+
+| Android | Cùng cơ chế trên server của bạn | Phần |
+|---|---|---|
+| Zygote `fork()` + copy-on-write | `fork()` + COW ở Nền tảng hệ thống | B |
+| Binder pool cạn → caller chờ → ANR | Connection pool cạn → request thread chờ → p99 nổ. Backpressure | C |
+| `linkToDeath` | Heartbeat + timeout ở 1.5 — cho thế giới không có kernel chung | C |
+| `Looper.loop()` → `epoll_wait` | Event loop Netty/Ktor; `Selector` ở 1.2 | E |
+| ANR 5s | Tick miss 50ms; `bench/tick-jitter` | E |
+| `oom_score_adj` + `lmkd`, Doze, OEM killer | cgroup OOM killer trên VPS; toàn bộ module 2.4 | F |
+
+## Bảng giờ — 30h
+
+| Phần | Giờ | Trả lời câu hỏi |
+|---|---|---|
+| A. Vòng đời khởi động | 4 | Tiến trình nào sinh tiến trình nào |
+| B. Zygote và copy-on-write | 3 | Vì sao mở app mất 300ms chứ không 3s |
+| C. Binder | 7 | Cuộc gọi vào hệ thống đi đường nào, kẹt ở đâu |
+| D. ART và bộ nhớ app | 4 | Code chạy dạng gì, heap tới đâu thì chết |
+| E. Looper, Handler, ANR | 5 | Main thread thật ra là gì, 5 giây từ đâu ra |
+| F. Vòng đời tiến trình, `lmkd` | 4 | App bị giết theo luật nào, WebSocket sống được không |
+| G. Sandbox, uid, SELinux | 2 | Vì sao app không đọc được file app khác |
+| H. Bộ công cụ | 1 | Câu hỏi nào → lệnh nào |
+| | **30** | |
+
+Phần app cơ bản của module cũ không biến mất — nó là phương tiện của lab. Buổi đầu của A: tạo project bằng wizard IDE (wizard, không phải AI viết hộ), khai `INTERNET`, chạy trên máy thật. App lab là app **tối thiểu**: một màn, một nút, một WebSocket nối vào server CARO của bạn — đủ cho lab C, E, F, không cần đợi 2.9. Activity lifecycle + process death nằm ở F. Canvas + `pointerInput` chuyển sang 2.9.
+
+**Sự thật:** 30h này không dạy bạn vẽ màn hình. Nó dạy bạn đọc bốn hiện vật — `ps`, `dumpsys meminfo`, trace ANR, log `lmkd` — và nối mỗi hiện vật với một quyết định trên server.
+
+## A. Vòng đời khởi động — 4h
+
+**Sự thật:** không có "hệ điều hành Android" tách khỏi Linux. Có một kernel, một PID 1 tên `init`, và một cây tiến trình mà mọi app đều là con của cùng một cha.
+
+| Bước | Tiến trình | Làm gì | Vì sao bạn cần biết |
+|---|---|---|---|
+| 1 | Boot ROM → bootloader | Verified Boot, nạp kernel | Chuỗi tin cậy bắt đầu từ silicon. Không lab |
+| 2 | Kernel Linux | Driver, mount, tạo `/dev/binder`, chạy PID 1 | Binder là driver kernel — có **trước** mọi dòng Java |
+| 3 | `init` (PID 1) | Đọc `init.rc` (`on`, `service`, `class`, `setprop`), khởi động `servicemanager`, `logd`, `lmkd`, `vold`, `surfaceflinger`, `adbd` | Là systemd của điện thoại. `LimitNOFILE` ở 1.8 có bản Android là `rlimit` trong file `.rc` |
+| 4 | `servicemanager` | Mở `/dev/binder`, làm context manager — handle 0 | Danh bạ. Lần đầu lấy một system service đi qua đây (`ServiceManager.getService`); sau đó proxy được cache trong app (`ServiceManager.sCache`), và `Context.getSystemService` thường không tạo giao dịch nào |
+| 5 | `zygote64` | `/system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote` (dòng thật trong `init.zygote64.rc`): khởi tạo ART **một lần**, preload vài nghìn lớp framework, nhận fd của socket `/dev/socket/zygote` — socket do `init` tạo theo khai báo `socket zygote stream 660 root system` trong file `.rc` và truyền qua env `ANDROID_SOCKET_zygote`, y như socket activation của systemd; zygote không tự mở — rồi đợi lệnh `fork()` | Phần B |
+| 6 | `system_server` | Con đầu tiên của zygote. **Một tiến trình Java**, uid 1000, chứa hàng chục system service: ActivityManagerService, WindowManagerService, PackageManagerService, PowerManagerService, `InputDispatcher` (native, cùng tiến trình). Binder pool 31 thread do driver sinh + 1 thread chính = 32 | "Server" của mọi app. ANR do nó phán, `oom_score_adj` do nó tính, app do nó xin zygote fork |
+| 7 | Launcher + `BOOT_COMPLETED` | AMS gửi intent HOME → zygote fork launcher | Từ đây mỗi app là một `fork()` của zygote |
+
+LAB — vẽ cây tiến trình bằng số thật:
+
+```bash
+adb shell ps -A -o PID,PPID,USER,NAME | grep -E "^ *1 |zygote|system_server|servicemanager|lmkd|com.example.caro"
+```
+
+Phải đọc được: `init` PID 1, PPID 0. `zygote64` có PPID 1. `system_server` và app của bạn có **cùng** PPID — PID của `zygote64`.
+
+**Ngưỡng đạt:** vẽ 7 bước từ trí nhớ, mỗi bước ghi tiến trình và cha; đối chiếu `ps` không sai bước nào.
+
+## B. Zygote và copy-on-write — 3h
+
+**Vì sao Android không `exec()` một JVM mới cho mỗi app:** khởi tạo ART, nạp và verify vài nghìn lớp, dựng heap — tính bằng giây trên CPU điện thoại. Làm một lần lúc boot, rồi mỗi app là một `fork()`: con thừa kế nguyên không gian địa chỉ của zygote. Sau `fork()`, con tự hạ đặc quyền: `setuid` về uid app, gắn SELinux context, bật `seccomp`, gọi `ActivityThread.main`.
+
+Trang nhớ **dùng chung** giữa zygote và mọi app tới khi có ai ghi vào — kernel mới copy trang đó. Đó là copy-on-write ở mục S2 của [Nền tảng hệ thống](/nen-tang-he-thong), và là lý do 30 app "mở" mà RAM không nổ. Cái giá: mọi app dùng chung một ART — bạn không chọn được runtime, khác server nơi bạn chọn JDK.
+
+| Đơn vị | Đếm gì | Cộng 20 app lại |
+|---|---|---|
+| RSS | Mọi trang vật lý đang ánh xạ, **kể cả trang dùng chung** | Lớn hơn RAM máy — vô nghĩa |
+| PSS | Trang riêng + trang dùng chung **chia đều** cho số tiến trình dùng | Xấp xỉ RAM thật — cột `dumpsys` in ra |
+| USS | Chỉ trang riêng | RAM thu về nếu giết tiến trình |
+
+LAB:
+
+```bash
+adb shell ps -A -o PID,PPID,RSS,NAME | grep -E "zygote|com.example.caro"
+adb shell dumpsys meminfo com.example.caro
+```
+
+Dòng `TOTAL`: PSS nhỏ hơn RSS. Phần chênh là framework thừa kế từ zygote, đang chia cho mọi app trên máy. Ghi hai số vào journal — dùng lại ở D.
+
+**Ngưỡng đạt:** giải thích bằng cơ chế vì sao PSS nhỏ hơn RSS trên app của mình, có hai số thật.
+
+## C. Binder — 7h
+
+Phần nặng nhất, và trả lời trực tiếp câu "vì sao UI treo".
+
+### Vì sao không phải pipe hay UNIX socket
+
+| | pipe / UNIX socket | Binder |
+|---|---|---|
+| Số lần copy | 2 — user → kernel → user | **1** — từ bên gửi thẳng vào vùng `mmap` của bên nhận |
+| Định danh người gọi | Tự gửi trong payload, giả được | Kernel đóng dấu uid/pid lên **mỗi giao dịch** — `Binder.getCallingUid()`. Mọi permission check đứng trên đây |
+| Tham chiếu object bên kia | Không có | Handle do kernel quản, đếm tham chiếu, không giả được |
+| Bên kia chết | EOF/EPIPE, có thể trễ | Kernel báo `BR_DEAD_BINDER` → `binderDied()` |
+
+### Kiến trúc
+
+| Tầng | Tên | Vai trò |
+|---|---|---|
+| Kernel | `/dev/binder` — `drivers/android/binder.c`; từ Android 8 thêm `/dev/hwbinder`, `/dev/vndbinder` | Chuyển giao dịch, quản buffer `mmap`, refcount, death notification, đánh thức thread pool |
+| Cửa vào | `open` → `mmap` (~1MB) → `ioctl(BINDER_WRITE_READ)` | **Mọi giao dịch là một `ioctl`.** `strace` thấy được |
+| Native | `libbinder` — `ProcessState`, `IPCThreadState` | Thread pool, marshal `Parcel` |
+| Java | `android.os.Binder` (stub), `BinderProxy` (proxy) | `transact()` bên gọi ↔ `onTransact()` bên nhận |
+| Danh bạ | `ServiceManager` — handle 0 | `getService("activity")` trả proxy |
+| Sinh code | AIDL → `IFoo.Stub` (server) + `IFoo.Stub.Proxy` (client) | Việc DTO + `kotlinx.serialization` làm cho bạn: hợp đồng trước, code sau |
+
+### Thread pool
+
+Mỗi tiến trình có một Binder thread pool: mặc định tối đa **15 thread do driver sinh** (`DEFAULT_MAX_BINDER_THREADS` trong `ProcessState.cpp`) **+ 1 thread chính** do `ProcessState::startThreadPool()` tự tạo = 16; `system_server` nâng lên 31 + 1 = 32. `BINDER_SET_MAX_THREADS` chỉ giới hạn số thread driver được yêu cầu sinh thêm (`BR_SPAWN_LOOPER`) **theo nhu cầu**, tên `Binder:<pid>_1`, `_2`… App mới thường chỉ có 3–4.
+
+Pool cạn: giao dịch mới xếp hàng trong kernel chờ thread rảnh. Bên **gọi** đứng trong `ioctl` chờ reply. Bên gọi là main thread — ANR. Đây là backpressure nguyên chất: bên nhận chậm, bên gọi đứng, tắc lan ngược. Server của bạn: HikariCP `maximumPoolSize` cạn → request thread chờ → p99 nổ. Cùng bệnh.
+
+### Giới hạn ~1MB
+
+Vùng `mmap` mỗi tiến trình là 1MB − 2 trang (`1MB − 8KB` với trang 4KB; `1MB − 32KB` trên máy Android 15 dùng trang 16KB), **dùng chung cho mọi giao dịch đang bay**, cả hai chiều; giao dịch `oneway` chỉ được nửa. Không có trần cố định cho một giao dịch: Parcel 600KB qua khi buffer trống, hỏng khi có hai giao dịch khác đang bay. Hỏng → `TransactionTooLargeException` — nhưng `libbinder` (`signalExceptionForError`) chỉ ném tên đó khi parcel > 200KB; nhỏ hơn mà vẫn hỏng vì buffer bên nhận phân mảnh thì bạn thấy `DeadObjectException` hoặc `RuntimeException: Unknown binder error` — cùng nguyên nhân, khác tên. Từ Android 7 TTLE được bọc trong `RuntimeException`.
+
+**Vì sao kinh điển:** `getInstalledPackages`, Bitmap trong Intent, `onSaveInstanceState` lưu cả danh sách — tất cả là "trả danh sách lớn qua kênh có trần". Server có đúng trần đó dưới tên `maxFrameSize` WebSocket; leaderboard 100k dòng phải phân trang.
+
+### `oneway` và cuộc gọi đồng bộ
+
+Đồng bộ: thread gọi vào `ioctl`, ngủ tới khi `BR_REPLY` về. `oneway`: driver nhận xong là thread gọi được về; các `oneway` tới cùng đích xếp hàng tuần tự. Phần lớn API framework — `startActivity`, `bindService`, `PackageManager.getPackageInfo`, `NotificationManager.notify`, `ActivityManager.getRunningAppProcesses` — là cuộc gọi **đồng bộ** vào `system_server`, chạy trên thread bạn gọi chúng. `ContentResolver.query` cũng đồng bộ, nhưng tới **tiến trình của ContentProvider** (ví dụ `com.android.providers.settings` hoặc một app khác), không tới `system_server` — AMS chỉ bị hỏi lúc `acquireProvider` lần đầu: cùng bệnh, khác bị cáo. Còn `getSystemService` thường **không** phải giao dịch Binder: object lấy từ cache `SystemServiceRegistry` ngay trong tiến trình app. Gọi từ main thread thì main thread ngủ chờ `system_server`; bên đó giữ lock hoặc pool cạn thì bạn ngủ lâu. Dấu vết trong trace ANR: `android.os.BinderProxy.transactNative`.
+
+### Death recipient
+
+`IBinder.linkToDeath(recipient)`: tiến trình giữ object chết → fd đóng → `binder_release` → kernel gửi `BR_DEAD_BINDER` cho mọi tiến trình đang giữ tham chiếu, ngay lập tức, không heartbeat. `system_server` biết app chết bằng đúng cách này.
+
+**Vì sao giống heartbeat của bạn — và vì sao bạn không có nó:** Binder chính xác vì hai bên chung một kernel làm trọng tài. Qua mạng không có trọng tài. TCP FIN/RST chỉ tới khi kernel bên kia còn sống và còn đường; điện thoại hết pin không gửi gì. Heartbeat + timeout ở 1.5 là `linkToDeath` viết lại cho thế giới không có kernel chung — và vì thế **luôn** trễ ít nhất một chu kỳ.
+
+### LAB
+
+```bash
+adb shell service list | head -30
+adb shell dumpsys activity services com.example.caro
+adb shell ps -T -p $(adb shell pidof com.example.caro) | grep Binder   # tối đa 16 ở app (15 + 1), 32 ở system_server
+adb shell ps -A -T | grep -c "Binder:"
+```
+
+Gây `TransactionTooLargeException` cố ý:
+
+```kotlin
+val intent = Intent(this, SecondActivity::class.java)
+intent.putExtra("blob", ByteArray(2_000_000))
+startActivity(intent)
+// RuntimeException: android.os.TransactionTooLargeException: data parcel size 2000xxx bytes
+```
+
+Trong `logcat` tìm `!!! FAILED BINDER TRANSACTION !!!  (parcel size = ...)`. Hạ xuống 400KB — qua. Nếu có lần hỏng mà tên là `DeadObjectException` thay vì TTLE: parcel dưới 200KB, cùng nguyên nhân — xem mục Giới hạn ~1MB. Ghi cả hai: trần không phải một con số, là một buffer chung.
+
+**Ngưỡng đạt:** giải thích bằng cơ chế — thread nào ngủ ở đâu, chờ ai — vì sao một cuộc gọi Binder từ main thread treo UI; chỉ ra chỗ tương ứng trên server (room actor gọi đồng bộ vào Postgres) và nói bạn chặn nó bằng gì.
+
+## D. ART và bộ nhớ app — 4h
+
+| Giai đoạn | Sản phẩm | Ghi chú |
+|---|---|---|
+| Biên dịch | `.class` → `.dex` trong APK | Bytecode thanh ghi, không phải bytecode stack của JVM |
+| Cài đặt | `dex2oat` → `.vdex` (đã verify), `.odex`/`.oat` (mã máy), `.art` (image) | Android 5–6: AOT toàn bộ lúc cài, rất chậm |
+| Chạy | JIT + thu profile | Android 7 trở đi. JIT cache mất khi tiến trình chết |
+| Nền | AOT theo profile (`speed-profile`) lúc máy rảnh; Baseline Profile trong APK | Mã hot được AOT, còn lại interpret hoặc JIT |
+
+GC của ART khác GC server ở mục tiêu, không ở lý thuyết:
+
+| | ART | HotSpot G1 của bạn |
+|---|---|---|
+| Thuật toán | Concurrent Copying, generational từ Android 10; Android 14 kernel mới: Concurrent Mark-Compact dùng `userfaultfd` | Region, concurrent marking, evacuation dừng-thế-giới |
+| Tối ưu cho | Heap vài chục–vài trăm MB, 1–2 core, pin | Heap GB, nhiều core, throughput |
+| Trần heap | **Hệ điều hành đặt**: `dalvik.vm.heapgrowthlimit` (thường 192m–384m); `largeHeap` nâng lên `dalvik.vm.heapsize` (thường 512m–1024m, tuỳ OEM/RAM). Cả hai là property OEM đặt theo RAM máy — đọc bằng `getprop` ở LAB, không tin con số của trang | Bạn chọn `-Xmx`; cgroup giết nếu RSS vượt |
+| Hết heap | `OutOfMemoryError: Failed to allocate a N byte allocation with M free bytes and X until OOM` | `Java heap space`, hoặc OOMKilled từ ngoài |
+
+Hai tầng chết giống nhau: Java heap đầy → OOME trong tiến trình; RSS vượt ngưỡng hệ thống → bị giết từ ngoài (`lmkd` ở đây, cgroup OOM killer trên VPS — LAB 2 của S2 ở Nền tảng hệ thống). Native heap — Bitmap từ Android 8 nằm đó — không bị trần Java chặn, nhưng `lmkd` nhìn thấy.
+
+LAB:
+
+```bash
+adb shell getprop dalvik.vm.heapgrowthlimit
+adb shell getprop dalvik.vm.heapsize
+adb shell cmd package compile -m speed-profile -f com.example.caro
+adb shell dumpsys meminfo com.example.caro
+```
+
+Đọc `dumpsys meminfo` từng dòng — không chỉ `TOTAL`:
+
+| Dòng | Là gì | Bản server |
+|---|---|---|
+| `Dalvik Heap` — Size / Alloc / Free | Java heap của ART | `-Xmx` / used — thứ JFR in ra |
+| `Native Heap` | `malloc`: Bitmap, `libbinder`, `allocateDirect` | Netty `ByteBuf` off-heap, metaspace |
+| `.so` / `.dex` / `.oat` / `.art mmap` | Code và image ánh xạ file — phần lớn chung với zygote | `libjvm.so`, AppCDS |
+| `TOTAL PSS` | Tổng đã chia trang dùng chung | RSS tiến trình JVM |
+
+**Ngưỡng đạt:** trên app của mình, nói Java heap bao nhiêu, native heap bao nhiêu, vì sao PSS không bằng tổng hai thứ đó; `heapgrowthlimit` tương đương gì trong lệnh chạy server.
+
+## E. Looper, Handler, MessageQueue và ANR — 5h
+
+Phần quan trọng nhất về nghề. Đọc source thật ở T5: `Looper.java`, `MessageQueue.java`, `Handler.java`.
+
+**Sự thật:** main thread không phải thứ đặc biệt của Android. Nó là thread đã gọi `Looper.loop()` trong `ActivityThread.main` — vòng `for (;;)` lấy `Message` khỏi `MessageQueue` rồi gọi `msg.target.dispatchMessage(msg)`. `onCreate`, `onClick`, `onDraw` — tất cả là một `Message` lấy ra từ hàng đợi đó. Hàng đợi trống, thread ngủ trong `nativePollOnce`. Trong trace, `MessageQueue.nativePollOnce(Native method)` **không** phải kẹt — là đang rảnh.
+
+Vòng đời một `Message` từ `post` tới lúc chạy — cột cuối là chỗ phải chỉ ra khi thi:
+
+| Bước | Java | Native | Syscall |
+|---|---|---|---|
+| 1 | `handler.post(r)` → `sendMessageAtTime(msg, uptimeMillis() + delay)` | — | `clock_gettime` (vDSO) |
+| 2 | `MessageQueue.enqueueMessage`: chèn vào danh sách sắp theo `when`, trong `synchronized` | — | — |
+| 3 | Chèn vào đầu và looper đang ngủ → `nativeWake` | `Looper::wake()` | **`write`** vào `eventfd` |
+| 4 | Looper thread trong `next()` → `nativePollOnce(timeout)` | `Looper::pollOnce` | **`epoll_wait`** — thức khi `eventfd` đọc được hoặc hết `timeout` |
+| 5 | — | `awoken()` | **`read`** `eventfd` |
+| 6 | `next()` so `when` với hiện tại: tới giờ thì trả `Message`, chưa thì tính `timeout` mới, ngủ tiếp | — | — |
+| 7 | `Looper.loop()` → `dispatchMessage` → `r.run()`; `recycleUnchecked` trả về pool | — | — |
+
+`postDelayed` không có timer thread: độ trễ thành tham số `timeout` của `epoll_wait`. Đó chính xác là mục S3 của [Nền tảng hệ thống](/nen-tang-he-thong). Cùng `epoll` đó còn theo dõi hai fd nữa: socket nhận input event từ `InputDispatcher`, và fd VSYNC từ `surfaceflinger`. Main thread là một event loop mạng đúng nghĩa, chỉ khác tên fd.
+
+`Handler` là đích của `Message`, chạy trên thread của Looper nó gắn vào — đường duy nhất được đụng UI từ thread khác. Sync barrier (`postSyncBarrier`) chặn message thường, cho message `async` đi trước — `ViewRootImpl` dùng để khung hình không xếp sau việc vặt. `Choreographer` nhận VSYNC, gọi `doFrame`: input → animation → traversal, nhịp 60Hz = 16,7ms (90Hz = 11,1ms, 120Hz = 8,3ms; Android 11+ còn cho app đổi tần số bằng `Surface.setFrameRate`). Quá nhịp = jank.
+
+### ANR
+
+| Loại | Ngân sách | Ai đếm |
+|---|---|---|
+| Input (chạm, phím) | **5s** không ack | `InputDispatcher` trong `system_server` gửi event qua socket, chờ app `finishInputEvent` |
+| BroadcastReceiver | 10s foreground, 60s nền | AMS |
+| Service `onCreate`/`onStartCommand` | 20s foreground, 200s nền | AMS |
+
+**Ai phán:** không phải app. `system_server` giữ đồng hồ; hết giờ, gửi `SIGQUIT` cho app — signal catcher của ART ghi stack mọi thread vào `/data/anr/anr_<thời-gian>` (trên user build, `adb shell` không root không vào được thư mục đó — chỉ đọc qua `adb bugreport`). Dòng `ANR in … / Reason: / CPU usage from …` **không** nằm trong file trace: `system_server` ghi nó vào `logcat` (tag `ActivityManager`) và dropbox `data_app_anr` — `adb shell dumpsys dropbox --print data_app_anr` đọc được không cần root. Nói cách khác: `system_server` là server, app là client, input event là request, 5s là timeout budget. Bạn đã viết đúng cấu trúc này ở 1.5. `Watchdog` của `system_server` là chuyện khác — nó canh chính `system_server`, treo 60s thì tự giết.
+
+### Nối thẳng sang ARENA
+
+| | Main thread Android | Tick thread ARENA |
+|---|---|---|
+| Vòng lặp | `Looper.loop()` | Loop có accumulator ở 0.6 và 3.2 |
+| Nhịp | 16,7ms hình (60Hz) · 5s ANR | `dt` = 50ms |
+| Ai phán | `InputDispatcher` | Chính bạn — HdrHistogram tick jitter, p99 dưới 5ms |
+| Bệnh | Thread tiêu thụ hàng đợi làm việc quá ngân sách | Y hệt — tick miss, accumulator dồn, spiral of death (S1) |
+| Thuốc | Không I/O trên main thread, chia nhỏ việc, đo | Y hệt — không DB, không mạng trong tick; vào/ra qua `Channel`; đo p99 |
+
+Khác đúng một chỗ: ngân sách của bạn nghiêm hơn 100 lần, và không ai gửi `SIGQUIT` hộ.
+
+### LAB
+
+```kotlin
+button.setOnClickListener {
+    Thread.sleep(15_000)   // cố ý, trên main thread; 6s không đủ — xem dưới
+}
+```
+
+Bấm nút, rồi **chạm màn hình ngay** — `InputDispatcher` cần một event chưa ack để đếm. Hộp thoại ANR hiện **~5s sau cú chạm thứ hai**, không phải 5s sau khi bấm nút. Vì sao: cú chạm đầu (`ACTION_UP` sinh `onClick`) đã được ack trước khi `sleep` chạy — `performClick` được post thành `Message` riêng. Đồng hồ 5s gắn với event chưa ack **cũ nhất** trong `waitQueue` của `InputDispatcher`, tính từ lúc event đó được gửi qua socket (`timeoutTime = deliveryTime + 5s`, Android 11+; Android 10 trở xuống cộng thêm 0,5s). Với `sleep(6000)` mà bạn chạm ở giây 1,5 thì hạn ANR là 6,5s, main thread thức dậy ở 6,0s và ack — không có hộp thoại nào. Lấy trace:
+
+```bash
+adb shell dumpsys activity exit-info com.example.caro | head -40   # Android 11+
+adb shell dumpsys dropbox --print data_app_anr | head -60          # Reason + CPU usage, không cần root
+adb bugreport bugreport.zip      # FS/data/anr/anr_* nằm trong zip
+```
+
+Trong trace, tìm thread `"main"`:
+
+```text
+"main" prio=5 tid=1 Sleeping
+  at java.lang.Thread.sleep(Native method)
+  at com.example.caro.MainActivity.onClick(MainActivity.kt:42)
+  at android.os.Handler.dispatchMessage(Handler.java:106)
+  at android.os.Looper.loopOnce(Looper.java:201)
+  at android.os.Looper.loop(Looper.java:288)
+  at android.app.ActivityThread.main(ActivityThread.java:7842)
+```
+
+Đọc từ dưới lên: `ActivityThread.main` → `Looper.loop` → `dispatchMessage` → code của bạn. Đây là bảng vòng đời ở trên, in ra từ máy thật. Mở log tick miss của server (0.6 hoặc 3.2) đặt cạnh: cùng một hình dạng.
+
+**Ngưỡng đạt:** vẽ lại vòng đời một `Message` từ `post` tới lúc chạy trên giấy trắng, chỉ đúng ba chỗ là syscall; một trace ANR thật trong `notes/` với 3 dòng giải thích.
+
+## F. Vòng đời tiến trình, `oom_score_adj` và `lmkd` — 4h
+
+Lý do backend của bạn phải có reconnect.
+
+**Sự thật:** trên Android, "app đang mở" không phải trạng thái của app. Nó là **điểm ưu tiên** do `system_server` tính lại liên tục và ghi cho `lmkd`. Điểm đó quyết định ai chết trước khi thiếu RAM — và thiếu RAM là chuyện hằng ngày trên máy 4GB.
+
+| Bậc | `oom_score_adj` (hằng số trong `ProcessList.java`) | Khi nào | `lmkd` giết |
+|---|---|---|---|
+| Native, `system_server`, persistent | −1000 … −700 | Luôn | Không bao giờ |
+| Foreground | 0 | Activity đang tương tác (top app) | Cuối cùng |
+| Visible / perceptible | 50–250 | Thấy một phần; **foreground service = 200** (`PERCEPTIBLE_APP_ADJ`); vài phút đầu sau khi rời top = 50 (`PERCEPTIBLE_RECENT_FOREGROUND_APP_ADJ`, Android 10+); một số loại 225 từ Android 12 | Rất muộn |
+| Service | 500 | Service đã start | Muộn |
+| Home / Previous | 600 / 700 | Launcher; app vừa rời | Trung bình |
+| Cached | **900–999** | Ở nền, không gì chạy — **app game của bạn sau khi người dùng bấm Home** | **Đầu tiên** |
+
+FGS **không phải bậc 0** — đó là lý do `lmkd` và OEM killer vẫn giết được app nhạc khi RAM căng, và là mức an toàn thật của ý tưởng "giữ socket bằng foreground service".
+
+`lmkd` là daemon user-space, có từ Android 4.4 (khi đó chỉ ghi `minfree`/adj cho driver kernel `lowmemorykiller`); tự giết từ Android 9 (vmpressure); đọc PSI từ Android 10 (`ro.lmk.use_psi`), chiến lược mới ở Android 11 — máy Android 9 hoặc kernel không có PSI vẫn dùng vmpressure. Vượt ngưỡng thì giết tiến trình có `oom_score_adj` cao nhất; cùng bậc: to nhất nếu `ro.lmk.kill_heaviest_task=true` (Pixel), còn mặc định là tiến trình **cũ nhất trong bucket** — kiểm tra bằng `adb shell getprop ro.lmk.kill_heaviest_task` trên máy mình. Log (Android 10+): `lmkd: Kill 'com.example.caro' (12345), uid 10123, oom_score_adj 900 to free 118432kB rss, 2048kB swap; reason: low watermark is breached`.
+
+**Process death:** app bị giết ở nền. Người dùng quay lại, thấy app "mở lại" trong 300ms — zygote fork nhanh — nhưng mọi thứ trong RAM đã mất: singleton, `object`, ViewModel, socket, và trận đang chơi nếu bạn chỉ giữ nó trong RAM. Thứ sống sót: Bundle của `onSaveInstanceState` — nằm trong `system_server`, không trong app — và những gì đã ghi xuống đĩa hoặc gửi lên server.
+
+LAB bắt buộc — lab process death của module "Android tối thiểu" cũ:
+
+1. Developer options → **Don't keep activities**. Mở trận, đi 3 nước, bấm Home, quay lại. State trong ViewModel mất — chứng minh bằng log.
+2. Mô phỏng `lmkd` đúng hơn: bấm Home, rồi `adb shell am kill com.example.caro` (chỉ giết được app ở nền — đúng luật `lmkd`).
+3. Sửa client: khởi động → đọc session token từ đĩa → gọi server lấy state. Quay lại thấy đúng 3 nước — **từ server**, không từ RAM.
+
+```bash
+PID=$(adb shell pidof com.example.caro)
+adb shell cat /proc/$PID/oom_score_adj     # 0 khi foreground; bấm Home → 700 ngay (previous app); sau ~60s (max_previous_time) hoặc khi mở app khác → 900+
+adb shell dumpsys activity exit-info com.example.caro | head -20   # Android 11+
+adb shell dumpsys deviceidle force-idle    # ép Doze — xem log heartbeat trên server dừng
+adb shell dumpsys deviceidle unforce
+```
+
+### Doze, App Standby, giới hạn chạy nền
+
+| Cơ chế | Từ | Làm gì với app của bạn |
+|---|---|---|
+| Doze | Android 6 | Màn hình tắt, rút sạc, máy nằm yên → **cắt mạng**, hoãn alarm và job |
+| App Standby / Buckets | Android 6 / 9 | App ít dùng rơi vào bucket `rare` → job, alarm, cả FCM bị hạn thêm |
+| Giới hạn chạy nền | Android 8 | Rời foreground ~1 phút → background service bị dừng; start service từ nền ném `IllegalStateException` |
+| Foreground service | Có từ đầu (API 5). Android 8: `startForegroundService` + notification bắt buộc · 10: `foregroundServiceType` · 12: cấm start từ nền · 14: type bắt buộc | Cách duy nhất chạy lâu ở nền trên AOSP thuần: notification thường trực, `foregroundServiceType` |
+
+Cột **Từ** chỉ đúng cho AOSP; OEM bán ở Việt Nam thường siết hơn — xem lớp dao thứ tư dưới đây.
+
+**Vì sao WebSocket không sống được trong nền:** bốn lớp dao. Doze cắt mạng — socket còn mở nhưng không gói nào đi. `lmkd` giết tiến trình cached — socket biến mất cùng tiến trình. **OEM killer** — MIUI/HyperOS "Battery saver" + autostart, ColorOS/realme UI, Funtouch/OriginOS, Samsung "Put unused apps to sleep": vendor sửa AMS/`lmkd`, giết theo danh sách riêng, kể cả tiến trình có foreground service, chặn cả FCM high-priority; không nằm trong bảng nào của AOSP (dontkillmyapp.com xếp Samsung/Xiaomi/OnePlus/Huawei vào nhóm tệ nhất). Server không phân biệt được nó với `lmkd` — chỉ thấy heartbeat ngừng. Và ngay cả khi ba thứ kia không xảy ra, NAT nhà mạng bỏ mapping của kết nối TCP im lặng sau vài phút — gói tiếp theo rơi vào hư không, hai đầu đều không biết. Foreground service giữ được socket **trên AOSP thuần**; trên MIUI/ColorOS/OneUI mặc định thì không — và cái giá là notification cộng pin: đúng cho app nhạc, sai cho game caro theo lượt.
+
+Vì thế FCM tồn tại: một kết nối bền duy nhất do Google Play services giữ — tiến trình persistent, miễn Doze — và server của bạn không "giữ socket tới app", mà **nhờ hệ điều hành đánh thức app**. FCM nằm ở [Mở rộng](/mo-rong); ở Lõi, trận theo lượt chỉ cần server là nguồn sự thật và client hỏi lại khi mở.
+
+### Kết luận nghề
+
+Đây là nguồn gốc của module 2.4. Client Android không chết ngẫu nhiên — nó chết theo luật, và luật nằm ở bảng trên. Bạn không thiết kế session token, `seq`, replay buffer vì sách bảo thế; bạn thiết kế chúng vì `oom_score_adj` 900, Doze và OEM killer là những sự kiện **chắc chắn** xảy ra với mọi người chơi mỗi ngày — Xiaomi, Oppo, Samsung, Vivo chiếm phần lớn Android ở Việt Nam, nên với người chơi CARO, OEM killer còn thường gặp hơn Doze thuần.
+
+**Ngưỡng đạt:** liệt kê 6 kịch bản client biến mất, mỗi kịch bản nói server thấy gì và phải làm gì. Bảng dưới là khung — bạn viết bằng số của mình (timeout bao nhiêu, replay buffer giữ bao nhiêu `seq`). Bản nháp của bảng này (viết trước 2.4, chỉ từ đọc F) là đầu vào của 2.4; bản kiểm lại bằng lab F sau trang này quay về sửa 2.4. Trượt F thì 2.4 chưa được đóng.
+
+| Kịch bản | Server thấy | Server phải làm |
+|---|---|---|
+| Rớt mạng / đổi 4G sang WiFi (IP đổi, TCP cũ chết) | Heartbeat ngừng; kết nối mới đến với cùng session token | Timeout theo ngân sách; nhận reconnect, gửi lại từ `lastSeq` client báo, quá buffer thì gửi full state |
+| Bấm Home → Doze | Heartbeat ngừng, không FIN | Không xử thua. Trận theo lượt: giữ nguyên, đợi. ARENA: đếm timeout trong trận |
+| `lmkd` giết tiến trình cached | Có thể có FIN, có thể không | Session token trên đĩa client → client mới lấy lại state. Nước đi chưa ack phải idempotent theo `seq` |
+| OEM killer (MIUI/ColorOS/OneUI) giết app, kể cả khi có foreground service | Heartbeat ngừng; FIN/RST không đoán được; thời điểm không theo luật nào của AOSP — server không phân biệt được với `lmkd` | Y hệt hàng `lmkd`. Không thiết kế gì dựa trên giả định "FGS còn sống" |
+| Đăng nhập ở thiết bị thứ hai | Hai kết nối cùng account | Chính sách rõ: đá phiên cũ hoặc cho cả hai — có test mỗi nhánh (5 kịch bản identity ở 2.4) |
+| ANR → người dùng bấm "Đóng app" giữa lúc gửi nước | Nước đi gửi mà không nhận ack | Client gửi lại cùng `seq`; server khử trùng, không đi hai lần |
+
+## G. Sandbox, uid và SELinux — 2h
+
+Chỉ đọc hiểu. Không viết policy.
+
+| Lớp | Cơ chế | Điều bạn cần thấy |
+|---|---|---|
+| uid | Mỗi app một uid Linux lúc cài: `u0_a123` = 10123. `/data/data/<pkg>` thuộc uid đó | Cùng nguyên tắc user `caro` chạy service trên VPS, không chạy root |
+| Quyền | Một số permission là GID: `INTERNET` → nhóm `inet`. Không khai → `socket()` trả `EACCES` | Lỗi đầu tiên khi nối WebSocket từ app: không phải server, là thiếu một dòng manifest |
+| SELinux | Enforcing từ Android 5. App thường chạy domain `untrusted_app` (hoặc `untrusted_app_<sdk>` — `_27`, `_29`, `_30`, `_32`… theo targetSdk; xem bằng `adb shell ps -Z`); `/proc` ẩn tiến trình khác từ Android 7 | Đọc được một dòng `avc: denied` trong `logcat` |
+
+```text
+avc: denied { read } for pid=12345 comm="com.example.car" name="stat" dev="proc"
+  scontext=u:r:untrusted_app:s0:c123,c256 tcontext=u:object_r:proc_stat:s0 tclass=file permissive=0
+```
+
+Đọc: ai (`scontext` — app thường), bị chặn làm gì (`read`), lên cái gì (`tcontext` — `/proc/stat`), `permissive=0` là chặn thật. `comm` chỉ có 15 ký tự (`TASK_COMM_LEN` = 16 kể cả NUL) nên tên gói bị cắt — grep theo tên đầy đủ sẽ không thấy dòng nào. `adb shell getenforce` phải in `Enforcing`.
+
+**Ngưỡng đạt:** đọc một dòng `avc: denied` bất kỳ và nói đúng ba thành phần.
+
+## H. Bộ công cụ — 1h
+
+| Công cụ | Trả lời câu hỏi gì |
+|---|---|
+| `adb shell` | Có shell Linux trên máy không? Có — mọi lệnh dưới chạy trong đó |
+| `logcat -v threadtime --pid=...` | App vừa in gì, `lmkd` vừa giết ai, `avc` vừa chặn gì |
+| `dumpsys meminfo` / `activity` / `battery` | Heap bao nhiêu; app ở bậc nào, chết lần cuối vì gì; máy có đang Doze |
+| `am` / `pm` | Giả lập hệ điều hành làm gì với app; app cài ở đâu, biên dịch chế độ nào |
+| `ps -A -T` | Bao nhiêu thread, bao nhiêu `Binder:` thread, cha là ai |
+| Perfetto (`record_android_trace`, ui.perfetto.dev) | Main thread làm gì trong từng ms — systrace là tiền thân |
+| `simpleperf` | Hàm nào ăn CPU — flame graph của Android, tương đương `async-profiler` ở 4.3 |
+| `strace -p <pid> -e epoll_wait,ioctl` (máy ảo, `adb root`) | Nhìn tận mắt `epoll_wait` của Looper và `ioctl` của Binder |
+
+## 📚 Nguồn học
+
+| Nguồn | Phần |
+|---|---|
+| source.android.com — Architecture overview; Binder IPC và AIDL; ART and Dalvik; Low Memory Killer Daemon | A, C, D, F |
+| Jonathan Levin — *Android Internals: A Confectioner's Cookbook, Volume I* — chương khởi động, dịch vụ, bộ nhớ | A, B, F |
+| Karim Yaghmour — *Embedded Android* (O'Reilly) — ch. 2 và 6 | A, B |
+| Source AOSP đọc ở T5: `frameworks/base/core/java/android/os/Looper.java`, `MessageQueue.java`, `Handler.java`, `Binder.java`; native `system/core/libutils/Looper.cpp`; hằng số adj trong `services/core/java/com/android/server/am/ProcessList.java` | E, C, F |
+| Thorsten Schreiber — *Android Binder: Android Interprocess Communication* (luận văn, Ruhr-Universität Bochum, 2011) | C |
+| dontkillmyapp.com — bảng xếp hạng OEM killer theo hãng, cách tắt từng cái trên MIUI/ColorOS/OneUI | F |
+| Perfetto docs — perfetto.dev | H |
+| Dianne Hackborn — kỹ sư Android framework — loạt bài về process lifecycle và bộ nhớ; "Process Stats: Understanding How Your App is Using RAM" (Android Developers Blog) | B, F |
+
+Đọc source ở T5 theo luật cũ: đọc **sau** lab. `Looper.java` chỉ có nghĩa khi bạn đã thấy trace của chính mình.
+
+## Không học ở đây
+
+Cố ý để ngoài — quyết định, không phải "chưa kịp".
+
+| Bỏ | Vì sao |
+|---|---|
+| Compose sâu: animation, custom layout, Navigation, Hilt, Room, Paging, CameraX, Wear OS | Client 1–3 màn là phương tiện. Mục 8 spec cắt ~100h; 2.9 đủ cho một màn Canvas + reconnect UI |
+| ViewModel / Lifecycle library ở mức thư viện | Bạn học **cơ chế** process death; wrapper Jetpack không phải nội dung |
+| AOSP nặng: tự build AOSP, viết Binder service C++, kernel module, SELinux policy, Perfetto phân tích sâu | Không đổi kết quả xin việc trong 26 tháng; cần khối thời gian liền mà lộ trình part-time không có |
+
+Tất cả nằm ở tầng "năm 3" của [Mở rộng](/mo-rong).
+
+## 🔒 Hợp đồng AI cho trục này
+
+Giữ nguyên [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-thêm--bản-server) và [Đọc hiện vật](/he-thong-hoc#đọc-hiện-vật) của [Hệ thống học & luật AI](/he-thong-hoc). Áp vào đây:
+
+| Vùng | AI được | AI không được |
+|---|---|---|
+| Cơ chế: Binder, Zygote, ART, `lmkd` | Giải thích, link docs, hỏi ngược "thread nào đang ngủ ở đâu?" | — |
+| Hiện vật: trace ANR, `meminfo`, log `lmkd` | Dạy cách đọc một **loại** hiện vật; sinh trace và log **giả có bệnh cài sẵn** để luyện | **Nhìn trace/log của bạn rồi chỉ nguyên nhân.** Bạn đọc, bạn kết luận |
+| Looper / tick loop, reconnect, session, mọi thứ chạm shared state | Tên khái niệm, câu hỏi | Pseudo-code, skeleton — vùng AI-free suốt 26 tháng |
+| Máy của bạn: SDK, driver USB, `adb` không thấy máy, wizard IDE | Hướng dẫn từng bước, đọc log | — (luật 7) |
+
+Máy dò copy-paste: "Binder pool 4 thread thay vì 15 thì cái gì vỡ trước?" và "ANR là 500ms thay vì 5s thì app của bạn sống không?". Trả lời bằng cơ chế, không bằng tên thư viện.
+
+## → Tiếp theo
+
+- Cơ chế Linux bên dưới trang này — `fork()`, COW, `epoll`, `/proc`, OOM killer: [Nền tảng hệ thống](/nen-tang-he-thong). Đọc lại mục S3 ngay sau lab E.
+- Module này nằm đâu trong 26 tháng, và 2.4 nhận gì từ bảng 6 kịch bản: [Roadmap 26 tháng](/roadmap).
+- Tầng AOSP nặng (~90h) — build AOSP, system service riêng, kernel module, SELinux policy — nhãn "năm 3": [Mở rộng](/mo-rong).

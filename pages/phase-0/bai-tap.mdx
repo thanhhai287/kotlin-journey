@@ -1,45 +1,57 @@
 # Kho bài tập Phase 0
 
-Trang này là toàn bộ bài tập rời của Phase 0 — mọi thứ nằm ngoài hai project lớn. Mở nó mỗi buổi học: đầu buổi warm-up bằng kata, giữa tuần là Error Zoo và Docs Quest, cuối tuần là drill — lịch cụ thể từng tuần xem ở [Lịch 12 tuần](/phase-0/lich-12-tuan).
+Trang này là toàn bộ bài tập rời của Phase 0 — mọi thứ nằm ngoài hai project lớn. Mở nó mỗi tuần: kata Tier 1 ở tuần 2–6, Error Zoo ở tuần 3–6, Docs Quest ở tuần 2–5, Tier 2 ở tuần 7, Bug Hunt ở tuần 2 và tuần 11, decomposition drill ở tuần 12–13 — lịch cụ thể từng tuần ở [Lịch 14 tuần](/phase-0/lich-14-tuan).
+
+---
 
 | Loại | Là gì | Khi nào | Luật AI |
 |---|---|---|---|
-| Tier 1 — kata 30 phút | 8 bài nhỏ bối cảnh Việt Nam, làm đi làm lại | Tuần 1–5, mở đầu mỗi buổi | **AI-free tuyệt đối** |
-| Tier 2 — bài một buổi | 4 bài 2–2.5h, có file, có test | Tuần 5–8 | Docs thoải mái, **không AI sinh code** |
-| Error Zoo | 15 chương trình có lỗi cài sẵn, tự chẩn đoán | Tuần 2–3, 20 phút/buổi | AI chỉ chấm **sau khi** bạn chẩn đoán xong |
-| Docs Quest | Mỗi tuần 1 câu hỏi chỉ trả lời được bằng docs | Hằng tuần, 30–45 phút | Cấm AI — đáp án nằm trong docs |
-| Decomposition drill | Đề mơ hồ, chỉ nộp bản phân rã, không code | Tuần 4, 5, 6, 8 | AI chấm bản phân rã, không phân rã hộ |
-| Bug Hunt Kata | Bài kiểm tra debug có chấm điểm, cấm println | Tuần 3 và tuần 8 | AI ra đề + làm giám khảo |
+| Tier 1 — kata 30 phút | 5 bài nhỏ, làm đi làm lại, bấm giờ | Tuần 2–6, mỗi tuần một bài | **AI-free tuyệt đối** |
+| Tier 2 — bài một buổi | 1 bài 2h, có file, có test | Tuần 7 | Docs thoải mái, **không AI sinh code** |
+| Error Zoo | 10 chương trình có lỗi cài sẵn, tự chẩn đoán | Tuần 3–6, 20 phút/buổi | AI chỉ chấm **sau khi** bạn chẩn đoán xong |
+| Docs Quest | 4 câu hỏi chỉ trả lời được bằng docs | Tuần 2–5, mỗi tuần một câu, 30–45 phút | Cấm AI — đáp án nằm trong docs |
+| Decomposition drill | Đề mơ hồ, chỉ nộp bản phân rã, không code | Tuần 12 và 13 | AI chấm bản phân rã, không phân rã hộ |
+| Bug Hunt Kata | Bài kiểm tra debug có chấm điểm, cấm println | Tuần 2 và tuần 11 | AI ra đề + làm giám khảo |
 
-Hai project lớn (Sổ Chi Tiêu CLI, Flashcard Từ Vựng) ở trang [Hai project](/phase-0/projects). Quy trình IOSTV, đọc lỗi 4 bước, debug 6 bước — vũ khí để làm mọi bài dưới đây — ở trang [Meta-skills](/phase-0/meta-skills).
+Error Zoo 10/10 và Tier 1 5/5 là **ngưỡng của module 0.3**; Tier 2 ở tuần 7 là **nguyên liệu bắt buộc** của module 0.4 chứ không phải cổng ra của nó — nó chạy trước cả 4.7 (tuần 8) lẫn 4.8 (tuần 9) nên không kiểm được hai module đó. **Ngưỡng ra của module 0.4 là bài tự kiểm 4.8 ở tuần 9.** Không bài nào trong trang này là việc làm thêm. Hai project lớn ở [Hai project CLI](/phase-0/projects); quy trình IOSTV, đọc lỗi 4 bước, debug 6 bước ở [Meta-skills](/phase-0/meta-skills).
 
 ---
 
 ## 🛠️ Tier 1 — kata 30 phút
 
-Luật chung: tuần 1–5, mỗi buổi học mở đầu bằng đúng một kata. Được mở kotlinlang.org, **cấm AI dưới mọi hình thức — kể cả hỏi khái niệm**. Kata là bài để làm lại nhiều lần: lần đầu cho xong, các lần sau cho nhanh và sạch. **Bấm giờ mọi lần làm, ghi số** — đó là dữ liệu chống lại cảm giác "học mãi vẫn ngu".
+Luật chung: tuần 2–6, mỗi tuần đúng một kata, mở đầu một buổi BUILD. Được mở kotlinlang.org, **cấm AI dưới mọi hình thức — kể cả hỏi khái niệm**. Warm-up 10 phút đầu buổi ở Phase 0 là 3 câu tự kiểm về buổi trước, không phải kata — 5 kata × 30' nằm trong 20h của module 0.3, không phải giờ thêm.
 
-Mỗi kata là một tool dùng thật được: tính đúng hoá đơn nhà mình, lọc đúng sao kê của mình. Chạy code của mình trên dữ liệu thật của mình — cảm giác đó là phần thưởng chính của Phase 0.
+Kata là bài làm lại nhiều lần: lần đầu cho xong, lần sau cho nhanh và sạch. **Bấm giờ mọi lần, ghi số.**
 
-#### 1. Tính tiền điện bậc thang EVN — 30 phút
+Tuần 14 (module 0.10) **không làm lại cả 5 kata** — 5 kata × 30' cộng bài Tier 2 làm lại đã hơn 4h, trong khi cả module 0.10 chỉ có 5h và còn phải chứa blank-file #5 với phiên vấn đáp. Tuần 14 làm lại đúng **3 bài, ~3h**:
 
-**Đề:** nhập số kWh dùng trong tháng, tính tiền điện theo biểu giá bậc thang 6 bậc của EVN. Bước 1 của đề: **tự tra biểu giá hiện hành** trên trang EVN — đọc yêu cầu thật là một phần bài tập. Khai báo biểu giá thành danh sách hằng số, không rải số lẻ khắp code.
+| Làm lại ở tuần 14 | Là gì | Bắt buộc |
+|---|---|---|
+| Kata 4 — FizzBuzz | **Bảng 1 của benchmark tốt nghiệp**: lần 1 tuần 5 · lần 2 tuần 14 | Có |
+| Bài Tier 2 — CLI đọc log trận | **Bảng 2 của benchmark tốt nghiệp**: lần 1 tuần 7 · lần 2 tuần 14 | Có |
+| Một kata Tier 1 do **AI chọn** trong bốn kata còn lại (1, 2, 3, 5) | Bài bốc thăm — bạn không biết trước là bài nào | Có, nhưng không biết trước |
 
-**Ví dụ** (minh hoạ cách chia bậc — số tiền bạn tự tính theo biểu giá tra được):
+Ghi hai số cạnh nhau ở mỗi bài làm lại. Bốn kata không được bốc thăm vẫn để trống ô "làm lại" — đó không phải nợ. Thang đo ở đây chỉ có một: bạn so với chính bạn.
+
+### 1. Tính damage theo bậc — tuần 2
+
+**Đề:** một đòn đánh có chỉ số `power` (số nguyên). Damage thực nhận **không** tỉ lệ thẳng với `power` — nó tính theo bậc thang, mỗi bậc một hệ số, cộng dồn từng bậc. Bước 1: **tự chốt bảng bậc** (số bậc, ranh giới, hệ số), ghi vào comment đầu file, khai báo thành danh sách hằng số — không rải số lẻ khắp code.
+
+**Ví dụ** (minh hoạ cách chia bậc — hệ số bạn tự chốt):
 
 | Input | Cách chia đúng |
 |---|---|
-| `45` kWh | 45 kWh nằm trọn bậc 1 |
-| `215` kWh | 50 kWh bậc 1 + 50 kWh bậc 2 + 100 kWh bậc 3 + 15 kWh bậc 4 |
-| `0` kWh | 0 đồng — nhưng chương trình của bạn có crash không? |
+| `45` power | 45 nằm trọn bậc 1 |
+| `215` power | 50 bậc 1 + 50 bậc 2 + 100 bậc 3 + 15 bậc 4 |
+| `0` power | 0 damage — nhưng chương trình của bạn có crash không? |
 
-**Đạt khi:** khớp với 3 hoá đơn thật của nhà bạn (đối chiếu con số EVN in trên hoá đơn — chú ý hoá đơn thật còn thuế, đọc hoá đơn để biết).
+**Đạt khi:** qua bộ 10 case bạn tự viết ra giấy **trước khi code**, bắt buộc có `power` đúng ranh giới bậc và `power` âm.
 
-**⚠️ Bẫy đã cài sẵn:** ranh giới bậc (kWh thứ 50 và thứ 51 thuộc bậc nào — đọc kỹ biểu giá); tính cộng dồn từng bậc, không phải nhân toàn bộ với đơn giá của bậc cao nhất.
+**⚠️ Bẫy đã cài sẵn:** ranh giới bậc — `power` thứ 50 và thứ 51 thuộc bậc nào; cộng dồn từng bậc, không phải nhân toàn bộ `power` với hệ số bậc cao nhất; damage ra số lẻ thì làm tròn kiểu gì — quyết trước, đừng để phép chia số nguyên cắt hộ bạn.
 
-- [ ] Đã làm — thời gian thực tế: ____ phút
+- [ ] Lần 1 (tuần 2): ____ phút · làm lại (tuần 14, chỉ khi AI bốc trúng): ____ phút
 
-#### 2. Chuẩn hoá số điện thoại VN — 30 phút
+### 2. Chuẩn hoá số điện thoại VN — tuần 3
 
 **Đề:** nhận chuỗi người dùng gõ tuỳ hứng, trả về dạng chuẩn 10 chữ số bắt đầu bằng 0 — hoặc báo không hợp lệ.
 
@@ -54,48 +66,11 @@ Mỗi kata là một tool dùng thật được: tính đúng hoá đơn nhà m�
 
 **Đạt khi:** qua bộ 10 test case bạn tự viết ra giấy trước khi code, trong đó ít nhất 3 case không hợp lệ.
 
-**⚠️ Bẫy đã cài sẵn:** quyết định "không hợp lệ thì hàm trả gì" chính là bài thiết kế hợp đồng đầu tiên của bạn — kiểu trả về nullable là một ứng viên; sau khi chuẩn hoá phải kiểm tra lại độ dài, đừng tin chuỗi đầu vào.
+**⚠️ Bẫy đã cài sẵn:** "không hợp lệ thì hàm trả gì" chính là bài thiết kế hợp đồng đầu tiên của bạn — kiểu trả về nullable là một ứng viên; sau khi chuẩn hoá phải kiểm tra lại độ dài, đừng tin chuỗi đầu vào.
 
-- [ ] Đã làm — thời gian thực tế: ____ phút
+- [ ] Lần 1 (tuần 3): ____ phút · làm lại (tuần 14, chỉ khi AI bốc trúng): ____ phút
 
-#### 3. Tính tiền gửi xe theo giờ — 30 phút
-
-**Đề:** xe vào lúc X, ra lúc Y. Tính tiền theo block 60 phút (lẻ 1 phút cũng tính tròn 1 block), gửi qua đêm phụ thu theo từng đêm. Đơn giá và giờ tính "qua đêm" bạn tự chọn, khai báo thành hằng số và ghi rõ trong comment đầu file.
-
-**Ví dụ** (tính theo block — tiền nhân với đơn giá bạn chọn):
-
-| Input | Output |
-|---|---|
-| vào `08:00`, ra `08:45` | 1 block |
-| vào `08:00`, ra `10:01` | 3 block |
-| vào `22:30`, ra `07:00` hôm sau | ? block + 1 phụ thu đêm — tự tính tay trước rồi mới code |
-| vào `09:00`, ra `09:00` | gửi 0 phút — bạn phải quyết: 0 block hay 1 block? |
-
-**Đạt khi:** đúng cả khi gửi 0 phút và khi gửi qua 2 đêm.
-
-**⚠️ Bẫy đã cài sẵn:** quy hết về phút rồi mới tính — đừng tính bằng giờ lẻ; mốc qua nửa đêm là chỗ nhiều người chết nhất; bài này cấm thư viện ngày giờ — luyện số học thời gian bằng tay.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút
-
-#### 4. Lọc sao kê — 30 phút
-
-**Đề:** cho danh sách giao dịch (ngày dạng `dd/MM/yyyy`, mô tả, số tiền), lọc ra các giao dịch trên 500.000 đồng trong tháng 6, in ra màn hình.
-
-**Ví dụ:**
-
-| Input | Có vào kết quả? |
-|---|---|
-| `15/06/2026, an cuoi ban, 750000` | có |
-| `03/06/2026, ca phe, 45000` | không — không quá 500k |
-| `20/07/2026, mua ban phim, 900000` | không — tháng 7 |
-
-**Đạt khi:** viết **cả hai bản** — bản vòng lặp và bản dùng `filter` — đặt cạnh nhau. Đây chính là phương pháp "mỗi bài hai lần" của module Collections: não cần thấy phép dịch giữa hai cách nghĩ.
-
-**⚠️ Bẫy đã cài sẵn:** "trên 500k" — dấu so sánh nào?; lấy tháng từ chuỗi ngày là một bài parse con, tách nó thành hàm riêng.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút
-
-#### 5. Validate ngày — 30 phút
+### 3. Validate ngày — tuần 4
 
 **Đề:** viết `laNgayHopLe(chuoi: String): Boolean` cho định dạng `dd/MM/yyyy`. Tự xử lý năm nhuận. Cấm thư viện ngày giờ — bài này luyện logic, không luyện tra API.
 
@@ -113,38 +88,21 @@ Mỗi kata là một tool dùng thật được: tính đúng hoá đơn nhà m�
 
 **⚠️ Bẫy đã cài sẵn:** luật năm nhuận có 2 tầng ngoại lệ — 1900 là câu trả lời cho việc bạn đã đọc đủ luật chưa; input rác kiểu `ab/cd/efgh` và `1/1/2026` (thiếu số 0) — hợp lệ hay không do bạn quyết, nhưng phải nhất quán.
 
-- [ ] Đã làm — thời gian thực tế: ____ phút
+- [ ] Lần 1 (tuần 4): ____ phút · làm lại (tuần 14, chỉ khi AI bốc trúng): ____ phút
 
-#### 6. Chia tiền lì xì — 30 phút
+### 4. FizzBuzz biến thể + tổng — tuần 5
 
-**Đề:** chia tổng `T` đồng cho `n` người, mỗi phần **ngẫu nhiên** nhưng tổng đúng bằng `T` và không ai nhận dưới mức sàn `S`.
+**Đề:** in các số 1 đến 100; chia hết cho 3 in "Fizz", chia hết cho 5 in "Buzz", chia hết cả hai in "FizzBuzz"; **và trả về tổng của các số không bị thay thế**.
 
-**Ví dụ:**
-
-| Input | Output |
-|---|---|
-| `T = 500000, n = 5, S = 20000` | 5 số, mỗi số ≥ 20.000, tổng đúng 500.000, mỗi lần chạy ra bộ khác nhau |
-| `T = 100000, n = 6, S = 20000` | không chia nổi — hàm phải từ chối **có chủ đích**, không trả kết quả sai |
-
-**Đạt khi:** viết vòng lặp chạy thử 100 lần, không lần nào lệch tổng hoặc thủng sàn.
-
-**⚠️ Bẫy đã cài sẵn:** random từng người một cách độc lập thì tổng gần như chắc chắn lệch — nghĩ lại cách phân phối; phần dư sau chia là nơi tiền "bốc hơi" từng đồng một.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút
-
-#### 7. FizzBuzz biến thể + tổng — 30 phút, benchmark
-
-**Đề:** chính là câu 1 bài test đầu vào — in các số 1 đến 100, chia hết cho 3 in "Fizz", chia hết cho 5 in "Buzz", chia hết cả hai in "FizzBuzz", **và trả về tổng của các số không bị thay thế**.
-
-**Đạt khi:** ≤5 phút, chạy đúng ngay, không sửa đi sửa lại. Làm tuần 1 và làm lại tuần 5 — **ghi cả hai thời gian**. Cặp số này là bằng chứng tiến bộ đầu tiên của bạn: khi tự nghi ngờ, mở nó ra xem.
+**Đạt khi:** ≤5 phút, chạy đúng ngay, không sửa đi sửa lại.
 
 **⚠️ Bẫy đã cài sẵn:** thứ tự kiểm tra "chia hết cả hai" phải đứng ở đâu?; "tổng các số **không bị thay thế**" — đọc lại đề lần nữa trước khi nộp.
 
-- [ ] Lần 1 (tuần 1): ____ phút · làm lại (tuần 5): ____ phút
+- [ ] Lần 1 (tuần 5): ____ phút · làm lại (tuần 14 — Bảng 1, bắt buộc): ____ phút
 
-#### 8. Đổi số tiền thành chữ — trùm cuối Tier 1
+### 5. Đổi số tiền thành chữ — trùm cuối Tier 1, tuần 6
 
-**Đề:** viết `docSoTien(soTien: Long): String` — ví dụ `1250000` thành "một triệu hai trăm năm mươi nghìn đồng". **Làm ở tuần 5**, sau khi đã tập decomposition drill — bài này thắng thua ở khâu phân rã, không ở cú pháp. Lần đầu thường không xong trong 30 phút: cho phép tối đa 2 phiên 30 phút, nhưng phiên 1 phải nộp được bản phân rã.
+**Đề:** viết `docSoTien(soTien: Long): String` — ví dụ `1250000` thành "một triệu hai trăm năm mươi nghìn đồng". Bài này thắng thua ở khâu phân rã, không ở cú pháp. Lần đầu thường không xong trong 30 phút: cho phép tối đa 2 phiên 30 phút, nhưng phiên 1 phải nộp được bản phân rã.
 
 **Ví dụ:**
 
@@ -160,80 +118,52 @@ Mỗi kata là một tool dùng thật được: tính đúng hoá đơn nhà m�
 
 **⚠️ Bẫy đã cài sẵn:** "mười lăm" chứ không phải "mười năm"; "hai mươi mốt" chứ không phải "hai mươi một"; "lẻ" hay "linh" — chọn một và nhất quán; gợi ý phân rã tốt nhất nằm ở việc tiếng Việt đọc số theo từng nhóm 3 chữ số.
 
-- [ ] Đã làm — tổng thời gian thực tế: ____ phút
+- [ ] Lần 1 (tuần 6): ____ phút · làm lại (tuần 14, chỉ khi AI bốc trúng): ____ phút
 
 ---
 
-## 🛠️ Tier 2 — bài một buổi (2–2.5h)
+## 🛠️ Tier 2 — bài một buổi
 
-Luật chung: tuần 5–8, mỗi bài chiếm trọn một buổi dài (thứ 7 hoặc Chủ nhật). Được dùng docs thoải mái, **không để AI sinh code**. Trước khi code: chạy IOSTV rút gọn — 3 cặp ví dụ input → output và danh sách việc. Từ tuần 5, luật test có hiệu lực: **mọi hàm logic thuần phải có ≥1 test**, theo công thức 3 tầng happy / edge / error.
+Đúng **một** bài, làm ở tuần 7, chiếm buổi LONG BUILD T7 — 2h trong buổi 3h, 1h còn lại của T7 thuộc module 4.6. Cộng cả tuần 7: module 4.6 6h + Tier 2 2h = **8h**, khít bậc 8h — không nhét thêm gì vào tuần này. Docs thoải mái, **không để AI sinh code**. Trước khi code: nộp `BACKLOG.md` theo IOSTV — 3 cặp ví dụ input → output bằng số thật và danh sách việc. Từ tuần 4, luật test đã có hiệu lực: **mọi hàm logic thuần phải có ≥1 test**, theo công thức 3 tầng happy / edge / error.
 
-#### 1. CLI thống kê sao kê ngân hàng — 2.5h
+Bài này chính là **Bảng 2 của benchmark tốt nghiệp** — phép đo "đọc file log nước đi → `groupBy` → in báo cáo": lần 1 ở **tuần 7** (chính buổi này), lần 2 ở **tuần 14** trong module 0.10. Bấm giờ cả hai lần, ghi hai số cạnh nhau — bảng đo ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep).
 
-**Đề:** đọc file CSV ~200 dòng (ngày, mô tả, số tiền, loại thu/chi) → in báo cáo: tổng thu/chi theo tháng, top 5 khoản chi lớn nhất, tổng chi theo loại. Đây là chỗ dùng AI **đúng luật**: nhờ AI sinh file CSV 200 dòng có 5 dòng hỏng (sinh dữ liệu test nằm trong whitelist) — nhưng không nhờ AI viết một dòng code nào.
+**Giữ nguyên repo của bài này sau khi nộp — hai tuần sau còn dùng lại.** Tuần 8 (module 4.7) lấy chính nó ra refactor một hàm đang ném exception hoặc trả `null` mập mờ thành trả `Result`; tuần 9 (module 4.8) đưa phần đọc file ra sau một interface để test logic chạy xanh mà không chạm ổ đĩa — và đó mới là ngưỡng ra của [Kotlin Core II](/phase-0/kotlin-core-2).
+
+### CLI đọc log trận — 2h
+
+**Đề:** đọc file CSV ~200 dòng log trận (`ngay,nguoi_choi,doi_thu,ket_qua,so_nuoc,giay`) → `groupBy` → in báo cáo: số trận theo tháng, tỉ lệ thắng từng người chơi, top 5 trận dài nhất, số nước đi trung bình theo kết quả. Đây là chỗ dùng AI **đúng luật**: nhờ AI sinh file CSV 200 dòng có 5 dòng hỏng (sinh dữ liệu test nằm trong whitelist) — không nhờ AI viết một dòng code nào.
 
 **Ví dụ** (hành vi với từng loại dòng):
 
 | Dòng trong file | Chương trình làm gì |
 |---|---|
-| `15/06/2026,tien nha,3500000,chi` | tính bình thường |
-| `16/06/2026,luong,abc,thu` | bỏ qua, đếm vào số dòng lỗi |
+| `15/06/2026,hai,lan,win,37,415` | tính bình thường |
+| `16/06/2026,hai,lan,win,abc,415` | bỏ qua, đếm vào số dòng lỗi |
 | `17/06/2026,thieu cot` | bỏ qua, đếm vào số dòng lỗi |
 
-**Đạt khi:** chạy đúng với file có dòng hỏng — bỏ qua và in "đã bỏ qua N dòng lỗi"; có ≥3 test; số tiền in ra có dấu phân cách nghìn kiểu `1.250.000` (Docs Quest câu 4 phục vụ đúng chỗ này).
+**Đạt khi:** chạy đúng với file có dòng hỏng — bỏ qua và in "đã bỏ qua N dòng lỗi"; có ≥3 test; số lớn in có dấu phân cách nghìn kiểu `1.250.000` (Docs Quest tuần 5 phục vụ đúng chỗ này); và tiêu chí quan trọng nhất — **thêm một mục báo cáo mới không phải sửa hàm parse**. Parse là một việc, gộp số là việc khác; trộn hai thứ đó là thất bại thiết kế của bài này.
 
 **⚠️ Bẫy đã cài sẵn:** con thú số 4 của Error Zoo sống trong file này; thiết kế hàm parse **một dòng** trước — dòng hỏng thì hàm đó trả gì? Trả lời câu đó xong bài mới bắt đầu dễ.
 
-- [ ] Đã làm — thời gian thực tế: ____ phút · số test: ____
-
-#### 2. Máy tính tiền trà sữa — 2.5h
-
-**Đề:** menu đồ uống với size (S/M/L), topping, mức đá/đường; khuyến mãi mua 2 tặng 1 (tặng ly rẻ nhất); in hoá đơn đọc được.
-
-**Đạt khi:** nộp `BACKLOG.md` **trước khi viết dòng code đầu tiên**; và tiêu chí quan trọng nhất — **thêm món mới vào menu không phải sửa logic tính tiền**. Menu là dữ liệu, tính tiền là logic; trộn hai thứ đó là thất bại thiết kế của bài này.
-
-**⚠️ Bẫy đã cài sẵn:** mua 2 tặng 1 với 7 ly thì tặng mấy ly, và là những ly nào? Viết ví dụ input → output cho đúng case này trước khi code; giá tiền hard-code trong `when` là dấu hiệu bạn đang trộn dữ liệu vào logic.
-
-- [ ] Đã làm — BACKLOG nộp trước: có/không · thời gian: ____ phút
-
-#### 3. Flashcard từ vựng CLI bản mini — 2.5h
-
-**Đề:** đọc file từ vựng (từ, nghĩa), quiz ngẫu nhiên 10 câu, chấm điểm cuối phiên, lưu danh sách từ hay sai ra file để lần chạy sau ưu tiên hỏi lại.
-
-**Đạt khi:** tiến độ sống sót giữa 2 lần chạy — tắt chương trình, mở lại, nó vẫn nhớ từ nào bạn hay sai.
-
-**⚠️ Bẫy đã cài sẵn:** shuffle nhưng không hỏi lặp một từ trong cùng phiên; file tiến độ bị xoá hoặc hỏng thì chương trình làm gì — quyết trước, đừng để nó tự crash.
-
-Bài này là tổng duyệt nhỏ cho capstone Flashcard ở [Hai project](/phase-0/projects) — làm kỹ ở đây, tuần 10 sẽ dễ thở hơn hẳn.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút
-
-#### 4. Dò vé số — 2h
-
-**Đề:** nhập danh sách vé (dãy số) và bảng kết quả xổ số miền Nam, báo mỗi vé trúng giải nào. Bước 1 của đề: **tự tra luật dò thật** — các giải, so đuôi số, giải phụ — và mô tả luật vào README trước khi code. Đây là bài đọc yêu cầu thật: yêu cầu không nằm trong đề, nằm ngoài đời.
-
-**Đạt khi:** đúng luật thật — đối chiếu với một kỳ quay thật; người không biết code đọc README của bạn hiểu được luật bạn đã cài.
-
-**⚠️ Bẫy đã cài sẵn:** so đuôi số khác so cả số; một vé khớp nhiều giải thì tính sao — luật thật nói gì?; vé sai định dạng là error case, không phải lý do crash.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút
+- [ ] Lần 1 (tuần 7): ____ phút · số test: ____ · BACKLOG nộp trước: có/không · làm lại (tuần 14 — Bảng 2, bắt buộc): ____ phút
 
 ---
 
-## ⚠️ Error Zoo — 15 con thú
+## ⚠️ Error Zoo — 10 con thú
 
-Sở thú lỗi: 15 chương trình Kotlin ngắn, **mỗi con chứa đúng một lỗi cài sẵn**. Chơi ở tuần 2–3, mỗi buổi 20 phút, thuần hoá 2–3 con.
+Sở thú lỗi: 10 chương trình Kotlin ngắn, **mỗi con chứa đúng một lỗi cài sẵn**. Chơi ở tuần 3–6, mỗi buổi 20 phút, thuần hoá 1–2 con. Ngưỡng: 10/10 trước khi hết tuần 6.
 
 Cách chơi với từng con:
 
-1. **Gõ lại nguyên văn** vào scratch file — gõ tay, không copy. Mắt lướt qua từng ký tự chính là lượt soi bug đầu tiên
-2. Chạy thử. Chú ý: **không phải con nào cũng sống tới runtime** — một số chết ngay khi compile. Phân biệt lỗi compile với lỗi runtime là bài học số một của sở thú này
-3. Chẩn đoán theo đúng [quy trình 4 bước](/phase-0/meta-skills): tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu
-4. Sửa, chạy lại, rồi ghi 3 dòng vào `notes/ERRORS.md`: tên lỗi / triệu chứng / cách nhận diện lần sau
+1. **Gõ lại nguyên văn** vào scratch file — gõ tay, không copy. Mắt lướt qua từng ký tự là lượt soi bug đầu tiên
+2. Chạy thử. **Không phải con nào cũng sống tới runtime** — một số chết ngay khi compile. Phân biệt lỗi compile với lỗi runtime là bài học số một của sở thú này
+3. Chẩn đoán theo [quy trình 4 bước](/phase-0/meta-skills): tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu
+4. Sửa, chạy lại, ghi 3 dòng vào `notes/ERRORS.md`: tên lỗi / triệu chứng / cách nhận diện lần sau
 
-**Không có đáp án ở bất kỳ đâu trong trang này — cố ý.** Sau khi tự chẩn đoán xong, mở Claude Code và nói: *"Error Zoo số N: tôi chẩn đoán là X vì Y"* — để được chấm. Hỏi đáp án trước khi có giả thuyết là tự phá bài đo của chính mình.
+**Không có đáp án ở bất kỳ đâu trong trang này — cố ý.** Chẩn đoán xong mới mở một phiên AI và nói: *"Error Zoo số N: tôi chẩn đoán là X vì Y"* — để được chấm. Hỏi đáp án trước khi có giả thuyết là tự phá bài đo của chính mình.
 
-#### Con số 1 — Danh bạ điện thoại
+### Con số 1 — Danh bạ điện thoại
 
 ```kotlin
 fun main() {
@@ -246,11 +176,9 @@ fun main() {
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 2 — Tổng điểm cả lớp
+### Con số 2 — Tổng điểm cả lớp
 
 ```kotlin
 fun main() {
@@ -263,257 +191,157 @@ fun main() {
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 3 — Đọc một dòng sao kê
+### Con số 3 — Đọc một dòng log trận
 
 ```kotlin
 fun main() {
-    val dong = "15/06/2026,an trua"
+    val dong = "15/06/2026,hai,lan"
     val cot = dong.split(",")
     val ngay = cot[0]
-    val moTa = cot[1]
-    val soTien = cot[2]
-    println("$ngay | $moTa | $soTien")
+    val nguoiChoi = cot[1]
+    val ketQua = cot[3]
+    println("$ngay | $nguoiChoi | $ketQua")
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 4 — Tổng chi ba giao dịch
+### Con số 4 — Tổng vàng ba giao dịch
 
 ```kotlin
 fun main() {
     val giaoDich = listOf("500000", "1.250.000", "300000")
     val tong = giaoDich.sumOf { it.toLong() }
-    println("Tổng chi: $tong đồng")
+    println("Tổng vàng: $tong")
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 5 — Phí gửi xe
+### Con số 5 — Vàng thưởng sau trận
 
 ```kotlin
-fun tinhPhiGuiXe(soGio: Int): Int {
-    return soGio * 5000
+fun tinhVangThuong(soTran: Int): Int {
+    return soTran * 5000
 }
 
 fun main() {
-    val soGio = "3"
-    val phi = tinhPhiGuiXe(soGio)
-    println("Phí gửi xe: $phi đồng")
+    val soTran = "3"
+    val vang = tinhVangThuong(soTran)
+    println("Vàng thưởng: $vang")
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 6 — Giỏ hàng trà sữa
+### Con số 6 — Danh sách người trong phòng
 
 ```kotlin
 fun main() {
-    val gioHang = mutableListOf("trà sữa", "trân châu", "pudding", "kem cheese")
-    for (mon in gioHang) {
-        if (mon == "trân châu") {
-            gioHang.remove(mon)
+    val nguoiTrongPhong = mutableListOf("hai", "lan", "minh", "tuan")
+    for (nguoi in nguoiTrongPhong) {
+        if (nguoi == "lan") {
+            nguoiTrongPhong.remove(nguoi)
         }
     }
-    println(gioHang)
+    println(nguoiTrongPhong)
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 7 — Nhập họ tên
+### Con số 7 — Đếm lượt còn lại
 
 ```kotlin
 fun main() {
-    print("Nhập họ tên: ")
-    val hoTen = readLine()
-    val soKyTu = hoTen.length
-    println("Họ tên của bạn dài $soKyTu ký tự")
-}
-```
-
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
-- [ ] Đã thuần hoá — tên lỗi: ____________________
-
-#### Con số 8 — Bán vé
-
-```kotlin
-fun main() {
-    var conLai = 10
-    while (conLai > 0) {
-        println("Còn $conLai vé")
-        if (conLai % 2 == 0) continue
-        conLai--
+    var luotConLai = 10
+    while (luotConLai > 0) {
+        println("Còn $luotConLai lượt")
+        if (luotConLai % 2 == 0) continue
+        luotConLai--
     }
-    println("Hết vé")
+    println("Hết lượt")
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 9 — Tổng điện năng ba quý
+### Con số 8 — Trạng thái trận
 
 ```kotlin
-fun main() {
-    val duLieu: List<Any> = listOf(150, 200, "180", 90)
-    var tongKwh = 0
-    for (muc in duLieu) {
-        tongKwh += muc as Int
-    }
-    println("Tổng điện năng: $tongKwh kWh")
-}
-```
+sealed class TrangThaiTran
+object Waiting : TrangThaiTran()
+object Playing : TrangThaiTran()
+object Finished : TrangThaiTran()
+object Abandoned : TrangThaiTran()
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
-- [ ] Đã thuần hoá — tên lỗi: ____________________
-
-#### Con số 10 — Trạng thái đơn hàng
-
-```kotlin
-sealed class TrangThaiDon
-object ChoXacNhan : TrangThaiDon()
-object DangGiao : TrangThaiDon()
-object DaGiao : TrangThaiDon()
-
-fun thongBao(trangThai: TrangThaiDon): String = when (trangThai) {
-    ChoXacNhan -> "Đơn đang chờ xác nhận"
-    DangGiao -> "Shipper đang trên đường"
+fun thongBao(trangThai: TrangThaiTran): String = when (trangThai) {
+    Waiting -> "Đang chờ đối thủ"
+    Playing -> "Đang trong ván"
+    Finished -> "Ván đã kết thúc"
 }
 
 fun main() {
-    println(thongBao(DaGiao))
+    println(thongBao(Abandoned))
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 11 — Đếm ngược
-
-```kotlin
-fun demNguoc(n: Int) {
-    println(n)
-    demNguoc(n - 1)
-}
-
-fun main() {
-    demNguoc(5)
-}
-```
-
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
-- [ ] Đã thuần hoá — tên lỗi: ____________________
-
-#### Con số 12 — Khoản chi lớn nhất
+### Con số 9 — Ván dài nhất
 
 ```kotlin
 fun main() {
-    val chiTieu = listOf(45000, 120000, 30000)
-    val chiLon = chiTieu.filter { it > 500000 }
-    println("Khoản chi lớn nhất: ${chiLon.first()}")
+    val soNuoc = listOf(45, 120, 30)
+    val vanDai = soNuoc.filter { it > 500 }
+    println("Ván dài nhất: ${vanDai.first()}")
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 13 — Xếp loại học lực
-
-```kotlin
-fun xepLoai(diem: Double): String {
-    if (diem >= 8.0) {
-        return "Giỏi"
-    } else if (diem >= 6.5) {
-        return "Khá"
-    }
-}
-
-fun main() {
-    println(xepLoai(5.0))
-}
-```
-
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
-- [ ] Đã thuần hoá — tên lỗi: ____________________
-
-#### Con số 14 — Điểm trung bình lớp
+### Con số 10 — Damage trung bình
 
 ```kotlin
 fun main() {
-    val diemDanhSach = listOf<Int>()
-    val tongDiem = diemDanhSach.sum()
-    val trungBinh = tongDiem / diemDanhSach.size
-    println("Điểm trung bình lớp: $trungBinh")
+    val damageMoiTran = listOf<Int>()
+    val tong = damageMoiTran.sum()
+    val trungBinh = tong / damageMoiTran.size
+    println("Damage trung bình: $trungBinh")
 }
 ```
 
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
 - [ ] Đã thuần hoá — tên lỗi: ____________________
 
-#### Con số 15 — Danh sách môn học
-
-```kotlin
-fun main() {
-    val monHoc = listOf("Toán", "Lý", "Hoá")
-    val danhSach = monHoc as MutableList<String>
-    danhSach.add("Tin")
-    println(danhSach)
-}
-```
-
-*Quy trình 4 bước: tên lỗi → giá trị trong message → dòng của mình → giả thuyết 1 câu.*
-
-- [ ] Đã thuần hoá — tên lỗi: ____________________
-
-Thuần hoá đủ 15 con, `notes/ERRORS.md` của bạn có 15 mục — đó là trophy nhìn thấy được đầu tiên của Phase 0.
+Thuần hoá đủ 10 con, `notes/ERRORS.md` có 10 mục — trophy nhìn thấy được đầu tiên của Phase 0.
 
 ---
 
 ## 📚 Docs Quest
 
-Mỗi tuần một câu hỏi chỉ trả lời được bằng cách **đọc docs** — kotlinlang.org, tiếng Anh, không AI, không tutorial. 30–45 phút. Quy trình cố định: **viết dự đoán ra giấy → chạy trong scratch file → đối chiếu**. Dự đoán sai là kết quả tốt — nó chỉ đúng chỗ mental model của bạn cần sửa.
+Bốn câu hỏi cố định, mỗi tuần một câu từ **tuần 2 đến tuần 5**, chỉ trả lời được bằng cách **đọc docs** — kotlinlang.org, tiếng Anh, không AI, không tutorial. 30–45 phút một câu, **mở đầu buổi BUILD** — 4 câu × 30–45' nằm trong 10h của module 0.2, không phải giờ thêm. Quy trình cố định: **viết dự đoán ra giấy → chạy trong scratch file → đối chiếu**. Dự đoán sai là kết quả tốt — nó chỉ đúng chỗ mental model của bạn cần sửa.
 
-- [ ] **Tuần 1** — `split` với `limit = 2` cho ra gì với chuỗi `"a,b,c"`? Dự đoán trước, chạy sau. Thử thêm `limit = 0` — có đúng như bạn nghĩ không?
-- [ ] **Tuần 2** — `sortedBy` và `sortedWith` khác nhau thế nào? Tìm một tình huống **bắt buộc** phải dùng `sortedWith`, viết ví dụ chạy được cho tình huống đó
-- [ ] **Tuần 3** — `associateBy` và `groupBy` khác nhau ở đâu? Viết mỗi hàm một ví dụ với tình huống dùng đúng — và giải thích vì sao đổi chỗ hai hàm là sai
-- [ ] **Tuần 4** — tìm cách format số `1250000` thành `1.250.000` theo locale Việt Nam. Câu này **cố ý** không trả lời được chỉ bằng kotlinlang.org — Kotlin đứng trên vai JVM, và biết lúc nào phải bước sang Java docs là kỹ năng thật. Kết quả dùng ngay cho bài sao kê Tier 2
+Docs Quest **không** phải nghi thức thứ tư: Phase 0 chỉ có ba nghi thức — journal 3 dòng, bảng tuần, blank-file. Tuần 1 cũng không có Docs Quest: tuần 1 chỉ có Ngày 1 và tag `v0.0.1`, không nghi thức nào bật trước tag.
 
-**Tự ra câu mới từ tuần 5** — công thức: mỗi khi gặp (a) một hàm có tham số bạn chưa từng đụng, hoặc (b) hai hàm na ná nhau (`first` với `firstOrNull` là ví dụ đầu tiên bạn sẽ gặp), biến nó thành một câu Docs Quest: viết câu hỏi + dự đoán, chạy, ghi vào note. Cũng được nhờ AI ra đề — sinh đề nằm trong whitelist: *"Ra cho tôi 1 câu Docs Quest về Collections, đáp án phải nằm trong docs kotlinlang.org, không nói đáp án."*
+- [ ] **Tuần 2** — `split` với `limit = 2` cho ra gì với chuỗi `"a,b,c"`? Dự đoán trước, chạy sau. Thử thêm `limit = 0` — có đúng như bạn nghĩ không?
+- [ ] **Tuần 3** — `sortedBy` và `sortedWith` khác nhau thế nào? Tìm một tình huống **bắt buộc** phải dùng `sortedWith`, viết ví dụ chạy được cho tình huống đó
+- [ ] **Tuần 4** — `associateBy` và `groupBy` khác nhau ở đâu? Viết mỗi hàm một ví dụ với tình huống dùng đúng — và giải thích vì sao đổi chỗ hai hàm là sai. Kết quả dùng ngay cho bài Tier 2
+- [ ] **Tuần 5** — tìm cách format số `1250000` thành `1.250.000` theo locale Việt Nam. Câu này **cố ý** không trả lời được chỉ bằng kotlinlang.org — Kotlin đứng trên vai JVM, và biết lúc nào phải bước sang Java docs là kỹ năng thật. Kết quả dùng ngay cho bài log trận Tier 2
+
+**Tự ra câu mới từ tuần 6** — không phải chỉ tiêu tuần nào cũng phải có, mà là phản xạ khi gặp chỗ mờ. Công thức: gặp (a) một hàm có tham số bạn chưa từng đụng, hoặc (b) hai hàm na ná nhau (`first` với `firstOrNull`), biến nó thành một câu Docs Quest: câu hỏi + dự đoán, chạy, ghi vào note. Được nhờ AI ra đề — sinh đề nằm trong whitelist: *"Ra cho tôi 1 câu Docs Quest về Collections, đáp án phải nằm trong docs kotlinlang.org, không nói đáp án."*
 
 ---
 
 ## Decomposition drill
 
-Mỗi tuần một đề **mơ hồ có chủ đích**, 30 phút, **chỉ nộp bản phân rã theo IOSTV — không viết một dòng code nào**. Đây là thuốc cho lỗ hổng lớn nhất của hồ sơ này: nhận đề thật là tê liệt. Quy trình IOSTV đầy đủ ở [Meta-skills](/phase-0/meta-skills).
+Hai đề **mơ hồ có chủ đích**, 30 phút mỗi đề, **chỉ nộp bản phân rã theo IOSTV — không viết một dòng code nào**. Đây là thuốc cho lỗ hổng lớn nhất của hồ sơ này: nhận đề thật là tê liệt. Quy trình IOSTV đầy đủ ở [Meta-skills](/phase-0/meta-skills).
 
 Đề mơ hồ là một phần của bài: việc của bạn bao gồm tự đặt câu hỏi làm rõ — rồi tự trả lời như một người chủ sản phẩm.
 
-- [ ] **Tuần 4** — "Tool chia tiền ăn nhóm sau chuyến du lịch"
-- [ ] **Tuần 5** — "Tool nhắc hạn đóng tiền điện/nước/net cho phòng trọ"
-- [ ] **Tuần 6** — "Quản lý tủ quần áo cho thuê chụp ảnh"
-- [ ] **Tuần 8** — "Tool tra cứu điểm chuẩn đại học từ file dữ liệu"
+- [ ] **Tuần 12** — "Tách `caro-engine` thành module riêng". Một `caro-cli` trộn hết vào một chỗ: luật cờ, bàn cờ, bàn phím, màn hình, file. Vẽ ranh giới sao cho luật cờ thành module Gradle **0 dependency, 0 I/O** — và trả lời: cái gì đi qua ranh giới, theo hướng nào
+- [ ] **Tuần 13** — "Tách room ra khỏi kết nối". Một phòng chơi giữ 2 người và trạng thái ván; kết nối mạng rớt bất cứ lúc nào. Phân rã sao cho logic phòng **không biết** socket tồn tại — người chơi rớt mạng thì phòng vẫn nguyên trạng thái. Bản nháp giấy của room actor ở Phase 1
 
 **Tiêu chí đạt** — bản phân rã phải có đủ 5 điều:
 
@@ -522,7 +350,7 @@ Mỗi tuần một đề **mơ hồ có chủ đích**, 30 phút, **chỉ nộp 
 | 1 | Đủ 3 cặp ví dụ input → output **bằng số thật** |
 | 2 | Có `data class` cho dữ liệu; nếu bài có trạng thái thì có ứng viên `sealed class`/`enum` |
 | 3 | ≥10 việc cụ thể |
-| 4 | Việc đầu tiên cho ra chương trình **chạy được trong 30 phút** — dù chỉ in menu |
+| 4 | Việc đầu tiên cho ra chương trình **chạy được trong 30 phút** — dù chỉ in ra một dòng |
 | 5 | Không việc nào ước lượng quá 30 phút |
 
 **Cách chấm:** nộp bản phân rã cho AI và yêu cầu chấm theo đúng 5 tiêu chí trên, chỉ ra việc nào còn mơ hồ. Nhờ AI phân rã hộ là hỏng bài — thứ được luyện ở đây chính là thứ AI không được làm thay.
@@ -531,35 +359,46 @@ Mỗi tuần một đề **mơ hồ có chủ đích**, 30 phút, **chỉ nộp 
 
 ## 🏁 Bug Hunt Kata
 
-Bài kiểm tra debug **có chấm điểm**, làm 2 lần trong Phase 0: tuần 3 (ngay sau tuần Debugger) và tuần 8 (đo tiến bộ). AI đóng vai người ra đề và giám khảo.
+Bài kiểm tra debug **có chấm điểm**, làm 2 lần trong Phase 0: tuần 2 (buổi LONG BUILD T7, **sau** buổi debugger 2h — 90 phút này không chen vào buổi debugger) và tuần 11 (buổi BUILD T4, đo tiến bộ — tuần 8 đã kín với module 0.7 và 4.7). AI đóng vai người ra đề và giám khảo.
+
+**Hai đề khác cỡ, vì tuần 2 và tuần 11 bạn khác nhau.** Hết tuần 2 bạn mới có 4.1 và 4.2 — chưa có collection, chưa có nullable, chưa có `data class`. Debug một chương trình bạn chưa đọc nổi không luyện được kỹ năng debug, nó chỉ dạy bạn cảm giác thua đúng vào tuần DP0.
+
+| Đề | Tuần | Cỡ và ràng buộc cứng |
+|---|---|---|
+| Số 1 | 2 | **≤60 dòng**, chỉ `Int`/`Long`/`String`/`Boolean`, hàm, `if`/`when`, `for` trên khoảng số — **không collection, không nullable, không `data class`, không lambda** |
+| Số 2 | 11 | **~120 dòng** quản lý điểm sinh viên, được dùng đủ collection, nullable, `data class` — tuần 11 bạn đã qua 4.3–4.8 |
 
 **Luật chơi:**
 
-- Đề là một chương trình Kotlin ~120 dòng quản lý điểm sinh viên, giấu đúng **5 bug**: 1 crash, 2 logic sai, 1 edge case, 1 chỉ lộ ra với dữ liệu tiếng Việt có dấu
+- Cả hai đề giấu đúng **5 bug** theo cùng công thức: 1 crash (chia cho 0 hoặc parse hỏng), 2 logic sai, 1 lỗi biên, 1 chỉ lộ ra với chuỗi tiếng Việt có dấu
 - **Cấm println. Chỉ dùng debugger** — breakpoint, Step, Watch, Evaluate Expression
 - Trước khi sửa mỗi bug: viết 1 câu giả thuyết, nộp cho giám khảo
 - **Đạt: tìm và sửa 5/5 bug trong 90 phút**
 
-**Vì sao đề không đăng ở trang này:** đây là bài kiểm tra có chấm điểm — đọc đề trước sẽ làm hỏng phép đo. Trang này chỉ giữ luật chơi.
+**Vì sao đề không đăng ở đây:** đây là bài có chấm điểm — đọc đề trước là hỏng phép đo. Trang này chỉ giữ luật chơi.
 
-**Cách lấy đề:** tới tuần 3, mở Claude Code và nói:
+**Cách lấy đề:** tới tuần 2, mở một phiên AI mới và gõ:
 
 ```text
-Tuần 3 rồi — ra đề Bug Hunt Kata số 1: chương trình Kotlin khoảng 120 dòng
-quản lý điểm sinh viên, giấu đúng 5 bug (1 crash, 2 logic sai, 1 edge case,
-1 chỉ lộ với dữ liệu tiếng Việt có dấu). Không tiết lộ bug nằm đâu.
-Tôi có 90 phút, sẽ nộp giả thuyết từng bug trước khi sửa — chấm theo luật.
+Tuần 2 rồi — ra đề Bug Hunt Kata số 1. Ràng buộc cứng: chương trình Kotlin
+tối đa 60 dòng, chỉ dùng Int/Long/String/Boolean, hàm, if/when và for trên
+khoảng số. Không collection, không nullable, không data class, không lambda —
+tôi mới học xong val/var, kiểu và hàm. Giấu đúng 5 bug: 1 crash (chia 0 hoặc
+parse hỏng), 2 logic sai, 1 lỗi biên, 1 chỉ lộ với chuỗi tiếng Việt có dấu.
+Không tiết lộ bug nằm đâu. Tôi có 90 phút, sẽ nộp giả thuyết từng bug trước
+khi sửa — chấm theo luật.
 ```
 
-Tuần 8 xin đề số 2 với cùng cấu trúc nhưng **yêu cầu biến thể mới, không trùng đề tuần 3** — theo hợp đồng AI, đề timed-test luôn là biến thể.
+Tuần 11 xin đề số 2 theo cỡ thật ở bảng trên (~120 dòng, được dùng collection, nullable, `data class`), cùng công thức 5 bug, và **yêu cầu biến thể mới, không trùng đề tuần 2** — theo hợp đồng AI, đề timed-test luôn là biến thể.
 
-- [ ] Bug Hunt 1 (tuần 3): ____/5 bug · ____ phút
-- [ ] Bug Hunt 2 (tuần 8): ____/5 bug · ____ phút
+- [ ] Bug Hunt 1 (tuần 2): ____/5 bug · ____ phút
+- [ ] Bug Hunt 2 (tuần 11): ____/5 bug · ____ phút
 
-Dưới 5/5 ở tuần 3 không phải thất bại — ghi số thật. Con số có nghĩa là **hiệu số giữa tuần 8 và tuần 3**.
+Dưới 5/5 ở tuần 2 không phải thất bại — ghi số thật. Hai đề khác cỡ nên đừng so phút với phút; thứ so được là **quy trình**: bao nhiêu bug tìm ra, bao nhiêu giả thuyết đúng ngay lần đầu, có phải bật println lần nào không. Con số có nghĩa là **hiệu số giữa tuần 11 và tuần 2** trên ba thước đó. Lỗi là dữ liệu, không phải bản án.
 
 ---
 
 ## → Tiếp theo
 
-Kata và drill là bài tập cơ. Nơi cơ bắp thành sản phẩm — và thành bằng chứng — là hai project: [Sổ Chi Tiêu CLI và Flashcard Từ Vựng](/phase-0/projects). Lịch ghép tất cả vào từng tuần ở [Lịch 12 tuần](/phase-0/lich-12-tuan).
+- Kata và drill là bài tập cơ. Nơi cơ bắp thành bằng chứng là hai project: [Túi đồ & Ví CLI và `caro-engine` + `caro-cli`](/phase-0/projects)
+- Lịch ghép tất cả vào từng tuần: [Lịch 14 tuần](/phase-0/lich-14-tuan)

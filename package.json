@@ -2,7 +2,7 @@
   "name": "kotlin-journey-docs",
   "version": "0.1.0",
   "private": true,
-  "description": "Hành trình học Kotlin backend + fullstack + Android của Hải",
+  "description": "Lộ trình 26 tháng: Kotlin/JVM Game Server & Backend Engineer",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -22,6 +22,9 @@
     "typescript": "^5.4.0"
   },
   "overrides": {
-    "next-mdx-remote": "^6.0.0"
+    "next-mdx-remote": "^6.0.0",
+    "postcss": "^8.5.28",
+    "nanoid": "^3.3.18",
+    "dompurify": "^3.4.13"
   }
 }

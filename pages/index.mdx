@@ -1,6 +1,6 @@
-# Hành trình 24 tháng: từ "biết cú pháp" đến Mobile Dev
+# Hành trình 26 tháng: từ "biết cú pháp" đến Backend Engineer — sản phẩm là một game server
 
-Đây là cửa vào không gian học của Hải — lộ trình, luật chơi với AI, và bằng chứng tiến độ nằm ở đây. Mở trang này khi bạn mất phương hướng và cần nhớ mình đang đứng ở đâu trong 24 tháng.
+Đây là cửa vào không gian học của Hải — lộ trình, hợp đồng với AI, và bằng chứng tiến độ nằm ở đây. Mở trang này khi bạn mất phương hướng và cần nhớ mình đang đứng ở đâu trong 26 tháng. Lần đầu mở: đọc đúng mục "Ngày 1", rồi mở IntelliJ.
 
 ---
 
@@ -8,50 +8,69 @@
 
 | Mục | Giá trị |
 |---|---|
-| Phase | **P0 — Nền móng** (tháng 1–3, ~125–140h) |
-| Tuần | **Tuần 0** — tuần setup, chưa tính vào 10–12 tuần học |
-| Ngày bắt đầu | **01/08/2026** |
-| Project đang làm | Chưa có. Project 1 "Sổ Chi Tiêu CLI" mở ở **tuần 7** |
-| Giờ mỗi tuần | **10–14h**, khung đề xuất 20:00–22:00 các buổi tối |
-| Độ dài Phase 0 | 8 / 10 / 12 tuần — chốt **sau khi chấm bài test đầu vào** |
+| Phase | **P0 — Kotlin viết được, không chỉ đọc được** (W1–15, 116h) |
+| Tuần | **W1** — tuần học đầu tiên. Không có Tuần 0 |
+| Ngày bắt đầu | **Thứ Hai 07/09/2026** |
+| Project đang làm | Chưa có. Project 1 "Túi đồ & Ví CLI" mở ở **W10** |
+| Giờ mỗi tuần | Bậc ramp: **6h** (W1–4) → 8h (W5–8) → 10h (W9+). Khung 20:00–22:00 các tối trong tuần + một block 3h ban ngày thứ Bảy. Cấm vượt bậc |
+| Độ dài Phase 0 | **14 tuần chạy + 1 tuần buffer** (W15), kết thúc 20/12/2026. Không có phiên bản 8/10/12 tuần, không có bài test đầu vào |
+| Kết thúc lộ trình | Chủ Nhật 05/11/2028 |
 
-Chưa làm bài test đầu vào thì chưa biết Phase 0 của bạn dài bao nhiêu. Đó là việc số 2 trong checklist Tuần 0 bên dưới.
-
----
-
-## ⚠️ Ba sự thật cần chấp nhận trước khi bắt đầu
-
-Ba điều này quyết định toàn bộ thiết kế phía sau. Không đồng ý thì nói ngay để chỉnh lộ trình, đừng đồng ý cho xong.
-
-**1. "6 tháng thành Android dev" chỉ đúng với người học full-time 40h/tuần.**
-Với 10–14h/tuần, từ điểm xuất phát chưa từng tự build một app hoàn chỉnh, con số trung thực là **12–14 tháng tới vòng phỏng vấn đầu tiên**. Vẫn nhanh hơn 90% người tự học không có hệ thống — vì phần lớn họ không bao giờ tới đích.
-
-**2. Quỹ giờ là tài nguyên khan hiếm nhất, không phải động lực.**
-10–14h/tuần × 24 tháng = **~1.135h thực tế**, đã trừ Tết, ốm, tuần vỡ kế hoạch, tuần nghỉ phục hồi. Mọi thứ không nhét vừa con số đó **đã bị cắt có chủ đích**: C/C++ và NDK, Spring Boot, XML View system, Fragment, LiveData, RxJava, Dagger thuần. Danh sách cắt kèm lý do nằm ở [Roadmap 24 tháng](/roadmap) — đọc để yên tâm rằng đó là quyết định, không phải thiếu sót.
-
-**3. Rủi ro lớn nhất của bạn không phải độ khó — mà là AI.**
-Bạn đã có bằng chứng: cả một monorepo ERP trong máy do AI sinh ra. **Đọc hiểu code không bằng viết được code.** Hiện tượng này có tên: **reading–writing gap** — đọc và viết là hai cơ bắp khác nhau, bạn mới chỉ tập một cái. Nếu tiếp tục để AI viết hộ, sau 24 tháng bạn sẽ có một GitHub đẹp và một cái đầu rỗng — và điều đó lộ ra trong 15 phút phỏng vấn đầu tiên. Toàn bộ bộ luật ở [Hệ thống học & luật AI](/he-thong-hoc) tồn tại để chống đúng điều này.
-
-Cảm giác "mình từng đọc hiểu cả hệ thống ERP mà giờ vật lộn với bài 30 phút" là bình thường và đã được dự báo. Thấy khó không phải vì bạn kém đi, mà vì lần đầu tiên bạn đo đúng cơ bắp cần đo.
+Ba con số khung của toàn bộ site: **113 tuần lịch · 94 tuần chạy · 839h giờ đồng hồ tại bàn**. Trang nào in con số khác, trang đó sai. Trung bình vẫn là **8,9h/tuần chạy** — nhịp không đổi so với bản 755h, lộ trình chỉ dài thêm 2 tháng để chứa 84h ba trục nền tảng.
 
 ---
 
-## 🎯 Bản đồ 24 tháng
+## ⚠️ Ba sự thật cần chấp nhận
 
-| Phase | Tháng | Giờ | Tên gọi | Đầu ra kiểm chứng được |
-|---|---|---|---|---|
-| **P0** | 1–3 | ~125h | Nền móng | Tự build tool console hoàn chỉnh, **không một dòng nào do AI viết** |
-| **P1** | 4–6 | ~150h | App Android đầu tiên | App Compose nhiều màn hình, lưu trữ local, sống sót xoay màn hình |
-| **P2** | 7–11 | ~245h | Chuẩn Junior | **App live trên Google Play Store**, có unit test, đúng bar JD Junior VN |
-| **P3** | 12–14 | ~135h | Săn việc | 30+ đơn apply, ≥3 phỏng vấn thật, giải được LeetCode medium |
-| **P4** | 15–20 | ~290h | Backend & sản phẩm riêng | Client + server chạy thật, **≥10 người dùng ngoài bản thân** |
-| **P5** | 21–24 | ~190h | Chuyên nghiệp hoá | CI/CD xanh, KMP shared module, crash-free ≥99% |
+Ba điều này quyết định toàn bộ thiết kế phía sau. Không đồng ý thì nói ngay để chỉnh, đừng đồng ý cho xong.
 
-**Tổng ~1.135h.** Không có phép màu ở đây, chỉ có kỷ luật cộng dồn.
+**1. Không tồn tại cửa Junior game backend ở Việt Nam.**
+Đếm tay ITviec ngày 05/09/2026: tag `games` có 16 tin (8 art/design · 3 Unity/client · 1 QA · 2 backend/data · 2 khác), trong đó 2 tin backend/data, cả hai đòi Middle. Tag backend gộp với tag `back end`: cộng thô 123 + 125 + 47 + 41 = **336** tin, nhưng một tin Java backend gần như luôn mang cả hai tag, nên sau khi trừ trùng chỉ còn ước **180–250 tin** (tổng các phần là cận trên; hợp thật luôn nhỏ hơn). Ước lượng: dưới 5 vị trí Junior game backend cả nước, hầu hết đòi 2+ năm. Đường đi duy nhất có người đi qua được: **vào bằng cửa backend chung**, rồi chuyển nội bộ hoặc nhảy sau 12–18 tháng production. Game là vỏ của sản phẩm, backend là đích của đơn xin việc. Đến DP5 (W45) bạn tự đếm lại.
 
-Ba điểm dễ hiểu sai, nói rõ luôn: **Mobile là dòng chính**, không phải backend-first. **Backend nằm ở P4, đặt sau mốc xin việc** — vì vòng tuyển Junior không hỏi backend, nó không được phép đứng chắn trước mốc apply. **Kiến thức CS được dạy just-in-time**, gắn vào đúng tuần Mobile cần nó.
+**2. Ba con số giờ, và chúng khác nhau vì đo ba thứ khác nhau.**
 
-Thang 11 project, tỷ lệ giờ từng trục, bản đồ điểm bỏ cuộc và danh sách "cắt trước khi chậm tiến độ" → [Roadmap 24 tháng](/roadmap).
+| Con số | Là gì | Vì sao |
+|---|---|---|
+| 6–8h/tuần | Năng lực **khởi điểm** | Bạn chưa ghi được giờ nào, nên bắt đầu ở 6h |
+| 9h/tuần | **Kế hoạch** sau ramp | Lịch chuẩn 10,5h, điểm danh 90%. Rơi một buổi mỗi 2 tuần là bình thường, không phải thất bại |
+| ≥10h thật 4 tuần liên tiếp | Điều kiện **mở trang mở rộng** | Chỉ khi số cho phép, không phải khi hứng |
+
+Tổng quỹ là **839h** = 755h lộ trình sản phẩm + 84h ba trục nền tảng, trên 94 tuần chạy. Cơ cấu: **680h nội dung + 132h nghi thức + 27h dự phòng** (nghi thức = 1,4h × 94 tuần chạy). Bản này trừ hẳn **19 tuần lịch** (17%) ra khỏi kế hoạch: Tết 2027 ×2, Tết 2028 ×3, 14 tuần ốm/đời sống/deload rải đều. Vì sao không phải con số cũ: xem [Roadmap](/roadmap). Chạy không đủ 94 tuần thì Roadmap cũng đã công bố sẵn thứ tự cắt 8 bậc — quyết định lúc tỉnh táo, không phải lúc hoảng.
+
+**3. Năm tuần trượt ở 0h là thất bại kích hoạt, không phải lười.**
+Nguyên nhân nằm ngay trong repo này. Phiên bản cũ đặt **27 ô checklist chặn trước Tuần 1** (trang chủ 9, hệ thống học 10, tiến độ 8), cộng thêm bài test đầu vào 12 câu, 2 giờ, không AI, không Google. Một người chưa ghi được giờ nào phải qua 28 cổng mới được gõ dòng Kotlin đầu tiên. Bộ tài liệu cũ chính là cái phanh. Bản này **xoá cả 27 ô và bài test**. Ngày 1 là 90 phút, một file chạy được, một commit, một tag. Không nghi thức nào tồn tại trước tag đó.
+
+Vẫn còn rủi ro cũ: bạn đọc hiểu cả monorepo ERP do AI sinh ra, nhưng đọc và viết là hai cơ bắp khác nhau — bạn mới chỉ tập một cái. Lỗi là dữ liệu, không phải bản án.
+
+---
+
+## 🎯 Bản đồ 26 tháng
+
+Một sản phẩm duy nhất, phát hành theo phiên bản: **CARO** — cờ caro online async có economy thật, cộng một chế độ ARENA realtime 20Hz — tự dựng từ socket thô lên tới báo cáo load test hai máy.
+
+| Mã | Tháng | Tuần lịch | Tuần chạy | Giờ | Tên | Đầu ra kiểm chứng được |
+|---|---|---|---|---|---|---|
+| **P0** | 1–4 | W1–15 | 14 | **116** | Kotlin viết được | Tag `v0.0.1` ≤14 ngày; 2 repo tag `v1.0`; `caro-engine` seed + log → cùng bàn cờ 100/100; blank-file ≥3/5; trang tĩnh thế cờ public |
+| **P1** | 4–9 | W16–38 | 19 | **169** | Server đầu tiên, người thật chơi qua web | G1 race đỏ→xanh; bench TCP vs UDP; 100 bot loopback; server từ chối gian 100%; `wss://` public; `v0.1` web client; ≥1 người ngoài chơi ≥1 trận |
+| **P2** | 9–16 | W39–67 | 24 | **218** | Dữ liệu bền + Android client + kênh apply mở | `v1.0` APK; `kill -9` @50 CCU → trận dở khôi phục đúng; Testcontainers xanh trong GH Actions; restore từ backup dưới 15'; 20 đơn apply đợt 0 + bảng gap |
+| **P3** | 16–20 | W68–84 | 13 | **120** | ARENA tick slice + kinh tế | Tick jitter p99 dưới 5ms trong 10'; hash khớp 100%; 2 điện thoại; G5 lệch 0; outbox `kill -9` ×20 = 0 sai; `v1.5` |
+| **P4** | 20–24 | W85–103 | 16 | **144** | Spring Boot + chịu tải + apply đợt 1 | Repo Spring Boot có Security/JWT + bench so Ktor; G2, G3, G4 đủ; 40 đơn đợt 1 + bảng gap; take-home công khai |
+| **P5** | 24–26 | W104–113 | 8 | **72** | Đi làm hoặc sửa-và-apply-lại | Nhánh A: hợp đồng lao động. Nhánh B: bảng gap có cột "đã sửa", 40 đơn đợt 2, 5 postmortem công khai |
+| | | **113** | **94** | **839** | | |
+
+**Tổng 839h.** Không có phép màu ở đây — chỉ có kỷ luật cộng dồn.
+
+Năm điểm dễ hiểu sai, nói rõ luôn:
+
+| Điểm | Sự thật |
+|---|---|
+| Backend là dòng chính, không phải Android | Android native chỉ 30h [Android core](/android-core) + client Compose **16h Lõi, cap 20h** ở P2. Client là phương tiện, server là sản phẩm |
+| Apply là hoạt động nền, không phải phần thưởng cuối | Đợt 0 ngay sau `v0.1` (W39–41) — kênh apply mở từ tháng 9 (06/2027); 1 đơn/tuần từ W42; đợt 1 vẫn từ **21/02/2028** để bám sóng tuyển sau Tết — theo lịch mới ngày đó rơi vào P3, và điều đó là cố ý: mốc thị trường neo theo lịch dương, không theo tuần chạy. Có offer backend chung ≥12tr không bond → **nhận**. Đó là thắng |
+| Spring Boot quay lại | 40h Lõi ở P4, sau raw socket + Ktor + Postgres. 40% JD ghi Spring, gần 100% JD Java. Repo Spring ghim #1 trên GitHub |
+| ARENA realtime là lát mỏng nhưng thật | 40h ở P3, không bao giờ xuống 0. Đủ để trả lời 5 câu netcode bằng số của chính mình — không hơn, và đó là cố ý |
+| Ba trục nền tảng là 84h đan vào P1–P4, không phải phase riêng | [Nền tảng hệ thống](/nen-tang-he-thong) 32h · [Android core](/android-core) **+22h** (8h cũ → 30h) · [Backend core](/backend-core) 30h — cộng đúng 32 + 22 + 30 = 84h. Nguyên tắc chia: cái gì quyết định được nhận thì ở Lõi, cái gì làm thành senior thì học tiếp khi đi làm — 144h phần senior của ba trục đã đẩy sang [Mở rộng](/mo-rong) theo đúng nguyên tắc đó (trang đó tổng 363h = 219h danh mục gốc + 144h) |
+
+Thang 12 bậc dự án, thứ tự cắt 8 bậc, sàn không bao giờ cắt, các điểm quyết định DP0–DP8 → [Roadmap 26 tháng](/roadmap).
 
 ---
 
@@ -59,48 +78,65 @@ Thang 11 project, tỷ lệ giờ từng trục, bản đồ điểm bỏ cuộc
 
 Hợp đồng giữa bạn và tôi, năm dòng:
 
-- **Tôi là mentor / examiner / reviewer — không bao giờ là author.** Suốt Phase 0 tôi không gõ một dòng code nào vào project của bạn. Tuyệt đối, không ngoại lệ, kể cả khi bạn nài nỉ.
-- **Socratic là mặc định.** Bạn hỏi một khái niệm, tôi hỏi ngược 1–2 câu định hướng trước. Bí tiếp thì tôi chỉ *vùng* vấn đề và section docs cần đọc, không chỉ thẳng dòng lỗi.
-- **Luật 30 phút vật lộn.** Tôi từ chối debug hộ cho tới khi bạn trình ra ba thứ trong `notes/ERRORS.md`: giả thuyết của bạn, hai thí nghiệm đã thử, kết quả quan sát được của từng thí nghiệm.
-- **Explain-back bắt buộc.** Tôi giải thích xong, bạn nói lại bằng lời của bạn, rồi tôi hỏi xoáy hai tầng "tại sao". Code review của tôi trả về câu hỏi kèm nhãn `[BLOCKER]` / `[SHOULD]` / `[NIT]`, không trả về bản sửa.
-- **Friday Rebuild mỗi tối thứ Sáu, 30 phút.** Tôi chọn ngẫu nhiên một hàm bạn viết trong tuần; bạn xoá khỏi màn hình và viết lại từ trí nhớ. Viết lại được trong 15 phút = tuần đó kiến thức là của bạn. Không viết lại được = tuần đó bạn đã "mượn" nhiều hơn "học".
+- **Tôi là mentor / examiner / reviewer — không bao giờ là author.** Suốt Phase 0 tôi không gõ một dòng code nào vào project của bạn. Và có một **vùng AI-free suốt 26 tháng**: vòng tick, serialize/deserialize gói tin, session/connection, mọi thứ chạm `Mutex`/`Channel`/`Atomic`/shared state, reconnect và state sync. Ở đó tôi không đưa cả pseudo-code — chỉ tên khái niệm, link docs, câu hỏi.
+- **Socratic là mặc định.** Bạn hỏi một khái niệm, tôi hỏi ngược 1–2 câu định hướng trước. Bí tiếp thì tôi chỉ *vùng* vấn đề và section docs cần đọc, không chỉ thẳng dòng lỗi. Bug concurrency: tôi không nêu giả thuyết, chỉ hỏi "cái gì có thể chạy đồng thời với dòng này?"
+- **Luật 30 phút vật lộn.** Tôi từ chối debug hộ cho tới khi bạn trình ra ba thứ trong `notes/ERRORS.md`: giả thuyết của bạn, hai thí nghiệm đã thử, kết quả quan sát được của từng thí nghiệm. Riêng câu hỏi **hiệu năng**: vé vào cửa là một phép đo. Không có số thì chưa có câu hỏi.
+- **Explain-back bắt buộc.** Tôi giải thích xong, bạn nói lại bằng lời của bạn, rồi tôi hỏi xoáy hai tầng "tại sao". Code review của tôi trả về câu hỏi kèm nhãn `[BLOCKER]` / `[SHOULD]` / `[NIT]`, không trả về bản sửa. Trả lời bằng tên thư viện = trượt.
+- **Blank-file test, 2 tuần một lần, 45 phút — bật từ W6.** Tôi chọn ngẫu nhiên một thành phần bạn đã viết; bạn viết lại từ file trống, không internet, không AI. Commit nguyên trạng — kể cả không compile — vào `rebuild/<ngày>-<tên>.kt` kèm diff so bản gốc. Fail 2 lượt liên tiếp → chế độ sửa chữa. Không còn Friday Rebuild.
 
-Thêm một luật hạ tầng: **AI autocomplete và Copilot trong IDE phải tắt hoàn toàn suốt Phase 0.**
+Hợp đồng chỉ đắt ở đúng chỗ. **Máy của bạn** — JDK, Gradle wrapper, SSH/PAT GitHub, wizard IDE — không phải nội dung học: tôi hướng dẫn từng bước, đọc log hộ, toàn phần. Thêm một luật hạ tầng: AI autocomplete và Copilot trong IDE tắt hoàn toàn suốt Phase 0.
 
-Bộ luật đầy đủ, nhịp một buổi tối 10/70/30/10, tỷ lệ 30% đọc : 70% gõ, chỉ báo cảnh báo sớm và ngưỡng hành động → [Hệ thống học & luật AI](/he-thong-hoc).
+Bộ luật đầy đủ — 5 luật gốc cộng 6 luật bản server, nhịp một buổi tối 10/70/30/10, ba nghi thức bật dần, bảng tuần và ngưỡng báo động → [Hệ thống học & luật AI](/he-thong-hoc).
 
 ---
 
-## 🛠️ Việc cần làm Tuần 0
+## 🏁 Ngày 1 — 90 phút
 
-Chín việc. Xong hết mới được tính là bước vào tuần 1. Tick bằng cách sửa file này rồi commit — mỗi lần tick là một commit, và commit chính là bằng chứng.
+Không còn Tuần 0. Không còn bài test đầu vào. Không còn checklist chặn đường. Một việc duy nhất:
 
-- [ ] Đọc hết [Roadmap 24 tháng](/roadmap) và [Hệ thống học & luật AI](/he-thong-hoc) — không skim, đọc để trả lời được "vì sao backend đặt ở tháng 15"
-- [ ] Làm bài test đầu vào trong repo học (`progress/assessments/test-dau-vao.md`): 12 câu, ~2h, **không AI, không Google**. Ghi điểm để chốt Phase 0 dài 8, 10 hay 12 tuần
-- [ ] Cài IntelliJ IDEA Community + JDK 21+. Chạy được "Hello World" **từ terminal**, không phải từ nút Run của IDE
-- [ ] **Tắt hoàn toàn AI autocomplete/Copilot trong IDE** — chụp màn hình settings làm bằng chứng, lưu vào repo
-- [ ] Tạo tài khoản GitHub với ảnh và bio tử tế; tạo repo `kotlin-mastery` (có thể private) và repo cho Project 1 (public từ ngày đầu)
-- [ ] Chốt khung giờ học cố định (đề xuất 20:00–22:00) kèm hard stop, và **báo với gia đình** để không phải thương lượng lại mỗi tối
-- [ ] Cài Anki, tạo deck `kotlin` — deck rỗng cũng được, quan trọng là tồn tại trước buổi học đầu tiên
-- [ ] Viết journal entry đầu tiên vào `progress/journal/2026-08.md`, kết thúc bằng dòng `NEXT:` có tên file và hành động cụ thể
-- [ ] Đặt lịch weekly review đầu tiên vào **Chủ nhật này**, block 1.5h trong calendar
+**Thứ Hai 07/09/2026, 20:00.** Mở IntelliJ IDEA Community. Tạo một project Kotlin/JVM. Viết một file `main.kt` chạy được. Tạo repo **public** trên GitHub. Một commit. Một tag `v0.0.1`. Đóng máy.
+
+```kotlin
+fun main() {
+    println("W1 - 07/09/2026")
+}
+```
+
+Cụ thể:
+
+| Có | Không |
+|---|---|
+| IntelliJ, JDK, một file `main.kt` in ra được một dòng | Gradle — project mặc định của IntelliJ là đủ. Chuyển sang Gradle + JUnit5 có slot riêng ở **W3, 1h**, AI hướng dẫn toàn phần |
+| Repo public, một commit, tag `v0.0.1` | Đọc bất kỳ trang nào của site trước khi gõ |
+| AI gỡ rối cài đặt máy **toàn phần**: JDK sai đường dẫn, SSH key, PAT GitHub | README, test, journal, bảng tuần — không nghi thức nào tồn tại trước tag |
+| Hết 90 phút thì dừng, kể cả chưa xong | Báo gia đình, block calendar, chụp màn hình settings, dựng bất kỳ sổ sách nào — tất cả bật sau tag |
+
+**Vì sao chỉ có thế.** 27 ô checklist cũ chính là nguyên nhân 5 tuần ở 0h. Mỗi ô là một lý do hợp lệ để chưa mở IntelliJ hôm nay: "chưa đọc xong roadmap", "chưa làm test", "chưa báo gia đình". Người chưa ghi được giờ nào không cần một hệ thống hoàn hảo — cần một commit. Mọi thứ bật dần **sau** tag: journal 3 dòng từ W1, bảng tuần từ W3, người chứng kiến từ W4, blank-file từ W6.
+
+**Hạn: tag `v0.0.1` phải tồn tại trước 21/09/2026** (DP0, ≤14 ngày). Chưa có → trang duy nhất còn mở là mục này. Thử lại tối hôm sau. Không có câu "vấn đề nằm ở bạn".
 
 ---
 
 ## 📚 Đọc gì trước
 
+Không có gì phải đọc trước tag `v0.0.1`. Bảng này dành cho buổi thứ hai trở đi.
+
 | Trang | Mở khi nào |
 |---|---|
-| [Roadmap 24 tháng](/roadmap) | Ngay hôm nay. Sáu phase, thang 11 project, những gì đã bị cắt và vì sao |
-| [Hệ thống học & luật AI](/he-thong-hoc) | Ngay hôm nay, đọc cùng roadmap. Nhịp học, luật AI đầy đủ, cách đo tiến độ |
-| [Phase 0 — Nền móng](/phase-0) | Sau khi chấm xong bài test đầu vào. Đây là trang bạn sống cùng 10–12 tuần tới |
-| [Tiến độ](/progress) | Cuối mỗi buổi và mỗi Chủ nhật. Số liệu, benchmark, kết quả Friday Rebuild |
-| [Phase 1](/phase-1) | Khoá. Chỉ mở khi tốt nghiệp Phase 0 đạt ≥8/10 mục, trong đó mục 1–4 bắt buộc |
+| [Nghề backend game](/nghe-backend-game) | Buổi thứ hai, 20 phút. Hai nhánh của nghề, vì sao nhắm nhánh Platform/Services. Đọc tới hết mục Stack rồi **dừng** — chuỗi xác suất ở cuối trang để dành cho DP2 và DP5 |
+| [Roadmap 26 tháng](/roadmap) | Tuần 1, sau tag. Sáu phase, thang 12 bậc, thứ tự cắt, sàn không bao giờ cắt, DP0–DP8 |
+| [Hệ thống học & luật AI](/he-thong-hoc) | Tuần 1, đọc cùng roadmap. Nhịp buổi, 5 luật AI gốc + 6 luật bản server, ba nghi thức, bảng tuần |
+| [Phase 0 — Kotlin viết được](/phase-0) | Từ buổi thứ hai. Trang bạn sống cùng 14 tuần tới; từ đó mở [bảng tốt nghiệp 10 tiêu chí](/phase-0/tot-nghiep) |
+| [Tiến độ](/progress) | Cuối mỗi buổi (journal 3 dòng) và mỗi Chủ nhật từ W3 (bảng tuần) |
+| [Phase 1](/phase-1) | Khoá. Chỉ mở khi qua DP2 cuối W14: bảng tốt nghiệp P0 ≥8/10, mục 1–5 bắt buộc |
+| [Nền tảng hệ thống](/nen-tang-he-thong) · [Android core](/android-core) · [Backend core](/backend-core) | Khoá trong Phase 0. Mở lần đầu ở P1 (hệ thống, backend) và P2 (Android) |
 
 ---
 
 ## → Tiếp theo
 
-Việc kế tiếp của bạn không phải là học Kotlin. Là **làm bài test đầu vào** — vì mọi thứ trong Phase 0 được cá nhân hoá theo điểm số đó, và làm sau khi đã học một tuần thì con số mất hết ý nghĩa.
+Việc kế tiếp của bạn không phải là đọc. Không phải roadmap, không phải luật AI, không phải Phase 0.
 
-Xong test, mở [Phase 0 — Nền móng](/phase-0) và chốt lịch 12 tuần của bạn.
+Là **tag `v0.0.1`** — Thứ Hai 07/09/2026, 20:00, 90 phút, một file `main.kt` chạy được, một repo public, một commit. Không có commit đó thì toàn bộ tài liệu này là 0h.
+
+Tag xong, mở [Phase 0](/phase-0) và bắt đầu W1.

@@ -1,0 +1,329 @@
+# Lịch 14 tuần — Phase 0
+
+Trang điều hướng hằng ngày của Phase 0: mở đầu mỗi buổi để biết tuần này phải xong gì, xong việc nào thì sửa `- [ ]` thành `- [x]` rồi commit — mỗi lần tick là một commit, và commit là bằng chứng. Lý thuyết, đề bài và quy trình chi tiết nằm ở các trang được link; trang này chỉ trả lời một câu hỏi: **hôm nay làm gì**.
+
+---
+
+## 📦 Bảng 14 tuần (+ W15 buffer)
+
+Phase 0 chạy từ **Thứ Hai 07/09/2026 (W1)** đến hết **20/12/2026 (W15)**. Tổng **116h** = 97h nội dung + 15h nghi thức + 4h dự phòng. Cột giờ module của P0 là ramp 6/8/10 = 116h; buổi CN 30' (W3–14, 6h) nằm **ngoài** cột này — giờ đồng hồ thật của P0 là 122h. 15h nghi thức tách ra: 9h trong buổi (journal + blank-file) + 6h CN ngoài buổi:
+
+| Bậc | Tuần | Giờ/tuần | Tổng của bậc | Cổng để lên bậc |
+|---|---|---|---|---|
+| **6h** | W1–4 | 6 | 24h | — |
+| **8h** | W5–8 | 8 | 32h | DP1a cuối W4 |
+| **10h** | W9–14 | 10 | 60h | DP1b cuối W8 |
+
+Vượt bậc bị **cấm**. Bạn đạt DP1a sớm cũng không nhảy lên 8h ở W3.
+
+| Tuần | Bắt đầu | Trọng tâm | Bậc giờ | Trang liên quan |
+|---|---|---|---|---|
+| 1 | 07/09 | Ngày 1 (0.1) · git CLI · Kotlin 4.1–4.2 · journal 3 dòng bật | 6 | [Tổng quan Phase 0](/phase-0) · [Kotlin Core I](/phase-0/kotlin-core-1) |
+| 2 | 14/09 | 4.2 xong · buổi debugger 2h · Bug Hunt #1 · Docs Quest bắt đầu · hạn DP0 21/09 | 6 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Meta-skills](/phase-0/meta-skills) |
+| 3 | 21/09 | 4.3 Null-safety · chuyển project sang Gradle + JUnit5 (1h, việc máy) · Error Zoo bắt đầu · **bảng tuần bật** | 6 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Bài tập](/phase-0/bai-tap) |
+| 4 | 28/09 | 4.3 xong → 4.4 · test 3 tầng · người chứng kiến · **DP1a** | 6 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Meta-skills](/phase-0/meta-skills) |
+| 5 | 05/10 | 4.4 xong → 4.5 · Git Disaster Recovery 1,5h · T5 READ bật · Docs Quest câu cuối | 8 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Meta-skills](/phase-0/meta-skills) |
+| 6 | 12/10 | 4.5 Collections xong · Error Zoo 10/10 · Tier 1 5/5 · **blank-file #1** | 8 | [Kotlin Core I](/phase-0/kotlin-core-1) · [Bài tập](/phase-0/bai-tap) |
+| 7 | 19/10 | 4.6 Functions nâng cao (6h) · **Tier 2** "đọc log trận → `groupBy`" (2h, trọn T7) · thêm `ktlint` vào project | 8 | [Kotlin Core II](/phase-0/kotlin-core-2) · [Bài tập](/phase-0/bai-tap) · [Meta-skills](/phase-0/meta-skills) |
+| 8 | 26/10 | 0.7 Byte, bit & số (5h) · 4.7 Generics + `Result` (2,25h — phần đọc 45' đã làm ở W6) · **blank-file #2** · **DP1b** — không xếp gì thêm | 8 | [Byte, bit & số](/phase-0/byte-bit-so) · [Kotlin Core II](/phase-0/kotlin-core-2) |
+| 9 | 02/11 | 4.8 Interface + composition (2h) · 0.5 Concurrency nhập môn (8h) | 10 | [Kotlin Core II](/phase-0/kotlin-core-2) · [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) |
+| 10 | 09/11 | 0.6 Game loop & state machine · Project 1 bắt đầu · **blank-file #3** | 10 | [Game loop](/phase-0/game-loop-co-ban) · [Hai project CLI](/phase-0/projects) |
+| 11 | 16/11 | Project 1 "Túi đồ & Ví CLI" tag `v1.0` · Bug Hunt #2 (90', buổi BUILD T4) · tách `caro-engine` thành module Gradle riêng (45', mẫu 3 lỗi) | 10 | [Hai project CLI](/phase-0/projects) · [Bài tập](/phase-0/bai-tap) |
+| 12 | 23/11 | `caro-engine`: bàn cờ, luật, win-check · decomposition drill #1 (30', chỉ nộp bản phân rã) · **blank-file #4** | 10 | [Hai project CLI](/phase-0/projects) · [Bài tập](/phase-0/bai-tap) |
+| 13 | 30/11 | `caro-engine` xong: replay, seed · `caro-cli` bắt đầu · trang tĩnh "thế cờ hôm nay" lên Vercel (1,5h, trong 20h Project 2) · thử thách tự học thư viện 2h · decomposition drill #2 (30') | 10 | [Hai project CLI](/phase-0/projects) · [Bài tập](/phase-0/bai-tap) · [Meta-skills](/phase-0/meta-skills) |
+| 14 | 07/12 | `caro-cli` tag `v1.0` · 3 kata bấm giờ · **blank-file #5** · Examiner + vấn đáp (một phiên 1,5h) · **DP2** · mốc ngoài #1: JSON thật lên trang, gửi 3 người — **AI-free khi build, 3 phiên ngoại lệ có tên** | 10 | [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) · [Hai project CLI](/phase-0/projects) |
+| 15 | 14/12 | **Buffer.** Không xếp nội dung. Chỉ dùng khi trượt | — | [Tiến độ](/progress) |
+
+**Đây là định hướng, không phải hợp đồng.** Một module tràn sang tuần sau là chuyện bình thường — bảng tuần ghi lại, W15 hấp thụ. Thứ không xê dịch: ba cổng DP1a/DP1b/DP2, năm lần blank-file (W6/8/10/12/14), và hai tag `v1.0`.
+
+**Cộng giờ module theo tuần** — bằng chứng cho luật "vượt bậc bị cấm". Cột này đếm giờ module — tức 97h nội dung cộng 4h dự phòng. Kata Tier 1, Error Zoo và warm-up **không có dòng riêng**: chúng nằm trong giờ của module 0.3, chi phí đồng hồ bằng 0. Bậc là trần của cột này. CN 30' nằm ngoài buổi, ngoài bậc; blank-file 45' nằm **trong** buổi T5 (bậc 6h: 45' đầu T7), nên ở tuần chẵn W6/8/10/12/14 trần thật của giờ module là bậc trừ 45' — cả hai đều thuộc 15h nghi thức, không đếm vào cột này. Việc máy (chuyển Gradle W3, tách module W11) cũng không đếm vào 97h nhưng vẫn phải nằm dưới bậc. Cách chia một module qua hai tuần (4.3, 4.4, 4.5, hai project) là ước lượng — bảng tuần Chủ nhật ghi số thật:
+
+| Tuần | Bậc | Giờ module | Cộng từ |
+|---|---|---|---|
+| 1 | 6h | 5h | 0.1 2h · 4.1 1h · 4.2 2h |
+| 2 | 6h | 5h | 4.2 1h · buổi debugger 2h · Bug Hunt #1 1,5h · Docs Quest 30' |
+| 3 | 6h | 3,5h | 4.3 3h · Docs Quest 30' *(+1h chuyển Gradle + JUnit5 — việc máy, không đếm; tuần 4,5h)* |
+| 4 | 6h | 4,5h | 4.3 2h · 4.4 2h · Docs Quest 30' |
+| 5 | 8h | 7,5h | 4.4 3h · 4.5 2h · Git Disaster Recovery 1,5h · Đọc số đo 30' · Docs Quest 30' |
+| 6 | 8h | 4,75h | 4.5 4h · 4.7 phần đọc generics 45' (kéo lên từ W8) — tuần thưa để 4.5 tràn từ W5; trần sau blank-file #1 là 7,25h |
+| 7 | 8h | **8h** | 4.6 6h · Tier 2 2h — **khít bậc** |
+| 8 | 8h | **7,25h** | 0.7 5h · 4.7 2,25h — **khít bậc sau khi trừ blank-file #2** (8h − 45') |
+| 9 | 10h | **10h** | 4.8 2h · 0.5 8h — **khít bậc** |
+| 10 | 10h | 9h | 0.6 4h · Project 1 5h |
+| 11 | 10h | 8,5h | Project 1 7h · Bug Hunt #2 1,5h *(+45' tách module Gradle — việc máy, không đếm; tuần 9,25h)* |
+| 12 | 10h | **9,25h** | Project 2 8,75h · drill #1 30' — **khít bậc sau khi trừ blank-file #4** (10h − 45') |
+| 13 | 10h | 9,5h | Project 2 7h · thử thách thư viện 2h · drill #2 30' |
+| 14 | 10h | **9,25h** | Project 2 4,25h · 0.10 5h — **khít bậc sau khi trừ blank-file #5** (10h − 45') |
+| | | **101h** | = 97h nội dung + 4h dự phòng (Tier 2 2h · thử thách thư viện 2h). Không tuần nào vượt bậc, kể cả sau khi trừ blank-file ở tuần chẵn |
+
+Năm tuần khít bậc: W7 và W9 khít đúng bậc; W8, W12 và W14 khít bậc sau khi trừ blank-file 45' — năm tuần đó không có chỗ tràn: tràn thì lấy W15, không lấy thêm buổi. Ngân sách 4h dự phòng nằm ở bảng module của [Tổng quan Phase 0](/phase-0); trang này chỉ kiểm bậc tuần.
+
+| Cổng | Khi | Câu hỏi | Dữ liệu — hiện vật, không tự khai | Không đạt thì |
+|---|---|---|---|---|
+| **DP0** | 21/09/2026 | Có kích hoạt được không? | Tag `v0.0.1` tồn tại trên GitHub | Trang duy nhất còn mở là Ngày 1 (90'). Thử lại |
+| **DP1a** | Cuối W4 | 6h → 8h? | ≥3/4 tuần W1–4 có ≥3 buổi deep-work trọn 70' (journal có commit cùng ngày; Ngày 1 đếm là 1 buổi). Rơi 1 buổi trong 4 tuần vẫn đạt — đúng luật 90% | Giữ 6h |
+| **DP1b** | Cuối W8 | 8h → 10h? | ≥3/4 tuần W5–8 có ≥4 khối deep-work trọn 70' — T7 3h đếm là 2 khối, T5 1h không đếm (bậc 8h có tối đa 4 khối: T2, T4, T7×2) | Giữ 8h |
+| **DP2** | Cuối W14 | Mở P1? | Bảng tốt nghiệp ≥8/10, mục 1–5 bắt buộc — [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) | Kéo P0 ≤4 tuần |
+
+## ⚠️ Nếu bạn không lên được bậc giờ
+
+Không còn bài test đầu vào. Độ dài Phase 0 không do điểm số quyết định — nó do **số buổi deep-work bạn thật sự ngồi** quyết định.
+
+**Sự thật:** ramp là cổng, không phải mục tiêu. Trượt DP1a nghĩa là bạn giữ 6h thêm 4 tuần nữa, rồi đo lại. Trượt DP1b nghĩa là giữ 8h. Không có "cố gắng hơn" — có hiện vật thì lên, không có thì ở lại.
+
+| Tình huống | Xử lý | Lấy tuần từ đâu |
+|---|---|---|
+| Trượt DP1a (cuối W4) | W5–8 vẫn chạy bậc 6h; đo lại DP1a ở cuối W8. Blank-file W6/W8 vẫn chạy — bậc 6h không có T5 nên nó chiếm 45' đầu buổi T7 | Nội dung trôi chậm hơn, W15 hấp thụ trước |
+| Trượt DP1b (cuối W8) | W9–14 chạy bậc 8h | P0 kéo **tối đa 4 tuần**: W15 + 2 tuần buffer đời sống của P1 + 1 tuần lấy từ 5 tuần buffer của P2 (P1 chỉ có 2 tuần đời sống — 2 tuần còn lại là Tết W22–23, không dời được) |
+| Trượt DP2 (cuối W14) | Kéo P0 ≤4 tuần để đóng đủ mục 1–5 bảng tốt nghiệp | Cùng nguồn trên; trang mở rộng khoá cả năm |
+| Hết 4 tuần kéo mà vẫn thiếu | Áp thứ tự cắt ở [Roadmap](/roadmap), ghi một dòng vào `notes/ADR.md` | Không kéo qua mốc lịch dương của P1 |
+
+**Con số của ba kịch bản** — tính từ bảng cộng giờ module ở trên (101h), trần mỗi tuần là bậc trừ blank-file 45' ở tuần chẵn:
+
+| Kịch bản | Giờ module đến hết W14 | Thiếu so với 101h | Bù bằng | Cắt độ rộng trước, theo thứ tự |
+|---|---|---|---|---|
+| Chuẩn: 8h từ W5, 10h từ W9 | 101h | 0 | — | Không cắt |
+| Trượt DP1b: 8h từ W9 đến W14 | ≈91h | ≈10h | W15 (8h) + kéo ≤1 tuần | Project 2 bỏ "2 người cùng máy" · Project 1 bỏ lưu file |
+| Trượt DP1a hai lần: 6h suốt phase | ≈74h | ≈27h | W15 (6h) + 4 tuần kéo (24h) = 30h — vừa đủ, không có dư | 4.5 còn 2 bài · Project 1 bỏ lưu file · Project 2 bỏ "2 người cùng máy" |
+
+Cách tính: W1–4 chứa 18h như kế hoạch. Bậc 6h ở W5–8 chứa 24h − 1,5h blank-file = 22,5h thay vì 27,5h kế hoạch; bậc 6h ở W9–14 chứa 36h − 2,25h = 33,75h thay vì 55,5h; bậc 8h ở W9–14 chứa 48h − 2,25h = 45,75h. Kịch bản 6h-suốt vừa khít 30h dự phòng — nghĩa là bạn phải cắt độ rộng ngay từ W9, không đợi W15.
+
+**Cấm bỏ trong mọi tình huống — kể cả khi ở lại bậc 6h suốt phase:**
+
+- Tag `v0.0.1` ≤14 ngày
+- Hai repo tag `v1.0` với `./gradlew test` xanh trên máy trắng
+- `caro-engine` seed + log → cùng bàn cờ 100/100 có test
+- Blank-file ≥3/5, lần W14 **phải** pass
+- Trang tĩnh "thế cờ hôm nay" public, đã gửi 3 người
+
+Ở lại bậc thấp thì cắt **độ rộng** (số bài, số case) của module đang chạy, không cắt **ngưỡng**.
+
+## Chi tiết từng tuần
+
+Mỗi tuần: mục tiêu một câu → việc phải xong (tick vào file này rồi commit) → bằng chứng cuối tuần. Đề bài luôn nằm ở trang được link, không nằm ở đây.
+
+### Tuần 1 — Ngày 1 và tag đầu tiên
+
+Mục tiêu: **90 phút tối Thứ Hai 07/09** có một file Kotlin chạy từ IntelliJ, một repo public, một commit, một tag. Không có commit đó thì cả lộ trình này là 0h.
+
+- [ ] **Ngày 1 (module 0.1, 90')**: cài IntelliJ IDEA Community + JDK 21+, `main.kt` chạy được, repo public, 1 commit, tag `v0.0.1`. Không Gradle, không đọc gì trước, không test. AI được phép gỡ rối cài đặt máy toàn phần — [Tổng quan Phase 0](/phase-0)
+- [ ] Tắt hoàn toàn AI autocomplete/Copilot trong IDE — luật ở [Hệ thống học](/he-thong-hoc)
+- [ ] Git **CLI** (cấm GUI): `init` · `add` · `commit` · `push` · `log` · `diff` — commit mỗi buổi từ hôm nay — [Meta-skills](/phase-0/meta-skills)
+- [ ] Module 4.1 (1h): "Kotlin khác Java chỗ nào" — không làm lại phần setup — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Bắt đầu module 4.2: `val`/`var`, kiểu, hàm — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Journal 3 dòng `DID:` / `NEXT:` / `AI:` cuối mỗi buổi, bắt đầu từ buổi ngay sau tag
+
+**Bằng chứng cuối tuần:** tag `v0.0.1` nhìn thấy trên GitHub · ≥3 buổi có commit.
+
+### Tuần 2 — Kotlin cơ bản và debugger
+
+Mục tiêu: xong 4.2 và chuyển từ `println` sang breakpoint trước khi gặp bug thật.
+
+- [ ] Hoàn thành module 4.2 + bài tự kiểm cuối module — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] **Buổi debugger 2h — trọn buổi T2 INPUT**: breakpoint, Step Over/Into/Out, Watch, conditional breakpoint; quy trình debug 6 bước — [Meta-skills](/phase-0/meta-skills)
+- [ ] **Bug Hunt Kata #1 — 90', buổi T7 LONG BUILD, sau buổi debugger, không chen vào buổi đó**: 5 bug giấu sẵn, **cấm println, chỉ dùng debugger**, ghi giả thuyết trước khi sửa — ____/5 trong ____ phút. Đề bị ràng buộc theo đúng những gì bạn đã học đến W2: ≤60 dòng, chỉ `Int`/`Long`/`String`/`Boolean`, hàm, `if`/`when`/`for`-range — không collection, không nullable, không `data class` — [Bài tập](/phase-0/bai-tap)
+- [ ] Kata Tier 1 bài #1 (30', mở đầu buổi T7 LONG BUILD trước Bug Hunt; từ W3 vẫn mở đầu T7 — T4 đã có warm-up và Docs Quest, không nhét thêm — không phải giờ thêm) — [Bài tập](/phase-0/bai-tap)
+- [ ] Docs Quest câu tuần 2 (30–45', mở đầu buổi BUILD T4, nằm trong 10h của module 0.2 — không phải giờ thêm) — [Bài tập](/phase-0/bai-tap)
+- [ ] Warm-up 10' đầu T2 và T4: 3 câu tự kiểm của buổi trước
+
+**Bằng chứng cuối tuần:** **DP0 — 21/09/2026**: tag `v0.0.1` tồn tại. Chưa có → mọi trang khác tự đóng, chỉ còn Ngày 1.
+
+### Tuần 3 — Null-safety, Error Zoo, bảng tuần
+
+Mục tiêu: hết sợ màn hình đỏ — đọc stack trace theo 4 bước và bắt đầu công khai tiến độ.
+
+- [ ] Module 4.3 Null-safety (5h, kéo sang W4) — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] **Chuyển project sang Gradle + JUnit5** (1h, việc máy của bạn — AI hướng dẫn toàn phần theo Luật 7; chỉ JUnit5, không Kotest): `gradlew`, plugin Kotlin, `useJUnitPlatform()`, một test chạy xanh từ terminal. Không đếm vào 97h, vẫn nằm dưới bậc 6h — tuần này 4,5h
+- [ ] Nhờ AI soạn 10 chương trình lỗi cài sẵn cho Error Zoo *(đây là cách dùng AI đúng luật)*; thuần hoá 20'/buổi từ W3 đến W6, mỗi con 3 dòng vào `notes/ERRORS.md` — [Bài tập](/phase-0/bai-tap)
+- [ ] Áp quy trình đọc lỗi 4 bước cho **mọi** lỗi trong tuần — [Meta-skills](/phase-0/meta-skills)
+- [ ] **Bảng tuần bật**: CN 30' điền bảng vào `PROGRESS.md` trong repo public + 1 dòng mục tiêu tuần tới — mẫu ở [Hệ thống học](/he-thong-hoc)
+- [ ] Kata Tier 1 bài #2
+- [ ] Docs Quest câu tuần 3 (30–45') — [Bài tập](/phase-0/bai-tap)
+
+**Bằng chứng cuối tuần:** `PROGRESS.md` có dòng bảng tuần đầu tiên · `notes/ERRORS.md` có ≥3 entry.
+
+### Tuần 4 — Modeling, test 3 tầng, người chứng kiến, DP1a
+
+Mục tiêu: model được trận đấu bằng `sealed class`, viết test có chủ đích, và có người ngoài nhìn thấy bảng tuần của bạn.
+
+- [ ] Hoàn thành 4.3: bài refactor không còn chỗ nào dùng `!!` — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] Bắt đầu module 4.4: `data class` + `sealed class` `Waiting/Playing/Finished/Abandoned` + `when` — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] **Test 3 tầng** (happy/edge/error) bằng JUnit5 (đã cài ở W3). Luật từ nay: mọi hàm logic thuần có ≥1 test — [Meta-skills](/phase-0/meta-skills)
+- [ ] Gửi link bảng tuần cho **bất kỳ ai** — người cố định là mục tiêu, không phải điều kiện. Im 3 tuần → đổi người; không có ai → đăng công khai. Không phải tiêu chí tốt nghiệp — tiêu chí 9 đếm dòng bảng tuần trong `PROGRESS.md`, không đếm người xác nhận
+- [ ] Error Zoo tiếp, kata Tier 1 bài #3
+- [ ] Docs Quest câu tuần 4 (30–45') — kết quả dùng ngay cho bài Tier 2 ở W7 — [Bài tập](/phase-0/bai-tap)
+- [ ] **DP1a**: đếm journal W1–4 — số tuần có ≥3 buổi deep-work trọn 70' (Ngày 1 đếm là 1 buổi): ____/4, cần ≥3
+
+**Bằng chứng cuối tuần:** DP1a đạt → W5 lên bậc 8h. Không đạt → giữ 6h, không có bàn cãi.
+
+### Tuần 5 — Collections và Git Disaster Recovery
+
+Mục tiêu: xong modeling, vào module nặng nhất của Kotlin core, và tự thoát được mọi tai nạn git.
+
+- [ ] Hoàn thành 4.4 + bài tự kiểm: nhận mô tả nghiệp vụ 5 câu, model trong 15 phút — thực tế: ____ phút
+- [ ] Bắt đầu 4.5 Collections (6h): bài log trận, bảng loot. **Không còn luật "mỗi bài hai lần"** — đi thẳng vào operators — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] **Git Disaster Recovery 1,5h**: tự thoát 5 kịch bản (commit nhầm, amend, revert vs reset, conflict, reflog) — [Meta-skills](/phase-0/meta-skills)
+- [ ] Mục 7 Meta-skills "Đọc số đo" 30': percentile, vì sao trung bình nói dối — [Meta-skills](/phase-0/meta-skills)
+- [ ] **T5 READ 1h bật**: đọc lại source của lớp bạn đã tự viết xong tuần trước
+- [ ] 30': kiểm tra thẻ thanh toán quốc tế — không có thẻ là blocker im lặng phổ biến nhất khi VPS xuất hiện ở P1
+- [ ] Error Zoo tiếp, kata Tier 1 bài #4 — FizzBuzz biến thể, **lần đo 1 của bảng benchmark 1** ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep): bấm giờ, ghi số
+- [ ] Docs Quest câu tuần 5 — câu cố định cuối cùng; từ đây gặp hàm lạ thì tự ra đề theo công thức ở [Bài tập](/phase-0/bai-tap), không còn lịch cố định
+
+**Bằng chứng cuối tuần:** đã thoát 5/5 kịch bản git · số khối deep-work trọn 70' tuần này: ____ (mục tiêu 4 ở bậc 8h — T2, T4, và T7 3h đếm là 2 khối).
+
+### Tuần 6 — Collections xong và blank-file #1
+
+Mục tiêu: đóng Kotlin Core I và lần đầu tự đo reading–writing gap bằng một file trống.
+
+- [ ] Hoàn thành 4.5 + bài tự kiểm module — [Kotlin Core I](/phase-0/kotlin-core-1)
+- [ ] **Blank-file #1** (45' đầu T5): AI chọn ngẫu nhiên 1 thành phần đã viết → viết lại từ file trống, không internet, không AI. Commit **nguyên trạng** (kể cả không compile) vào `rebuild/<ngày>-<tên>.kt` + diff so bản gốc, commit riêng — kết quả: pass / fail
+- [ ] Error Zoo **10/10**, `notes/ERRORS.md` đủ 10 entry
+- [ ] Kata Tier 1 bài #5 — đủ 5/5 — [Bài tập](/phase-0/bai-tap)
+- [ ] Phần đọc generics của 4.7 (45', kéo lên từ W8 vì W8 chỉ còn 7,25h sau blank-file #2): `List<T>`, `Map<K, V>`, bound — chỉ đọc-hiểu, không viết generic của mình — [Kotlin Core II](/phase-0/kotlin-core-2)
+
+**Bằng chứng cuối tuần:** commit trong `rebuild/` · Error Zoo 10/10 · Tier 1 5/5 — ba ngưỡng của module 0.3 đều có hiện vật.
+
+### Tuần 7 — Functions nâng cao và Tier 2
+
+Mục tiêu: đọc và viết được lambda/extension/DSL kiểu Ktor — thứ bạn sẽ gặp trong mọi file routing ở P1 — rồi dùng chính collections và extension đó cho bài Tier 2 duy nhất của phase. Cộng giờ: 4.6 (6h) + Tier 2 (2h) = **8h, khít bậc 8h** — không xếp gì thêm, không có chỗ tràn.
+
+- [ ] Module 4.6 (6h): lambda, higher-order, extension, scope function *(chỉ `let` và `apply`)*, 1 ví dụ Ktor routing DSL 30' — [Kotlin Core II](/phase-0/kotlin-core-2)
+- [ ] Bài refactor của 4.6: viết extension trên danh sách nước đi rồi dùng nó để refactor bài Collections "đọc log trận" của module 4.5 (W6) — test cũ vẫn xanh
+- [ ] Hai extension dùng lại được cho mọi project sau: `String.chuanHoaSdt()` và `Long.formatVnd()`, mỗi cái có test 3 tầng
+- [ ] Thêm `ktlint` vào project (15', nằm trong 6h của 4.6) — chạy lần đầu trên hai extension vừa viết — [Meta-skills](/phase-0/meta-skills)
+- [ ] **Tier 2** (1 bài, 2h, trọn buổi T7 LONG BUILD): CSV → log trận → `groupBy` → in báo cáo, dùng collections của 4.5 và extension của 4.6 — viết `BACKLOG.md` theo IOSTV **trước khi code**. Lỗi đọc file tạm xử lý bằng exception: W8 (4.7) refactor một hàm sang `Result`, W9 (4.8) tách phần đọc file ra sau interface — bài này là **nguyên liệu** của hai tuần sau, không phải cổng ra của module 0.4 (cổng ra là bài tự kiểm 4.8 ở W9). Bấm giờ: đây là **lần đo 1 của bảng benchmark 2** ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) — [Bài tập](/phase-0/bai-tap)
+- [ ] T5 READ: đọc lại lớp collections của W6
+
+**Bằng chứng cuối tuần:** commit refactor với test xanh · hai extension có test trong repo · Tier 2 pass có `BACKLOG.md` đứng trước commit code.
+
+### Tuần 8 — Byte/bit, Generics + `Result`, DP1b
+
+Mục tiêu: trả lời được "vàng lưu kiểu gì, tràn số ở đâu" trước khi làm Project 1, xử lý lỗi như dữ liệu, và đo cổng lên 10h. Cộng giờ: 0.7 (5h) + 4.7 (2,25h — phần đọc generics 45' đã làm ở W6) = **7,25h = bậc 8h trừ blank-file #2 45'** — khít, không xếp gì thêm vào W8. Blank-file #2 giữ 45' đầu T5 (giờ nghi thức, nằm trong buổi nhưng không đếm vào giờ module); DP1b là 10' đếm journal trong buổi CN. Tier 2 đã xong ở W7, Bug Hunt Kata #2 nằm ở W11.
+
+- [ ] Module 0.7 Byte, bit & số (5h — T2 INPUT 2h, T4 BUILD 2h, 1h đầu T7): `Int`/`Long` bù hai, tràn số, `shl/shr/ushr/and/or/xor`, hex, `ByteArray`, endian, `ByteBuffer` cơ bản — [Byte, bit & số](/phase-0/byte-bit-so)
+- [ ] Tự viết `encodeInt`/`decodeInt`, round-trip 100.000 giá trị ngẫu nhiên — số lỗi: ____ (phải = 0)
+- [ ] Module 4.7 (2,25h tuần này — 2h còn lại của T7 + 15' T5 sau blank-file #2; phần đọc generics 45' đã xong ở W6): exception, `Result` — refactor một hàm của bài Tier 2 (W7) đang ném exception thành trả `Result`, chỗ gọi xử lý cả hai nhánh — [Kotlin Core II](/phase-0/kotlin-core-2)
+- [ ] **Blank-file #2** (45' đầu T5) — commit `rebuild/`, kết quả: pass / fail
+- [ ] **DP1b**: đếm journal W5–8 — số tuần có ≥4 khối deep-work trọn 70' (T7 3h = 2 khối): ____/4, cần ≥3
+
+**Bằng chứng cuối tuần:** test round-trip 100k xanh trong repo · một hàm của Tier 2 trả `Result` với test cả hai nhánh · DP1b đạt → W9 lên bậc 10h (T3 BUILD xuất hiện). Không đạt → giữ 8h, P0 được kéo tối đa 4 tuần.
+
+### Tuần 9 — Composition và concurrency nhập môn
+
+Mục tiêu: nhìn tận mắt một lost update, rồi tự sửa nó — commit đỏ→xanh đầu tiên, tiền thân của G1.
+
+- [ ] Module 4.8 (2h): interface + composition — không kế thừa sâu — [Kotlin Core II](/phase-0/kotlin-core-2)
+- [ ] Module 0.5 (8h): thread, counter 4 thread lost update **thấy tận mắt**, `synchronized`/`AtomicInteger`, `suspend`/`launch`/`runBlocking`/cancel — [Concurrency nhập môn](/phase-0/concurrency-nhap-mon)
+- [ ] Commit 1: test race **đỏ** (counter lệch). Commit 2: test **xanh** sau khi sửa — hai commit riêng
+- [ ] Chỉ ghi nhớ tên Dispatchers / structured concurrency — học thật ở P1, không đào ở đây
+- [ ] Nguồn bắt buộc: *Java Concurrency in Practice* ch.2 mục 2.1–2.3 (≈8 trang) — 30' sau lab, ghi 3 dòng. Ch.3 để dành cho module 1.3 cùng ch.16, không đọc ở đây
+
+**Bằng chứng cuối tuần:** hai commit race đỏ→xanh — tiêu chí 6 bảng tốt nghiệp.
+
+### Tuần 10 — Game loop và Project 1 bắt đầu
+
+Mục tiêu: loop có `dt` chạy 10.000 tick không drift, và `BACKLOG.md` của Project 1 đứng trước dòng code đầu tiên.
+
+- [ ] Module 0.6 (4h): loop có `dt`, accumulator, state machine `sealed class`, `Random(seed)` — [Game loop & state machine](/phase-0/game-loop-co-ban)
+- [ ] Loop 10.000 tick in drift — drift đo được: ____ · cùng seed → cùng chuỗi, có test
+- [ ] Project 1 "Túi đồ & Ví CLI": đọc đề + 6 quyết định tự chọn, viết `BACKLOG.md` theo IOSTV **trước khi code** — [Hai project CLI](/phase-0/projects)
+- [ ] Walking skeleton chạy được ngay buổi đầu: menu in ra, chưa làm gì
+- [ ] **Blank-file #3** (45' đầu T5) — pass / fail
+
+**Bằng chứng cuối tuần:** commit `BACKLOG.md` đứng **trước** commit code đầu tiên trong `git log`.
+
+### Tuần 11 — Project 1 tag `v1.0`
+
+Mục tiêu: chuyển vật phẩm + vàng giữa 2 túi **nguyên tử** — fail giữa chừng không mất đồ — và chứng minh bằng 1.000 lần chuyển xen lỗi. Cộng giờ: Project 1 phần còn lại (7h) + Bug Hunt Kata #2 (1,5h) = 8,5h — 1,5h dư của bậc 10h: 45' cho việc tách module Gradle (việc máy, không đếm vào 97h), 45' còn lại là chỗ tràn tự nhiên của Project 1.
+
+- [ ] Thêm/xoá/stack vật phẩm, 2 túi, chuyển giữa 2 túi, lưu file — theo BACKLOG, mỗi feature một branch
+- [ ] Trả lời câu "vàng lưu kiểu gì, tràn số ở đâu" bằng kiến thức 0.7, ghi vào README
+- [ ] Test: 1.000 lần chuyển xen lỗi cố ý → tổng vàng bảo toàn — lệch: ____ (phải = 0)
+- [ ] Input ác: chữ vào ô số, số âm, file hỏng — không crash
+- [ ] **Bug Hunt Kata #2** (90', buổi BUILD T4, biến thể mới, không trùng đề W2): ____/5 bug · ____ phút — đo hiệu số so với W2 — [Bài tập](/phase-0/bai-tap)
+- [ ] **Tách `caro-engine` thành module Gradle riêng** (45', chuẩn bị cho W12): AI đưa `settings.gradle.kts` + `build.gradle.kts` mẫu có **3 lỗi cố ý** (Luật 7, dạng server config) — bạn tìm, sửa, giải thích từng lỗi trong commit message
+- [ ] DoD: ≥10 commit, ≥2 branch, README 5 mục, BACKLOG khoá, tag `v1.0`. **Không cần demo cho người ngoài**
+
+**Bằng chứng cuối tuần:** tag `v1.0` · `./gradlew test` xanh · tiêu chí 7 bảng tốt nghiệp có hiện vật.
+
+### Tuần 12 — `caro-engine`: bàn cờ, luật, win-check
+
+Mục tiêu: một module Gradle thuần Kotlin, 0 dependency, 0 I/O — thứ sẽ chạy trong server từ P1 tới hết tháng 26.
+
+- [ ] `caro-engine` đã là module Gradle riêng từ W11; xác nhận 0 dependency, 0 I/O — [Hai project CLI](/phase-0/projects)
+- [ ] Bàn 15×15; **luật chốt cứng: đúng 5 quân liên tiếp thắng, overline cũng thắng**. Ghi `notes/ADR.md` vì sao chọn bản dễ
+- [ ] State machine phiên bằng `sealed class` từ 4.4
+- [ ] Win-check: **20 case biên** có test (mép bàn, góc, chéo ngược, overline, bàn đầy)
+- [ ] Decomposition drill #1 "tách caro-engine thành module" (30') — chỉ nộp bản phân rã — [Bài tập](/phase-0/bai-tap)
+- [ ] **Blank-file #4** (45' đầu T5) — pass / fail
+- [ ] Không undo. Không HTTP. Không biến thể luật — ba thứ này đã bị cắt bằng dao, đừng nhặt lại
+
+**Bằng chứng cuối tuần:** 20 test win-check xanh · ADR có dòng luật.
+
+### Tuần 13 — `caro-engine` xong, `caro-cli` bắt đầu
+
+Mục tiêu: seed + log nước đi → cùng một bàn cờ 100/100 lần, có test — rồi bọc engine bằng một CLI có I/O. Cộng giờ: Project 2 phần tuần này (≈7h, trong đó trang tĩnh 1,5h) + thử thách tự học thư viện (2h) + drill (30') = **9,5h**, còn 30' dư của bậc 10h — đọc nháp 12 câu vấn đáp là 10' trong buổi CN, không phải buổi riêng. Tuần này gần như không có chỗ tràn: Project 2 tràn thì lấy W15, không lấy thêm buổi.
+
+- [ ] Replay từ log nước đi; seeded RNG cho "máy đi ngẫu nhiên"
+- [ ] Test: seed + log → cùng bàn cờ, chạy 100 lần cùng hash — kết quả: ____/100
+- [ ] Chốt bề mặt API của engine — từ đây đổi phải có ADR, tối đa 3 lần trong 22 tháng
+- [ ] Tạo `caro-cli` là module riêng: người vs máy random-seed, 2 người cùng máy
+- [ ] **Trang tĩnh "thế cờ hôm nay"** (1,5h, trong 20h của Project 2 — làm ở W13 để nằm ngoài tuần AI-free): một file HTML+JS trong repo, đọc `./the-co.json` cùng thư mục. JS không phải mục tiêu học nên AI đưa khung ≤40 dòng có **3 lỗi cố ý** (Luật 7, dạng server config) để bạn tìm và sửa; deploy Vercel là việc máy của bạn, AI hướng dẫn toàn phần. Tuần này chạy bằng một file JSON mẫu viết tay; W14 thay bằng JSON thật do `caro-cli` xuất — URL: ____
+- [ ] Decomposition drill #2 "tách room khỏi kết nối" (30') — chỉ nộp bản phân rã, không code — [Bài tập](/phase-0/bai-tap)
+- [ ] **Thử thách tự học thư viện** (2h, lấy từ 4h dự phòng của 116h): `kotlinx-serialization` — thứ `caro-cli` cần để xuất JSON ở W14 — chỉ docs chính thức + source, không tutorial, không AI; nộp `LEARNING.md` một trang — [Meta-skills](/phase-0/meta-skills)
+- [ ] Đọc nháp 12 câu vấn đáp (10', trong buổi CN), trong đó 3 câu concurrency — [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)
+
+**Bằng chứng cuối tuần:** test 100/100 hash trong repo · `LEARNING.md` trong repo · tiêu chí 2 bảng tốt nghiệp có hiện vật.
+
+### Tuần 14 — `caro-cli` `v1.0`, tốt nghiệp, mốc ngoài #1 — AI-free khi build
+
+Mục tiêu: build `caro-cli` một mình hoàn toàn — không AI, kể cả hỏi khái niệm — đóng hai repo, đóng bảng tốt nghiệp, và để 3 người ngoài chạm vào thứ bạn làm. Cộng giờ: Project 2 phần còn lại (4,25h) + 0.10 (5h = 3 kata bấm giờ ~3h · một phiên Examiner + vấn đáp 1,5h · tự chấm bảng tốt nghiệp 30') = **9,25h = bậc 10h trừ blank-file #5 45'** — khít, không xếp gì thêm.
+
+- [ ] **AI-free áp cho việc BUILD `caro-cli`** — code, xuất JSON, test, README (trang tĩnh đã xong ở W13): bí thì mở docs, `notes/ERRORS.md`, và code của chính mình. Đúng **ba phiên có tên** được mở; luật đầy đủ ở [Hệ thống học & luật AI](/he-thong-hoc)
+- [ ] `caro-cli`: lưu/tải phiên, **xuất JSON "thế cờ hôm nay"**, input ác không crash, README 5 mục, tag `v1.0`
+- [ ] Kata tốc độ (0.10, ~3h): làm lại **3 kata** bấm giờ, đặt cạnh số cũ — so với chính mình, không so với ai. Hai kata cố định là FizzBuzz biến thể (lần 1 W5) và bài log trận → `groupBy` (lần 1 W7, bài Tier 2) — **lần đo 2** của hai bảng benchmark tốt nghiệp; kata thứ ba do AI chọn trong 5 bài Tier 1
+- [ ] **Blank-file #5** (45' đầu T5) — lần này **phải pass**
+- [ ] **Mốc ngoài #1**: commit JSON thật do `caro-cli` xuất vào repo trang tĩnh (đã lên Vercel từ W13) → trang hiển thị "thế cờ hôm nay" · đã gửi cho 3 người: ____, ____, ____
+- [ ] Examiner mode + vấn đáp 12 câu — **gộp một phiên 1,5h**: ____/12 (cần ≥10) — [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)
+- [ ] Tiêu chí 9: `PROGRESS.md` trong repo public có ≥9/11 dòng bảng tuần (W4–14), mỗi dòng có commit trong đúng tuần đó (`git log --date`) — xác nhận của người chứng kiến là điểm cộng, không phải tiêu chí
+- [ ] **DP2** (30'): tự chấm bảng tốt nghiệp 10 tiêu chí — ____/10, mục 1–5: ____/5 bắt buộc
+
+**Bằng chứng cuối tuần:** DP2 đạt → [Phase 1](/phase-1) mở từ 21/12/2026. Thiếu → kéo P0 ≤4 tuần, không mở trang mở rộng cả năm.
+
+### Tuần 15 — Buffer
+
+Không xếp nội dung. Đây là tuần bạn dùng khi một module tràn hoặc một cổng trượt — không phải tuần "học thêm". Xong đúng hạn thì nghỉ; P1 vẫn bắt đầu **21/12/2026** theo lịch dương, không sớm hơn.
+
+## 🛠️ Lịch mẫu một tuần — bậc 10h chuẩn (W9+)
+
+Vai trò mỗi buổi cố định; số buổi thay đổi theo bậc. Ví dụ dưới là tuần 9 (concurrency nhập môn). **Nghỉ hẳn T6.**
+
+| Buổi | Vai trò | Nội dung |
+|---|---|---|
+| **T2** (2h) | INPUT | 10' warm-up 3 câu tự kiểm buổi trước → 70' đọc [Concurrency nhập môn](/phase-0/concurrency-nhap-mon): thread, shared state → 30' scratch file → 10' commit + journal |
+| **T3** (2h) | BUILD | Counter 4 thread — làm nó lệch bằng mắt, commit test **đỏ** |
+| **T4** (2h) | BUILD | 10' warm-up → `synchronized`/`AtomicInteger` → test **xanh**, commit riêng → 10' journal |
+| **T5** (1h) | READ CODE | Đọc lại source lớp `Result` parser bạn viết ở W8. *Tuần chẵn W6/8/10/12/14: 45' đầu là blank-file* |
+| **T6** | LIGHT / BUFFER | Không xếp gì. Mất T6 không tính lỡ lịch |
+| **T7** (3h) | LONG BUILD | `suspend`/`launch`/`runBlocking`/cancel — giả lập 3 tác vụ tuần tự vs đồng thời, đo thời gian |
+| **CN** (30') | REVIEW + PLAN | Điền bảng tuần vào `PROGRESS.md`, public log, 1 dòng mục tiêu tuần tới |
+
+Bậc thấp hơn bỏ bớt buổi, không bỏ vai trò: bậc 6h không có T3 và T5 (READ là 20' cuối T4, blank-file lấy 45' đầu T7), bậc 8h chưa có T3. Thành phần buổi đầy đủ của từng bậc và giờ đồng hồ thật (6–6,5 · 8,5 · 10,5, đã cộng CN 30') nằm ở [Hệ thống học](/he-thong-hoc) — không chép lại ở đây.
+
+**Kế hoạch giờ tính ở 90% điểm danh** — rơi một buổi mỗi 2 tuần là bình thường, không phải thất bại. Giờ và số ngày commit là hàng phụ của bảng tuần vì chúng farm được; **buổi deep-work trọn 70'** mới là cột dùng làm cổng.
+
+## 🏁 Nghi thức chốt buổi (10 phút cuối)
+
+Nó giúp buổi sau vào việc trong 2 phút thay vì mất 30 phút nhớ lại mình đang ở đâu. Chạy **mỗi buổi**, không ngoại lệ. Không có flashcard, không có Anki — hai thứ đó đã bị cắt.
+
+- [ ] `git diff` → commit, dù dở dang — WIP commit vẫn hơn không commit
+- [ ] Journal **3 dòng**, 5 phút — nửa sau của 10 phút chốt: `DID:` · `NEXT:` · `AI:`
+- [ ] Dòng `NEXT:` phải đủ cụ thể để **mở máy là gõ** — file nào, hàm nào, làm gì — đây là đòn bẩy lớn nhất của người học buổi tối
+- [ ] Dòng `AI:` ghi `0` hoặc số dòng + lý do; mọi phiên AI có thêm file `notes/ai-sessions/<ngày>.md` chứa nguyên văn prompt
+- [ ] Lỗi mất ≥30' → 5 dòng postmortem vào `notes/INCIDENTS.md`; đổi quyết định → 1 dòng `notes/ADR.md`. Không có thì không ghi
+
+Bảng tuần (CN 30') và blank-file (2 tuần/lần) là hai nghi thức còn lại — cả ba bật dần W1 → W3 → W6, không có nghi thức nào tồn tại trước tag `v0.0.1`.
+
+## → Tiếp theo
+
+Việc đầu tiên là **Ngày 1 — 90 phút** ở [Tổng quan Phase 0](/phase-0). Sau tag `v0.0.1`, đọc [Meta-skills](/phase-0/meta-skills) để nắm IOSTV, cách đọc stack trace và debug 6 bước. Lý thuyết Kotlin bắt đầu tại [Kotlin Core I](/phase-0/kotlin-core-1); bảng tuần và tiến độ tổng ghi ở [Tiến độ](/progress).

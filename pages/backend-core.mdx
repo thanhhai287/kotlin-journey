@@ -1,0 +1,316 @@
+# Backend core — API, dữ liệu, danh tính, vận hành
+
+Trang này trả lời một câu: trong CARO, phần nào là năng lực backend mà fintech, outsourcing, e-commerce sẽ hỏi — học ở đâu, bao nhiêu giờ. Mở lần đầu sau module 1.5; mở lại đầu P2, đầu P3, tuần đầu P4 — mỗi lần đúng một khối.
+
+---
+
+## 🎯 Luận điểm trung tâm
+
+Lộ trình này xây một game server, nhưng thứ bán được cho nhà tuyển dụng là **năng lực backend chuyển được**. Người phỏng vấn ở fintech không hỏi tick loop. Họ hỏi 409 khác 422 chỗ nào, thêm cột vào bảng 10 triệu dòng thế nào, JWT thu hồi ra sao, SLO là gì. Bốn khối dưới đây là **phần giao nhau** giữa "game server" và "mọi backend khác" — và đó chính là phần được hỏi.
+
+Nguyên tắc chọn nội dung: **cái gì quyết định việc bạn được nhận thì nằm ở Lõi; cái gì làm bạn thành senior thì học tiếp khi đã đi làm và được trả tiền.** Đó không phải cắt bớt tham vọng — đó là đặt đúng thứ tự.
+
+| Khối | Giờ biên | Học ở | Sau module | Đã có ở module — nhắc, không dạy lại |
+|---|---|---|---|---|
+| **B1** API và hợp đồng | 10 | P1 muộn 3h + P2 7h | 1.5 (3h — đọc B1, sửa envelope) · 2.3 (7h — LAB B1 khi có leaderboard thật) | 1.5 type + version · 4.1 springdoc, `@RestControllerAdvice` |
+| **B2** Dữ liệu và migration | 10 | P2 10h (sau 2.1) | 2.1 | 2.1 index, `EXPLAIN`, isolation, Flyway · 2.7 backup · 3.3 ledger |
+| **B3** Danh tính và phân quyền | 6 | P2 3h + P3 3h | 2.2 (3h — rotation) · 3.6 (3h — authz, OIDC) | 2.2 session token · 2.4 hai thiết bị · 3.6 authz, IDOR · 4.1 Security/JWT |
+| **B4** Vận hành chuẩn | 4 | P4 4h | 4.3 (sau G3, trước 4.4) | 2.10 log, Micrometer, JFR · 4.4 rollback · 5.5 OTel |
+| | **30** | P1 3 · P2 20 · P3 3 · P4 4 | | + 24h đẩy sang mục "Backend nâng cao — năm 3 hoặc tháng đầu đi làm" của [Mở rộng](/mo-rong), nằm trong khối 54h ở đó |
+
+Cột "Sau module" là neo duy nhất: bảng của [Phase 1](/phase-1) và các phase sau phải khớp từng dòng với cột này. Mã `4.x` ở trang này là module của **Phase 4** (4.1 Spring, 4.3 profiling, 4.4 CD) — không phải dãy 4.1–4.8 Kotlin core của Phase 0.
+
+**Sự thật:** 30h là **giờ biên** — chỉ đếm phần chưa có ở module nào. Idempotency key học ở 3.3 thì B1 không tính lại; Flyway ở 2.1 thì B2 chỉ dạy phần 2.1 không dạy. Theo giáo trình thường, bốn khối này là 60–70h; hơn nửa đã nằm rải trong 26 tháng của lộ trình (các module 1.5–5.5). Trang này gom về một trục, bịt đúng lỗ còn hở. 30h này **đã nằm trong 839h** của lộ trình (P1 3 · P2 20 · P3 3 · P4 4), phân bổ ở bảng bổ sung của [Roadmap](/roadmap) — không phải giờ cộng thêm ngoài khung.
+
+**Luật sắt:** mỗi khối có bảng khái niệm theo thứ tự phụ thuộc, một LAB trên chính CARO, một ngưỡng đo được, câu hỏi phỏng vấn thật. Đọc mà chưa làm LAB thì chưa tính giờ.
+
+## B1 — Thiết kế API và hợp đồng (10h · P1 muộn 3h + P2 7h)
+
+1.5 cho bạn giao thức WebSocket; P2 cho bạn REST. B1 làm chúng **đúng ngữ nghĩa**: client cũ không chết khi server đổi, retry không nhân đôi giao dịch.
+
+| # | Khái niệm | Câu phải trả lời được |
+|---|---|---|
+| 1 | Tài nguyên REST | Vì sao `/getMatch` sai |
+| 2 | Khi nào **không** REST | "Đầu hàng" là thao tác, không phải CRUD |
+| 3 | Mã trạng thái; idempotent | 400 vs 409 vs 422; PUT vs POST khi retry |
+| 4 | `ETag` / `If-Match`; cache | Hai thiết bị cùng sửa — ai nhận 412 |
+| 5 | Offset vs cursor | Vì sao offset vỡ khi dữ liệu đổi |
+| 6 | Lỗi theo RFC 9457 (thay RFC 7807) | Client rẽ nhánh lỗi bằng trường nào |
+| 7 | Versioning, tương thích ngược | Thêm trường được, đổi nghĩa không |
+| 8 | Contract-first OpenAPI | Spec trước khác code trước chỗ nào |
+| 9 | Tiến hoá giao thức WebSocket | Đổi message mà client cũ vẫn chơi được |
+
+| Mã | Dùng khi | CARO |
+|---|---|---|
+| 400 | Không đọc được: JSON hỏng, sai kiểu — không retry | `row` là chuỗi |
+| 409 | Hợp lệ nhưng **xung đột trạng thái hiện tại** — đọc lại rồi quyết | Đi khi chưa tới lượt |
+| 422 | Cú pháp đúng, **ngữ nghĩa** sai | `row = 99` trên bàn 15×15 |
+| 401 / 403 / 412 | Chưa biết bạn là ai / biết nhưng cấm / `If-Match` lệch | Token hết hạn / đọc ví người khác / hai thiết bị cùng đổi avatar |
+
+**Vì sao idempotent quan trọng với retry:** GET, PUT, DELETE — gọi N lần thì trạng thái server như gọi 1 lần, nên được retry mù. Định nghĩa của RFC 9110 nói về **hiệu ứng trên server**, không nói về response: DELETE lần hai trả 404 vẫn idempotent; PUT với `If-Match` lần hai trả 412 vẫn idempotent. POST thì không: retry mù một lần mua skin là mua hai lần. 3.3 đã giải bằng idempotency key; B1 thêm: key đó là **một phần hợp đồng**, có tên header trong spec.
+
+**Phân trang.** Offset là "bỏ N dòng đầu theo thứ tự lúc chạy truy vấn". Giữa hai trang, leaderboard đổi — một người bị ban, ba người lên hạng — ranh giới dịch: có bản ghi hiện hai lần, có bản ghi không bao giờ hiện. Giá thứ hai của offset — lý do trang 37 của leaderboard 100k người chậm: `OFFSET N` buộc Postgres đọc rồi **vứt** N dòng, kể cả khi có index; trang càng sâu càng chậm tuyến tính theo N, tải DB tăng đều khi người dùng lật sâu. Cursor mã hoá **vị trí bản ghi cuối đã thấy**, cặp `(rating, player_id)`; trang sau là "mọi thứ sau vị trí đó": `WHERE (rating, player_id) < (?, ?) ORDER BY rating DESC, player_id DESC LIMIT 50` — đi thẳng vào index bằng range scan, mỗi trang tốn như nhau. Chèn hay xoá ở đâu cũng không dịch ranh giới. Giá: không nhảy tới trang 37. Giới hạn ghi vào test: khoá sắp xếp **tự đổi** thì cursor cũng sót — leaderboard nghiêm túc dùng snapshot theo mùa.
+
+**Mô hình lỗi.** Lỗi dạng chuỗi tự do là nợ kỹ thuật: client parse tiếng Việt để rẽ nhánh, đổi câu chữ là client vỡ. RFC 9457 *Problem Details for HTTP APIs* (2023, thay RFC 7807 — cùng hình; gặp tên cũ trong code cũ thì nhận ra) cho một hình cố định: `type` là URI máy đọc (`.../errors/insufficient-gold`), `title`, `status`, `detail` cho người, cộng trường mở rộng (`required: 500, available: 120`) để client hành động. Content-Type là `application/problem+json` — client rẽ nhánh theo header này trước, theo `type` sau. Mọi handler lỗi — kể cả `@RestControllerAdvice` ở 4.1 và validation — trả đúng hình này. Spring 6 có sẵn `ProblemDetail`/`ErrorResponse`, bật `spring.mvc.problemdetails.enabled=true` ở 4.1; Ktor dùng `StatusPages` và tự đặt content type.
+
+**Versioning.** Được: thêm trường response, thêm trường tuỳ chọn request, thêm endpoint, thêm giá trị enum nếu client bỏ qua giá trị lạ. Không được: xoá, đổi tên, biến tuỳ chọn thành bắt buộc, đổi **ý nghĩa** trường (`gold` sang đơn vị ×100). Buộc phải đổi nghĩa: trường mới tên mới, trường cũ `deprecated`, header `Sunset`, và **số đếm** client cũ còn gọi — không có số thì không bao giờ dám tắt. Giữ luật này thì hiếm khi cần `/v2`. Khi buộc phải có v2: đặt trên URL (`/v2/players`) — route, cache, log, `Sunset` theo đường dẫn đều dễ, hai bản chạy song song được; version trong header (`Accept: application/vnd.caro.v2+json`) giữ URI bất biến nhưng khó debug, khó cache, proxy dễ bỏ qua — chỉ hợp khi URI phải bất biến. Không bao giờ version từng trường bằng header.
+
+**Contract-first.** Sinh spec từ annotation là tài liệu mô tả **thứ đã lỡ viết**. Viết spec trước rồi sinh stub và client là hợp đồng được review **trước dòng code đầu tiên**; diff spec là diff hợp đồng.
+
+**Tiến hoá giao thức WebSocket** — envelope `type + v + payload` từ 1.5:
+
+| Luật | Vì sao |
+|---|---|
+| Bỏ qua trường lạ; không tái dùng `type` đã bỏ; đổi nghĩa = message mới | Thêm trường không bao giờ breaking; hiểu sai tệ hơn không hiểu |
+| Client gửi `supported_versions`, server chọn cao nhất chung và đếm session theo version | Đổi lớn có đường lùi; tắt bản cũ bằng số |
+
+**LAB B1:**
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | Viết lại 3 endpoint: mời đấu (thao tác), đặt nước đi (409 vs 422), đổi profile (`If-Match`) | Bảng mã trước/sau |
+| 2 | `ETag` cho `GET /players/me`; `PUT` với `If-Match` cũ trả 412; `PUT` **thiếu** `If-Match` trả 428 Precondition Required (RFC 6585) — không bắt buộc header thì hai client không gửi nó vẫn ghi đè nhau | Test hai client ghi đè, ba trường hợp 200 / 412 / 428 |
+| 3 | Leaderboard offset → cursor keyset | Test: chèn và ban player **giữa** hai lần đọc — offset trùng/thiếu, cursor không. `EXPLAIN (ANALYZE, BUFFERS)` của offset 50.000 vs keyset cùng vị trí — số buffers đọc và thời gian, ghi `bench/` |
+| 4 | Viết tay OpenAPI cho 3 endpoint, sinh client Kotlin, gọi server thật | Client sinh ra chạy trong CI |
+
+**Ngưỡng đạt:** spec sinh ra client chạy được; test chứng minh cursor không mất bản ghi còn offset thì có; `bench/` có số buffers offset vs keyset.
+
+**Câu hỏi phỏng vấn thật rơi vào đây:** #1–5 bảng cuối trang.
+
+## B2 — Mô hình dữ liệu và migration an toàn (10h · P2)
+
+B2 dạy hai thứ 2.1 không dạy: **vẽ schema đúng**, và **đổi schema khi bảng đang có người dùng**. Phần thứ hai phân loại junior với người từng chạm production.
+
+| # | Khái niệm | Câu phải trả lời được |
+|---|---|---|
+| 1 | 1NF/2NF/3NF bằng ví dụ thật | Vì sao `match.player_x_name` là chuẩn vỡ |
+| 2 | Phá chuẩn có kiểm soát | Khi nào cố ý lưu `move_count` trên `match` |
+| 3 | Khoá tự nhiên vs thay thế; UUID vs bigserial | UUID v4 làm gì với B-tree |
+| 4 | Xoá mềm, theo thời gian, append-only | Ban — xoá dòng hay cắm cờ |
+| 5 | Lock của `ALTER TABLE`, hàng đợi khoá | Vì sao `ALTER` 5ms sập site 30 giây |
+| 6 | Expand/contract | Đổi tên cột mà không chết |
+| 7 | Backfill theo lô; `CREATE INDEX CONCURRENTLY` | Vì sao không `UPDATE` triệu dòng một transaction |
+| 8 | Hai phiên bản app song song | Bản cũ chưa biết cột mới thì sao |
+| 9 | Migration trong CI/CD; roll forward | Rollback migration có tồn tại không |
+| 10 | Lost update và isolation | READ COMMITTED (mặc định) không chặn read-modify-write; REPEATABLE READ / SERIALIZABLE báo `40001` → app phải retry; hoặc `SELECT ... FOR UPDATE` / `UPDATE ... SET gold = gold - ? WHERE gold >= ?` nguyên tử — ví 3.3 chọn gì |
+
+**Chuẩn hoá bằng CARO.** `match` có `player_x_name` — người đổi tên thì mọi trận cũ sai: sự thật lưu hai chỗ. Đây là phụ thuộc bắc cầu đúng nghĩa 3NF: `match_id → player_x_id → player_x_name`. Sửa: chỉ giữ `player_x_id`. `move.player_id` là chuyện khác: thuộc tính **dẫn xuất** (suy từ `seq` chẵn lẻ cộng `match.player_x_id`/`player_o_id`) — dư thừa liên bảng, cùng loại với `move_count` bên dưới: bỏ, hoặc giữ kèm ADR và `CHECK`/trigger đối soát. **Khi nào cố ý phá chuẩn:** đọc rất nhiều lần phải join hoặc đếm — và có số. Trang lịch sử cần `move_count`; đếm `move` mỗi lần là N+1 dạng khác. Lưu `move_count` trên `match`, cập nhật cùng transaction với `move`. Điều kiện: `EXPLAIN ANALYZE` trước/sau; một nguồn sự thật và script đối soát như 3.3; ADR.
+
+| Khoá chính | bigint `IDENTITY` (bigserial là cách cũ) | UUID v4 | UUID v7 |
+|---|---|---|---|
+| Ai sinh | Chỉ DB — client chờ | Client — khớp idempotency key 3.3 | Client hoặc DB (`uuidv7()` có sẵn từ PG 18) |
+| B-tree | Chèn cuối, locality tốt | Chèn ngẫu nhiên: page split, cache miss, index phình | Prefix thời gian, chèn gần cuối |
+| Kích thước | 8 byte | 16 byte | 16 byte — nhân theo số index và FK trỏ vào `player`, `match`: B-tree phình gần gấp đôi, kể cả v7 |
+
+Khoá tự nhiên (`email`, `install_id`) là `UNIQUE`, không làm khoá chính — đổi email là đổi mọi FK. `player` dùng UUID vì client sinh id trước khi có mạng (guest 2.2); `move` dùng `(match_id, seq)` — khoá tự nhiên không bao giờ đổi.
+
+**Ban và xoá mềm — hai trạng thái, đừng gộp.** Ban là cột `banned_at`, không `DELETE`: FK từ `match` trỏ vào, admin cần gỡ ban, audit 3.7 cần dấu vết. Giá: mọi truy vấn đăng nhập/ghép trận nhớ `WHERE banned_at IS NULL`. **Không** đổi `UNIQUE(email)` — ban giữ nguyên danh tính, email vẫn bị chiếm. Làm partial unique index `WHERE banned_at IS NULL` là chép nhầm mẫu của xoá mềm: người bị ban đăng ký lại đúng email đó, có account mới, ban vô hiệu — và mâu thuẫn với luật "không merge tự động" ở B3. Xoá mềm/GDPR mới là cột `deleted_at`: lúc đó mới cân nhắc partial unique index `WHERE deleted_at IS NULL`, kèm rủi ro tái sử dụng email ghi vào ADR. Ví 3.3 đã append-only — số dư là tổng.
+
+**Sự thật:** `ALTER TABLE` lấy `ACCESS EXCLUSIVE`. Thay đổi 5ms cũng phải **xếp sau mọi transaction đang giữ khoá** trên bảng — một báo cáo 30 giây là đủ — và trong lúc xếp hàng, **mọi truy vấn mới kể cả `SELECT` xếp sau nó**. Bảng lớn không phải vấn đề; hàng đợi khoá mới là. **Luật sắt:** mọi migration `SET lock_timeout = '2s'` và retry — trừ script `CREATE INDEX CONCURRENTLY`, xem bảng.
+
+| Thao tác | Bẫy | Cách đúng |
+|---|---|---|
+| Thêm cột có default | Default **không hằng** (`gen_random_uuid()`) ghi lại toàn bảng; default hằng từ PG 11 chỉ sửa catalog | Default hằng, hoặc nullable rồi backfill |
+| `SET NOT NULL` cột đang có | Quét toàn bảng dưới `ACCESS EXCLUSIVE` | `CHECK (x IS NOT NULL) NOT VALID` → `VALIDATE` (không chặn ghi) → `SET NOT NULL` (PG 12+ không quét lại) → bỏ check |
+| Thêm index | `CREATE INDEX` chặn ghi suốt lúc build. `CONCURRENTLY` (CIC) có bẫy riêng: nó **chờ mọi transaction mở trước nó** kết thúc (hai pha, kể cả `idle in transaction`) — long transaction làm CIC treo; `lock_timeout`/`statement_timeout` ngắn sẽ **huỷ CIC giữa chừng** và để lại index `INVALID` vẫn tốn ghi mỗi lần `INSERT` | CIC — ngoài transaction, chậm hơn; script CIC đặt `lock_timeout` riêng (0 hoặc dài), chạy ngoài giờ cao điểm; kiểm `pg_index.indisvalid`, `INVALID` thì `DROP INDEX CONCURRENTLY` rồi chạy lại. Flyway: file `.conf` cạnh migration với `executeInTransaction=false` |
+| Đổi tên cột | `RENAME` — app cũ vỡ ngay | Thêm cột mới → ghi cả hai → backfill → đọc mới → ngừng ghi cũ → xoá cũ. Năm bước, năm deploy |
+| Backfill | Một `UPDATE` triệu dòng: row lock lâu, WAL phình | Lô 5.000 theo khoá chính, `lock_timeout`, nghỉ giữa lô |
+| Xoá cột | `DROP` ngay khi app mới lên — rollback app là mất dữ liệu | Deploy sau, khi số đo nói không còn bản cũ |
+
+**Vì sao hai phiên bản app phải chạy song song:** deploy không phải một khoảnh khắc — bản cũ còn xử lý request dở khi bản mới lên (4.4), và rollback là bản cũ chạy trên schema mới. Migration đúng là **schema N+1 chạy được với app N và N+1**. Expand/contract nhiều bước vì mỗi bước cả hai bản đều sống.
+
+**Migration trong CI/CD.** Một job riêng trước deploy app, không trong `main()` lúc khởi động; file có `CONCURRENTLY` tắt transaction riêng. **Phần lớn migration không rollback được** — `DROP COLUMN` không hoàn tác, backfill không tự huỷ. Bạn roll forward. Thứ bảo vệ bạn là diễn tập trên bản `pg_dump` từ 2.7 — chưa chạy thử trên bản sao thì chưa được chạy thật.
+
+**Backup để đâu — câu CV screen.** Bản `pg_dump` của 2.7 không ở lại VPS: `rclone copy` lên object storage S3-compatible free tier (Cloudflare R2 hoặc Backblaze B2), lifecycle 30 ngày, và diễn tập restore **từ đó** — đó là câu trả lời cho "backup để đâu, restore mất bao lâu, deploy lên đâu". Bốn từ đủ trả lời phỏng vấn mà không cần tài khoản AWS: IAM (khoá nào được làm gì), EC2 (VPS của bạn dưới tên khác), RDS (Postgres của bạn do người khác vận hành — backup, failover, patch), S3 (object storage, không phải filesystem). Không có giờ riêng trong 30h: một lệnh `rclone` thêm vào bước diễn tập restore của LAB B2 #3. Stack "1 VPS" vẫn đúng để học cơ chế; cloud rộng hơn nằm ở [Mở rộng](/mo-rong).
+
+**LAB B2 — trên chính CSDL CARO:**
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 0 | Bơm `match` lên ≥1 triệu dòng bằng `generate_series`; 100 bot (1.7) đánh suốt lab. **Trước mỗi migration** mở một session "báo cáo" không commit: `BEGIN; SELECT count(*) FROM match; SELECT pg_sleep(60);` — bot chỉ chạy transaction ngắn, không có session này thì không có hàng đợi khoá để đo | 6 dòng giàn đo trong `bench/` |
+| 1 | **Cách sai:** một migration `ADD COLUMN move_count int` + `UPDATE` toàn bảng + `SET NOT NULL`, không `lock_timeout` | p99 nước đi lúc chạy; thời gian mọi `SELECT` mới của bot đứng với `wait_event_type = 'Lock'` trong `pg_stat_activity` — đây là số chứng minh "`ALTER` 5ms sập site 30 giây" |
+| 2 | **Cách đúng:** `lock_timeout = '2s'` + retry; cột nullable → app ghi cho trận mới → backfill lô 5.000 → `CHECK NOT VALID` → `VALIDATE` → `SET NOT NULL`; index `CONCURRENTLY` | Cùng hai số đo; log thấy `ALTER` lỗi vì `lock_timeout` rồi retry thay vì chặn toàn site |
+| 3 | Jar cũ (chưa biết `move_count`) và jar mới chạy cùng lúc suốt bước 2; diễn tập trước trên bản restore 2.7 kéo về từ object storage | Log 0 lỗi từ bản cũ; giờ kéo dump về + giờ restore trong `bench/` |
+
+**Ngưỡng đạt:** hai lần đo trong `bench/` — cách sai khoá ghi bao lâu, p99 nhảy bao nhiêu; cách đúng khoá dưới `lock_timeout`, p99 không đổi có ý nghĩa. Migration chạy trọn với hai phiên bản app song song, 0 lỗi.
+
+**Câu hỏi phỏng vấn thật rơi vào đây:** #6–11 và #20 bảng cuối trang.
+
+## B3 — Danh tính, phiên và phân quyền (6h · P2 3h + P3 3h)
+
+2.2, 2.4, 3.6, 4.1 đã cho CARO session token, hai thiết bị, ba request tấn công bị chặn, Spring Security. B3 là phần **lý luận** nối chúng — chọn được cơ chế, nói được đánh đổi, không tự nghĩ ra thuật toán.
+
+| # | Khái niệm | Câu phải trả lời được |
+|---|---|---|
+| 1 | Session server-side vs token | Thu hồi ngay được không; tốn gì mỗi request |
+| 2 | JWT đúng: `exp`, `iat`, clock skew | Vì sao JWT không thu hồi được; ba cách xử lý |
+| 3 | Refresh rotation, phát hiện tái sử dụng | Kẻ trộm dùng token cũ thì thấy gì |
+| 4 | `alg=none`, key confusion | Vì sao không tin header của token |
+| 5 | argon2id / bcrypt, cost, salt vs pepper | Vì sao SHA-256 + salt vẫn sai |
+| 6 | OAuth2 / OIDC — đọc hiểu | Vì sao mobile đi đường PKCE |
+| 7 | RBAC, tầng kiểm tra, IDOR | Vì sao check role ở route chưa đủ |
+| 8 | Danh tính thiết bị cho game | Cài lại app mất gì; nâng cấp guest ra sao |
+
+| | Session server-side (token mờ) | JWT tự chứa |
+|---|---|---|
+| Thu hồi | Xoá dòng — tức thì | Không thể — đúng chữ ký là đúng tới `exp` |
+| Mỗi request | Một tra cứu; nhiều instance cần store chung | Chỉ xác minh chữ ký; cần `kid` để xoay khoá |
+| Hợp với CARO | Refresh token, admin | Access token ngắn cho REST và handshake WebSocket |
+
+Câu trả lời gần như luôn là **cả hai**: access JWT 5–15 phút, refresh token mờ server-side. Chi tiết game: WebSocket sống hàng giờ, token hết hạn giữa chừng — cần message re-auth trên kênh đang mở.
+
+**JWT đúng.** `exp` bắt buộc; `iat` để từ chối token "phát hành trong tương lai"; chấp nhận lệch đồng hồ 30–60 giây. Ba cách xử lý việc không thu hồi được:
+
+| Cách | Cơ chế | Giá |
+|---|---|---|
+| TTL ngắn + refresh | Token chết sau 10 phút; thu hồi refresh là đủ | Cửa sổ 10 phút kẻ trộm còn dùng |
+| Danh sách đen `jti` | Redis giữ `jti` bị thu hồi tới `exp` | Một tra cứu mỗi request (cũng cache được); trạng thái là tập `jti` sống tới `exp` |
+| Phiên bản token | Claim `ver` so với `player.token_version`; logout-all → tăng | Vẫn một tra cứu/request; cache được nhưng thu hồi trễ đúng bằng TTL cache — chọn TTL ≤ độ trễ thu hồi chấp nhận được (vd 30s). Hơn blacklist ở chỗ trạng thái nhỏ: một số nguyên/user |
+
+**Rotation:** mỗi lần dùng refresh token, cấp cái mới, đánh dấu cái cũ đã dùng, cả chuỗi chung `family_id`. Ai đưa lại token **đã dùng** → client lỗi hoặc bị trộm, xử lý như nhau: thu hồi cả family. Cơ chế duy nhất cho bạn biết mình bị trộm.
+
+**`alg=none` và key confusion:** header JWT tự khai thuật toán. Thư viện tin header thì `alg=none` bỏ qua chữ ký; RS256 đổi sang HS256 thì public key thành secret HMAC. Luật: xác minh với thuật toán và loại khoá **bạn** chọn sẵn.
+
+**Băm mật khẩu.** SHA-256 nhanh — đó là vấn đề: GPU thử hàng tỉ lần một giây. bcrypt chậm theo cost nhưng chỉ dùng ~4KB trạng thái — GPU/ASIC song song hoá được; argon2id chậm **và** tốn bộ nhớ (`m`, `t`, `p` — sàn OWASP 2024: m=19MiB, t=2, p=1) nên chống GPU tốt hơn, là mặc định. bcrypt cắt mật khẩu ở 72 byte — Spring `BCryptPasswordEncoder` ném lỗi khi dài hơn. Cost factor không phải hằng số để chép: **đo** trên server của bạn, chỉnh cho một lần băm 100–300ms, ghi vào `bench/` kèm phép nhân: thời gian băm × số lõi = số đăng nhập/giây tối đa của cả máy (300ms trên 2 vCPU ≈ 6–7 lần/giây), và argon2 chiếm `m` MiB cho mỗi lần băm song song — endpoint login là vector DoS, rate limit ở 2.3. Salt theo user, thư viện tự làm; pepper là secret chung trong env (3.6) — dump DB thì hash vẫn vô dụng. **Luật sắt:** không tự nghĩ thuật toán. Guest CARO không có mật khẩu — nó chỉ xuất hiện khi nâng cấp tài khoản.
+
+**OAuth2 / OIDC — đọc hiểu.** Authorization code + PKCE: app sinh `code_verifier`, gửi `code_challenge = S256(verifier)`; nhận `code` qua redirect; đổi `code` + `verifier` lấy token. Vì sao mobile đi đường này: app là public client, không giữ được `client_secret`; app khác có thể chặn redirect lấy `code` — nhưng `code` vô dụng khi không có `verifier` chưa rời máy. Server CARO xác minh ID token: `iss`; `aud` **bằng đúng** `client_id` của app CARO (chặn ID token cấp cho app khác); `exp`; `nonce` (app sinh trước khi gọi, chống replay); chữ ký qua JWKS cache theo `kid`. Khoá liên kết tài khoản là cặp `(iss, sub)` lưu ở bảng `player_identity` — `sub` mới là danh tính ổn định. `email` đổi được, tái cấp được, có IdP trả `email_verified=false`: chỉ dùng để hiển thị hoặc gợi ý merge, và chỉ khi `email_verified = true`. Liên kết theo email là lỗ hổng account takeover kinh điển (RFC 9700 §4.14). App native đi PKCE + trình duyệt hệ thống, không WebView (RFC 8252). Lõi cần bạn vẽ được luồng.
+
+**Phân quyền.** RBAC ba vai `player`, `cs`, `admin` (3.7); kiểm tra vai ở route là điều kiện cần. IDOR nằm tầng khác: `GET /wallets/8f3c` — vai hợp lệ, nhưng ví của ai? Cách chắc nhất: **đưa chủ sở hữu vào chính truy vấn** — `WHERE id = ? AND owner_id = ?`, không có dòng thì 404. IDOR ở 3.6 bị chặn bằng cơ chế này, không bằng `if` ở controller.
+
+| Danh tính thiết bị | Quyết định | Vì sao |
+|---|---|---|
+| Lần đầu / cài lại | `install_id` trong storage riêng → guest; cài lại = guest mới, **mất ví** nếu chưa liên kết | Chơi ngay; mất ví là động lực nâng cấp — nói thẳng trong UI |
+| Nâng cấp guest | Liên kết `(iss, sub)` của Google — hoặc email + mật khẩu — vào **cùng** `player_id`; danh tính đó đã gắn tài khoản khác → không merge tự động, hỏi người dùng, ghi audit | Merge ví im lặng là lỗ hổng gian lận |
+| Hai thiết bị | Mỗi thiết bị một refresh family; logout-all = tăng `token_version` | 2.4 lo kết nối; đây là danh tính |
+
+**LAB B3:** thêm refresh token rotation vào endpoint refresh (2.2). Test: dùng RT1 → nhận RT2; dùng lại RT1 → 401 **và** RT2 cũng bị từ chối. Code chạm session là vùng AI-free — tự viết.
+
+**Ngưỡng đạt:** test tái sử dụng refresh token **đỏ trước khi sửa, xanh sau khi sửa**, hai commit; `bench/` có cost factor, thời gian băm trên VPS và số đăng nhập/giây suy ra.
+
+**Câu hỏi phỏng vấn thật rơi vào đây:** #12–15 bảng cuối trang, cộng #1.
+
+## B4 — Vận hành chuẩn: quan sát được, SLO và cấu hình (4h Lõi · P4)
+
+2.10 cho bạn log, Micrometer, JFR; 4.3 cho bạn G3. B4 là **ngôn ngữ vận hành** để nói về chúng theo cách một team SRE hiểu. 4h vì công cụ đã có — thiếu là khung suy nghĩ.
+
+| # | Khái niệm | Câu phải trả lời được |
+|---|---|---|
+| 1 | Ba trụ: log, metric, trace | Mỗi trụ trả lời câu gì; dùng sai trụ tốn gì |
+| 2 | RED cho service, USE cho tài nguyên | Bốn panel đầu tiên của dashboard |
+| 3 | SLI / SLO / error budget | SLO khác SLA; budget quyết định gì |
+| 4 | Correlation id; kỷ luật log | Log gì, tuyệt đối không log gì |
+| 5 | Cấu hình 12-factor | Một image chạy ba môi trường bằng cách nào |
+| 6 | Cảnh báo theo triệu chứng | Vì sao không cảnh báo CPU 80% |
+| 7 | Timeout, retry có backoff + jitter, circuit breaker, bulkhead | Postgres/Redis chậm thì request thread làm gì, chờ bao lâu, bỏ ở đâu; retry ở đâu là nhân đôi giao dịch (nối 3.3) |
+
+| Trụ | Trả lời | Dùng sai |
+|---|---|---|
+| Metric | "Bao nhiêu, bao nhanh, có đang tệ đi" — rẻ, gộp được | Đem metric đi tìm request nào lỗi — không có |
+| Log | "Chuyện gì xảy ra với request này" — đắt theo dung lượng | Đếm lỗi bằng `grep` thay vì counter |
+| Trace | "Thời gian đi đâu qua các bước" — phải sample | Bật 100% trace thay log — hoá đơn đến trước insight |
+
+**RED và USE.** RED cho mỗi endpoint hoặc message type: Rate, Errors, Duration (histogram, đọc p50/p99). USE cho mỗi tài nguyên: Utilization, Saturation, Errors — CPU, HikariCP pool (thread chờ connection là saturation), disk. Dashboard tối thiểu: RED cho `move` và `purchase`, USE cho pool và GC.
+
+| | Của CARO | Vì sao |
+|---|---|---|
+| SLI | Tỉ lệ nước đi hợp lệ được server ack **dưới 300ms**, đo tại server từ nhận frame tới gửi ack | Người chơi cảm nhận đúng thứ này; đo tại server thì sạch, nhưng ghi rõ giới hạn: mạng người dùng nằm ngoài |
+| SLO | 99,5% trên cửa sổ 30 ngày trượt | Đủ chặt để deploy lỗi hiện ra, đủ lỏng cho một VPS |
+| Error budget | 0,5% — 100.000 nước đi/tháng thì được hỏng 500 | Đốt quá 50% giữa tháng → đóng băng deploy rủi ro; còn nhiều → được thử ZGC. Budget biến "ổn định" từ cãi nhau thành số |
+| SLO vs SLA | SLO là mục tiêu nội bộ; SLA là hợp đồng có phạt tiền, luôn **lỏng hơn** SLO | Câu phỏng vấn thẳng |
+
+**Correlation id.** Sinh ở rìa — cấu hình Caddy sinh `X-Request-Id`, hoặc tự sinh ở tầng ngoài cùng của server nếu chưa có, đưa vào MDC, in trong mọi dòng log của request. WebSocket: `session_id` lúc handshake, `msg_id` mỗi message. Bẫy thật: MDC gắn với thread, coroutine đổi thread — dùng `MDCContext` của `kotlinx-coroutines-slf4j`. Bẫy thứ hai của chính `MDCContext`: nó **chụp** MDC lúc tạo và khôi phục mỗi lần resume — `MDC.put` gọi sau đó không lan sang coroutine con và có thể mất sau suspend. Thứ tự đúng: `MDC.put` xong mới `withContext(MDCContext()) { ... }`; mỗi message WS tạo `MDCContext` mới sau khi put `msg_id`. REST trên Ktor dùng plugin `CallId` + `callIdMdc("request_id")`.
+
+| Log | Tuyệt đối không log |
+|---|---|
+| Correlation id, `player_id`, `match_id`, tên sự kiện, kết quả, thời lượng, mã lỗi, version client | Token, mật khẩu — kể cả sai, kể cả một phần; header `Authorization`; purchase token; email, số điện thoại dạng plain; body request mặc định |
+
+**Cấu hình 12-factor.** Một image, ba môi trường, khác nhau chỉ bằng env; không commit `.env` hay secret trong yml. Config đọc lúc khởi động và **validate ngay** — thiếu `DATABASE_URL` thì chết trong 1 giây, không chết sau 10 phút ở request đầu. Secret từ file ngoài image (3.6). Viết bảng "biến nào, bắt buộc không, mặc định gì" vào README.
+
+**Timeout và breaker.** CARO có đúng hai dependency: Postgres và Redis. Mỗi cuộc gọi ra ngoài có hai số bạn buộc phải chọn từ 2.2: HikariCP `connectionTimeout` và `socketTimeout` JDBC — không có thì thread chờ mãi, pool cạn, và đó chính là saturation ở USE. Retry chỉ cho thao tác idempotent (B1), backoff mũ + jitter để không dồn đợt; retry một giao dịch không có idempotency key là nhân đôi tiền (3.3). Circuit breaker mở khi tỉ lệ lỗi vượt ngưỡng trong cửa sổ — trả lỗi nhanh thay vì xếp hàng; bulkhead là pool riêng cho từng dependency để Redis chết không kéo Postgres theo. Resilience4j là tên thư viện; câu trả lời phỏng vấn là cơ chế. 0h thêm — số đo lấy từ LAB B4 #3.
+
+**Cảnh báo không nhiễu.** Theo **triệu chứng người dùng thấy**: tỉ lệ ack rơi dưới SLO, error rate `move` trên 1%, tốc độ đốt budget. Không cảnh báo CPU 80% — có thể đang hoàn toàn ổn, và báo nhiễu làm bạn tắt tiếng rồi bỏ lỡ cái thật. Mỗi cảnh báo trỏ tới một runbook.
+
+**LAB B4:**
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | `docs/SLO.md` một trang: SLI, điểm đo, SLO, cửa sổ, chính sách budget | File trong repo |
+| 2 | Dashboard 3 panel RED cho `move` từ Prometheus text (2.10) — Grafana hay đồ thị Prometheus đều được; 6 panel + alert rule ở [Mở rộng](/mo-rong) | Ảnh + query |
+| 3 | Runbook một trang "p99 tăng gấp 10": xác nhận (một endpoint hay tất cả, trùng deploy không) → saturation (pool, GC) → giảm thiệt hại (rollback 4.4, rate limit, hạ timeout / mở breaker) → bằng chứng (JFR, `pg_stat_activity`) → postmortem `INCIDENTS.md` | File; diễn tập một lần bằng cách tự gây (G3) |
+
+**Ngưỡng đạt:** tài liệu SLO một trang + runbook một trang + dashboard đủ ba chỉ số RED cho `move`, và một lần diễn tập runbook có timestamp.
+
+**Câu hỏi phỏng vấn thật rơi vào đây:** #16–19 bảng cuối trang.
+
+## Học tiếp khi đi làm — 24h đẩy sang Mở rộng, trong khối 54h Backend nâng cao
+
+Bốn hạng mục có tên, có giờ, **không dạy ở trang này**. Chúng nằm trong mục **"Backend nâng cao — năm 3 hoặc tháng đầu đi làm"** của [Mở rộng](/mo-rong): 24h này + 30h nâng cao = khối **54h** ở đó, không cộng vào tổng nào của lộ trình. Lý do chung: chúng làm bạn thành senior chứ không quyết định bạn có được nhận hay không, và ở công ty bạn gặp chúng trong codebase thật với người review — học ở đó nhanh gấp nhiều lần. Nhãn: **năm 3 hoặc tháng đầu đi làm**.
+
+| Hạng mục | Giờ | Vì sao hoãn |
+|---|---|---|
+| Job queue trên Postgres với `SKIP LOCKED` + DLQ | 8 | Outbox 3.4 đã giải "trận kết thúc → ELO/vàng". Queue tổng quát là bài của ngày có việc nền thứ ba |
+| Ports & adapters, ranh giới module của modular monolith | 8 | `caro-engine` 0 I/O đã là bài học thật. Kiến trúc đầy đủ cần codebase đủ lớn để đau — của công ty |
+| OpenTelemetry trace phân tán đầy đủ | 4 | 5.5 có một trace end-to-end. Sampling, propagation qua outbox — khi có hơn một service |
+| Feature flag, canary / blue-green | 4 | Một VPS, một instance. Canary cần instance thứ hai và lưu lượng thật để chia |
+| | **24** | Nằm trong khối 54h của mục "Backend nâng cao — năm 3 hoặc tháng đầu đi làm" ở [Mở rộng](/mo-rong) — bảng đủ 8 dòng ở đó: 24h này + 30h nâng cao (Kafka/NATS, CQRS, sharding, gRPC) |
+
+## Câu hỏi phỏng vấn thật rơi vào trang này
+
+Trả lời bằng tên thư viện là trượt (luật 9); trả lời bằng số từ `bench/` của mình là đậu.
+
+| # | Câu hỏi | Khối |
+|---|---|---|
+| 1 | Khác nhau giữa 401 và 403? | B3, B1 |
+| 2 | Vì sao PUT idempotent còn POST thì không? | B1, 3.3 |
+| 3 | Khi nào 400, khi nào 409, khi nào 422? | B1 |
+| 4 | Vì sao offset pagination sai? Cursor đổi lấy gì? | B1 |
+| 5 | Version API trên URL hay header? Bao giờ mới cần v2? | B1 |
+| 6 | Thêm một cột vào bảng 10 triệu dòng đang chạy production thì làm thế nào? | B2 |
+| 7 | Thêm index trên bảng lớn mà không chặn ghi? | B2 |
+| 8 | UUID hay bigserial làm khoá chính? | B2 |
+| 9 | Khi nào cố ý phá chuẩn 3NF? | B2 |
+| 10 | Isolation level nào tránh được lost update? | 2.1, B2 |
+| 11 | Rollback một migration thế nào? | B2 |
+| 12 | JWT hết hạn rồi nhưng cần thu hồi ngay thì làm sao? | B3 |
+| 13 | bcrypt/argon2 khác SHA-256 chỗ nào? Salt khác pepper? | B3 |
+| 14 | Refresh token bị trộm — phát hiện bằng cách nào? | B3 |
+| 15 | PKCE giải quyết vấn đề gì? | B3 |
+| 16 | SLO khác SLA chỗ nào? Error budget dùng làm gì? | B4 |
+| 17 | Log gì và không log gì? | B4 |
+| 18 | p99 tăng gấp 10 — nhìn cái gì đầu tiên? | B4, 4.3 |
+| 19 | Postgres chậm gấp 10 — request thread làm gì, chờ bao lâu, bỏ ở đâu? Retry ở đâu thì an toàn? | B4, B1 |
+| 20 | Backup để đâu, restore mất bao lâu? Deploy lên đâu? | B2, 2.7 |
+
+## 📚 Nguồn học
+
+| Nguồn | Khối | Đọc phần nào |
+|---|---|---|
+| Martin Kleppmann — *Designing Data-Intensive Applications* | B1, B2 | Ch.7, 9, 11 đã dùng ở 3.3/3.4; thêm ch.4 *Encoding and Evolution* |
+| Roy Fielding — luận án, chương 5 | B1 | Chỉ phần REST constraints |
+| RFC 9110 *HTTP Semantics*; RFC 9457 *Problem Details for HTTP APIs* (thay RFC 7807) | B1 | Idempotent methods, conditional requests, status codes; 9457 đọc trọn — 7807 chỉ để nhận ra khi gặp trong code cũ |
+| RFC 6749 + RFC 7636; RFC 8252; RFC 9700; RFC 7519; OpenID Connect Core | B3 | Authorization code, PKCE — đọc hiểu; 8252: vì sao native app phải PKCE + trình duyệt hệ thống; 9700 *OAuth 2.0 Security BCP*: PKCE bắt buộc, refresh rotation + reuse detection, §4.14 liên kết theo `sub`; JWT registered claims, mục `alg`; OIDC Core mục 3.1.3.7 xác minh ID token |
+| *Use The Index, Luke* | B2 | Đã dùng ở 2.1; thêm phần khoá ngẫu nhiên và pagination |
+| Google SRE Book | B4 | *Service Level Objectives*; *Monitoring Distributed Systems* |
+| OWASP API Security Top 10; Cheat Sheet *Password Storage*, *JSON Web Token* | B1, B3 | BOLA (chính là IDOR); tham số argon2id/bcrypt; bẫy JWT |
+| Postgres docs: `ALTER TABLE`, `CREATE INDEX` | B2 | Mục Notes của `ALTER TABLE`; *Building Indexes Concurrently* |
+| 12factor.net | B4 | III Config, X Dev/prod parity |
+
+## 🔒 Hợp đồng AI cho trục này
+
+Theo [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-thêm--bản-server) và mục [Đọc hiện vật](/he-thong-hoc#đọc-hiện-vật) của hợp đồng AI:
+
+| Vùng | AI được | AI không được |
+|---|---|---|
+| Thiết kế API, mô hình dữ liệu (B1, B2 schema) | Giải thích khái niệm; **ra đề** — take-home giả, schema có lỗi cài sẵn (luật 8, 9); review bản thiết kế **bằng câu hỏi** | Đưa bản thiết kế; đưa bản sửa. Review trả về câu hỏi, không trả về schema mới |
+| Đọc hiện vật (`pg_locks`, `pg_stat_activity`, dashboard) | Dạy cách đọc một **loại** hiện vật: `wait_event_type` nghĩa gì, panel nào là saturation | Nhìn output **của bạn** và nói nguyên nhân |
+| Migration chạm dữ liệu thật (LAB B2); session, refresh token, shared state (LAB B3) | Tên khái niệm, link RFC, câu hỏi | Vùng AI-free suốt lộ trình — kể cả pseudo-code |
+| Runbook, tài liệu SLO (B4) | Hỏi "runbook này thiếu bước nào?" | Viết hộ — runbook không phải của bạn thì 2h sáng bạn không dùng được |
+
+Mọi phiên AI ghi prompt nguyên văn vào `notes/ai-sessions/`.
+
+## → Tiếp theo
+
+1. Đọc lần đầu ngay sau 1.5 — chỉ B1; làm LAB B1 sau 2.3, khi có leaderboard thật. Phần còn lại đóng tới đúng phase của nó.
+2. Nền chạy dưới cả bốn khối — tiến trình, bộ nhớ, mạng, Linux — ở [Nền tảng hệ thống](/nen-tang-he-thong).
+3. Phía client chạm B3 (token trên thiết bị, install-id) ở [Android core](/android-core).
+4. Vị trí 30h này trong bức tranh lớn và thứ tự cắt khi trễ: [Roadmap 26 tháng](/roadmap). Bốn hạng mục 24h, nằm trong khối 54h của mục "Backend nâng cao — năm 3 hoặc tháng đầu đi làm": [Mở rộng](/mo-rong).

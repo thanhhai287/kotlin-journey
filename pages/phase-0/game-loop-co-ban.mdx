@@ -1,0 +1,216 @@
+# Game loop & state machine — module 0.6
+
+Trang này trả lời một câu hỏi: **một server game chạy vòng lặp thế nào để mô phỏng không trôi khỏi thời gian thật, và để chạy lại được y hệt?** Mở nó vào buổi INPUT đầu tuần 10, sau khi xong [Concurrency nhập môn](/phase-0/concurrency-nhap-mon).
+
+---
+
+| | |
+|---|---|
+| Mã module | 0.6 |
+| Giờ | 4h |
+| Tuần | W10 |
+| Cần trước | 4.4 `sealed class` + `when` ([Kotlin Core I](/phase-0/kotlin-core-1)) |
+| Dùng lại ở | `caro-engine` (0.9, W12–13) → **room ticker của CARO v0** (1.6, P1 — đồng hồ lượt và timeout ghép trận chạy bằng đúng loop accumulator này, 1 tick/giây) → **jitter của ticker dưới 2.000 kết nối** (2.5, P2) → **ARENA tick 20Hz** (3.2, P3, W68–84) |
+| Ngưỡng | Vòng lặp 10.000 tick in được drift; cùng seed cho ra cùng chuỗi |
+
+Game loop là trái tim của mọi game server. Trang này dạy đúng ba thứ — vòng lặp `dt` cố định, state machine bằng `sealed class`, RNG có seed — và cả ba sống trong mọi sản phẩm từ đây tới cuối lộ trình: `caro-engine` ở W12, room ticker của CARO v0 ở P1, bench jitter ở P2, rồi ARENA 20Hz ở P3 (W68–84). Vòng tick không được phép ngủ 14 tháng rồi bất ngờ xuất hiện ở module rủi ro nhất — nó phải chạy trong sản phẩm ngay từ P1. Không thứ nào ở đây là lý thuyết trang trí.
+
+## 🎯 Sau module này bạn làm được
+
+- [ ] Viết một vòng lặp fixed timestep có accumulator, chạy 10.000 tick và in ra drift
+- [ ] Nói được vì sao "chạy nhanh hết sức" và "`dt` biến thiên" đều sai, mỗi cái sai kiểu khác nhau
+- [ ] Model trạng thái một phiên chơi bằng `sealed class` + `when` exhaustive, không `else`
+- [ ] Chứng minh bằng test rằng cùng một seed cho ra cùng một chuỗi số
+
+---
+
+## 1. Vòng lặp có `dt`
+
+Mọi vòng lặp game đều cùng một hình dạng: đọc input → cập nhật state một bước `dt` → phát state ra ngoài. Câu hỏi khó duy nhất là `dt` bằng bao nhiêu và ai quyết định nó.
+
+| Kiểu vòng lặp | Cách làm | Vì sao |
+|---|---|---|
+| Chạy nhanh hết sức | Lặp vô hạn, gọi `update()`, không đo thời gian | **Sai.** Tốc độ mô phỏng dính vào tốc độ CPU: máy nhanh gấp đôi thì nhân vật đi nhanh gấp đôi. Đốt 100% một core để mô phỏng thứ chỉ cần 20 lần mỗi giây. Hai máy chạy cùng một trận ra hai kết quả |
+| `dt` biến thiên | Đo thời gian vòng trước, truyền vào `update(dt)` | **Sai.** Vật lý không ổn định: `dt` lớn thì vật xuyên qua tường, `dt` nhỏ thì tích luỹ sai số kiểu khác. Nặng hơn: `dt` phụ thuộc tải máy nên **không tái lập được** — chạy lại cùng input ra kết quả khác |
+| Fixed timestep + accumulator | `dt` là hằng số; thời gian thật thừa ra được cất vào accumulator | **Đúng.** Phần còn lại của trang |
+
+**Sự thật:** `dt` biến thiên không phải "kém chính xác hơn một chút". Nó phá khả năng tái lập — thứ mà determinism, replay và chống gian lận đều đứng lên trên. Mất nó là mất cả ba, cùng lúc.
+
+---
+
+## 2. 📦 Fixed timestep + accumulator
+
+`dt` là hằng số do bạn chọn, không do máy chọn. **20Hz nghĩa là 20 tick mỗi giây, tức `dt` = 1000ms / 20 = 50ms.** Server hứa: mỗi 50ms mô phỏng đúng một bước, không hơn không kém.
+
+Nhưng vòng lặp thật không bao giờ chạy đúng 50ms — OS xếp lịch, GC dừng thế giới, một tick nặng hơn tick khác. **Accumulator là cái thùng chứa phần thời gian thật đã trôi qua nhưng chưa được mô phỏng.** Ba dòng luật:
+
+1. Đo thời gian thật trôi qua từ vòng trước, cộng vào accumulator.
+2. Chừng nào accumulator còn đủ một `dt`: chạy một tick, trừ đúng một `dt` khỏi accumulator. Lặp lại.
+3. Hết thì nhường CPU, quay lại bước 1.
+
+Bằng số, `dt` = 50ms:
+
+| Vòng | Thời gian thật trôi | Accumulator trước | Số tick chạy | Accumulator sau |
+|---|---|---|---|---|
+| 1 | 50ms | 0ms | 1 | 0ms |
+| 2 | 62ms | 0ms | 1 | 12ms |
+| 3 | 41ms | 12ms | 1 | 3ms |
+| 4 | 118ms (tick nặng + GC) | 3ms | 2 | 21ms |
+| 5 | 30ms | 21ms | 1 | 1ms |
+
+Đọc bảng: sau 5 vòng, thời gian thật đi được 301ms, mô phỏng đi được 300ms (6 tick × 50ms), 1ms còn lại nằm trong accumulator. **Không có mili-giây nào bốc hơi** — đó là toàn bộ ý tưởng. Vòng 4 chạy bù 2 tick vì thời gian thật nhảy một cục; vòng 3 và vòng 5 tiêu bớt phần dư.
+
+```kotlin
+val dtNanos = 50_000_000L          // 50ms = 20Hz
+var accumulator = 0L
+var last = System.nanoTime()
+var tick = 0L
+
+while (tick < 10_000) {
+    val now = System.nanoTime()
+    accumulator += now - last
+    last = now
+
+    while (accumulator >= dtNanos) {
+        update(dtNanos)            // luôn đúng một bước, luôn cùng độ lớn
+        accumulator -= dtNanos
+        tick++
+    }
+    // hết thời gian tích được: nhường CPU rồi quay lại
+}
+```
+
+Chú ý `System.nanoTime`, không phải `System.currentTimeMillis`. Cái sau là đồng hồ treo tường: nó nhảy khi máy đồng bộ NTP hoặc bạn đổi giờ. Đo **khoảng** thời gian thì dùng `nanoTime`. Luật này quay lại ở P1 module 1.1 dưới dạng "cấm `currentTimeMillis` quanh vòng lặp".
+
+### 🛠️ Lab 1 — chạy 10.000 tick, in drift
+
+**drift = thời gian thật đã trôi − (số tick × `dt`).** Nó trả lời "mô phỏng của tôi đang đi sau đời thực bao nhiêu". Với accumulator, mô phỏng **không bao giờ chạy trước** thời gian thật: phần chưa mô phỏng luôn nằm trong thùng, nên drift luôn ≥ 0 — bằng accumulator cộng thời gian của tick đang xử lý. Ở 20Hz, 10.000 tick là 500 giây mô phỏng — chuẩn bị ngồi cạnh máy 8 phút 20 giây.
+
+- [ ] Chạy 10.000 tick, in drift mỗi 1.000 tick và in drift cuối cùng
+- [ ] Đạt khi: drift nằm trong **[0, một `dt`)** — luôn là số dương nhỏ, không bao giờ âm, không tăng đơn điệu theo số tick. Thấy toàn số dương là đúng, không phải loop sai
+- [ ] Ghi vào journal: drift cuối = ____ ms sau 10.000 tick
+
+Drift tăng đều theo số tick là một bug, không phải "sai số chấp nhận được". Nó có nghĩa vòng lặp của bạn đang trôi, và sau một giờ chạy nó lệch hàng phút.
+
+---
+
+## 3. State machine bằng `sealed class`
+
+Vòng lặp trả lời "khi nào chạy". State machine trả lời "chạy cái gì" — vì một phiên chơi không phải lúc nào cũng ở cùng một trạng thái, và tick của mỗi trạng thái làm việc khác nhau.
+
+| Trạng thái | Mang theo dữ liệu | Tick làm gì |
+|---|---|---|
+| `Waiting` | Ai đã vào phòng, mở phòng lúc tick nào | Đếm timeout ghép trận. Không mô phỏng gì |
+| `Playing` | State bàn cờ / entity, tới lượt ai, seed | Chạy một bước mô phỏng, validate input |
+| `Finished` | Ai thắng, lý do, lúc nào | Không tick. Chờ dọn |
+| `Abandoned` | Ai rời, lúc nào | Không tick. Chờ dọn |
+
+```kotlin
+sealed class GameSession {
+    data class Waiting(val players: List<String>, val openedAtTick: Long) : GameSession()
+    data class Playing(val board: Board, val turnOf: String, val seed: Long) : GameSession()
+    data class Finished(val winner: String?, val reason: String, val atTick: Long) : GameSession()
+    data class Abandoned(val leaver: String, val atTick: Long) : GameSession()
+}
+
+fun step(s: GameSession, dtNanos: Long): GameSession = when (s) {
+    is GameSession.Waiting   -> s.checkMatchTimeout()
+    is GameSession.Playing   -> s.simulate(dtNanos)
+    is GameSession.Finished  -> s
+    is GameSession.Abandoned -> s
+}
+```
+
+`step` nhận state cũ, trả state mới. Không sửa tại chỗ, không biến toàn cục. Đây chính là lý do `caro-engine` ở module 0.9 replay được từ log nước đi: **state mới là hàm thuần của state cũ cộng input.**
+
+**Luật sắt, không thương lượng (đã học ở 4.4):** `when` trên `sealed class` **cấm `else`**. Thêm một trạng thái mới — ví dụ `Paused` khi có người mất mạng — thì mọi chỗ `when` thiếu nhánh phải đỏ lúc compile. `else` là công tắc tắt cái radar đó.
+
+Cú pháp `sealed class` nằm ở [Kotlin Core I — module 4.4](/phase-0/kotlin-core-1). Trang này chỉ dùng, không dạy lại.
+
+---
+
+## 4. 🔒 Seeded RNG — `Random(seed)`
+
+`Random(seed)` cho cùng một chuỗi số ở mọi lần chạy. Một dòng code, ba thứ mua được:
+
+**Lưu ý trước khi tin lời hứa đó:** `kotlin.random.Random(seed)` chỉ đảm bảo cùng chuỗi trong **cùng phiên bản Kotlin** — docs nói thẳng "within the same version of Kotlin runtime"; thuật toán bên dưới (XorWow) không phải hợp đồng API và được phép đổi giữa các bản Kotlin. Muốn replay log cũ sau khi nâng Kotlin, dùng `java.util.Random(seed)` (thuật toán LCG được đặc tả trong Javadoc, mọi JVM mọi phiên bản phải cho cùng chuỗi) hoặc tự cài một PRNG đơn giản (xorshift) và ghi tên thuật toán vào README protocol. Chọn `Random` nào là một quyết định phải ghi vào BACKLOG của `caro-engine` (0.9), không phải mặc định.
+
+| Mua được | Cơ chế |
+|---|---|
+| **Replay** | Lưu seed + log input là lưu đủ cả trận. Không cần lưu state từng tick — chạy lại từ đầu là ra đúng cái cũ |
+| **Chống gian lận** | Số ngẫu nhiên sinh trên server từ seed của server. Client không đoán trước được và cũng không "gửi kết quả xúc xắc lên" được |
+| **Bug tái lập được** | Bug nằm ở tick 4.213 của seed 91827. Bạn chạy lại đúng chuỗi đó bao nhiêu lần cũng được. Không có seed thì mỗi lần chạy là một vũ trụ khác, và bug thành "thỉnh thoảng nó bị" — loại bug đắt nhất tồn tại |
+
+**Sự thật:** một server không tái lập được thì mọi báo cáo lỗi từ người chơi đều vô dụng. Bạn không sửa được thứ bạn không gọi ra được lần thứ hai.
+
+**Luật:** mọi nguồn ngẫu nhiên trong vòng tick phải đến từ một instance `Random(seed)` lưu cùng state. Cấm `Random.nextInt()` toàn cục, cấm `Math.random()`, cấm `UUID.randomUUID()` bên trong phần mô phỏng.
+
+### 🛠️ Lab 2 — chứng minh bằng test
+
+- [ ] Test 1: tạo `Random(42)`, sinh 1.000 số vào list A; tạo lại `Random(42)`, sinh 1.000 số vào list B; assert A bằng B
+- [ ] Test 2 (đối chứng): `Random(42)` và `Random(43)` cho hai chuỗi **khác nhau**
+- [ ] Chạy lại cả hai ở một lần chạy JVM khác trên cùng máy — vẫn xanh
+- [ ] Đạt khi: hai test xanh **và** bạn nói được vì sao test 2 phải tồn tại
+
+Test 2 không thừa. Một test chỉ so A với B có thể xanh vì lý do sai — ví dụ cả hai list đều rỗng.
+
+---
+
+## 5. Chỉ nhắc tên — học thật ở P3
+
+Ba thứ dưới đây có tên ở đây để tới P3 (W68–84) bạn không thấy lạ. **Không học ở tuần 10.** Học chúng bây giờ là học giải pháp trước khi gặp triệu chứng — đúng cái bệnh lộ trình này đang chữa. Nhưng vòng tick thì không ngủ tới P3: nó chạy trong room ticker của CARO v0 từ 1.6, và tick jitter được đo lần đầu ở đó.
+
+| Tên | Một câu | Học thật ở |
+|---|---|---|
+| Spiral of death & clamp accumulator | Khi mỗi tick chạy lâu hơn `dt`, accumulator phồng vô hạn và server chết đuối trong việc chạy bù. Cách chặn là kẹp trần accumulator — kèm một cái giá phải trả | Module 3.2, P3 |
+| Tick jitter | Khoảng cách thật giữa hai tick liên tiếp không bao giờ đúng 50ms. Phân bố của độ lệch đó đo được, và phải đo | Đo lần đầu ở 1.6 (file `bench/` tick-jitter của room ticker, 1 tick/giây) → dưới 2.000 kết nối ở 2.5 → ngưỡng p99 ở 3.2, P3 |
+| Snapshot | Ảnh chụp state gửi cho client, để client vẽ được mà không phải chạy cùng mô phỏng | Module 3.2, P3 |
+
+Ở P3 cả ba có ngưỡng bằng số. Ở đây chúng là ba cái tên, không hơn — riêng tick jitter thì từ P1 đã có một file số đo đi kèm sản phẩm.
+
+---
+
+## ⚠️ Bẫy thường gặp
+
+| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
+|---|---|---|
+| Truyền `dt` thật vào `update` "cho chính xác" | Nghe rất hợp lý: thật trôi bao nhiêu thì mô phỏng bấy nhiêu | Chạy lại cùng input ra kết quả khác; test lúc xanh lúc đỏ không lý do |
+| Dùng `System.currentTimeMillis` để đo khoảng thời gian | Quen tay từ code cũ | Drift nhảy một cục khi máy đồng bộ NTP |
+| Dùng `if` thay vì lặp khi tiêu accumulator | Nghĩ mỗi vòng chỉ cần đúng một tick | Sau một cú stall, mô phỏng tụt lại và không bao giờ đuổi kịp — drift tăng đơn điệu |
+| Duyệt entity bằng `HashSet()` / `HashMap()` / `hashMapOf()` trong tick, key là object không override `hashCode` | Key dùng identity hash mặc định → khác nhau mỗi lần chạy JVM; `HashMap` không hứa thứ tự duyệt. (`mutableMapOf()` / `mutableSetOf()` là `LinkedHashMap` / `LinkedHashSet`, giữ thứ tự chèn, nên không mắc) | Cùng seed vẫn ra hai kết quả — thứ tự duyệt không được đảm bảo. Tránh: dùng `List` hoặc `mutableMapOf()`, key là `data class` / id |
+| Một chỗ duy nhất lỡ gọi `Random.nextInt()` toàn cục | Một dòng, không ai để ý khi review | Replay lệch đúng một chỗ, tìm mất cả buổi |
+| Ngủ cứng 50ms mỗi vòng thay cho accumulator | Đơn giản hơn, "cũng ra 20Hz mà" | Lệnh ngủ luôn ngủ dài hơn yêu cầu → drift tăng đều, 10.000 tick lệch hàng chục giây |
+
+---
+
+## 🏁 Ngưỡng đạt
+
+Đạt/trượt, đo bằng chứng cứ, không đo bằng cảm tính.
+
+- [ ] Vòng lặp fixed timestep chạy đủ 10.000 tick và in drift. Drift cuối: ____ ms
+- [ ] Drift không tăng đơn điệu — có số ở ít nhất 3 mốc để chứng minh
+- [ ] `sealed class` 4 trạng thái phiên + hàm `step` dùng `when` exhaustive, không một chữ `else`
+- [ ] Test cùng seed → cùng chuỗi 1.000 số: xanh. Test đối chứng seed khác → chuỗi khác: xanh
+- [ ] Cả ba thứ đã commit vào repo học
+
+## Bài tự kiểm
+
+Trả lời thành lời của bạn, không mở lại trang:
+
+1. Server chạy 20Hz nhưng một tick mất 70ms để xử lý. Vòng tiếp theo xảy ra gì? Sau 10 vòng như vậy thì sao — hiện tượng đó tên là gì?
+2. Vì sao lưu seed + log input đủ để dựng lại cả trận, còn lưu "state mỗi 5 giây" thì không đủ?
+3. Bạn thêm trạng thái `Paused` vào `sealed class`. Compiler báo lỗi ở những đâu? Nếu bạn đã viết `else` thì nó báo ở đâu?
+
+## 📚 Đọc gì
+
+- Gaffer On Games — *Fix Your Timestep!* — bài gốc của accumulator. Phần prediction + reconciliation ở cuối không thuộc Lõi — nó nằm ở [Mở rộng](/mo-rong)
+- Kotlin docs — `kotlin.random.Random`, phần hàm dựng nhận seed — đọc đúng câu "within the same version of Kotlin runtime"
+- Javadoc `java.util.Random` — đoạn đặc tả thuật toán LCG, để hiểu vì sao nó thay được `kotlin.random.Random` khi cần replay qua nhiều phiên bản
+- Javadoc `System.nanoTime` — đọc đúng đoạn nói vì sao nó dùng để đo khoảng thời gian, còn `currentTimeMillis` thì không
+
+## → Tiếp theo
+
+- Ngay trong W10: khởi động [Project 1 — Túi đồ & Ví CLI](/phase-0/projects), và blank-file #3 vào 45 phút đầu buổi T5
+- W12–13: `caro-engine` — nơi state machine phiên và `Random(seed)` của trang này thành hiện vật có test: [Hai project CLI](/phase-0/projects)
+- P1 module 1.6: CARO v0 — đồng hồ lượt và timeout ghép trận chạy bằng đúng loop accumulator này trong room actor, kèm file `bench/` tick-jitter. Đây là chỗ vòng tick của W10 lên sản phẩm lần đầu
+- Xem W10 nằm ở đâu trong phase: [Lịch 14 tuần](/phase-0/lich-14-tuan)

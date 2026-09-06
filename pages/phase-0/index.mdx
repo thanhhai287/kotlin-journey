@@ -1,6 +1,57 @@
-# Phase 0 — Nền móng: từ "biết cú pháp" đến "tự build được"
+# Phase 0 — Kotlin viết được, không chỉ đọc được
 
-Đây là cửa vào Phase 0 — tháng 1–3, 10–12 tuần, ~125–140h. Đọc trang này trước, làm bài test đầu vào, rồi mới mở các trang còn lại của mục Phase 0.
+Đây là cửa vào Phase 0 — W1–15, 07/09–20/12/2026, 116h. Trang này trả lời "Phase 0 dạy gì, dài bao nhiêu, chạy nhịp nào, và qua cổng nào". Đọc một lần **sau tag `v0.0.1`**, ở buổi thứ hai; mở lại đúng ba lần nữa: cuối W4, cuối W8, cuối W14.
+
+---
+
+## 🎯 Tuần 0 không tồn tại — chỉ có Ngày 1
+
+**Sự thật:** 5 tuần vừa qua ở 0h không phải trượt tiến độ. Đó là thất bại kích hoạt, và nguyên nhân nằm trong chính bộ tài liệu này — 27 ô checklist và một bài test 12 câu đứng chắn trước dòng code đầu tiên. Bản này xoá cả hai. Không có Tuần 0. Không nghi thức nào tồn tại trước tag `v0.0.1`.
+
+| Ngày 1 | Nội dung |
+|---|---|
+| Khi | Thứ Hai 07/09/2026, 20:00, **90 phút** |
+| Làm | IntelliJ IDEA Community, `main.kt` chạy được, repo public, 1 commit, tag `v0.0.1` |
+| Không làm | Không Gradle, không đọc gì trước, không test |
+| AI | Được gỡ rối cài đặt máy mình toàn phần — JDK, IDE, SSH/PAT GitHub. Máy của bạn không phải nội dung học |
+| Ngưỡng | Tag tồn tại ≤14 ngày |
+
+Nếu bạn đang đọc trang này trước 20:00 Thứ Hai 07/09 — đóng nó lại, mở IntelliJ.
+
+**DP0 — 21/09/2026.** Câu hỏi duy nhất: tag `v0.0.1` có tồn tại không? Chưa có → trang duy nhất còn mở là Ngày 1. Mọi trang khác tự ẩn. Thử lại. Không có câu "vấn đề nằm ở bạn".
+
+Khung Phase 0 sau tag đó:
+
+| Con số | Giá trị |
+|---|---|
+| Tuần lịch | W1–15 (07/09–20/12/2026) |
+| Tuần chạy | 14 — W15 là buffer |
+| Giờ tại bàn — cột ramp | **116h** = 97 nội dung + 15 nghi thức + 4 dự phòng. Nghi thức 15h tách làm hai: **9h trong buổi** (journal + blank-file) và **6h buổi CN 30'** (W3–14) — buổi CN nằm ngoài cột ramp 6/8/10 |
+| Giờ đồng hồ thật | **122h** = 116h cột ramp + 6h buổi CN ngoài buổi |
+| Nhịp | Ramp 6h → 8h → 10h, có cổng bằng hiện vật |
+| Cổng ra | DP2 cuối W14 — bảng tốt nghiệp ≥8/10 |
+
+Giờ ở đây là giờ đồng hồ tại bàn — một buổi 2h có ~70 phút deep work, phần còn lại là warm-up, đọc lại, journal.
+
+## ⚠️ Ramp 6 → 8 → 10 — cấm vượt bậc
+
+Bạn chưa ghi được giờ nào, nên bắt đầu ở 6h — con số bạn chứng minh được. Lên bậc bằng hiện vật, không bằng cảm giác "tuần này ổn".
+
+| Bậc | Tuần | h/tuần | Tổng của bậc | Buổi trong tuần | Cổng lên bậc kế |
+|---|---|---|---|---|---|
+| **6h** | W1–4 | 6 | 24h | T2 INPUT 2h · T4 BUILD 2h · T7 LONG BUILD 2h · CN 30' từ W3 (ngoài cột giờ) | **DP1a** cuối W4 |
+| **8h** | W5–8 | 8 | 32h | + T5 READ 1h · T7 lên 3h · blank-file 45' từ W6 | **DP1b** cuối W8 |
+| **10h** | W9–14 | 10 | 60h | + T3 BUILD 2h | **DP2** cuối W14 |
+| | | | **116h** | | |
+
+Cộng đúng 24 + 32 + 60 = 116h. Cột giờ module của P0 **là** ramp 6/8/10 = 116h; buổi CN 30' (W3–14, 6h) nằm ngoài cột này — giờ đồng hồ thật của P0 là **122h**. Trong 116h của cột ramp: 101h module (97 + 4 dự phòng), 9h nghi thức trong buổi (journal cuối buổi, blank-file 45' đầu T5), 6h còn lại là đệm trong buổi cho buổi rơi và module tràn.
+
+| Cổng | Khi | Dữ liệu — hiện vật, không tự khai | Không đạt |
+|---|---|---|---|
+| **DP1a** | Cuối W4 | ≥3 buổi deep-work trọn 70' (T2 · T4 · T7) trong **≥3/4 tuần** W1–4 — journal có commit cùng ngày. Ngày 1 đếm là 1 buổi. Rơi đúng một buổi trong 4 tuần vẫn đạt, khớp luật 90% | Giữ 6h. Không phạt, không kéo dài |
+| **DP1b** | Cuối W8 | 4 tuần liên tiếp W5–8: ≥3 buổi deep-work trọn 70' (T2 · T4 · T7) **và** T5 có commit — bậc 8h chỉ có ba buổi dài ≥70', T5 60' không đếm là buổi trọn | Giữ 8h. P0 kéo tối đa 4 tuần, lấy từ W15 + 2 tuần buffer đời sống của P1 + 1 tuần lấy từ 5 tuần buffer của P2 |
+
+**Luật sắt:** đang ở bậc 6h mà tuần này rảnh, muốn học 10h — cấm. Đo bằng số buổi deep-work trọn 70 phút, không đo bằng giờ: giờ farm được, buổi trọn 70 phút có commit cùng ngày thì không. T6 không xếp gì; mất T6 không tính lỡ lịch.
 
 ## 🌱 Phase 0 dạy cái gì
 
@@ -10,78 +61,73 @@ Bạn không thiếu thông tin. Trong máy bạn có cả kho project do AI sin
 
 Gọi tên hiện tượng ngay từ bây giờ: cảm giác "mình từng đọc hiểu cả hệ thống lớn mà giờ vật lộn với bài 30 phút" có tên là **reading–writing gap**. Đọc hiểu và tự viết là hai cơ bắp khác nhau — bạn mới chỉ tập một cái. Thấy khó không phải vì bạn kém đi, mà vì lần đầu tiên bạn đo đúng cơ cần đo.
 
-Đầu ra của phase: một người viết Kotlin trôi chảy, tự debug, tự phân rã bài toán, có kỷ luật git/test — và có **bằng chứng cụ thể** rằng "mình tự làm được", không phải cảm giác.
+Đầu ra của phase: một người viết Kotlin trôi chảy, tự debug, tự phân rã bài toán, có kỷ luật git/test — và có **bằng chứng cụ thể** rằng "mình tự làm được", không phải cảm giác. Bằng chứng có tên file: hai repo tag `v1.0`, năm commit blank-file trong `rebuild/`, một `caro-engine` mà tháng 6 chạy trong server thật.
 
 Ba luật khung sống suốt phase:
 
-- Công cụ duy nhất: **IntelliJ IDEA Community + JDK 21+**. Android Studio chỉ xuất hiện đúng 1 buổi 3h cuối tuần 6 (xem bên dưới).
+- Công cụ duy nhất: **IntelliJ IDEA Community + JDK 21+**. Không Android Studio. Buổi Android field trip cũ đã bỏ — thay bằng server field trip 2h ở P1 (telnet vào server của chính mình, `tcpdump` nhìn gói), nằm trong module 1.2.
 - **AI autocomplete/Copilot tắt hoàn toàn trong IDE.** Toàn bộ luật AI nằm ở [Hệ thống học & luật AI](/he-thong-hoc).
 - Git bằng **CLI**, cấm GUI git trong suốt Phase 0.
 
-## 🎯 Bước 0: làm bài test đầu vào
+## 📦 Mười module — 97h nội dung
 
-Trước khi học bất cứ gì: 12 câu, ~2h, **không AI, không Google** (trừ câu 6 được mở đúng một trang docs quy định). Đề bài nằm trong `progress/assessments/test-dau-vao.md` của workspace học. Đây không phải bài thi đánh trượt — đây là thước đo để cá nhân hoá lộ trình, gian lận chỉ hại chính mình.
+Thứ tự đúng như đánh số. Giờ là giờ đồng hồ. Ngưỡng là đạt/trượt, người lạ xác minh được. Số hiệu **4.1–4.8** trong hai dòng Kotlin core là dãy riêng của Phase 0 — không phải module 4.x của Phase 4 trong [Roadmap](/roadmap).
 
-12 câu đo 12 thứ khác nhau:
+| # | Module | Giờ | Nội dung | Ngưỡng |
+|---|---|---|---|---|
+| 0.1 | **Ngày 1 — kích hoạt** | 2 | 90': IntelliJ, `main.kt`, repo, commit, tag `v0.0.1` | Tag tồn tại ≤14 ngày |
+| 0.2 | [Meta-skills](/phase-0/meta-skills) | 10 | Buổi debugger W2 2h (debug 6 bước) · Bug Hunt Kata W2 + W11 2×1,5h · Git Disaster Recovery W5 1,5h · Docs Quest W2–5 4 × 30' = 2h · "Đọc số đo" W5 30' · decomposition drill W12–13 2 × 30' = 1h = 10h. IOSTV, stack trace, git CLI, README 5 mục, test 3 tầng (từ W4) dạy ngay trong các buổi đó và trong buổi BUILD của 0.3 — không có giờ riêng | Bug Hunt pass; Git Disaster Recovery pass |
+| 0.3 | [Kotlin Core I](/phase-0/kotlin-core-1) 4.1–4.5 | 20 | 4.1 1h · 4.2 3h · 4.3 5h · 4.4 5h, sealed `Waiting/Playing/Finished/Abandoned` · 4.5 6h, 4 bài → log trận, bảng loot = 20h. Tier 1 5 kata × 30' (W2–6, mỗi tuần một kata mở đầu buổi LONG BUILD T7) nằm trong giờ của 4.2–4.5, không phải giờ thêm. Error Zoo 10 lỗi, 20'/buổi W3–6 | Error Zoo 10/10; Tier 1 5 kata |
+| 0.4 | [Kotlin Core II](/phase-0/kotlin-core-2) 4.6–4.8 | 11 | 4.6 W7 6h: lambda, extension, `let/apply`, 1 ví dụ Ktor routing DSL · 4.7 W8 3h: generics đọc-hiểu, `Result` · 4.8 W9 2h: interface + composition. Tier 2 "CSV → log trận → `groupBy`" 2h làm ở W7 ngay sau 4.6 — nguyên liệu để refactor ở 4.7 và 4.8 | Tier 2 (W7) pass; ngưỡng ra cả trang: bài tự kiểm 4.8 ở W9 — đưa phần đọc file ra sau interface, test cũ vẫn xanh |
+| 0.5 | [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) | 8 | W9 — thread, counter 4 thread lost update **thấy tận mắt**, `synchronized`/`AtomicInteger`, `suspend`/`launch`/`runBlocking`/cancel | 1 commit test race đỏ → xanh — tiền thân G1 |
+| 0.6 | [Game loop & state machine](/phase-0/game-loop-co-ban) | 4 | W10 — loop có `dt`, accumulator, state machine sealed class, `Random(seed)` | Loop 10.000 tick in drift; cùng seed → cùng chuỗi |
+| 0.7 | [Byte, bit & số](/phase-0/byte-bit-so) | 5 | W8 — `Int`/`Long` bù hai, tràn số, `shl/shr/ushr/and/or/xor`, hex, `ByteArray`, endian, `ByteBuffer` cơ bản | `encodeInt/decodeInt` round-trip 100k giá trị ngẫu nhiên = 0 lỗi |
+| 0.8 | [Project 1 — Túi đồ & Ví CLI](/phase-0/projects) | 12 | Vật phẩm, 2 túi, chuyển nguyên tử, lưu file. DoD: ≥10 commit, ≥2 branch, không demo cho người ngoài | Tag `v1.0`; 1.000 lần chuyển xen lỗi cố ý → tổng vàng bảo toàn, 0 lệch |
+| 0.9 | [Project 2 — `caro-engine` + `caro-cli`](/phase-0/projects) | 20 | Engine thuần 0 dependency 0 I/O; CLI có file; xuất JSON "thế cờ hôm nay"; trang tĩnh hiển thị JSON đó 1,5h ở W13 (nằm trong 20h, ngoài tuần AI-free). Không undo, không HTTP | Tag `v1.0`; seed + log → cùng bàn cờ 100/100 có test; 20 case biên win-check |
+| 0.10 | Kata tốc độ + [tốt nghiệp](/phase-0/tot-nghiep) | 5 | 3 kata bấm giờ so với chính mình (FizzBuzz, Tier 2, một kata AI chọn) ≈3h · Examiner mode + vấn đáp 12 câu gộp một phiên 1,5h · blank-file #5 (45', nghi thức, ngoài 5h) | Pass ≥10/12 |
+| | **Tổng nội dung** | **97** | | |
 
-| Câu | Đo cái gì |
-|---|---|
-| 1 | Fluency cú pháp thật sự (FizzBuzz biến thể) |
-| 2 | Kỹ năng đọc stack trace — lỗ hổng rẻ nhất để lấp, lãi nhất khi lấp |
-| 3 | Bản năng debug — phần "mô tả cách tìm ra bug" quan trọng hơn phần tìm ra |
-| 4 | Git và terminal có phải công cụ thật của bạn chưa |
-| 5 | Phân rã đề mơ hồ thành đầu việc — lỗ hổng lớn nhất của hồ sơ này |
-| 6 | Đọc API reference tiếng Anh |
-| 7 | Chọn đúng cấu trúc dữ liệu, hay lồng 2 vòng for |
-| 8 | OOP là công cụ giải quyết vấn đề, hay từ vựng thi cử |
-| 9 | Hiểu null — nền cho module quan trọng nhất của Kotlin |
-| 10 | Kiến thức giải thuật trường lớp còn dùng được không |
-| 11 | Diễn đạt kỹ thuật — thứ quyết định điểm phỏng vấn nhiều hơn bạn nghĩ |
-| 12 | **Tự khai trung thực mức phụ thuộc AI** — câu quan trọng nhất bài |
+Bảng này không có dòng riêng cho warm-up và Error Zoo (20'/buổi): warm-up nằm trong 10' đầu buổi, Error Zoo nằm trong 30' consolidate cuối buổi vốn có — chi phí đồng hồ = 0 và không ăn vào khối deep-work 70'. Kata Tier 1 (5 × 30', W2–6) và Docs Quest (4 × 30–45', W2–5) thì khác: Tier 1 mở đầu buổi LONG BUILD T7, Docs Quest mở đầu buổi BUILD T4 — hai buổi khác nhau, để T4 vẫn còn một khối 70' trọn cho module; tổng ≈4,5h, và đã được cộng sẵn — Tier 1 nằm trong 20h của module 0.3, Docs Quest nằm trong 10h của module 0.2. Bug Hunt, buổi debugger, Git Disaster Recovery là giờ deep-work và cũng nằm trọn trong 10h của 0.2. Chỉ hai thứ đứng ngoài 97h: **Tier 2** — một buổi LONG BUILD 2h ở W7, chiếm trọn T7, là **nguyên liệu bắt buộc** của 0.4 (ngưỡng ra vẫn là bài tự kiểm 4.8 ở W9) chứ không nằm trong 11h của 0.4 — và **thử thách tự học thư viện 2h ở W13**. Cả hai lấy từ 4h dự phòng của 116h: 2h + 2h = 4h, quỹ dự phòng vì thế đã có chủ; trượt tuần thì chỉ còn W15 hấp thụ.
 
-Mỗi câu chấm 0/1/2 điểm, tổng 24. **Kết quả quyết định độ dài Phase 0 của bạn:**
+Module nào rơi vào tuần nào — xem [Lịch 14 tuần](/phase-0/lich-14-tuan). Lịch là định hướng; ramp và cổng mới là hợp đồng.
 
-| Điểm (trên 24) | Phase 0 dài | Điều chỉnh |
-|---|---|---|
-| 0–8 | **12 tuần** | Đầy đủ. Đây là điểm phổ biến nhất của hồ sơ này — không tủi thân |
-| 9–16 | **10 tuần** | Câu nào đạt 2 điểm → module tương ứng học lướt (làm bài tự kiểm cuối module, đạt thì qua) |
-| 17–24 | **8 tuần** | Nén phần Kotlin cơ bản. **Không ai được bỏ 2 project** |
+## Ba trang mới của Phase 0
 
-**Luật riêng cho câu 12:** dưới 2 điểm → áp bộ quy tắc AI nghiêm nhất trong [Hệ thống học & luật AI](/he-thong-hoc), **bất kể tổng điểm**. Câu 12 là câu duy nhất bạn có thể tự lừa mình — và cũng là câu đo đúng rủi ro lớn nhất của lộ trình này.
+Phase 0 cũ chỉ có Kotlin thuần. Bản này thêm **9h nền server mới** (game loop 4h + byte/bit 5h), cộng 8h coroutines chuyển từ 4.9 sang module 0.5 — tổng ba trang mới là 17h; và cắt 31h Kotlin core lặp lại (62h → 31h) để lấy chỗ. 5h kata của 4.10 chuyển sang 0.10, không giờ nào bị cắt. Ba trang này trả lời trực tiếp câu hỏi thiết kế của hai project.
 
-Đánh dấu khi xong (sửa file này rồi commit — chính commit là bằng chứng):
+| Trang | Giờ | Vì sao ở Phase 0 chứ không đợi P1 | Trả lời câu hỏi nào |
+|---|---|---|---|
+| [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) | 8 | Server là nhiều client cùng lúc. Phải **thấy tận mắt** counter 4 thread mất số trước khi viết dòng shared-state nào. Thứ tự JMM → coroutines → actor bắt đầu từ đây | 3 câu concurrency trong vấn đáp tốt nghiệp: hai coroutine cùng sửa `MutableList`, huỷ scope cha thì con ra sao, vì sao `Channel`, actor và `Dispatchers` được hoãn sang module 1.4 |
+| [Game loop & state machine](/phase-0/game-loop-co-ban) | 4 | `caro-engine` là state machine có seed. Loop có `dt` + accumulator là nền của ARENA 20Hz ở P3 | "Cùng seed + cùng log → cùng bàn cờ 100/100" — ngưỡng cứng của Project 2 |
+| [Byte, bit & số](/phase-0/byte-bit-so) | 5 | Vàng trong ví là `Int` hay `Long`, tràn ở đâu. Framing length-prefix ở 1.5 và BitWriter ở 3.1 dùng đúng thứ học ở đây | "Vàng lưu kiểu gì, tràn số ở đâu" — quyết định tự chọn số 2 của Project 1 |
 
-- [ ] Làm xong 12 câu trong ~2h, không AI, không Google (trừ câu 6) — ngày làm: ____
-- [ ] Chấm điểm từng câu theo thang 0/1/2 — tổng: ____/24
-- [ ] Chốt độ dài Phase 0 theo bảng trên: ____ tuần
-- [ ] Ghi điểm câu 12: ____/2 — nếu dưới 2, đã đọc lại toàn bộ luật AI ở [Hệ thống học & luật AI](/he-thong-hoc)
-- [ ] Báo kết quả cho AI mentor để chốt danh sách module học lướt / học kỹ
+Ở 0.5 chỉ giới thiệu tên `Channel`, actor, `Dispatchers`, structured concurrency — học thật ở P1 module 1.4.
 
 ## ⚠️ Mười lỗ hổng điển hình — và trang nào trong bộ tài liệu này lấp nó
 
-Đây là bản đồ những chỗ sinh viên CNTT Việt Nam thường hổng. Đối chiếu với kết quả test của bạn — cột cuối chỉ thẳng nơi lỗ hổng đó được lấp trong site này.
+Bản đồ những chỗ sinh viên CNTT Việt Nam thường hổng. Đối chiếu bằng chính bài đầu tiên bạn làm ở W1–2. Cột cuối chỉ thẳng nơi lỗ hổng đó được lấp trong site này.
 
 | Lỗ hổng | Dấu hiệu | Cách lấp | Học ở đâu |
 |---|---|---|---|
-| **OOP thi cử** — thuộc định nghĩa nhưng không model được bài toán thật | Model "bãi giữ xe" thành 1 class 15 field, hoặc kế thừa vô nghĩa | Không dạy lại lý thuyết OOP. Dạy data modeling qua `data class` + `sealed class` | Module 4.4 trong [Kotlin Core I](/phase-0/kotlin-core-1) |
-| **DSA để thi** — giải trên giấy nhưng không biết khi nào dùng Map thay List | Đếm tần suất từ bằng 2 vòng for lồng nhau | Mọi bài Collections đều ép chọn cấu trúc dữ liệu trước khi code | Module 4.5 trong [Kotlin Core I](/phase-0/kotlin-core-1) |
-| **Không đọc error message** | Thấy đỏ là paste vào AI; chỉ đọc dòng đầu stack trace rồi bỏ | Error Zoo — 2 tuần luyện có chủ đích. Lỗ hổng rẻ nhất để lấp, lãi nhất khi lấp | [Meta-skills](/phase-0/meta-skills) |
-| **Chỉ biết println debug** | Chưa bao giờ đặt breakpoint | 1 buổi học debugger + 2 tuần bắt buộc dùng + Bug Hunt Kata | [Meta-skills](/phase-0/meta-skills) |
-| **Không biết chia nhỏ bài toán** | Đề mơ hồ → viết được 3 dòng chung chung | Quy trình IOSTV + decomposition drill hằng tuần. Lỗ hổng lớn nhất, lấp lâu nhất | [Meta-skills](/phase-0/meta-skills) + drill trong [Bài tập](/phase-0/bai-tap) |
-| **Git chưa dùng thật** | Chỉ clone/pull, commit hết lên main với message "update" | Git CLI từ tuần 1 + buổi Git Disaster Recovery | [Meta-skills](/phase-0/meta-skills) |
-| **Sợ docs tiếng Anh** | Chỉ tìm tutorial tiếng Việt/video | Docs Quest hằng tuần — docs chính thức trước, nguồn tiếng Việt chỉ để đối chiếu | [Meta-skills](/phase-0/meta-skills) |
-| **Nhầm "chạy được" với "đúng"** | Không nghĩ tới edge case, chưa từng viết test | Test 3 tầng happy/edge/error, bắt buộc từ tuần 5 | [Meta-skills](/phase-0/meta-skills) |
-| **Ảo tưởng năng lực do đọc code AI** | FizzBuzz 10 phút mà chật vật | Toàn bộ Phase 0 là thuốc; đo bằng benchmark và Friday Rebuild | [Hệ thống học & luật AI](/he-thong-hoc) + mục Tâm lý bên dưới |
-| **Terminal yếu** | Mọi thứ qua nút bấm IDE | 1 buổi tuần 1 + ép dùng git bằng CLI, cấm GUI | Tuần 1 trong [Lịch 12 tuần](/phase-0/lich-12-tuan) |
+| **OOP thi cử** — thuộc định nghĩa nhưng không model được bài toán thật | Model "bãi giữ xe" thành 1 class 15 field, hoặc kế thừa vô nghĩa | Không dạy lại lý thuyết OOP. Dạy data modeling qua `data class` + `sealed class`. Tên gọi chuẩn để trả lời phỏng vấn — 4 tính chất, SOLID, design pattern — gắn vào chính code CARO ở khối hồ sơ P4, không phải ở đây | Module 4.4 trong [Kotlin Core I](/phase-0/kotlin-core-1); state machine sealed class trong [Game loop](/phase-0/game-loop-co-ban) |
+| **DSA để thi** — giải trên giấy nhưng không biết khi nào dùng Map thay List | Đếm tần suất từ bằng 2 vòng for lồng nhau | Mọi bài Collections đều ép chọn cấu trúc dữ liệu trước khi code | Module 4.5 trong [Kotlin Core I](/phase-0/kotlin-core-1); `Int` hay `Long` là quyết định dữ liệu đầu tiên — [Byte, bit & số](/phase-0/byte-bit-so) |
+| **Không đọc error message** | Thấy đỏ là paste vào AI; chỉ đọc dòng đầu stack trace rồi bỏ | Error Zoo — 10 lỗi, 20'/buổi W3–6. Lỗ hổng rẻ nhất để lấp, lãi nhất khi lấp | [Meta-skills](/phase-0/meta-skills) |
+| **Chỉ biết println debug** | Chưa bao giờ đặt breakpoint | 1 buổi debugger 2h ở W2 + bắt buộc dùng + Bug Hunt Kata | [Meta-skills](/phase-0/meta-skills) |
+| **Không biết chia nhỏ bài toán** | Đề mơ hồ → viết được 3 dòng chung chung | Quy trình IOSTV + decomposition drill. Lỗ hổng lớn nhất, lấp lâu nhất | [Meta-skills](/phase-0/meta-skills) + drill trong [Bài tập](/phase-0/bai-tap) |
+| **Git chưa dùng thật** | Chỉ clone/pull, commit hết lên main với message "update" | Git CLI từ Ngày 1 + buổi Git Disaster Recovery W5 | [Meta-skills](/phase-0/meta-skills) |
+| **Sợ docs tiếng Anh** | Chỉ tìm tutorial tiếng Việt/video | Docs Quest — docs chính thức trước, nguồn tiếng Việt chỉ để đối chiếu | [Meta-skills](/phase-0/meta-skills) |
+| **Nhầm "chạy được" với "đúng"** | Không nghĩ tới edge case, chưa từng viết test | Test 3 tầng happy/edge/error từ W4; code chạy đúng với 1 thread và sai với 4 thread | [Meta-skills](/phase-0/meta-skills) + [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) |
+| **Ảo tưởng năng lực do đọc code AI** | FizzBuzz 10 phút mà chật vật | Toàn bộ Phase 0 là thuốc; đo bằng blank-file test 2 tuần/lần, commit nguyên trạng vào `rebuild/` | [Hệ thống học & luật AI](/he-thong-hoc) + mục Tâm lý bên dưới |
+| **Terminal yếu** | Mọi thứ qua nút bấm IDE | Ngày 1 + ép dùng git bằng CLI, cấm GUI | W1 trong [Lịch 14 tuần](/phase-0/lich-14-tuan) |
 
 ## Kiến thức ở trường: giữ gì, bỏ gì
 
-**Dùng lại được ngay** — đánh thức bằng cách làm lại bài quen bằng Kotlin trong tuần 1–2:
+**Dùng lại được ngay** — đánh thức bằng cách làm lại bài quen bằng Kotlin trong W1–2:
 
 - Trực giác Big-O và List/Map/Set — sống lại ngay khi học Collections
 - Từ vựng OOP (class, interface, override) — chỉ cần gắn lại vào bài toán thật
 - Kinh nghiệm C con trỏ → giúp hiểu reference vs value, tại sao hai biến trỏ cùng một object
-- SQL cơ bản — ngủ đông đến Phase 2, không cần đánh thức bây giờ
+- SQL cơ bản — đánh thức ở P2, tháng 9–10, đúng lúc server restart mất trận. Không cần đánh thức bây giờ
 
 **Cần gỡ bỏ chủ động** — đây là những mental model sai phải tháo ra:
 
@@ -89,57 +135,67 @@ Mỗi câu chấm 0/1/2 điểm, tổng 24. **Kết quả quyết định độ 
 - "Code viết một lần phải đúng luôn, sai là dốt" → thay bằng vòng lặp viết–chạy–sửa. **Lỗi là dữ liệu, không phải bản án**
 - "Chạy được là xong" → thay bằng checklist edge case + test
 - Nghìn dòng trong `main`, biến tên `a`, `b`, `tmp` — thói quen code bài tập lớn
-- Tooling lỗi thời (DevC++, Notepad++) → IntelliJ IDEA Community từ ngày 1
+- Tooling lỗi thời (DevC++, Notepad++) → IntelliJ IDEA Community từ Ngày 1
 
 ## Tâm lý: những gì sẽ xảy ra — đọc trước để nhận ra khi tới
 
-**Dự báo trước plateau tuần 3–5.** Khoảng tuần 4 bạn sẽ thấy chững lại và muốn bỏ. Điều này **nằm trong giáo án** — ai cũng gặp. Nó là dấu hiệu não đang tái cấu trúc, không phải dấu hiệu bạn không hợp nghề. Khi tới điểm đó, mở lại đúng đoạn này.
+**Dự báo trước plateau tuần 3–5.** Khoảng W4 bạn sẽ thấy chững lại và muốn bỏ. Điều này **nằm trong giáo án** — ai cũng gặp. Nó là dấu hiệu não đang tái cấu trúc, không phải dấu hiệu bạn không hợp nghề. Nó rơi đúng vào DP1a. Khi tới điểm đó, mở lại đúng đoạn này, rồi đếm số buổi deep-work trong journal — số quyết định, không phải cảm giác.
 
-**Quy tắc so sánh:** chỉ được so **input** — giờ học, số bài, số commit, những thứ mình kiểm soát. **Cấm so output** với người khác. Mạng xã hội dev ("18 tuổi làm app triệu download") — mute trong 12 tuần.
+**Quy tắc so sánh:** chỉ được so **input** — giờ học, số buổi, số commit, những thứ mình kiểm soát. **Cấm so output** với người khác. Mạng xã hội dev ("18 tuổi làm app triệu download") — mute đến hết Phase 0.
 
 **Early wins không hy sinh nền tảng:**
 
-- Tuần 1 đã có sản phẩm chạy được — nhỏ, nhưng là "của mình 100%", cảm giác khác hẳn chạy code AI
-- Bài tập là tool dùng thật: thống kê chính sao kê ngân hàng của mình, tính chính hoá đơn điện nhà mình
-- Demo mỗi 2 tuần cho bạn bè/người thân — nói về code của mình cũng là kỹ năng phỏng vấn
+- Ngày 1 đã có tag `v0.0.1` — nhỏ, nhưng là "của mình 100%", cảm giác khác hẳn chạy code AI
+- Bài tập là vật liệu dùng lại: log trận, bảng loot, túi đồ — domain Project 1 tái dùng ở economy P3, `caro-engine` chạy trong server từ tháng 6 tới tháng 26
+- Từ W4, gửi link bảng tuần cho một người — bất kỳ ai. Nói về code của mình cũng là kỹ năng phỏng vấn
+- W13: trang tĩnh "thế cờ hôm nay" public, gửi link cho 3 người — lần đầu người ngoài chạm vào thứ bạn làm
 
 **Trophy hữu hình** — khi tự nghi ngờ, mở số ra xem, cảm xúc không cãi được số liệu:
 
 - `notes/ERRORS.md` dày lên — mỗi lỗi đã thuần hoá là một chiến tích nhìn thấy được
 - GitHub contribution graph xanh
-- Số liệu benchmark trong `PROGRESS.md`: FizzBuzz làm tuần 0 và tuần 5, bài CSV-groupBy làm tuần 4 và tuần 8 — **bấm giờ cả hai lần, ghi số**. Tiến bộ đo so với chính mình, không so với ai khác
+- Thư mục `rebuild/` — năm file blank-file, kể cả file không compile. Người lạ thấy bạn viết lại được bao nhiêu phần trăm, không cần tin lời bạn
+- Số liệu kata trong `PROGRESS.md`: kata Tier 1 làm lần đầu ở W2–6, Tier 2 ở W7; ở 0.10 làm lại ba kata bấm giờ (FizzBuzz, Tier 2, một kata AI chọn) — **ghi cả hai số**. Tiến bộ đo so với chính mình, không so với ai khác
 
-- [ ] Đã mute các kênh mạng xã hội dev gây so sánh output — giữ nguyên 12 tuần
+Một việc môi trường — không chặn Ngày 1, làm sau tag cũng được:
 
-## Buổi Android field trip — đúng một buổi 3 giờ, cuối tuần 6
+- [ ] Đã mute các kênh mạng xã hội dev gây so sánh output — giữ đến hết Phase 0
 
-Cả Phase 0 chỉ có console, nhưng động lực dài hạn cần neo vào hình ảnh cụ thể: "cái app trên điện thoại mình" mạnh gấp mười lần lời hứa "sau này sẽ được làm app". Vì thế có đúng **một buổi 3 giờ**, kịch bản đóng sẵn, không thương lượng:
+## 🏁 Cổng ra: DP2 cuối W14
 
-- [ ] Cài Android Studio bản Stable mới nhất
-- [ ] Chạy được template Compose mặc định
-- [ ] Đổi text thành tên mình, đổi màu
-- [ ] Thêm một `Button` đếm số lần bấm
-- [ ] Cài app lên **điện thoại thật**, cầm trong tay
-- [ ] Hết đúng 3 giờ: đóng Android Studio, không mở lại cho đến Phase 1 — kể cả đang dở tay
+Phase 0 có **một** bảng tốt nghiệp duy nhất, nằm ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) — mười tiêu chí, người lạ xác minh được từng dòng.
 
-Buổi này còn có tác dụng thứ hai: bạn sẽ tự thấy code Compose đầy lambda, sealed state, modifier chain — *chính những thứ đang học ở Phase 0* — biến "học Kotlin thuần" từ nghĩa vụ thành chuẩn bị có chủ đích.
+| DP2 | Nội dung |
+|---|---|
+| Khi | Cuối W14 |
+| Câu hỏi | Mở P1? |
+| Dữ liệu | Bảng tốt nghiệp **≥8/10, mục 1–5 bắt buộc** |
+| Thiếu | Kéo P0 ≤4 tuần. Không mở trang mở rộng cả năm |
 
-Vì sao chỉ một buổi? Rủi ro sa đà được xử lý bằng cơ chế, không bằng ý chí: timebox 3h, kịch bản cố định, và điều kiện mở khoá [Phase 1](/phase-1) là **tốt nghiệp Phase 0**. Android là phần thưởng, không phải cám dỗ.
+Không có "≥30 ngày commit", không có "≥6,5h/tuần" trong bảng — hai thứ farm được ở lại hàng phụ bảng tuần, không DP nào dùng chúng làm cổng.
 
 ## 📚 Bản đồ bộ tài liệu Phase 0
 
 | Trang | Dùng khi nào |
 |---|---|
-| [Lịch 12 tuần](/phase-0/lich-12-tuan) | Đầu mỗi tuần — xem tuần này trọng tâm gì, bao nhiêu giờ, nhịp một buổi ra sao |
-| [Meta-skills](/phase-0/meta-skills) | Mở mỗi khi bí: IOSTV, đọc error, debug 6 bước, đọc docs, git, test 3 tầng |
-| [Kotlin Core I](/phase-0/kotlin-core-1) | Học các module Kotlin nửa đầu phase — từ setup đến collections |
-| [Kotlin Core II](/phase-0/kotlin-core-2) | Học các module nửa sau — từ lambda/extension đến coroutines nhập môn |
-| [Bài tập & drill](/phase-0/bai-tap) | Kata warm-up mỗi buổi, bài Tier 2, decomposition drill, Docs Quest |
-| [Hai project](/phase-0/projects) | Tuần 7 (Sổ Chi Tiêu CLI) và tuần 10–12 (Flashcard capstone) |
-| [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) | Đọc ngay tuần 1 để biết đích; quay lại tuần 10–12 để tự chấm |
+| [Lịch 14 tuần](/phase-0/lich-14-tuan) | Đầu mỗi tuần — tuần này trọng tâm gì, bậc ramp nào, blank-file lần mấy, DP nào |
+| [Meta-skills](/phase-0/meta-skills) | Mở mỗi khi bí: IOSTV, đọc error, debug 6 bước, đọc docs, git, test 3 tầng, đọc số đo |
+| [Kotlin Core I](/phase-0/kotlin-core-1) | W1–6 — từ "Kotlin khác Java chỗ nào" đến Collections |
+| [Kotlin Core II](/phase-0/kotlin-core-2) | W7–9 — lambda, extension, generics đọc-hiểu, interface + composition |
+| [Byte, bit & số](/phase-0/byte-bit-so) | W8 — trước khi quyết định kiểu dữ liệu cho vàng ở Project 1 |
+| [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) | W9 — một commit race đỏ → xanh, tiền thân G1 |
+| [Game loop & state machine](/phase-0/game-loop-co-ban) | W10 — ngay trước Project 1, nền của `caro-engine` |
+| [Bài tập & drill](/phase-0/bai-tap) | Kata warm-up, Error Zoo, Tier 1, Tier 2, decomposition drill, Docs Quest |
+| [Hai project CLI](/phase-0/projects) | W10–11 Túi đồ & Ví · W12–14 `caro-engine` + `caro-cli` |
+| [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) | Đọc ngay W1 để biết đích; quay lại W12–14 để tự chấm |
 | [Hệ thống học & luật AI](/he-thong-hoc) | Trước khi mở AI ra hỏi bất cứ gì |
-| [Tiến độ](/progress) | Cuối mỗi buổi và weekly review Chủ nhật |
+| [Tiến độ](/progress) | Cuối mỗi buổi (journal 3 dòng) và CN 30' (bảng tuần) |
+| [Phase 1](/phase-1) | Khoá. Mở khi DP2 pass |
+
+Trang mở rộng không nằm trong bản đồ này — chỉ mở khi ≥10h thật 4 tuần liên tiếp và giờ tích luỹ ≥90% kế hoạch, không bao giờ trong Phase 0.
 
 ## → Tiếp theo
 
-Làm bài test đầu vào trước (mục "Bước 0" phía trên) — không có điểm test thì chưa biết Phase 0 của bạn dài bao nhiêu tuần. Có điểm rồi → mở [Lịch 12 tuần](/phase-0/lich-12-tuan) và bắt đầu tuần 1.
+1. Ngày 1 — 90 phút, tag `v0.0.1`. Không đọc thêm trang nào trước đó. Chi tiết buổi đầu ở W1 trong [Lịch 14 tuần](/phase-0/lich-14-tuan).
+2. Sau tag: đọc [Hệ thống học & luật AI](/he-thong-hoc) một lần, rồi bật journal 3 dòng từ buổi kế tiếp.
+3. Trong W1: đọc [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) để biết mười tiêu chí mình đang đi tới.

@@ -1,211 +1,378 @@
-# Roadmap 24 tháng — toàn cảnh
+# Roadmap 26 tháng — toàn cảnh
 
-Trang này trả lời đúng một câu hỏi: khoảng 1.135 giờ của bạn đi đâu, và vì sao chúng không đi chỗ khác. Mở nó ra khi bạn nghi ngờ lộ trình, khi trễ tiến độ và cần biết cắt gì trước, hoặc khi có người bảo bạn "học Java trước cho chắc nền".
+Trang này trả lời đúng một câu hỏi: **839 giờ** của bạn đi đâu, và vì sao chúng không đi chỗ khác. Mở nó khi bạn nghi ngờ lộ trình, khi trễ tiến độ và cần biết cắt gì trước, hoặc khi có người bảo bạn "học Java trước cho chắc nền" hay "làm Android đi cho dễ xin việc".
 
-Nhịp học buổi tối, lịch tuần, quy tắc sống còn và luật AI nằm ở [Hệ thống học & luật AI](/he-thong-hoc). Mọi chi tiết Phase 0 nằm ở [Phase 0 — Nền móng](/phase-0). Trang này chỉ giữ phần bản đồ.
+Nhịp buổi tối, ba nghi thức và hợp đồng AI nằm ở [Hệ thống học & luật AI](/he-thong-hoc). Nghề là gì, stack đầy đủ nằm ở [Nghề backend game](/nghe-backend-game). Trang này chỉ giữ phần bản đồ.
 
-## 🎯 Bản đồ 24 tháng
+---
 
-Ngày bắt đầu: **01/08/2026**. Quỹ giờ: **10–14h/tuần**. Hệ sinh thái tham chiếu: Kotlin 2.4.0, Compose Multiplatform iOS Stable, Navigation 3, KSP, R8 full mode.
+## 🎯 Luận điểm trung tâm
 
-| Phase | Tháng | Giờ | Tên gọi | Đầu ra kiểm chứng được |
-|---|---|---|---|---|
-| **P0** | 1–3 | ~125h | **Nền móng** — từ "biết cú pháp" đến "tự build được" | Tự build tool console hoàn chỉnh, **không một dòng nào do AI viết** |
-| **P1** | 4–6 | ~150h | **App Android đầu tiên** | App Compose nhiều màn hình, có lưu trữ local, sống sót xoay màn hình |
-| **P2** | 7–11 | ~245h | **Chuẩn Junior** | **App live trên Google Play Store**, có unit test, đúng bar JD Junior VN |
-| **P3** | 12–14 | ~135h | **Săn việc** | 30+ đơn apply, ≥3 phỏng vấn thật, giải được LeetCode medium |
-| **P4** | 15–20 | ~290h | **Backend & Sản phẩm riêng** | Client + server chạy thật, ≥10 người dùng ngoài bản thân |
-| **P5** | 21–24 | ~190h | **Chuyên nghiệp hoá** | CI/CD xanh, KMP shared module, crash-free ≥99% |
+**Job đầu tiên là Backend Engineer (Kotlin/Java) ở một công ty bất kỳ tại Việt Nam, bằng MỘT sản phẩm duy nhất đang chạy public — CARO, game cờ caro online async có economy thật và một chế độ ARENA realtime 20Hz — do bạn tự tay dựng từ socket thô lên tới báo cáo load test hai máy. Kênh apply mở từ tháng 9 (06/2027) và không bao giờ đóng. Studio game là đích của năm 3–4.**
 
-**Tổng: ~1.135h.** Không có phép màu nào ở đây — chỉ có kỷ luật cộng dồn.
-
-Ba sự thật quyết định toàn bộ thiết kế bên dưới:
-
-1. **"6 tháng thành Android dev" chỉ đúng với người học full-time 40h/tuần.** Với 10–14h/tuần từ điểm xuất phát chưa từng build app hoàn chỉnh, con số trung thực là **12–14 tháng tới vòng phỏng vấn đầu tiên**. Vẫn nhanh hơn phần lớn người tự học không có hệ thống — vì phần lớn họ không bao giờ tới đích.
-2. **Quỹ giờ là tài nguyên khan hiếm nhất, không phải động lực.** Con số ~1.150h đã trừ Tết, ốm, tuần vỡ kế hoạch, tuần deload. Mọi thứ không nhét vừa con số đó đều đã bị cắt — danh sách cắt nằm ngay bên dưới.
-3. **Rủi ro lớn nhất không phải độ khó, mà là AI.** Đọc hiểu code ≠ viết được code. Hiện tượng này có tên: **reading–writing gap**. Một GitHub đẹp do AI sinh ra lộ ra trong 15 phút phỏng vấn đầu tiên.
-
-## Ba trục đan xen
-
-Lộ trình này **không học tuần tự** từng môn. Ba trục chạy song song, đan vào nhau:
-
-```text
-Tháng:   1  2  3 │ 4  5  6 │ 7  8  9 10 11 │ 12 13 14 │ 15 16 17 18 19 20 │ 21 22 23 24
-Mobile:  ▓▓▓▓▓▓▓▓▓ ████████████████████████████  ░░duy trì░░  ▓▓▓▓ client ▓▓▓▓  ████████
-Backend:                                                      ██████████████
-CS:      (nhúng P0) ▒toolchain ▒network ▒memory │ ███DSA███ │     ▒security      ▒tổng kết
-Nghề:              (GitHub từ tuần 1) ─────────  │ ██apply██ │                   ▒update CV
-```
-
-- **Mobile là dòng chính.** Kiến thức CS được dạy **just-in-time** — gắn vào đúng tuần Mobile cần nó: học Retrofit thì 2h về HTTP/TLS/pin, học Room thì 2h về index/transaction, gặp memory leak đầu tiên thì mới có buổi LeakCanary + GC. Học CS "cho biết" trước khi có nhu cầu thật là cách quên nhanh nhất.
-- **Backend là một block riêng, đặt SAU mốc xin việc.** Lý do ở mục kế tiếp.
-- **Nghề bắt đầu từ tuần 1**, không phải tháng 12: GitHub public ngay từ project đầu tiên.
-- Tỷ lệ giờ ở P1–P2: khoảng 70% Mobile / 20% CS / 10% hệ thống học và Git. Ở P4: khoảng 60% Backend / 30% Mobile / 10% CS.
-
-## Những gì đã bị cắt — và vì sao
-
-Đọc mục này để yên tâm rằng việc bỏ chúng là **có chủ đích**, không phải thiếu sót.
-
-### Cắt hoàn toàn khỏi 24 tháng đầu
-
-| Bị cắt | Lý do |
-|---|---|
-| **C/C++ và JNI/NDK** (~40h) | Không một tin tuyển dụng Junior Android nào ở VN yêu cầu NDK. Kiến thức memory/GC vẫn được dạy — qua Android Profiler + LeakCanary, không cần C. Quay lại năm thứ 3 nếu làm media/game/security |
-| **Java như một khoá học** | Bạn sẽ viết Kotlin, không viết Java. Java được dạy 2 liều nhỏ (~15h) ở mức đọc hiểu + interop, đặt SAU Kotlin |
-| **Spring Boot** | Chỉ có chỗ cho MỘT backend stack. Ktor thắng: Kotlin thuần, nhẹ, dùng chung được với KMP |
-| **Wear OS, CameraX/Media3 chuyên sâu, adaptive layout nâng cao** | Ngách. Junior không bị hỏi. Học khi job hoặc sản phẩm thật đòi hỏi |
-| **XML View, Fragment, LiveData, RxJava, kapt, Dagger thuần, AsyncTask, Gson, Picasso, Volley, SharedPreferences** | Xác chết của hệ sinh thái 15 năm tuổi. Chỉ học ở mức đọc hiểu 4–6h để bảo trì code cũ. Mọi tutorial trước 2023 nên bỏ qua — chúng cài mental model sai |
-| **SQLite internals, Kotlin internals sâu (CPS), HTTP/3 QUIC** | Kiến thức phỏng vấn Senior. Giữ lại đúng 1 buổi "coroutine là state machine" để phá hộp đen |
-
-### Hoãn sang v2 (tháng 25+)
-
-| Bị hoãn | Ghi chú |
-|---|---|
-| Compose Multiplatform iOS/Desktop/Web đầy đủ | Ngoại lệ duy nhất: một feature spike ~10h ở P5 nếu đúng tiến độ |
-| MVI và Clean Architecture đầy đủ | P2 đi bằng MVVM + Repository — đúng bar JD Junior VN 2026 |
-| Modularization nhiều module | P5 chỉ chạm mức tối thiểu, trong project 11 |
-| OWASP MASVS audit đầy đủ | Security ở lộ trình này là một liều nhúng trong P4, không phải một cuộc audit |
-| Baseline Profile tự viết và Macrobenchmark | R8 và App Bundle vẫn học ở P2; phần đo hiệu năng sâu để v2 |
-| On-device AI (Gemini Nano) | Feature spike ML Kit cũng chính là thứ bị cắt đầu tiên khi chậm tiến độ |
-
-### Giữ nguyên — xương sống không được đụng
-
-| Xương sống | Vì sao không được đụng |
-|---|---|
-| **Phase 0 trọn vẹn** | Không rút ngắn dù trễ tiến độ. Đây là thứ chữa đúng bệnh "biết cú pháp nhưng chưa build được gì" |
-| **Chuỗi Mobile cốt lõi** | Kotlin → Coroutines/Flow → lifecycle/process death → Compose → MVVM + Repository → Room/DataStore → Retrofit → Hilt → Testing → R8/Play Store. Đây **chính xác** là JD Junior Android VN 2026 |
-| **Hệ thống học** | Nhịp buổi tối, never-miss-twice, tỷ lệ 30:70, quy tắc AI. Chi tiết ở [/he-thong-hoc](/he-thong-hoc) |
-| **Toolchain awareness** (~10h) | `kt` → bytecode → DEX → ART, R8 là gì. Phá hộp đen, và là câu phỏng vấn hay gặp |
-
-### Backend: giữ hay cắt?
-
-**Giữ, nhưng cắt còn ~120h và đặt sau mốc xin việc.** Ba lý do:
-
-- Mục tiêu "tự build sản phẩm riêng" **không thể đạt nếu không có backend** — auth, push, sync, upload. Cắt backend là âm thầm huỷ một nửa mục tiêu của bạn.
-- Nhưng vòng tuyển Junior **không hỏi backend**. Vậy backend không được phép đứng chắn trước mốc xin việc.
-- Giữ lại: Ktor core + Exposed/Postgres + JWT refresh + FCM + upload + Docker deploy. Hoãn: sync protocol đầy đủ, outbox, idempotency nâng cao, SSE, OpenTelemetry.
-
-## Ba câu hỏi dứt khoát
-
-### "Có nên học Java không?"
-
-**Có, nhưng SAU Kotlin, và chỉ ở mức ĐỌC — không phải VIẾT.** Đây là chính kiến, không phải gợi ý.
-
-Lộ trình "học Java trước cho chắc nền" là sai lầm tốn kém nhất mà người mới hay chọn:
-
-- Học Java trước sẽ nhiễm đúng những thói quen phải *bỏ* khi sang Kotlin: null tự do, mutable mặc định, getter/setter, checked exception ceremony.
-- Với mobile dev Kotlin, Java là **ngôn ngữ đọc**: đọc stack trace, đọc source AndroidX, đọc code mẫu StackOverflow. Kỹ năng đọc học nhanh nhất khi có nhu cầu đọc thật.
-- Cái bạn thiếu không phải Java-the-language mà là **JVM-the-platform** — và cái đó học qua Kotlin còn tốt hơn.
-
-Hai liều Java trong lộ trình, tổng khoảng 15h:
-
-| Liều | Khi | Nội dung |
+| Con số | Giá trị | Nghĩa |
 |---|---|---|
-| 1 | Tháng 8, ~10h | Java đọc hiểu: cú pháp, anonymous inner class, checked exception, **type erasure** (quan trọng nhất), đọc stack trace JVM, annotation processing. Học bằng cách đọc source AndroidX rồi dịch sang Kotlin trong đầu |
-| 2 | Tháng 13, ~5h | Interop mức phỏng vấn: platform type (`String!`), `@JvmStatic` / `@JvmOverloads` / `@JvmField`, SAM conversion, vì sao `inline + reified` không gọi được từ Java, collection mutability không được bảo toàn |
+| Tuần lịch | **113** | Thứ Hai 07/09/2026 = W1 → Chủ Nhật 05/11/2028 (26,0 tháng). Đã trừ 19 tuần buffer: Tết 2027 ×2, Tết 2028 ×3, 14 tuần ốm/đời sống/deload rải đều |
+| Tuần chạy | **94** | Tuần lịch có ≥1 commit và ≥1 journal. Tiến độ nội dung đếm bằng tuần chạy. Trung bình **8,9h/tuần chạy** |
+| Giờ đồng hồ tại bàn | **839** | = **680h nội dung + 132h nghi thức + 27h dự phòng** (= 755h lộ trình sản phẩm + 84h ba trục nền tảng). Nghi thức = 1,4h × 94 tuần chạy |
 
-**Không học:** Swing/JavaFX, JSP/Servlet/EJB, Java EE, Maven internals, JVM server tuning.
+So với bản 755h: cộng 84h cho ba trục nền tảng (hệ thống · Android core · backend core), cộng 9 tuần chạy và 9 tuần lịch; buffer vẫn 19 tuần; trung bình vẫn 8,9h/tuần chạy. **Nhịp không đổi — lộ trình chỉ dài thêm 2 tháng.**
 
-### "Có nên học C++ không?"
+Mọi số giờ trên site là giờ đồng hồ tại bàn — đã gồm cấu trúc buổi 2h với ~70' deep work. Tiền VPS nằm ngoài 839h. Meetup và cộng đồng **không** còn là việc ngoài quỹ — từ W39 chúng là một phần của làn thị trường (xem mục "Nếu có việc làm sớm"). Tiếng Anh nói nằm ngoài 839h, **trừ một hiện vật**: bản pitch CARO 3 phút bằng tiếng Anh, viết ra và tập nói 10 lần, xong **trước đợt 0 (W39)** — 2h lấy từ dự phòng P2, cập nhật lại ở 4.5. Con số 1.135h của bản cũ đã bị thay thế: nó giả định 10,9h/tuần đều trên 104 tuần kể cả tuần vỡ — mâu thuẫn với 5/5 tuần vừa qua ở 0h.
 
-**Không, trong 24 tháng đầu. Cắt hẳn.** Đây là mục có chính kiến mạnh nhất trong roadmap.
+Không có phép màu nào ở đây — chỉ có kỷ luật cộng dồn.
 
-- **Nếu bỏ:** bạn vẫn là mobile dev tốt. Mất mát duy nhất là mù chữ trước native crash của SDK bên thứ ba — mà việc đó là mở ticket cho vendor, không phải việc của Junior.
-- **Nếu học:** 40h dự kiến sẽ thành khoảng 60h thực tế (người mới học chậm hơn chừng 1.5 lần) mà đầu ra không bán được cho bất kỳ nhà tuyển dụng Junior Android nào.
-- **Lý do gốc:** vấn đề của bạn chưa bao giờ là "biết ít ngôn ngữ" — mà là **chưa build được gì bằng bất kỳ ngôn ngữ nào**. Học 2–3 ngôn ngữ song song ở giai đoạn này là công thức thất bại kinh điển: mỗi thứ biết thêm 10%, không thứ nào đủ để làm việc.
-- **Khi nào quay lại:** năm thứ 3, khi đã là Junior đi làm và cần đọc native crash, tối ưu sâu, hoặc chuyển sang mảng media/game/CV. Lúc đó học **C** (không phải C++) cộng JNI mechanics khoảng 35h là đủ.
+## Bảng 6 phase
 
-Nếu ở trường bạn đã học C/C++ — tốt, trực giác con trỏ sẽ giúp bạn hiểu reference vs value nhanh hơn. Nhưng đừng đầu tư thêm giờ vào nó.
+| Mã | Tuần lịch | Tháng | Tuần chạy | Giờ | Tên | Đầu ra kiểm chứng được |
+|---|---|---|---|---|---|---|
+| **P0** | W1–15 · 07/09–20/12/2026 | 1–4 | 14 | **116** | Kotlin viết được, không chỉ đọc được | Tag `v0.0.1` ≤14 ngày; 2 repo tag `v1.0`; `caro-engine` seed + log → cùng bàn cờ 100/100; blank-file ≥3/5 (W14 phải pass); trang tĩnh thế cờ public |
+| **P1** | W16–38 · 21/12/2026–30/05/2027 | 4–9 | 19 | **169** | Server đầu tiên, người thật chơi qua web | G1; bench TCP vs UDP; 100 bot loopback p99 xử lý server dưới 30ms; server từ chối gian 100%; `wss://` public; `v0.1` web client; ≥1 người ngoài chơi ≥1 trận (5 người = mục tiêu, không phải cổng); đồng hồ lượt của room actor chạy bằng loop accumulator của 0.6 kèm 1 file `bench/` đo jitter của ticker; vẽ kiến trúc client → TLS → Ktor → room actor với ranh giới thread/process trong 10' |
+| **P2** | W39–67 · 31/05–19/12/2027 | 9–16 | 24 | **218** | Dữ liệu bền + Android client + kênh apply mở | `v1.0` APK; kill -9 (mức 2 — SIGKILL) @50 CCU → G4-lite; lost update tự tạo tự chữa; stampede 2 bench; Testcontainers xanh trong GH Actions; restore từ backup dưới 15'; 20 đơn đợt 0 + bảng gap |
+| **P3** | W68–84 · 20/12/2027–16/04/2028 | 16–20 | 13 | **120** | ARENA tick slice + kinh tế | `ledger-service` v0 (Spring Boot, **viết bằng Java**) chạy `docker compose up` trong 5', có Security/JWT, ghim #1 **trước 21/02/2028**; ARENA: tick jitter p99 dưới 5ms/10', hash khớp 100%, 2 điện thoại; G5 lệch 0; 3 request tấn công bị chặn; `v1.5` |
+| **P4** | W85–103 · 17/04–27/08/2028 | 20–24 | 16 | **144** | Spring Boot + chịu tải + apply đợt 1 | `ledger-service` hoàn thiện + bench so Ktor; outbox kill -9 ×20 = 0 sai; IAP offline; G2, G3, G4 đủ; 40 đơn đợt 1 + bảng gap 40 dòng; take-home công khai; báo cáo G1–G5 + G6 lần 1 |
+| **P5** | W104–113 · 28/08–05/11/2028 | 24–26 | 8 | **72** | Đi làm hoặc sửa-và-apply-lại | Nhánh A: hợp đồng lao động + G6 lần 2. Nhánh B: bảng gap có cột "đã sửa", 40 đơn đợt 2, 5 postmortem công khai, OTel trace 1 request |
+| | **113** | | **94** | **839** | | |
 
-### "Fullstack Kotlin — backend học lúc nào, học gì?"
+Kiểm tra cộng: tuần lịch 15+23+29+17+19+10 = 113 · buffer 1+4+5+4+3+2 = 19 · tuần chạy 14+19+24+13+16+8 = 94 · giờ 116+169+218+120+144+72 = 839 · nội dung 97+143+173+95+117+55 = **680** · nghi thức 15+24+35+20+25+13 = **132** (1,4h × 94 tuần chạy; bản 755h tính 114h theo 85 tuần chạy — hết hiệu lực) · dự phòng 4+2+10+5+2+4 = **27** · 680+132+27 = 839. Nội dung 680 = 614 bản cũ + 84 ba trục (P1 +16 · P2 +56 · P3 +3 · P4 +9) − 18 co lại ở P2–P5 (P2 −10 · P3 −4 · P4 −2 · P5 −2, chia tới từng module ở "Danh mục module" bên dưới) để trả nghi thức cho 9 tuần chạy tăng thêm; P0 (97/15/4) và P1 (143/24/2) giữ nguyên như trang riêng của chúng đã in.
 
-**Tháng 15–20, sau khi hồ sơ xin việc đã hoàn chỉnh. Ktor, không phải Spring Boot.**
+Ba trục nền tảng đan vào P1–P4, không thành phase riêng: [Nền tảng hệ thống](/nen-tang-he-thong) 32h (P1 13 · P2 14 · P4 5) · [Android core](/android-core) +22h (8h cũ → 30h, tất cả ở P2) · [Backend core](/backend-core) 30h (P1 3 · P2 20 · P3 3 · P4 4). Nguyên tắc phân tầng: **cái gì quyết định được nhận thì ở Lõi; cái gì làm thành senior thì học tiếp khi đi làm.**
 
-Ktor mỏng, nó buộc bạn hiểu tầng dưới — thread pool, pipeline, chỗ nào đang blocking. Mỗi giờ học Ktor là một giờ học JVM và coroutines thật. Spring Boot giấu chính xác những thứ bạn đang thiếu sau auto-configuration: nó dạy bạn cách dùng Spring, không dạy bạn cách hiểu máy.
+Bảng trên chỉ in cột Lõi. **363h nội dung mở rộng (219h danh mục gốc + 144h phần senior của ba trục nền tảng)** nằm ở [/mo-rong](/mo-rong): ARENA v2, Play thật, rolling deploy, hash ring, backend nâng cao, tầng AOSP nặng. Trang đó ẩn khỏi nav và không cộng vào tổng nào. Chỉ mở khi ≥10h thật 4 tuần liên tiếp **và** giờ tích luỹ ≥90% kế hoạch. Không mở được không phải bạn dốt — là số chưa cho phép.
 
-## 📦 Thang project 11 bậc
+**Tổng theo nhánh:** Nhánh B (chưa có việc) = 839h. Nhánh A (có việc từ đầu P5, giờ co về ~6h/tuần) ≈ 815h. Có việc sớm hơn thì tổng nhỏ hơn nữa — đó là THẮNG.
 
-Mọi project đều lên GitHub **public từ ngày đầu**. Không có chuyện "để đẹp rồi mới đăng".
+## Hai chiếc đồng hồ
 
-| # | Phase | Tên | Năng lực ép chạm | Giờ | Definition of Done |
+Lộ trình chạy trên hai đồng hồ. Nhầm hai cái này là cách lộ trình 26 tháng biến thành 36 tháng mà không ai nhận ra.
+
+| Đồng hồ | Đo gì | Luật |
+|---|---|---|
+| **Lịch dương** — gốc | Tết, mùa fresher, cửa sổ tuyển | Mốc thị trường (đợt 0, đợt 1, đợt 2, meetup) neo theo **ngày**, không theo tuần chạy. Apply đợt 1 **giữ ngày 21/02/2028** để bám sóng tuyển sau Tết — theo lịch mới ngày đó rơi vào P3 (khoảng W77), chấp nhận được vì apply là hoạt động nền, không phải phần thưởng cuối phase. Đến 21/02/2028 mà mới ở W70 thì **vẫn apply** với hiện vật đang có |
+| **Tuần chạy** — đếm nội dung | Tuần lịch có ≥1 commit và ≥1 journal | Tiến độ module đếm bằng tuần chạy. Tuần không commit không tồn tại trong sổ |
+
+**Luật trượt:** mỗi 4 tuần chạy mất thêm ngoài 19 buffer → phase hiện tại dời mốc lịch 4 tuần, và bảng tuần ghi "tuần chạy đã mất / buffer còn lại". Khi buffer về 0 → áp thứ tự cắt ở mục bên dưới, **không kéo qua 05/11/2028**.
+
+## Nhịp tuần theo bậc ramp
+
+Nhịp tuần theo bậc ramp 6h → 8h → 10h, vai trò từng buổi, cấu trúc buổi và luật cấm vượt bậc nằm ở [Hệ thống học & luật AI](/he-thong-hoc) — trang này không in lại bảng đó. Bản đồ chỉ giữ đúng ba điều nó cần: **kế hoạch giờ tính ở 9h/tuần chạy** (= 90% điểm danh của lịch 10,5h — rơi một buổi mỗi 2 tuần là bình thường, không phải thất bại); **cổng lên bậc là DP1a (cuối W4) và DP1b (cuối W8)**, đo bằng số khối deep-work trọn 70' — xem bảng Điểm quyết định; **T7 là slot mặc định cho lab đo đạc**, từ P2 T4 cũng là slot lab, P3–P4 chạy chế độ hai-slot-lab.
+
+Ba con số giờ khác nhau vì đo ba thứ khác nhau: 6–8h/tuần là năng lực **khởi điểm** · 9h/tuần là **kế hoạch** sau ramp · ≥10h thật 4 tuần liên tiếp là điều kiện **mở trang mở rộng**.
+
+## 📦 Thang dự án 12 bậc
+
+Đây là **một sản phẩm** phát hành theo phiên bản, không phải 12 project rời rạc. `caro-engine` viết ở tháng 3 chạy trong server từ tháng 6 tới tháng 26. Domain Túi đồ & Ví ở P0 tái dùng cho economy ở P3. Mọi thứ lên GitHub public từ ngày đầu — không có chuyện "để đẹp rồi mới đăng".
+
+| # | Phase | Dự án | Mô tả | Năng lực chứng minh | Nhà tuyển dụng nhìn thấy |
 |---|---|---|---|---|---|
-| 1 | P0 | **Sổ Chi Tiêu CLI** | Kotlin core, collections, file I/O, vòng lặp build–chạy–sửa | ~18h | Chạy được; nhập sai không crash; README; ≥10 commit có nghĩa |
-| 2 | P0 | **Flashcard Từ Vựng CLI** *(capstone P0)* | Gọi HTTP, parse JSON, error handling, tách lớp có chủ đích | ~25h | Như trên, cộng: mất mạng không crash; giải thích miệng 100% code; **0 dòng do AI viết** |
-| 3 | P1 | **Chia Tiền Trọ** | Compose cơ bản, state, remember, validation | ~15h | Chạy máy thật; xoay màn hình không mất dữ liệu; không vỡ trên 2 cỡ màn hình |
-| 4 | P1 | **Sổ Chi Tiêu Mobile** *(capstone P1)* | Room, ViewModel, Navigation 3, Coroutines vòng 1 | ~45h | Dữ liệu sống qua kill app; 3 màn hình; tự vẽ được sơ đồ luồng dữ liệu; video demo 2 phút |
-| 5 | P2 | **Thời Tiết & AQI Việt Nam** | Retrofit, Repository, loading/error/empty, Flow vòng 2 | ~35h | 3 trạng thái UI rõ ràng; tắt mạng thì hiện cache cuối; 3 unit test |
-| 6 | P2 | **Ví Của Tôi** *(TRỤ CỘT PORTFOLIO)* | MVVM + Hilt + Room + DataStore + test + R8 + publish Play Store | ~70h | **Live trên Play Store**; crash-free 1 tuần tự dùng; ≥8 unit test; README có screenshot và sơ đồ kiến trúc |
-| 7 | P3 | **UI Clone MoMo/Shopee Home** | Compose nâng cao: LazyLayout, animation, performance | ~20h | Gần pixel-perfect; không recomposition thừa, đo bằng Layout Inspector |
-| 8 | P4 | **Notes API** | Ktor, Exposed, Flyway, JWT + refresh, Docker, deploy thật | ~50h | API sống trên Internet có HTTPS; Postman collection; migration chạy được từ zero |
-| 9 | P4 | **Quản Lý Phòng Trọ** *(capstone sản phẩm)* | Client + server end-to-end: sync, FCM, upload, WorkManager, force-update | ~100h | **≥10 người dùng thật**; mất mạng vẫn ghi được và tự sync; push đến đúng người |
-| 10 | P5 | **KMP Shared Contract** | KMP setup, expect/actual, serialization đa nền tảng | ~25h | Backend và app cùng compile từ 1 module; đổi field thì cả 2 phía báo lỗi lúc compile |
-| 11 | P5 | **Professionalize** | GitHub Actions CI/CD, Crashlytics, test ViewModel, modularization | ~45h | CI chạy test mỗi PR; crash-free ≥99%; coverage domain ≥60%; có CHANGELOG và tag |
+| 1 | P0 | `v0.0.1` | 1 file Kotlin chạy được, tag, ≤14 ngày | Kích hoạt được | Ngày commit đầu của lịch sử 26 tháng |
+| 2 | P0 | Túi đồ & Ví CLI | Inventory + ví, chuyển nguyên tử, tràn số, input ác | Model tồn kho + transaction ở mức file | Không nhìn. Domain tái dùng ở 3.3 |
+| 3 | P0 | `caro-engine` + `caro-cli` + trang tĩnh | Engine thuần 0 I/O, seeded, replay từ log; CLI có file; trang "thế cờ hôm nay" public | State machine, tái lập được | "Tôi viết tháng 3, tháng 6 nó vào server, đổi API ≤3 lần — đây là ADR" |
+| 4 | P1 | Wire lab kit | Echo TCP/UDP/NIO + `tcpdump` + bench | Hiểu transport bằng số | "Tại sao realtime dùng UDP" bằng bảng của mình |
+| 5 | P1 | Concurrency lab | G1, `jstack`, race đỏ→xanh | Không tạo race, biết đo | "Race tôi tự tạo và tự sửa" |
+| 6 | P1 | **CARO `v0.1`** | Server authoritative + bot 100 + `wss://` + web client + người ngoài chơi; đồng hồ lượt chạy bằng loop accumulator của 0.6 ngay trong room actor | Server-authoritative, protocol, deploy, ship; vòng tick sống từ đây | **Link chạy được đầu tiên** + người thật tháng 9 |
+| 7 | P2 | **CARO `v1.0`** | Postgres, Redis, reconnect, Android APK, Testcontainers, backup; jitter của room ticker đo dưới 2.000 kết nối ở 2.5 | SQL thật, isolation, cache, resilience, test | "kill -9 (mức 2 — SIGKILL) mà không mất trận" + CI xanh |
+| 8 | P3 | **ARENA tick slice** | Tick 20Hz, determinism hash, snapshot, 3 cheat bị chặn, 2 điện thoại — cùng loop đã chạy ở 0.6 → 1.6 → 2.5, nay 20 lần/giây | Fixed timestep, không tin client | "Tick rate là gì" bằng số của mình |
+| 9 | P3 | **CARO `v1.5`** | Economy idempotent (G5), bảo mật tối thiểu; outbox + IAP offline dời sang P4 (4.4, 4.11) | G5, ledger append-only | Câu trả lời cho take-home phổ biến nhất |
+| 10 | P3–P4 | **`ledger-service` (Spring Boot, Java)** | v0 ở W68–70 (3.0): account/leaderboard/wallet + Security/JWT + JPA + Flyway + OpenAPI, xong **trước 21/02/2028**; hoàn thiện ở P4 (4.1): actuator, `@Transactional` sâu, bench so Ktor | Stack dày nhất trong JD VN, **viết được Java** | **Repo ghim #1.** Qua máy lọc CV từ đợt 1, không phải từ W103 |
+| 11 | P4 | Load test hai máy + chaos + CD | 300/100 CCU, knee point, outbox kill -9 ×20, G2–G4, rollback | Vận hành stateful server, effectively-once | "Đây là biểu đồ p99 theo thời gian + CPU/RAM" |
+| 12 | P4–P5 | Take-home ×2 công khai + PR OSS | REST CRUD "chán" đúng dạng studio/fintech ra; PR merged | Vòng bạn có lợi thế; code của người khác | Trả lời được "anh từng làm với code người khác chưa" |
 
 **Luật sắt:** không bắt đầu project mới khi project hiện tại chưa đạt DoD, hoặc chưa bị chính thức khai tử kèm một bản retro. Nghĩa trang side-project dở dang là mẫu số chung của mọi lộ trình tự học thất bại.
 
-## ⚠️ Bản đồ điểm bỏ cuộc
+Mốc ngoài rẻ — 4 lần người ngoài chạm vào thứ bạn làm trong 10 tháng đầu, không phải 1: trang tĩnh thế cờ (W14) · lobby `websocat` 2 người (W27) · `v0.1` web client (W38) · 20 đơn apply đợt 0 (W39–41). Với người trượt 5/5 tuần, bằng chứng ngoài giữ họ ở bàn.
+
+## 🛠️ Stack chốt
+
+Bản rút gọn. Lý do từng dòng, danh mục nguồn và bảng chi phí nằm ở [Nghề backend game](/nghe-backend-game).
+
+| Tầng | Chọn | Từ chối |
+|---|---|---|
+| Ngôn ngữ | **Kotlin/JVM, JDK 21+**; Java viết được ở `ledger-service` (3.0/4.1) | Go/C#/C++ làm ngôn ngữ chính |
+| Framework | **Ktor**, `embeddedServer(Netty)`, raw NIO trước | Spring Boot làm framework học đầu |
+| GC | **G1 mặc định**; ZGC là giả thuyết đo ở 2.5 | Kết luận trước module đo |
+| CSDL | **PostgreSQL** nguồn sự thật | MongoDB cho economy |
+| Cache/derived | **Redis** (ZSET, TTL, rate limit); "đến lượt" = Postgres + `SharedFlow` | Redis làm source of truth; pub/sub cho thông báo lượt — pub/sub mất tin khi subscriber vắng mặt lúc `PUBLISH`, đo ở 2.3 bằng `kill -9` subscriber rồi đếm lỗ seq |
+| Transport | **WebSocket over TCP + TLS** | Raw UDP/KCP — chỉ đọc |
+| Serialization | JSON platform; **binary tự đóng gói** cho ARENA | Protobuf — đọc khi đi làm |
+| Kiến trúc | **Modular monolith** | Microservices, Kafka, gRPC |
+| Hạ tầng | **Docker Compose + 1 VPS + VPS sinh tải (P4) + systemd + Caddy + GitHub Actions**; backup đẩy lên object storage S3-compatible free-tier | K8s/Agones — 2h đọc; AWS/GCP làm hạ tầng học — xem bảng Từ chối |
+| Đo lường | HdrHistogram, JFR, async-profiler, `tc netem`, `tcpdump`, Prometheus text | `currentTimeMillis` quanh vòng lặp |
+| Client | **Web thin client (P1, cap 14h)** → **Android + Compose Canvas (P2, 30h [Android core](/android-core) + client 16h Lõi, cap 20h)** | Unity, Godot, LibGDX, KorGE |
+| Testing | JUnit5/Kotest, MockK, **Testcontainers**, Kover | H2 thay Postgres |
+
+**Công nghệ học sau, bounded:** Spring Boot 40h = 20h đầu P3 (3.0, Java, trước đợt 1) + 20h P4 (4.1, + take-home) · Go 4h chỉ đọc Nakama (P5) · K8s/Agones 2h đọc · Unity/Godot 0h · C/C++ 0h.
+
+## Những gì đã bị cắt — và vì sao
+
+**Nói thẳng:** bản trước cắt ~668h nội dung Android rồi tái phân bổ đúng 668h vào server — tổng không đổi, độ khó mỗi giờ tăng mạnh. Bản này **cắt thật**: 1.135h → 755h giờ đồng hồ (614h nội dung); 84h ba trục nền tảng cộng thêm sau đó (→ 839h) là ba mảng **mới**, không phải cộng ngược thứ đã cắt. Cái giảm là số nghề phải học và khối lượng. Cái tăng là độ khó mỗi giờ — từng module đã được định giá lại cho người **không nhận skeleton** từ AI. Không có hệ số ×1,25 riêng; phụ phí đó chính là 170h nội dung bị cắt so với bản trước.
+
+Đọc mục này để yên tâm rằng việc bỏ chúng là **có chủ đích**, không phải thiếu sót.
+
+### Bảng cắt
+
+| Cắt | Giờ thu về | Lý do |
+|---|---|---|
+| P2 cũ "Chuẩn Junior Android + Google Play" | 245 | Nghề khác |
+| P3 cũ "Săn việc Android, LeetCode medium" | 135 | Apply sai JD |
+| KMP, Crashlytics, crash-free ≥99% | ~80 | KPI client |
+| Compose sâu (Navigation, Room, ViewModel, Hilt) | ~100 | Client 1–3 màn; phần nền Android giữ lại nay là 30h [Android core](/android-core), không phải Compose sâu |
+| LeetCode medium sprint | ~100 | Thay bằng DSA rải từ W20: đọc-phân-loại 10' trong warm-up T2/T4 + 1 bài giải thật 30' đầu T5 ở tuần không blank-file — nằm trong buổi vốn có, đổi lại T5 tuần đó đọc source ít hơn, không phải giờ ẩn. Ngưỡng và 7 pattern định nghĩa ở [Hệ thống học](/he-thong-hoc), kiểm ở 4.7 |
+| Sổ Chi Tiêu CLI, Flashcard CLI | — | Đổi đề tài để tái dùng: Túi đồ & Ví, `caro-engine` |
+| Bài test đầu vào + 27 ô checklist Tuần 0 | ~5 | Nguyên nhân thất bại kích hoạt |
+| Android field trip | 3 | Đổi thành server field trip |
+| Anki + FLASH trong journal | ~1h/tuần | Warm-up dùng cho DSA và tự kiểm; một app phải cài thêm là một cổng |
+| Friday Rebuild, AI-LOG.md riêng, journal 5 trường, bảng 7 nghi thức | ~2h/tuần | Gộp vào 3 nghi thức |
+| Kotlin core 4.1–4.8 của **Phase 0** (không phải module 4.x của Phase 4): 62h → 31h | 31 | Cắt phần *lặp lại* (luật "mỗi bài hai lần", 8 bài collection, scope function đủ bộ, generics viết) — không cắt kiến thức. 4.9 coroutines (8h) và 4.10 kata (5h) không bị cắt, chỉ chuyển sang 0.5 và 0.10 |
+| ARENA v2 prediction + reconciliation, M5 interpolation, delta snapshot | 110 | → trang mở rộng |
+| Play internal testing + IAP Google thật, FCM, RTDN | ~30 | → trang mở rộng; Lõi dùng IAP offline |
+| Rolling deploy 2 instance, fencing token lab, hash ring, sharding | ~40 | → trang mở rộng |
+| Spring Boot depth P5 | 15 | Security/JWT đưa thẳng vào 3.0 |
+| DSA block 24h, System design 8h → 4h, take-home ×3 → ×2 | ~30 | DSA rải; take-home công khai |
+| | **≈924** | Tổng gộp trước tái phân bổ (chỉ cộng các ô có số giờ; hai dòng "~h/tuần" và dòng "—" không cộng) |
+
+Mọi ô trong cột "Giờ thu về" là số giờ lấy lại được khi cắt, không phải kích thước cũ của hạng mục. Cột này cộng ra **≈924h gộp**: 245+135+80+100+100+5+3+31+110+30+40+15+30. Mức giảm **ròng** chỉ là 380h (1.135 → 755) vì phần chênh đã được tái phân bổ sang khối server. 84h ba trục nền tảng cộng lên sau đó, thành 839h.
+
+### Bảng bổ sung — 84h ba trục nền tảng
+
+Bổ sung theo yêu cầu mới của người học, đan vào P1–P4. Đây là giờ **cộng thêm** vào bản 755h cũ, không lấy từ bảng cắt. 84h là mức **làm việc được với hiện vật** — đọc `/proc`, `strace`, `jstack`, `dumpsys` của chính server và client rồi giải thích số bằng cơ chế — không phải mức chuyên gia hệ thống; mức đạt và không đạt của từng trục ghi ở trang riêng.
+
+| Trục | Trang | Giờ | Rải vào |
+|---|---|---|---|
+| Nền tảng hệ thống S1–S4: process/thread/CFS · virtual memory/COW/OOM · fd/`epoll`/`strace` (+ lát S3b socket TCP nhìn từ kernel) · signal/PID 1/namespace/cgroup — S1 tách 3h khái niệm cạnh 1.3, phần lab đo cạnh 1.7 và trong 2.5 | [/nen-tang-he-thong](/nen-tang-he-thong) | 32 | P1 13h · P2 14h · P4 5h |
+| Android core: init → Zygote → `system_server` · Binder · ART · Looper/ANR · `oom_score_adj`/lmkd/doze · SELinux · Perfetto — module 2.8, học sau 2.5; bảng kịch bản phần F viết nháp trước 2.4 | [/android-core](/android-core) | +22 (8h cũ → 30h) | P2 |
+| Backend core B1–B4: thiết kế API + HTTP semantics · mô hình dữ liệu + migration an toàn · danh tính/JWT/OAuth2 · observability + SLI/SLO + 12-factor | [/backend-core](/backend-core) | 30 | P1 3h · P2 20h · P3 3h · P4 4h |
+| | | **84** | P1 +16 · P2 +56 · P3 +3 · P4 +9 |
+
+Nguyên tắc phân tầng cho cả ba trục: **cái gì quyết định được nhận thì ở Lõi; cái gì làm thành senior thì học tiếp khi đi làm.** Theo đúng nguyên tắc đó, **144h** phần senior của ba trục đã bị đẩy sang [/mo-rong](/mo-rong), cộng được từ hai bảng riêng ở trang đó: **54h Backend nâng cao** (24h từ [Backend core](/backend-core) + 30h nâng cao: job queue `SKIP LOCKED` + DLQ, ports & adapters, OTel phân tán, feature flag/canary, Kafka, CQRS, sharding, gRPC) và **90h tầng AOSP nặng** (build AOSP, Binder service C++, kernel module, SELinux policy, eBPF). 219h danh mục gốc + 144h = 363h — trang đó không cộng vào tổng nào.
+
+### Từ chối dù chuyên gia đề xuất
+
+| Đề xuất | Trả lời |
+|---|---|
+| Giáo trình netcode đầy đủ (340h), UDP reliability layer, NAT punching, rollback/GGPO, lockstep, lag comp, AoI | Năm 3 |
+| CS 360h như 5 trụ tách riêng | Nhúng symptom-first vào từng module |
+| ARENA từ tháng 3 làm spine / ARENA cắt xuống 28h | Rủi ro cao nhất không đặt sớm nhất; 28h không ra số tick jitter + hash — không có số thì không trả lời được 5 câu netcode bằng số của mình |
+| Go viết được; Unity/Godot/LibGDX/KorGE; K8s/Agones/GameLift/Kafka/NATS/gRPC/MongoDB/GraphQL; Nakama/PlayFab làm nền; Firebase backend; tự viết Raft | Như bản trước: cắt |
+| AWS/GCP làm hạ tầng học (EC2, RDS, ECS, IAM) | 1 VPS đủ để học cơ chế — cloud là cùng cơ chế do người khác vận hành. Đây là hố giờ **đã nhìn thấy**, không phải bỏ sót: câu CV screen "deploy ở đâu, backup để đâu, restore mất bao lâu" trả lời bằng 2.7 + LAB B2 ở [Backend core](/backend-core) (bản `pg_dump` đẩy lên object storage S3-compatible free-tier, restore từ đó) và 4.4 CD; bốn từ IAM/EC2/RDS/S3 đọc đủ để trả lời phỏng vấn, không mở tài khoản AWS. Cloud rộng hơn: khi đi làm |
+| Freelance chủ động tìm để có "dòng CV" | Người chưa build tin cậy được nhận việc trả tiền là rủi ro uy tín + hố giờ không cap được. Chỉ nhận khi có người thật nhờ |
+| Chứng chỉ, khoá học trả phí (video) | Cắt. Sách không thuộc diện này — JCiP và DDIA là nguồn chính thức |
+| C/C++, NDK | Vẫn cắt, 0h. Vấn đề của bạn chưa bao giờ là "biết ít ngôn ngữ" — mà là chưa build được gì bằng bất kỳ ngôn ngữ nào |
+
+### Spring Boot QUAY LẠI — đảo quyết định cũ
+
+Bản cũ ghi: "Chỉ có chỗ cho MỘT backend stack. Ktor thắng." Quyết định đó bị đảo. ADR 01/08 đánh dấu SUPERSEDED 05/09/2026, dòng mới cùng ngày 05/09/2026. Cùng ngày, 40h Spring được **tách đôi** để nửa lõi đi trước đợt apply 1.
+
+| | Bản cũ | Bản này |
+|---|---|---|
+| Spring Boot | Cắt | **40h Lõi, chia hai (cap 48, sàn 32):** **3.0 = 20h ở W68–70, đầu P3**, xong **trước 21/02/2028** — đủ để repo tồn tại và ghim #1 khi đợt 1 mở; **4.1 = 20h ở P4**, chạy **song song** với 40 đơn đợt 1 |
+| Nội dung | — | Repo riêng `ledger-service`, **viết bằng Java**: 3.0 = Spring Data JPA + Flyway + validation + `@RestControllerAdvice` + **Spring Security + JWT (12h)** + springdoc-openapi, `docker compose up` chạy trong 5'. 4.1 = `@Transactional` proxy/self-invocation, JPA lazy/N+1, actuator, chạy bằng cả Gradle và Maven (1h), bench p99 so Ktor, drill Java core 3h |
+| Vị trí trên GitHub | — | **Ghim #1 từ W70.** Take-home ×1 viết bằng Spring (Java). CV headline: "Backend Engineer — Java/Kotlin, Spring Boot, PostgreSQL, Redis, Docker" (Ktor ở mục Also) |
+
+**Vì sao:** khoảng một nửa JD backend ghi Spring và gần như 100% JD ghi Java. Ktor vẫn là framework học **đầu** — nó mỏng, buộc bạn hiểu thread pool, pipeline, chỗ nào đang blocking. Spring Boot che đúng những thứ đó sau auto-configuration, nên nó được đặt **SAU** raw socket + Ktor + Postgres (không giấu cơ chế) và **TRƯỚC** đợt apply chính. Nếu để trọn 40h ở P4 thì 20 đơn đợt 0 + ~40 đơn hằng tuần + nửa đầu đợt 1 — tức phần lớn số đơn của cả lộ trình — đi ra ngoài **không có** repo Spring, đúng thứ máy lọc CV tìm đầu tiên; vì vậy nửa lõi dời lên đầu P3. Ktor để hiểu máy; Spring để qua máy lọc CV. Không phải hai stack cạnh tranh — là hai việc khác nhau.
+
+### Java: đọc từ P1, viết ở `ledger-service`
+
+**Có học Java, SAU Kotlin. Đọc từ P1; viết thật ở 3.0/4.1.** Đây là chính kiến, không phải gợi ý — và nó đã đổi so với bản "chỉ đọc": ghi "Java" lên CV mà không viết được Java là trượt ở phút thứ ba của vòng kỹ thuật, và nhiều online test/take-home của công ty VN ra đề bằng Java.
+
+- Học Java **trước** Kotlin vẫn bị từ chối: nó nhiễm đúng những thói quen phải *bỏ* khi sang Kotlin — null tự do, mutable mặc định, getter/setter, checked exception ceremony. Thứ tự là Kotlin viết được (P0–P2) rồi mới Java.
+- Từ P1, Java là **ngôn ngữ đọc**: đọc stack trace, đọc source JDK/Netty/Spring, đọc JD. T5 READ CODE là nhu cầu đọc thật, mỗi tuần.
+- Từ 3.0 (W68), Java là **ngôn ngữ viết**: `ledger-service` viết bằng Java thay vì Kotlin — cùng domain account/leaderboard/wallet, đặt cạnh bản Ktor Kotlin trong tài khoản GitHub để so sánh, và đó là một điểm cộng phỏng vấn. Take-home Spring (4.6) và online test (4.7) cũng làm bằng Java.
+- Cái bạn thiếu không chỉ là Java-the-language mà còn là **JVM-the-platform** — và cái đó học qua Kotlin còn tốt hơn: JMM ở 1.3, virtual thread ở 2.5, JFR/async-profiler ở 4.3. Nhưng vòng phỏng vấn Java junior ở VN hỏi **đặc trưng ngôn ngữ Java** mà Kotlin che mất: hợp đồng `equals`/`hashCode`, `HashMap` hoạt động thế nào (hashing + collision), Collection Framework, checked vs unchecked exception, `static`/`final`, autoboxing, String pool. Vì thế 4.1 có **3h drill Java core** đúng danh sách đó, nằm trong 40h Spring, không có dòng giờ Java riêng.
+
+**Không học:** Swing/JavaFX, JSP/Servlet/EJB, Java EE, Maven internals (chạy được bằng Maven là đủ). "JVM server tuning" đã bị xoá khỏi danh sách này — nó chính là nội dung 2.5 (G1 vs ZGC, ba mô hình thread) và 4.3.
+
+## ⚠️ Thứ tự cắt khi chậm tiến độ
+
+Chậm tiến độ là chuyện sẽ xảy ra, không phải chuyện có thể xảy ra. Cắt khi mệt là ra quyết định ở thời điểm tệ nhất — nên thứ tự cắt được công bố **ngay bây giờ**, lúc tỉnh táo. Khi tuần chạy thật dưới 94, cắt theo đúng thứ tự này, mỗi bậc ghi một dòng vào `notes/ADR.md`:
+
+| Bậc | Cắt | Thu về (h) | Vì sao cắt trước |
+|---|---|---|---|
+| 1 | Dự phòng phase (27h) | 27 | Đó là việc của nó |
+| 2 | 5.5 OTel + 5.3 postmortem + 5.4 đọc code | 16 | Nhánh B đào sâu, không quyết định việc làm |
+| 3 | 2.10 Observability cơ bản → chỉ structured log + JFR | 3 | Grafana không có trong JD Junior |
+| 4 | 4.8 System design ×4 → ×2 | 2 | |
+| 5 | 2.9 Compose client v1 16 → 10 (bỏ danh sách trận/lời mời, giữ 1 màn + reconnect) | 6 | Client là phương tiện |
+| 6 | 3.2 ARENA 40 → 32 (bỏ reconnect-trong-trận, giữ lát S1–S3 của ARENA + M1 + M3 — `S1–S3` ở đây là ba lát của module 3.2: accumulator, tick 20Hz, determinism hash; không phải bốn tầng S1–S4 của [Nền tảng hệ thống](/nen-tang-he-thong)) | 8 | Vẫn ra số tick jitter + hash |
+| 7 | 1.2 bỏ UDP echo (2h) + 2.5 bỏ G1 vs ZGC (3h) | 5 | |
+| 8 | Spring 40 → 32: cắt trong 4.1 (bỏ actuator + bench so Ktor); 3.0 giữ nguyên Security/JWT + JPA + Flyway | 8 | Đây là bậc cuối |
+
+Quy tắc chung khi recalibrate: **cắt scope, KHÔNG cắt chất lượng.** Cờ vàng trong bảng tuần = cắt độ rộng (giảm 30% số bài/case của module đang chạy), không hạ ngưỡng. Một module nhỏ đạt ngưỡng đáng giá hơn ba module to dang dở.
+
+### Sàn không bao giờ cắt — 11 mục
+
+1. Tag `v0.0.1`
+2. Server public `wss://`
+3. G1 — race đỏ→xanh
+4. `caro-engine` seeded
+5. ARENA ≥32h có tick jitter + hash
+6. Spring ≥32h có Security/JWT
+7. G5 lệch 0
+8. Testcontainers trong CI
+9. Kênh apply liên tục + 2 đợt
+10. Blank-file test
+11. File `bench/` cho mọi thay đổi hiệu năng
+
+### Bốn khối không nằm trong thứ tự cắt
+
+**Săn việc · Spring · SQL · testing.** Bốn khối này quyết định việc làm; cắt chúng là cắt mục tiêu. Bất kể áp lực.
+
+## Điểm quyết định
+
+Mỗi DP là một câu hỏi, một hiện vật, một mặc định. Hiện vật — không tự khai. Đo bằng chứng cứ, không đo bằng cảm tính.
+
+Bảng xếp theo **thời điểm**, không theo số hiệu — vì vậy DP5 (W45) đứng trước DP4 (cuối W67). Số hiệu theo thứ tự chốt của bản kế hoạch, giữ nguyên để đối chiếu `notes/ADR.md`.
+
+| DP | Khi | Câu hỏi | Dữ liệu (hiện vật) | Mặc định |
+|---|---|---|---|---|
+| **DP0** | 21/09/2026 | Có kích hoạt được không? | Tag `v0.0.1` tồn tại? | Chưa có → trang duy nhất còn mở là trang Ngày 1 (90'). Thử lại. Không có câu "vấn đề nằm ở bạn" |
+| **DP1a** | Cuối W4 | 6h → 8h? | ≥3 trong 4 tuần W1–4 có ≥3 khối deep-work trọn 70' (journal có commit cùng ngày; Ngày 1 đếm là một khối) | Không đạt → giữ 6h |
+| **DP1b** | Cuối W8 | 8h → 10h? | ≥3 trong 4 tuần W5–8 có ≥4 khối deep-work trọn 70' — T7 3h đếm là 2 khối, T5 1h không đếm; bậc 8h có đúng 4 khối lịch (T2, T4, T7×2), không có khối dự phòng | Không đạt → giữ 8h; P0 kéo tối đa 4 tuần: W15 + 2 tuần buffer đời sống của P1 (2 tuần buffer còn lại của P1 là Tết, không dời được) + 1 tuần lấy từ 5 tuần buffer của P2 |
+| **DP2** | Cuối W14 | Mở P1? | Bảng tốt nghiệp P0 ≥8/10, mục 1–5 bắt buộc | Thiếu → kéo P0 ≤4 tuần (cùng nguồn như DP1b), không mở trang mở rộng cả năm |
+| **DP3** | Cuối W38 | Client hết cap? Có người chơi? | Giờ web client vs cap 14; log trận từ IP ngoài | Hết cap → đóng băng. Chưa 5 người → vẫn mở P2, 2h/tuần tìm người ≤4 tuần từ dự phòng P2 |
+| **DP5** | W45 (4 tuần sau đợt 0) | Trục apply: backend chung hay game? | Tỉ lệ phản hồi 20 đơn; bảng gap; **tự đếm** tin ITviec/TopDev theo 3 truy vấn ghi sẵn | Backend chung là trục. Gap chỉ ra Spring → 3.0/4.1 giữ; gap chỉ ra SQL/Docker → dồn dự phòng P2 vào đó |
+| **DP4** | Cuối W67 | ARENA mở ở mức nào? | G1; 2.2 xong; giờ tích luỹ ≥90% kế hoạch | Đủ → cap 50h. Thiếu → vẫn 40h Lõi. Sàn 32h. Không bao giờ 0 |
+| **DP6** | Cuối W84 | Play internal thật? | Có ≥12 tester tự nhiên; điều kiện mở rộng | Không → sideload, 0h thủ tục. 4.11 IAP offline không phụ thuộc |
+| **DP7** | Cuối W103 | Nhánh A/B? Portfolio sai ở đâu? | 40+ đơn: 0 phỏng vấn → CV screen fail; có phỏng vấn rớt → lỗ hổng cụ thể | Nhánh B = "sửa rồi apply lại", không phải "học cái mới" |
+| **DP8** | **Bất kỳ lúc nào** | **Có offer backend chung?** | **≥12tr và không bond → NHẬN. Có bond → ≥15tr và bond ≤6 tháng. Dưới 10tr: nhận nếu có đủ hai thứ — (1) code review trên PR của bạn bởi người kinh nghiệm hơn, (2) một hệ thống production thật đang chạy; product hay outsourcing không quan trọng.** Đọc điều khoản đào tạo trước khi ký | **NHẬN. Đây là THẮNG.** Đi làm rút phần còn lại 2–3× |
+| **DP-lang** | Bất kỳ lúc nào | Kotlin hay Go/C#? | Chỉ khi có job thật đòi | Kotlin đến hết, Java viết được từ 3.0. Go/C# tháng đầu đi làm |
+
+**Đã chốt, không mở lại:** Kotlin/JVM; Ktor + Netty; Postgres nguồn sự thật, Redis derived; WebSocket; modular monolith; Compose + VPS; async trước realtime; ARENA ≥32h; Spring ≥32h, nửa lõi trước đợt 1; apply là hoạt động nền.
+
+## Bản đồ điểm bỏ cuộc
 
 Đọc trước để nhận ra khi tới. Bỏ cuộc hiếm khi là một quyết định — nó là thứ xảy ra khi bạn không nhận ra mình đang đứng ở đâu.
 
 | Điểm nguy hiểm | Vì sao | Đã cài sẵn phòng ngừa |
 |---|---|---|
-| **Tuần 4–10 (giữa P0)** | Hết hưng phấn, Kotlin bắt đầu khó (lambda, generics), chưa thấy "app xịn" nào | Quy tắc 20 phút/ngày; project 1 ra kết quả nhìn thấy được ở tuần 5–6; buổi "nếm thử Android" 3h ở tuần 6 làm phần thưởng |
-| **Tháng 5–6 (P1)** | Vỡ trận đầu tiên: lifecycle, coroutines và Compose state ập vào cùng lúc. **Cám dỗ nhờ AI viết hộ cao nhất tại đây** | Coroutines vòng 1 chỉ dạy mức "dùng được"; cho phép app xấu miễn là tự viết; weekly review có câu bắt buộc "tuần này AI viết hộ bao nhiêu phần trăm?" |
-| **Tháng 9–11 (capstone P2)** | Project 70h kéo dài, sinh cảm giác sa lầy | Chia thành 5 milestone 2 tuần, mỗi milestone tự chạy được; DoD khoá cứng từ đầu, cấm thêm feature — scope creep là kẻ giết capstone số 1 |
-| **Tháng 12–15 (apply)** | Bị từ chối 20–30 lần rồi nghi ngờ toàn bộ lộ trình | Đặt kỳ vọng TRƯỚC bằng con số: fresher VN trung bình 30–60 đơn cho offer đầu tiên. Đo tiến bộ bằng tỷ lệ được gọi phỏng vấn, không phải bằng offer |
-| **Tháng 16–18 (backend)** | Học một mình một mảng mới; nếu đã đi làm thì kiệt sức | Backend đã cắt còn mức tối thiểu; project 8 ra được "API sống trên Internet" trong khoảng 6 tuần |
+| **W1–2 (kích hoạt)** | Đã hiện hình 5/5 tuần ở 0h. Nguyên nhân nằm trong repo cũ: 27 ô checklist + bài test đầu vào chặn trước Tuần 1 | Xoá cả 27 ô và bài test. Ngày 1 = 90', một file Kotlin chạy từ IntelliJ, một commit, một tag. Không nghi thức nào tồn tại trước tag. DP0 ngày 21/09 |
+| **W4–10 (giữa P0)** | Hết hưng phấn, Kotlin bắt đầu khó (lambda 4.6, generics 4.7), chưa có gì chạy | Ramp 6→8→10 có cổng bằng hiện vật; blank-file từ W6; Project 1 ra kết quả ở W10–11; trang tĩnh thế cờ W14 là mốc ngoài đầu tiên |
+| **W16–27 (P1, mạng thô + JMM)** | Học một mình một mảng mới; echo server và race counter không "nhìn thấy" được như app | Thứ tự JMM → coroutines → actor, không lắp ráp trước hiểu sau; server field trip 2h nhìn gói bằng `tcpdump`; lobby `websocat` 2 người quen ở W27 |
+| **W39–45 (đợt 0 + SQL)** | 20 đơn gửi đi, phần lớn im lặng. Nghi ngờ toàn bộ lộ trình | Đợt 0 là **vé số miễn phí**, không phải phép đo. DP5 đo bằng bảng gap và số tin bạn tự đếm, không bằng offer. Fresher VN cần nhiều đơn — kênh hằng tuần không bao giờ đóng |
+| **W68–84 (Spring core → ARENA, Tết 2028 W73–75)** | ARENA là module đắt nhất và rủi ro nhất, bị Tết cắt ngang giữa chừng. Cám dỗ nhờ AI viết vòng tick cao nhất ở đây — mà vòng tick là vùng AI-free | Vòng tick **không mới** ở W68: cùng loop accumulator đã chạy ở 0.6 (W10), làm đồng hồ lượt của room actor ở 1.6, đo jitter dưới 2.000 kết nối ở 2.5 — ARENA chỉ tăng lên 20 tick/giây. Cap 50h, cờ vàng ở 80%; sàn 32h vẫn ra số; 3 ràng buộc thiết kế (Int, List thứ tự, seed trong snapshot) khoá scope; ARENA v2 đã ra trang mở rộng. 3.0 Spring core 20h nằm **trước** ARENA (W68–70) nên Tết không cắt nó |
+| **W77–103 (hai làn song song)** | Apply đợt 1 mở 21/02/2028 khi còn giữa P3 (ARENA đang chạy), rồi từ W85 vừa hoàn thiện Spring vừa apply 40 đơn; phỏng vấn rớt sinh cảm giác "chưa đủ, học thêm cái mới đã" | Repo Spring đã tồn tại từ W70; hồ sơ 4.5 làm **đầu tiên** ở W77–78; làn thị trường chiếm T5 + 1h T2 mỗi tuần; DP7 chốt: nhánh B là "sửa rồi apply lại", không phải "học cái mới" |
 
-## Khi chậm tiến độ thì cắt gì
+Lỗi là dữ liệu, không phải bản án. Mỗi điểm trên có một hiện vật để đối chiếu — bảng tuần, bảng gap, `bench/`. Không có hiện vật thì bạn đang đoán.
 
-Chậm tiến độ là chuyện sẽ xảy ra, không phải chuyện có thể xảy ra. Khi nó tới, cắt theo đúng thứ tự này — không cắt ngẫu hứng theo tâm trạng:
+## 🏁 Nếu có việc làm sớm — đó là THẮNG, không phải chệch hướng
 
-1. Feature spike ML Kit
-2. UI Clone (project 7)
-3. KMP shared module — dời sang v2
-4. Thu nhỏ sản phẩm riêng: bỏ upload ảnh, giữ auth + sync + push
-5. Giãn tổng lộ trình từ 24 lên 30 tháng
+**Apply là hoạt động nền, không phải phần thưởng cuối lộ trình.** Đợt 0 ngay sau `v0.1` (W39–41, khoảng 06/2027) · làn nền từ W42: 1–2 đơn/tuần · đợt 1 từ 21/02/2028 (giữa P3, repo Spring đã có từ W70, rồi song song 4.1 ở P4) · đợt 2 từ 08/2028 (W104). Chưa có việc thì không module nào đứng trước module apply.
 
-Quy tắc chung khi recalibrate: **cắt scope, KHÔNG cắt chất lượng.** Một app nhỏ đạt DoD đáng giá hơn ba app to dang dở.
+**Làn thị trường không chỉ là apply lạnh.** Với người tự học, tỉ lệ phản hồi apply lạnh ở VN cỡ 3–7% — 100 đơn sinh ~5 phản hồi, và đó là đặc điểm của kênh, không phải dấu hiệu portfolio kém. Vì thế mục tiêu tổng là **200–250 đơn** trong 26 tháng (20 đợt 0 + 1–2/tuần × ~70 tuần + ≥40 đợt 1 + ≥40 đợt 2), không phải ~100, và từ W39 có thêm **1h/tuần trong slot T5** (đổi lại T5 tuần đó đọc source ít hơn — không cộng thêm giờ vào 839h) cho ba việc đi vòng qua bộ lọc CV: LinkedIn khớp CV headline · 1 bài Viblo/tháng kể lại một phép đo đã có trong `bench/` (không viết nội dung mới) · 1 cộng đồng (Vietnam Java User Group, GDG, group Backend VN). Referral là kênh tuyển junior hiệu quả nhất ở VN và là kênh duy nhất bỏ qua được bộ lọc bằng cấp.
 
-### Hai mốc KHÔNG BAO GIỜ được cắt
+**DP8 kích hoạt bất kỳ lúc nào.** Offer backend chung ≥12tr không bond → NHẬN. 8 giờ mỗi ngày trong một codebase thật, cộng code review từ người giỏi hơn, rút phần còn lại của lộ trình 2–3×. Mọi giờ đặt trước lần apply đầu tiên đang cạnh tranh với chính nó.
 
-- [ ] **Mốc 1 — publish app lên Google Play Store** (kế hoạch: tháng 11) · ngày thật: ____
-- [ ] **Mốc 2 — DSA sprint hoàn tất trước khi apply** (kế hoạch: tháng 12–13) · ngày thật: ____
+Khi đi làm — nhánh A — lộ trình cá nhân co lại chứ không dừng:
 
-Mốc 1 là thứ biến CV từ "có học Android" thành "có ship app". Mốc 2 quyết định bạn qua hay trượt vòng code test. Cắt một trong hai là tự huỷ mục tiêu của cả 24 tháng.
+| Giữ | Đóng |
+|---|---|
+| ~6h/tuần. CARO sống. `INCIDENTS.md` ghi sự cố ở công ty. G6 lần 2 (4h). ARENA giữ bản P3, chỉ deploy | Mọi module khác. G2–G4 bỏ khi đã đi làm là đúng, không phải thất bại |
 
-### Nếu có việc làm sớm — đó là THẮNG, không phải chệch hướng
+Bộ tốt nghiệp nhánh A: G1 + G5 (đã đạt) + 3 mục production tại công ty (1 incident tự xử có postmortem, 1 thay đổi có đo trước/sau, 1 lần on-call/deploy) + G6. Tổng nhánh A ≈ 815h; có việc sớm hơn nữa thì nhỏ hơn nữa.
 
-Từ tháng 13 trở đi, **có offer chấp nhận được thì NHẬN.** 8 giờ mỗi ngày trong một codebase thật, cộng code review từ người giỏi hơn, dạy nhanh gấp 2–3 lần tự học buổi tối.
-
-Khi đi làm thì lộ trình cá nhân co lại chứ không dừng: quỹ giờ về 5–7h/tuần, bỏ các buổi INPUT Mobile (công việc đã lo phần đó), giữ T3 và T5 cho Backend, sáng T7 cho sản phẩm riêng. P4–P5 giãn từ 10 lên 13–15 tháng. Đó là một trade tốt.
+Chỉ nhận đúng thứ hiện vật đã dựng nên: backend chung, kể cả outsourcing, kể cả không-game. Job game backend là pivot nội bộ hoặc nhảy sau 12–18 tháng production — đường duy nhất có người đi qua được.
 
 ## 🔒 Chi tiết từng phase
 
-Trang chi tiết mở khoá theo tiến độ, không mở trước. Lý do: đọc nội dung Phase 2 khi đang ở tuần 3 của Phase 0 chỉ tạo cảm giác bận rộn, không tạo năng lực.
+Trang chi tiết mở khoá theo tiến độ, không mở trước. Đọc nội dung Phase 2 khi đang ở tuần 3 của Phase 0 chỉ tạo cảm giác bận rộn, không tạo năng lực.
 
 | Phase | Trang | Tóm tắt |
 |---|---|---|
-| **P0 — Nền móng** | [/phase-0](/phase-0) — **đã mở** | Tháng 1–3, ~125–140h. Meta-skills (IOSTV, đọc stack trace, debugger, git CLI) cộng Kotlin Core ~72h cộng 2 project CLI. Đầu ra là bằng chứng "mình tự làm được" |
-| **P1 — App Android đầu tiên** | [/phase-1](/phase-1) — 🔒 khoá | Tháng 4–6, ~150h. Compose, state, lifecycle, Room, ViewModel, Navigation 3, coroutines vòng 1. Mở khoá khi tốt nghiệp P0 |
-| **P2 — Chuẩn Junior** | Chưa mở | Tháng 7–11, ~245h. Retrofit, Flow vòng 2, MVVM + Hilt, testing, R8 và publish Play Store. Phase dài nhất, và là phase tạo ra trụ cột portfolio |
-| **P3 — Săn việc** | Chưa mở | Tháng 12–14, ~135h. DSA sprint, CV, mock interview, liều Java thứ 2, apply thật. Đo bằng tỷ lệ được gọi phỏng vấn |
-| **P4 — Backend & Sản phẩm riêng** | Chưa mở | Tháng 15–20, ~290h. Ktor, Exposed/Postgres, JWT refresh, FCM, Docker deploy — rồi ghép client và server thành một sản phẩm có người dùng thật |
-| **P5 — Chuyên nghiệp hoá** | Chưa mở | Tháng 21–24, ~190h. CI/CD, Crashlytics, KMP shared module, coverage domain, CHANGELOG và tag. Phase biến "làm được" thành "làm được như người đi làm" |
+| **P0 — Kotlin viết được** | [/phase-0](/phase-0) — **đã mở** · [Lịch 14 tuần](/phase-0/lich-14-tuan) | W1–15, 116h (97h nội dung). Meta-skills 7 kỹ năng, Kotlin core 31h, concurrency nhập môn, game loop, byte/bit, hai project CLI (Túi đồ & Ví, `caro-engine` + `caro-cli`). Ramp 6→8→10 |
+| **P1 — Server đầu tiên** | [/phase-1](/phase-1) — 🔒 khoá | W16–38, 169h. Đo lường, mạng thô NIO, JMM → coroutines → room actor, Ktor + protocol, bot swarm 100, Linux, deploy `wss://`, web thin client, `v0.1`. Gồm 13h [nền tảng hệ thống](/nen-tang-he-thong) + 3h [backend core](/backend-core). Mở khoá khi DP2 pass |
+| **P2 — Dữ liệu bền + Android client + kênh apply mở** | Chưa mở | W39–67, 218h. Thứ tự: 2.0 đợt 0 → 2.1 PostgreSQL 24h → 2.2 → 2.3 Redis → 2.4 reconnect (dùng bảng nháp F của Android core) → 2.5 ba mô hình thread → 2.6 Testcontainers + CI → 2.7 backup → 2.8 [Android core](/android-core) 30h (**+22h mới**) → 2.9 Compose client 16h Lõi (cap 20h) → 2.10 → `v1.0`. Gồm 14h [nền tảng hệ thống](/nen-tang-he-thong) + 20h [backend core](/backend-core) — cộng với 22h Android mới ra đúng +56h so với bản cũ |
+| **P3 — ARENA tick slice + kinh tế** | Chưa mở | W68–84, 120h. 3.0 Spring core `ledger-service` v0 bằng Java (20h, W68–70, trước đợt 1) → `tc netem` → ARENA tick slice 40h → economy idempotent (G5) → bảo mật tối thiểu → `v1.5`. Gồm 3h [backend core](/backend-core) |
+| **P4 — Spring Boot + chịu tải + apply đợt 1** | Chưa mở | W85–103, 144h. Hai làn song song: 4.1 hoàn thiện `ledger-service` (Java), load test hai máy (G2), profiling (G3), outbox + resilience + CD (G4), IAP offline · hồ sơ, 40 đơn, take-home ×2, online-test drill. Gồm 5h [nền tảng hệ thống](/nen-tang-he-thong) + 4h [backend core](/backend-core) |
+| **P5 — Đi làm hoặc sửa-và-apply-lại** | Chưa mở | W104–113, 72h. Nhánh A: G6 lần 2. Nhánh B: sửa portfolio theo bảng gap, 40 đơn đợt 2, 2 PR OSS, 5 postmortem công khai, OTel trace |
+
+### Danh mục module P2–P5 — mục lục và giờ, không phải nội dung
+
+Ba trang nền tảng và trang [Tiến độ](/progress) trỏ tới "2.5", "3.3", "4.4" hàng trăm lần; bảng này là chỗ để trỏ. Nó chỉ có mã, tên một dòng, giờ Lõi và trục nền tảng đứng cạnh — **không mở nội dung, không mở ngưỡng**: ngưỡng từng module mở cùng trang phase. Dòng tổng mỗi phase khớp cột "nội dung" ở Kiểm tra cộng. Số giờ = bản 755h + 84h trục − 18h co lại (ghi ở ô có dấu `−`; phần co nằm ở chỗ trục nền tảng hoặc làn T5 đã gánh phần lý luận, không phải cắt lab).
+
+**Cảnh báo số hiệu:** `4.1–4.8` ở [Phase 0](/phase-0) là dãy bài Kotlin core; `4.1–4.12` dưới đây là module của Phase 4. Hai dãy trùng ký hiệu, không trùng nội dung — nhìn phase trước khi nhìn số. Tương tự, `S1–S3` của module 3.2 là ba lát ARENA, còn `S1–S4` là bốn tầng [Nền tảng hệ thống](/nen-tang-he-thong).
+
+**P2 · W39–67 · 173h nội dung**
+
+| Mã | Module | Giờ Lõi | Trục cạnh nó |
+|---|---|---|---|
+| 2.0 | Kênh thị trường mở sớm: CV v0 một trang, GitHub + LinkedIn khớp headline, **20 đơn đợt 0** W39–41, bảng gap; bản pitch tiếng Anh 3' (2h từ dự phòng P2); sau đó làn nền 1h/tuần trong T5 | 12 (−3: profile/Viblo đi vào làn T5) | — |
+| 2.1 | PostgreSQL: schema player/match/move, B-tree, `EXPLAIN ANALYZE` 1M dòng, transaction, lost update 2 phiên `psql` → isolation → `FOR UPDATE`, N+1 leaderboard, Flyway, `pg_dump` | 24 | B2 10h ngay sau |
+| 2.2 | Persistence CARO: account + session token, match history, save/reload trận dở, restart không mất trận | 9 (−1: lý luận session → B3) | B3 3h |
+| 2.3 | Redis: ZSET leaderboard, TTL, rate limit; "đến lượt" = Postgres + `SharedFlow`; lab pub/sub mất tin khi subscriber vắng mặt lúc `PUBLISH` (`kill -9` rồi nối lại, đếm lỗ seq) so Streams; lab cache stampede | 8 (−1) | — |
+| 2.4 | Reconnect + async play: heartbeat, timeout budget, session token + seq + replay buffer, kịch bản identity, process death — đầu vào là bảng nháp phần F của Android core | 8 (−2: kịch bản client → Android core F) | Android core F (nháp) |
+| 2.5 | Đồng thời II + JVM: ba mô hình 2.000 kết nối (platform / virtual thread / event loop) đo RSS + context switch + throughput **+ jitter của room ticker** dưới tải; G1 vs ZGC; săn race có quy trình (`HUNT.md`); mutation test | 14 | S1 3h · S2 8h |
+| 2.6 | Testing thật + CI: JUnit5/Kotest, MockK, Testcontainers Postgres + Redis (không H2), Kover, GitHub Actions | 8 (−1) | — |
+| 2.7 | Backup & restore: `pg_dump` định kỳ đẩy lên object storage S3-compatible, drill khôi phục bấm giờ dưới 15' | 4 | B2 (LAB #3) |
+| 2.8 | Android core: init → Zygote → `system_server`, Binder, ART, Looper/ANR, lmkd, SELinux, Perfetto — học sau 2.5 | 30 | chính nó là trục A |
+| 2.9 | Compose client v1: 1 màn Canvas 15×15, tap, WebSocket, render state, reconnect UI, vòng đời | 16 (cap 20) | — |
+| 2.10 | Observability cơ bản + G3-lite: structured log, Micrometer → Prometheus text, JFR luôn bật | 4 (−1) | B4 (P4) |
+| 2.11 | Ship `v1.0` + tốt nghiệp P2 | 2 (−1) | — |
+| S | Nền tảng hệ thống ở P2: S1 3h · S2 8h · S4 3h | 14 | |
+| B | Backend core ở P2: B1 7h · B2 10h · B3 3h | 20 | |
+| | **Tổng P2** | **173** | 139 module + 14 S + 20 B |
+
+**P3 · W68–84 · 95h nội dung**
+
+| Mã | Module | Giờ Lõi | Trục cạnh nó |
+|---|---|---|---|
+| 3.0 | **Spring core — `ledger-service` v0, viết bằng Java** (W68–70): Spring Data JPA + Flyway + validation + `@RestControllerAdvice` + Spring Security/JWT + springdoc; `docker compose up` chạy trong 5'; ghim #1 **trước 21/02/2028** | 20 | B3 (JWT) đã học |
+| 3.1 | Mạng thô II: `tc netem` 5% loss/80ms → HOL blocking TCP vs UDP; BitWriter/BitReader 4 entity ≤60B (dùng 0.7), fuzz 100k | 5 | S3b mở lại |
+| 3.2 | **ARENA tick slice**: sim `Int`-only, lát S1 accumulator · S2 tick 20Hz jitter · S3 determinism hash; M1 input + 3 cheat; M3 full snapshot; reconnect trong trận | 40 (cap 50, sàn 32) | S1–S2 đã học |
+| 3.3 | Economy + idempotency: ví ledger append-only, shop, giao dịch nguyên tử, idempotency key, retry + backoff + jitter, `FOR UPDATE`, đối soát — **G5** | 15 (−1) | B2 đã học |
+| 3.4 | Bảo mật tối thiểu: authn/authz mọi endpoint, secret ngoài image, rate limit đăng nhập, SQL injection demo, dependency check, TLS renewal — 3 request tấn công tự viết bị chặn 100% | 5 (−2: authz/IDOR lý luận → B3) | B3 3h ngay sau |
+| 3.5 | Kênh thị trường liên tục: làn nền 1h/tuần T5; hồ sơ đợt 1 khởi động W77 cùng 4.5 | 5 (−1) | — |
+| 3.6 | Ship `v1.5` + tốt nghiệp P3 | 2 | — |
+| B | Backend core ở P3: B3 3h | 3 | |
+| | **Tổng P3** | **95** | 92 module + 3 B |
+
+Outbox, IAP offline và admin/CS (bản 755h gọi là 3.4, 3.5, 3.7) dời sang P4 để nhường 20h đầu P3 cho Spring core; số hiệu P3 đánh lại từ 3.0.
+
+**P4 · W85–103 · 117h nội dung**
+
+| Mã | Module | Giờ Lõi | Trục cạnh nó |
+|---|---|---|---|
+| 4.1 | Spring phần 2 (Java): `@Transactional` proxy/self-invocation, JPA lazy/N+1, actuator, Gradle + Maven, bench p99 so Ktor; **drill Java core 3h** (equals/hashCode, `HashMap` internals, Collection Framework, checked exception, static/final, autoboxing) | 20 | B1 đã học |
+| 4.2 | Load test hai máy: 300 CCU platform + 100 CCU ARENA từ VPS thứ hai, open vs closed model, knee point, `vmstat` steal% — **G2** | 9 | S1 đã học |
+| 4.3 | Profiling + **G3**: async-profiler trên hot path, JFR; 5 flame graph + 5 EXPLAIN có bệnh cài sẵn | 8 | S2 đã học |
+| 4.4 | Outbox + resilience + CD: at-least-once + idempotent = effectively-once, outbox "trận kết thúc → ELO/vàng" (kill -9 ×20 = 0 sai), drain `SIGTERM`, **G4 đủ** (kill -9 mức 2 @100 CCU), GitHub Actions deploy + rollback bằng tag | 19 | S4 5h · B4 4h |
+| 4.5 | Hồ sơ đợt 1 — làm **đầu tiên**, W77–78 theo lịch (giữa P3, giờ tính ở đây): CV v1, README có trade-off, video 30", pitch tiếng Anh cập nhật, LinkedIn | 8 | — |
+| 4.6 | Take-home drill ×2 công khai: 1 bằng Spring (Java), 1 bằng Ktor; timebox 8h/bài | 8 | — |
+| 4.7 | Online-test drill bằng Java: 2 bài 60' điều kiện thật; ngưỡng DSA (định nghĩa ở [Hệ thống học](/he-thong-hoc)): 1 bài medium chưa gặp pass trong 60' + rebuild 7/7 pattern từ file trống | 4 | — |
+| 4.8 | System design game ×4: leaderboard 10M, inventory chống double-spend, session/reconnect, matchmaking — mỗi doc có số từ CARO/ARENA | 4 | — |
+| 4.9 | Apply đợt 1: ≥40 đơn từ W77, mock 5 câu netcode + 5 câu backend JVM | 10 | — |
+| 4.10 | Phản hồi thị trường: take-home thật, phỏng vấn — giờ do bên ngoài đặt lịch, được chiếm chỗ 4.7/4.8/dự phòng | 6 (−2) | — |
+| 4.11 | IAP server-side offline (token giả, unique index, chống replay, 3 test) + admin/CS tối thiểu có audit log — dời từ P3 | 8 | — |
+| 4.12 | Tổng kết bằng chứng: báo cáo G1–G5 + **G6 lần 1** | 4 | — |
+| S+B | Nền tảng hệ thống S4 5h · Backend core B4 4h | 9 | |
+| | **Tổng P4** | **117** | 108 module + 9 S/B |
+
+**P5 · W104–113 · 55h nội dung**
+
+| Mã | Module | Giờ Lõi | Trục cạnh nó |
+|---|---|---|---|
+| 5.1 | Sửa portfolio theo bảng gap đợt 1: 0 phỏng vấn → CV screen fail; rớt kỹ thuật → dồn vào đúng lỗ hổng | 10 (−2) | — |
+| 5.2 | Apply đợt 2 song song từ W104: ≥40 đơn, 2 take-home, mock; 2 PR nhỏ vào Ktor/Exposed/kotlinx.serialization | 24 | — |
+| 5.3 | Postmortem công khai ×5 từ `INCIDENTS.md` (Việt + Anh) | 6 | — |
+| 5.4 | Đọc code người khác (T5): Nakama match handler (Go, chỉ đọc), Netty pipeline, 1 postmortem công khai | 4 | — |
+| 5.5 | OTel trace 1 request mua qua WS → sim → outbox → Postgres | 6 | B4 đã học |
+| 5.6 | Tốt nghiệp 26 tháng: G6 lần 2, cập nhật báo cáo G1–G6 | 5 | — |
+| | **Tổng P5** | **55** | |
+
+Kiểm tra cộng: P2 139+14+20 = 173 · P3 92+3 = 95 · P4 108+9 = 117 · P5 55 — khớp dòng "nội dung" ở Bảng 6 phase. Phần co −18: P2 −10 (2.0 −3 · 2.2 −1 · 2.3 −1 · 2.4 −2 · 2.6 −1 · 2.10 −1 · 2.11 −1) · P3 −4 (3.3 −1 · 3.4 −2 · 3.5 −1) · P4 −2 (4.10) · P5 −2 (5.1).
 
 Tick khi phase đó đã tốt nghiệp. Mỗi lần tick là một commit, và commit chính là bằng chứng:
 
-- [ ] **P0 tốt nghiệp** — đạt ≥8/10 tiêu chí, trong đó mục 1–4 bắt buộc · ngày đạt: ____
-- [ ] **P1 tốt nghiệp** — app Compose nhiều màn hình, có lưu trữ local, sống sót xoay màn hình · ngày đạt: ____
-- [ ] **P2 tốt nghiệp** — app live trên Google Play Store, có unit test · ngày đạt: ____
-- [ ] **P3 tốt nghiệp** — 30+ đơn apply, ≥3 phỏng vấn thật · ngày đạt: ____
-- [ ] **P4 tốt nghiệp** — client và server chạy thật, ≥10 người dùng ngoài bản thân · ngày đạt: ____
-- [ ] **P5 tốt nghiệp** — CI xanh mỗi PR, KMP shared module, crash-free ≥99% · ngày đạt: ____
+- [ ] **P0 tốt nghiệp** — bảng 10 tiêu chí ≥8/10, mục 1–5 bắt buộc; 2 repo tag `v1.0`; trang tĩnh thế cờ đã gửi 3 người · ngày đạt: ____
+- [ ] **P1 tốt nghiệp** — G1; `wss://` public; 100 bot p99 server dưới 30ms; 1 file `bench/` đo jitter của room ticker; ≥1 người ngoài chơi ≥1 trận từ IP ngoài · ngày đạt: ____
+- [ ] **P2 tốt nghiệp** — kill -9 (mức 2) @50 CCU → G4-lite; Testcontainers xanh trong CI; restore dưới 15'; 20 đơn đợt 0 đã gửi · ngày đạt: ____
+- [ ] **P3 tốt nghiệp** — `ledger-service` v0 (Java) ghim #1 trước 21/02/2028; tick jitter p99 dưới 5ms/10', hash khớp 100%; G5 lệch 0; 3 request tấn công bị chặn; `v1.5` · ngày đạt: ____
+- [ ] **P4 tốt nghiệp** — `ledger-service` hoàn thiện + bench so Ktor; outbox ×20 = 0 sai; G2, G3, G4; 40 đơn + bảng gap; G6 lần 1 · ngày đạt: ____
+- [ ] **P5 tốt nghiệp** — nhánh A: hợp đồng lao động + G6 lần 2 · nhánh B: 40 đơn đợt 2 + bảng gap có cột "đã sửa" · ngày đạt: ____
 
 ## → Tiếp theo
 
-Bản đồ chỉ nói bạn đi đâu. Thứ quyết định bạn có tới được hay không là nhịp học hằng tuần và bộ luật dùng AI.
+Bản đồ chỉ nói bạn đi đâu. Thứ quyết định bạn có tới được hay không là 90 phút tối 07/09/2026 và nhịp tuần sau đó.
 
-1. Đọc [Hệ thống học & luật AI](/he-thong-hoc) — nhịp buổi tối, lịch tuần theo vai trò, quy tắc sống còn, cách đo tiến bộ bằng số.
-2. Rồi mở [Phase 0 — Nền móng](/phase-0) và làm bài test đầu vào. Điểm test quyết định Phase 0 của bạn dài 8, 10 hay 12 tuần.
+1. Đọc [Hệ thống học & luật AI](/he-thong-hoc) — nhịp buổi tối, ba nghi thức bật dần, bảng tuần, hợp đồng AI bản server.
+2. Mở [Phase 0 — Kotlin viết được](/phase-0) và làm Ngày 1. Không có bài test đầu vào. Không có Tuần 0.
 3. Ghi kết quả vào [Tiến độ](/progress).

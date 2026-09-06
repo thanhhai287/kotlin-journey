@@ -2,144 +2,212 @@
 
 Đây là bảng điểm của bạn — chỗ duy nhất trong site này chứa **số liệu thật**, không phải kế hoạch. Mở nó 5 phút cuối mỗi buổi học và 30 phút mỗi Chủ nhật; mọi ô còn trống là một câu hỏi chưa có câu trả lời.
 
-## Toạ độ hiện tại
+---
 
-**Phase 0 — Nền móng** · Tuần 0/12 · Bắt đầu **01/08/2026**
+## 🎯 Toạ độ hiện tại
 
-Chưa học nội dung. Đang ở giai đoạn setup. Việc kế tiếp: làm bài test đầu vào — 2h, không AI, không Google.
+**Phase 0 — Kotlin viết được** · Tuần **1/14** (tuần lịch W1–15) · Bắt đầu **Thứ Hai 07/09/2026** · P0 đóng **20/12/2026**
 
-Độ dài Phase 0 **chưa chốt**. Nó phụ thuộc điểm test đầu vào (thang 24): 0–8 điểm thì 12 tuần · 9–16 thì 10 tuần · 17–24 thì 8 tuần. Bảng bên dưới đang dựng theo kịch bản 12 tuần — chấm điểm xong thì sửa lại.
+Không còn Tuần 0. Không còn bài test đầu vào, không còn 8 ô checklist của riêng trang này phải tick trước khi bấm giờ Tuần 1 (8 ô đó nằm trong 27 ô của cả site) — cả hai đã bị xoá ngày 05/09/2026, vì chính chúng là nguyên nhân của 5 tuần trượt ở 0h. **Sự thật:** thứ chặn bạn không phải thiếu kiến thức, mà là một hàng rào nghi thức dựng trước dòng code đầu tiên.
 
-Trước khi bấm giờ Tuần 1, những việc này phải xong:
+Toạ độ của bạn là W1. Việc đầu tiên là 90 phút, không hơn: mở IntelliJ, viết `main.kt` chạy được, tạo repo public, 1 commit, tag `v0.0.1`. Không Gradle, không đọc gì trước, không test.
 
-- [ ] Chấm xong bài test đầu vào, ghi điểm từng câu vào `progress/assessments/`
-- [ ] IntelliJ IDEA Community + JDK 21+ cài xong, chạy được "Hello World" **từ terminal** (không phải từ nút Run của IDE)
-- [ ] AI autocomplete/Copilot tắt hoàn toàn trong IDE — có ảnh chụp màn hình settings làm bằng chứng
-- [ ] Tài khoản GitHub có ảnh + bio; repo `so-chi-tieu-cli` đã tạo, để public
-- [ ] Khung giờ học cố định đã chốt (đề xuất 20:00–22:00) và đã báo với gia đình
-- [ ] Anki cài xong, deck `kotlin` đã tạo
-- [ ] Journal entry đầu tiên đã viết, có dòng `NEXT:` cụ thể
-- [ ] Lịch weekly review Chủ nhật đã đặt trong lịch điện thoại
+**Luật sắt:** không nghi thức nào tồn tại trước tag đó. Journal bật ngay sau tag (W1) · bảng tuần + public log bật W3 · blank-file test bật W6. Tag `v0.0.1` phải tồn tại **trong 14 ngày** kể từ 07/09/2026 — đạt/trượt, không thương lượng.
 
-## 12 tuần Phase 0
+Ngân sách P0: **116h** = 97h nội dung + 15h nghi thức + 4h dự phòng, rải trên 14 tuần chạy theo bậc ramp **6h → 8h → 10h**. Cột giờ **module** của P0 *chính là* ramp — cộng trần 14 tuần ra đúng 116h. Buổi CN 30' (W3–14, tổng **6h**) nằm **ngoài** cột đó, nên giờ đồng hồ thật của P0, nếu tuần nào cũng chạm trần, là **122h**. 15h nghi thức vì thế tách làm hai: **9h trong buổi** (journal 3 dòng cuối buổi + blank-file) và **6h buổi CN**, ngoài buổi. Vượt bậc bị cấm — bậc chặn cột module, không chặn buổi CN.
 
-| Tuần | Trọng tâm | Trạng thái | Bằng chứng |
-|---|---|---|---|
-| 1 | Test đầu vào · setup · Kotlin cơ bản (4.1–4.2) · git CLI ngay ngày đầu · đọc error nhập môn | ⬜ | — |
-| 2 | Null-safety (4.3) · Error Zoo · kata hằng ngày | ⬜ | — |
-| 3 | Modeling: data/sealed/when (4.4) · tuần Debugger · Bug Hunt Kata 1 | ⬜ | — |
-| 4 | Collections I (4.5, luật "mỗi bài hai lần") · decomposition drill 1 · Git Disaster Recovery | ⬜ | — |
-| 5 | Collections II · JUnit nhập môn · Tier 2 bài 1–2 · benchmark lần 1 | ⬜ | — |
-| 6 | Functions nâng cao + scope functions (4.6) · Tier 2 bài 3 · Android field trip 3h cuối tuần | ⬜ | — |
-| 7 | Project 1 "Sổ Chi Tiêu CLI" trọn tuần | ⬜ | — |
-| 8 | Generics + exception + Result (4.7) · OOP thực dụng (4.8) · Bug Hunt Kata 2 · benchmark lần 2 | ⬜ | — |
-| 9 | Coroutines nhập môn (4.9) · thử thách tự học thư viện không tutorial | ⬜ | — |
-| 10 | Project 2 capstone — nộp `BACKLOG.md` theo IOSTV trước khi viết dòng code đầu tiên | ⬜ | — |
-| 11 | Project 2 — build | ⬜ | — |
-| 12 | Project 2 — **AI-free hoàn toàn**: hoàn thiện, test, README, demo + vấn đáp | ⬜ | — |
+## 14 tuần Phase 0
+
+| Tuần | Bậc | Trọng tâm | Trạng thái | Bằng chứng |
+|---|---|---|---|---|
+| W1 | 6h | **Ngày 1** → tag `v0.0.1` · git CLI · Kotlin 4.1–4.2 | ⬜ | — |
+| W2 | 6h | 4.2 · buổi debugger 2h | ⬜ | — |
+| W3 | 6h | 4.3 null-safety · Error Zoo (20 phút/buổi) · **bật bảng tuần + public log** | ⬜ | — |
+| W4 | 6h | 4.3–4.4 sealed class · test 3 tầng (JUnit5/Kotest) · **DP1a** · chốt người chứng kiến | ⬜ | — |
+| W5 | 8h | 4.4–4.5 · Git Disaster Recovery 1,5h · **benchmark #1** (FizzBuzz biến thể) lần 1 | ⬜ | — |
+| W6 | 8h | 4.5 collections (bài: log trận, bảng loot) · **blank-file #1** | ⬜ | — |
+| W7 | 8h | 4.6 lambda + extension + `let`/`apply` (6h) · **bài Tier 2** đọc log trận → `groupBy` (2h, trọn buổi T7) = **benchmark #2** lần 1 | ⬜ | — |
+| W8 | 8h | **Byte, bit & số** (5h) · 4.7 generics đọc-hiểu + `Result` (3h) · **blank-file #2** · **DP1b** | ⬜ | — |
+| W9 | 10h | 4.8 interface + composition (2h) · **Concurrency nhập môn** (8h) | ⬜ | — |
+| W10 | 10h | **Game loop & state machine** · mở Project 1 · **blank-file #3** | ⬜ | — |
+| W11 | 10h | Project 1 — Túi đồ & Ví CLI, tag `v1.0` · **Bug Hunt Kata #2** (90', buổi BUILD) | ⬜ | — |
+| W12 | 10h | `caro-engine`: bàn cờ, luật, win-check · **blank-file #4** | ⬜ | — |
+| W13 | 10h | `caro-engine` xong: replay, seed · `caro-cli` bắt đầu | ⬜ | — |
+| W14 | 10h | `caro-cli` tag `v1.0` · kata bấm giờ (**benchmark #1 và #2** lần 2) · vấn đáp 12 câu · **blank-file #5** · **DP2** · mốc ngoài #1 | ⬜ | — |
+| W15 | — | Buffer. Không xếp nội dung mới. Dùng để trả nợ, không dùng để chạy trước | ⬜ | — |
 
 Chú thích: ⬜ chưa tới · 🔄 đang làm · ✅ xong
 
-Cột **Bằng chứng** điền link commit, tên file, hoặc số đo — không điền cảm giác. Một tuần không có bằng chứng nào là một tuần chưa xảy ra. Chi tiết nội dung từng tuần nằm ở [lịch 12 tuần](/phase-0/lich-12-tuan).
+**Bậc là trần, không phải chỉ tiêu**: 6h ở W1–4 · 8h ở W5–8 · 10h ở W9–14 (giờ module; CN 30' là buổi riêng ngoài trần, còn blank-file 45' kéo T5 dài thành 1h45' ở tuần chẵn W6/8/10/12/14 chứ không ăn vào 1h READ CODE — cả hai nằm trong 15h nghi thức). Tuần nào cộng giờ module vượt trần là lịch xếp sai, không phải bạn chậm — cắt độ rộng, không cắt ngưỡng.
 
-## Số liệu theo tuần
+Cột **Bằng chứng** điền link commit, tên file, hoặc số đo — không điền cảm giác. Một tuần không có bằng chứng nào là một tuần chưa xảy ra. Chi tiết từng buổi nằm ở [lịch 14 tuần](/phase-0/lich-14-tuan).
 
-| Tuần | Giờ học | Ngày có commit | % AI viết hộ | Friday Rebuild | Ghi chú |
-|---|---|---|---|---|---|
-| 0 | — | — | — | — | Setup |
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
-| 6 | | | | | |
-| 7 | | | | | |
-| 8 | | | | | |
-| 9 | | | | | |
-| 10 | | | | | |
-| 11 | | | | | |
-| 12 | | | | | |
+## Bảng tuần
 
-Cách đọc bốn cột giữa:
+Điền mỗi Chủ nhật, 30 phút, vào `PROGRESS.md` trong repo public — rồi gửi link. Bốn cột chính là bốn thứ **không farm được**.
 
-| Cột | Ngưỡng đỏ | Làm gì khi chạm ngưỡng |
+| Tuần | Buổi deep-work trọn 70' | Rebuild pass | Phép đo mới (`bench/`) | Cap module đang chạy |
+|---|---|---|---|---|
+| W1 | | — | — | |
+| W2 | | — | — | |
+| W3 | | — | — | |
+| W4 | | — | — | |
+| W5 | | — | — | |
+| W6 | | | — | |
+| W7 | | — | — | |
+| W8 | | | — | |
+| W9 | | — | — | |
+| W10 | | | — | |
+| W11 | | — | — | |
+| W12 | | | — | |
+| W13 | | — | — | |
+| W14 | | | — | |
+| W15 | | — | — | |
+
+Hàng phụ — điền cùng lúc, đọc sau:
+
+| Tuần | Giờ đồng hồ | Ngày có commit | Tuần chạy đã mất / buffer còn | Chạm vùng AI-free |
+|---|---|---|---|---|
+| W1 | | | 0 / 1 | 0 |
+| W2 | | | | |
+| W3 | | | | |
+| W4 | | | | |
+| W5 | | | | |
+| W6 | | | | |
+| W7 | | | | |
+| W8 | | | | |
+| W9 | | | | |
+| W10 | | | | |
+| W11 | | | | |
+| W12 | | | | |
+| W13 | | | | |
+| W14 | | | | |
+| W15 | | | | |
+
+**Giờ và ngày có commit nằm ở hàng phụ vì chúng farm được.** Ngồi 10 tiếng nhìn màn hình vẫn ra 10 giờ; một commit đổi dấu chấm phẩy vẫn là một ngày có commit. Không điểm quyết định nào dùng hai con số đó làm cổng. Chúng chỉ để phát hiện xu hướng.
+
+Cách đọc từng cột:
+
+| Cột | Đo cái gì | Báo động |
 |---|---|---|
-| Giờ học | Dưới 85% kế hoạch tuần | Không chỉnh ý chí, chỉnh scope: cắt việc trong tuần tới |
-| Ngày có commit | Dưới 4 ngày trong tuần | Tuần đó bạn đọc nhiều hơn làm — tuần sau đảo tỷ lệ đọc/gõ |
-| % AI viết hộ | Bất kỳ số nào lớn hơn 0 trong Phase 0 | Đọc lại luật AI, ghi rõ lần vi phạm ở cột Ghi chú |
-| Friday Rebuild | Không viết lại được trong 15 phút | Tín hiệu đỏ: tuần đó "mượn" nhiều hơn "học". Tuần sau siết luật |
+| **Buổi deep-work trọn 70'** | Số buổi bạn ngồi trọn 70 phút deep work. Mục tiêu bằng đúng số buổi **có chỗ** cho một khối 70' ở bậc đó: **3** ở bậc 6h (T2 · T4 · T7) · **3** ở bậc 8h (T2 · T4 · T7 — T5 chỉ 1h, không chứa nổi khối 70') · **4** ở bậc 10h (T2 · T3 · T4 · T7) | Từ 50% mục tiêu trở xuống, 2 tuần liên tiếp |
+| **Rebuild pass** | Đạt/tổng của blank-file test, 2 tuần một lần. Để trống W1–5 vì nghi thức chưa bật | Fail 2 lượt liên tiếp → vào **chế độ sửa chữa**: 3 buổi kế tiếp mỗi buổi viết lại từ file trống 1 thành phần đã fail, buổi 3 thi lại |
+| **Phép đo mới** | Số file `bench/` có commit hash trong tuần. Bật từ P1 — trong P0 để dấu gạch | 0 trong một tuần có buổi BUILD → tuần đó chưa xong |
+| **Cap** | % hard-cap của module đang chạy (cap = Lõi + khoảng 25%) | Từ 80% → cờ vàng; Chủ nhật phải ghi "còn thiếu gì để dừng được" |
 
-Con số ở đây chỉ có giá trị khi nó **thật**. Điền một số đẹp mà không có commit đối chứng thì bạn đang tự lừa chính mình, và bảng này mất toàn bộ tác dụng.
+Ngưỡng của hàng phụ:
+
+- **Vàng:** dưới 70% giờ kế hoạch, 2 tuần liên tiếp → **cắt độ rộng, không cắt ngưỡng**. Giảm 30% số bài/số case của module đang chạy. Ngưỡng đạt/trượt giữ nguyên.
+- **Đỏ:** dưới 50% giờ kế hoạch, 3 tuần → dừng module tại chỗ, ghi mức đã đạt vào `bench/`, nhảy tới hạng mục Sàn kế tiếp, phase dời 2 tuần lấy từ buffer.
+- **Cấm dồn giờ.** Bù 6 tiếng cuối tuần cho 3 buổi đã mất là tạo dữ liệu giả, không phải học bù.
+- **Chạm vùng AI-free phải bằng 0.** Khác 0 thì ghi ngay lần vi phạm vào `notes/ADR.md`, không ghi vào ghi chú tuần rồi quên.
+
+Con số ở đây chỉ có giá trị khi nó thật. Điền một số đẹp mà không có commit đối chứng thì bạn đang tự lừa chính mình, và bảng này mất toàn bộ tác dụng.
+
+## ⚠️ Số liệu hệ thống
+
+Gộp thêm vào bảng tuần **từ khoảng W30**, điền vào tuần nào có phép đo — không có phép đo thì để trống, không ước lượng.
+
+| Chỉ số | Nguồn | Ghi chú |
+|---|---|---|
+| p50 / p99 | HdrHistogram, kèm 6 dòng khai báo giàn đo | Trung bình là con số dối trá số một của server. Không ghi cột "trung bình" |
+| msg/s | Log server hoặc counter Micrometer | Ghi kèm kích thước gói |
+| CCU giả lập | Bot swarm | Ghi rõ bot chạy loopback hay từ máy khác |
+| Tick thực tế | Vòng tick ARENA (từ P3) | So với tick danh nghĩa 20Hz |
+| Tick miss % | Số tick trễ quá 1 chu kỳ / tổng tick | |
+| GC pause dài nhất | GC log / JFR | Ghi collector đang dùng |
+| RSS | `ps` / `docker stats` | Đo lúc đỉnh tải, không đo lúc rảnh |
+
+Ngưỡng đọc — ba dòng này quyết định tuần sau bạn làm gì:
+
+| Điều kiện | Nghĩa là | Làm gì |
+|---|---|---|
+| `p99 > 5x p50` | Cờ vàng: có đuôi trễ | G3-lite — nêu đúng 1 giả thuyết, chạy đúng 1 thí nghiệm, ghi vào `bench/` |
+| `p99 > 10x p50` | Mở cuộc điều tra | G3 đủ — sửa đúng 1 thứ, đo lại, p99 phải giảm 40%, kèm postmortem |
+| `tick miss > 1%` | **Game loop hỏng** | Dừng tính năng, sửa vòng tick trước mọi thứ khác |
 
 ## 🏁 Milestone Phase 0
 
-| Milestone | Trạng thái | Bằng chứng |
-|---|---|---|
-| Test đầu vào có điểm → cá nhân hoá lộ trình | ⬜ | — |
-| Kotlin core: null-safety, sealed class, collections | ⬜ | — |
-| Error Zoo: thuần hoá 15 loại lỗi | ⬜ | — |
-| Debug bằng debugger (không println) — Bug Hunt 5/5 | ⬜ | — |
-| Git Disaster Recovery: thoát 5 kịch bản | ⬜ | — |
-| Project 1: Sổ Chi Tiêu CLI đạt DoD | ⬜ | — |
-| Tự học 1 thư viện không tutorial | ⬜ | — |
-| Project 2: Flashcard Từ Vựng CLI (capstone P0) đạt rubric ≥70 điểm | ⬜ | — |
-| Vấn đáp 10 câu Kotlin ≥8/10 | ⬜ | — |
-| AI log 2 tuần cuối: 0 lần AI sinh code | ⬜ | — |
+| Milestone | Tuần | Trạng thái | Bằng chứng |
+|---|---|---|---|
+| **Ngày 1** — tag `v0.0.1` tồn tại, trong 14 ngày | W1 | ⬜ | — |
+| Kotlin core 4.1–4.8 viết được, không chỉ đọc được | W1–9 | ⬜ | — |
+| Error Zoo **10/10** loại lỗi đã thuần hoá | W3–6 | ⬜ | — |
+| Concurrency nhập môn: 1 commit test race **đỏ → xanh** | W9 | ⬜ | — |
+| Game loop: 10.000 tick không drift; cùng seed → cùng chuỗi | W10 | ⬜ | — |
+| Byte/bit: `encodeInt`/`decodeInt` round-trip 100k giá trị ngẫu nhiên = 0 lỗi | W8 | ⬜ | — |
+| **Project 1 — Túi đồ & Ví CLI** tag `v1.0`; 1.000 lần chuyển xen lỗi cố ý → 0 lệch vàng | W11 | ⬜ | — |
+| **Project 2 — `caro-engine` + `caro-cli`** tag `v1.0`; engine 0 dependency, 0 I/O | W12–14 | ⬜ | — |
+| Trang tĩnh "thế cờ hôm nay" chạy public, đã gửi link cho 3 người | W14 | ⬜ | — |
+| Vấn đáp 12 câu, đạt ít nhất **10/12** | W14 | ⬜ | — |
 
-Milestone không phải là tiêu chí tốt nghiệp. Tốt nghiệp Phase 0 là một bài kiểm tra riêng, có bấm giờ, gồm 10 mục trong đó mục 1–4 bắt buộc — xem [tiêu chí tốt nghiệp](/phase-0/tot-nghiep).
+Milestone không phải tiêu chí tốt nghiệp. Tốt nghiệp P0 là một bảng riêng gồm 10 mục, ngưỡng ít nhất 8/10 và mục 1–5 bắt buộc — xem [tiêu chí tốt nghiệp](/phase-0/tot-nghiep).
+
+## Tiêu chí tốt nghiệp G1–G6
+
+Sáu cái này trải suốt 26 tháng và là thứ người lạ xác minh được trong 10 phút. Ghi kết quả thật vào cột cuối, kèm ngày.
+
+| G | Tiêu chí | Bằng chứng | Đặt ở | Kết quả |
+|---|---|---|---|---|
+| **G1** | Race thật (đỏ) → `Mutex`/`Channel` → xanh | 2 commit + 3 câu giải thích | P1 | ____ |
+| **G2** | 100 CCU ARENA trên 1 node, tick 20Hz: tick jitter p99 dưới 5ms · ping-frame ngoài tick p99 dưới 10ms · input đến snapshot p99 dưới 75ms, sinh tải từ máy cùng vùng | Biểu đồ theo thời gian + CPU/RAM + 6 dòng giàn đo | P4 | ____ |
+| **G3** | p99 gấp 10 lần p50 → 1 giả thuyết → sửa đúng 1 thứ → p99 giảm 40% | 2 file `bench/` + postmortem | Lite ở P2 (mức 5 lần), đủ ở P4 | ____ |
+| **G4** | `kill -9` (**mức 2 — SIGKILL**: buffer user-space mất, page cache còn nên kernel vẫn ghi nốt xuống đĩa; đây **không** phải mất điện) ở 100 CCU với ít nhất 30 trận dở → ít nhất 99% trận dở khôi phục đúng từng nước · ít nhất 99% session reconnect trong 30s không phải đăng nhập lại · trận đầu chơi tiếp được dưới 60s | Script đối soát | Lite ở P2 (50 CCU), đủ ở P4 | ____ |
+| **G5** | 10.000 request mua, 20% trùng → lệch = 0 | Log + query | P3 | ____ |
+| **G6** | Vẽ lại kiến trúc trong 10 phút, đúng ít nhất 90%, lặp lại sau 1 tháng | 2 ảnh | Lần 1 ở P4, lần 2 ở P5 | ____ |
+
+**Cấm ghi vào cột Kết quả:** "hiểu sâu", "code sạch", "server ổn định", "có test", "AI chỉ hỗ trợ". Đó không phải kết quả, đó là cảm tính đội lốt.
 
 ## Nhật ký buổi học
 
-Năm dòng, viết trong 5 phút cuối mỗi buổi. Không viết dài hơn — dài hơn là đang kể chuyện thay vì ghi bằng chứng.
+Ba dòng, viết trong 5 phút cuối mỗi buổi. Trước đây là năm trường — đã cắt xuống ba, vì hai trường kia biến journal thành bài tập làm văn và là thứ đầu tiên bị bỏ khi mệt.
 
 ```markdown
-## YYYY-MM-DD (T?) — ?h — Phase ? / Tuần ? — Năng lượng: ?/5
+## YYYY-MM-DD (T?) — ?h — Phase ? / W?
 DID:
-AHA:
-MURKY:
-FLASH:
 NEXT:
+AI:
 ```
 
-| Trường | Viết gì | Vì sao |
+| Dòng | Viết gì | Vì sao |
 |---|---|---|
 | **DID** | Việc đã làm, kèm hash commit | Bằng chứng, không phải cảm giác. Không có commit thì tự hỏi tối nay mình có gõ code không |
-| **AHA** | Đúng **1** điều hiểu ra | Sáu tháng sau đọc lại vẫn còn giá trị. Đây là nguyên liệu viết blog sau này |
-| **MURKY** | Đúng **1** điều còn mơ hồ, kèm ngày phát sinh | Nguồn cho warm-up buổi sau. Tồn tại quá 1 tuần thì chạy Concept clinic |
-| **FLASH** | Số thẻ flashcard mới tạo | Tối đa 10 thẻ mỗi ngày. Nhiều hơn là đang nhồi |
-| **NEXT** | Buổi sau mở file nào, làm gì | Dòng quan trọng nhất. "Học tiếp coroutines" là sai — phải chỉ được tên file và hành động |
+| **NEXT** | Buổi sau mở **file nào**, làm gì | Dòng quan trọng nhất. "Học tiếp coroutines" là sai — phải cụ thể tới mức mở máy lên là gõ được ngay |
+| **AI** | `0`, hoặc số dòng AI sinh + lý do | Vùng AI-free không có ngoại lệ. Một dòng thành thật ở đây rẻ hơn một buổi debug code mình không hiểu |
 
-Entry thật, ngày đầu tiên:
+Entry mẫu, ngày đầu tiên:
 
 ```markdown
-## 2026-08-01 (T7) — 0h — Phase 0 / Tuần 0 — Năng lượng: ?/5
-DID:   Nhận roadmap 24 tháng. Đọc 00-TONG-QUAN.md và CLAUDE.md.
-AHA:   (điền sau khi đọc)
-MURKY:
-FLASH: 0
-NEXT:  Làm bài test đầu vào (progress/assessments/test-dau-vao.md) — 2h, không AI,
-       không Google trừ câu 6. Chấm điểm xong báo cho AI để cá nhân hoá Phase 0.
+## 2026-09-07 (T2) — 1,5h — Phase 0 / W1
+DID:   Ngày 1 xong. IntelliJ + JDK 21, main.kt chạy từ IDE, repo public,
+       1 commit, tag v0.0.1 (a3f1c9d). Không Gradle, không test.
+NEXT:  Mở main.kt, làm 4.1 — viết 5 dòng so sánh val/var và kiểu Kotlin
+       khác Java chỗ nào, commit.
+AI:    0 dòng code. Có hỏi cách sửa lỗi JAVA_HOME trên máy mình (Luật 7 —
+       máy của mình không phải nội dung học).
 ```
 
 Ba luật khi ghi:
 
 - Entry mới nhất đặt **trên cùng** file `progress/journal/YYYY-MM.md` — đọc lại tuần vừa rồi nhanh hơn.
 - Buổi nào không học cũng ghi, chỉ cần một dòng lý do. Chuỗi entry liền mạch là dữ liệu; chuỗi đứt quãng cũng là dữ liệu.
-- File journal là tiếng nói của bạn. AI đọc để ra quiz, không sửa.
+- File journal là tiếng nói của bạn. AI đọc để ra quiz, không sửa. Prompt nguyên văn của mọi phiên AI lưu riêng ở `notes/ai-sessions/`.
 
 ## Quyết định lộ trình (ADR)
 
 Mỗi lần đổi scope, đổi timeline, hoặc bỏ một thứ đã lên kế hoạch — ghi một dòng ở đây **kèm lý do**. Sáu tháng sau bạn sẽ không nhớ vì sao mình cắt, và sẽ cắt lại lần nữa hoặc tiếc nuối vô cớ.
 
-| Ngày | Quyết định | Lý do |
-|---|---|---|
-| 2026-08-01 | Lập roadmap 24 tháng; cắt C/C++ và Spring Boot; hoãn KMP đầy đủ sang v2 | Quỹ 10–14h/tuần chỉ đủ khoảng 1.135h. Ưu tiên mốc "đi làm được" trước mốc "biết nhiều thứ" — xem [roadmap](/roadmap) |
-| 2026-08-01 | Java học SAU Kotlin, 2 liều nhỏ tổng ~15h, chỉ ở mức đọc hiểu | Học Java trước sẽ nhiễm đúng những thói quen phải bỏ khi sang Kotlin: null tự do, mutable mặc định, getter/setter |
+| Ngày | Quyết định | Lý do | Trạng thái |
+|---|---|---|---|
+| 2026-08-01 | Lập roadmap 24 tháng hướng Android app developer; cắt C/C++ và Spring Boot; hoãn KMP đầy đủ sang v2 | Quỹ 10–14h/tuần chỉ đủ khoảng 1.135h. Ưu tiên mốc "đi làm được" trước mốc "biết nhiều thứ" | **SUPERSEDED** 05/09/2026 |
+| 2026-08-01 | Java học SAU Kotlin, 2 liều nhỏ tổng khoảng 15h, chỉ ở mức đọc hiểu | Học Java trước sẽ nhiễm đúng những thói quen phải bỏ khi sang Kotlin: null tự do, mutable mặc định, getter/setter | **SUPERSEDED** 05/09/2026 — kết luận về Java vẫn đúng, nhưng nó thuộc bản kế hoạch đã bị thay |
+| 2026-09-05 | Đảo trục sang **Game Server / Backend Engineer**; Spring Boot **quay lại** (40h ở P4); P0 kéo thành **14 tuần**; ngân sách **755h** thay 1.135h; **xoá bài test đầu vào và 27 ô checklist Tuần 0** | Không tồn tại cửa Junior game backend ở VN — vào bằng cửa backend chung, vỏ là game, đó là đường duy nhất có người đi qua được. 1.135h giả định 10,9h/tuần đều trên cả 104 tuần kể cả tuần vỡ; 755h trừ 19 tuần lịch cho Tết, ốm và deload. Spring Boot có trong khoảng 40% JD và gần như 100% JD Java — cắt nó là cắt cửa vào. 5 tuần trượt ở 0h là **thất bại kích hoạt**, và nguyên nhân nằm trong repo: 27 ô checklist chặn trước Tuần 1 cộng bài test 12 câu/2h. Xem [roadmap](/roadmap) | Hiệu lực — ngân sách đã được cộng thêm 84h ở dòng dưới, phần còn lại giữ nguyên |
+| 2026-09-05 | Bổ sung **ba trục nền tảng, +84h**: [nền tảng hệ thống](/nen-tang-he-thong) 32h · [Android core](/android-core) +22h (8h → 30h) · [backend core](/backend-core) 30h, đan vào P1–P4 (P1 153 → 169 · P2 162 → 218 · P3 117 → 120 · P4 135 → 144). Tổng **755h → 839h**, 104 → **113 tuần lịch**, 85 → **94 tuần chạy**, kết thúc 03/09/2028 → **05/11/2028** (26 tháng). P0 không đổi | Ba trục là thứ JD backend/Android hỏi mà lộ trình sản phẩm không dạy: process/memory/`epoll`, Binder/ART/ANR, API/migration/JWT/observability. Nguyên tắc phân tầng: **cái gì quyết định được nhận thì ở Lõi; cái gì làm thành senior thì học tiếp khi đi làm** — **144h** phần senior bị đẩy sang [mở rộng](/mo-rong) theo đúng nguyên tắc đó (54h backend nâng cao + 90h tầng AOSP nặng, nằm trong tổng 363h của trang đó). **Nhịp không đổi**: vẫn 8,9h/tuần chạy, buffer vẫn 19 tuần — chỉ dài thêm 2 tháng, không nhồi thêm giờ vào tuần | Hiệu lực |
 
 Quy tắc ghi ADR: một dòng một quyết định, cột Lý do phải trả lời được câu "vì sao lúc đó chọn vậy", không phải mô tả lại quyết định bằng từ khác.
 
 ## → Tiếp theo
 
-- Chưa làm bài test đầu vào thì mọi thứ khác đều là phỏng đoán — bắt đầu từ [tổng quan Phase 0](/phase-0).
-- Muốn biết tuần này học gì cụ thể: [lịch 12 tuần](/phase-0/lich-12-tuan).
-- Muốn biết vì sao trang này tồn tại và luật AI hoạt động thế nào: [hệ thống học & luật AI](/he-thong-hoc).
+- Chưa có tag `v0.0.1` thì mọi dòng trong trang này đều là phỏng đoán. Bắt đầu ở [tổng quan Phase 0](/phase-0) — Ngày 1 là 90 phút.
+- Tuần này học gì, buổi nào làm gì: [lịch 14 tuần](/phase-0/lich-14-tuan).
+- Vì sao trang này tồn tại và ba nghi thức bật khi nào: [hệ thống học & luật AI](/he-thong-hoc).

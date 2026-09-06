@@ -1,10 +1,13 @@
 {
   "index": "Tổng quan Phase 0",
-  "lich-12-tuan": "Lịch 12 tuần",
+  "lich-14-tuan": "Lịch 14 tuần",
   "meta-skills": "Meta-skills",
-  "kotlin-core-1": "Kotlin Core I — tuần 1–5",
-  "kotlin-core-2": "Kotlin Core II — tuần 6–10",
+  "kotlin-core-1": "Kotlin Core I — tuần 1–6",
+  "kotlin-core-2": "Kotlin Core II — tuần 7–9",
+  "concurrency-nhap-mon": "Concurrency nhập môn",
+  "game-loop-co-ban": "Game loop & state machine",
+  "byte-bit-so": "Byte, bit & số",
   "bai-tap": "Bài tập & drill",
-  "projects": "Hai project",
+  "projects": "Hai project CLI",
   "tot-nghiep": "Tốt nghiệp Phase 0"
 }
