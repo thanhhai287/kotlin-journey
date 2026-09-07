@@ -1,12 +1,14 @@
-# Nền tảng hệ thống — Linux, kernel & thread
+# Nền tảng hệ thống — Linux, kernel, thread & JVM
 
-Trang này trả lời một câu: *con số hiệu năng bạn vừa đo ra được sinh từ cơ chế nào bên dưới JVM?* Mở lần đầu ở P1 ngay sau lab `Selector` của 1.2, rồi mở lại từng tầng khi server của bạn tự đẻ ra triệu chứng tương ứng — cột **Sau module** ở bảng dưới nói chính xác lúc nào, không sớm hơn.
+Trang này trả lời một câu: *con số hiệu năng bạn vừa đo ra được sinh từ cơ chế nào bên dưới — và bên trong — JVM?* Mở lần đầu ở P1 ngay sau lab `Selector` của 1.2, rồi mở lại từng tầng khi server của bạn tự đẻ ra triệu chứng tương ứng — cột **Sau module** ở bảng dưới nói chính xác lúc nào, không sớm hơn.
 
 ---
 
 ## 🎯 Luận điểm trung tâm
 
 **Sự thật:** mọi con số bạn sẽ tạo ra từ P1 đến P4 — p99 của 1.7, bảng ba mô hình của 2.5, tick jitter của 3.2, GC pause, knee point của 4.2 — đều là hiện tượng bề mặt của đúng năm thứ: **thread**, **bộ nhớ ảo**, **file descriptor**, **socket TCP của kernel**, và **tiến trình**. JVM, Ktor, Netty, coroutine chỉ là các lớp vỏ xếp lên năm thứ đó. Không hiểu tầng dưới, bạn đọc được số mà không giải thích được số — và người phỏng vấn phân biệt hai loại người này bằng một câu "tại sao".
+
+Năm thứ đó là **sàn**. Đứng trên sàn rồi ngước lên, còn hai tầng nữa mà kernel không giải thích và Ktor cũng không: bộ cấp phát–GC–JIT bên trong HotSpot (S5), và giao thức cache coherence mà mọi `Atomic`, `Mutex`, `synchronized` xây lên (S6). Bản 05/09 của trang này mở kernel ra rất kỹ rồi dừng ngay dưới JVM — nơi phần lớn số đo của bạn thật ra được sinh ra. S5 và S6 là hai bậc thang còn thiếu, thêm ngày 07/09.
 
 Đây **không phải một phase mới**. Nó là một trục đan vào các module đã có, theo đúng luật symptom-first của lộ trình: học khái niệm tại điểm server của bạn vừa tự gây ra triệu chứng đó, không sớm hơn.
 
@@ -17,13 +19,17 @@ Trang này trả lời một câu: *con số hiệu năng bạn vừa đo ra đ�
 | **S3** | File descriptor và `epoll` | 6 | P1 | 1.2 · 1.6 · 1.8 | Khái niệm 3h ngay sau lab `Selector` của 1.2; lab `strace` 3h sau khi có Ktor server ở 1.6, trước lab EMFILE 1.8 | `Too many open files`; `read()` trả ít byte hơn xin; `Selector` thật ra là gì |
 | **S3b** | Socket TCP nhìn từ kernel | 4 | P1 | 1.5 · 1.7 · 3.1 | Sau 1.5 (frame nhỏ gửi liên tiếp) và 1.7 (bot swarm connect hàng loạt); mở lại ở P3 cạnh 3.1/3.2, không thêm giờ | p99 kẹt quanh 40ms dù CPU rảnh; bot connect hàng loạt mất im lặng; máy sinh tải cạn cổng trước server |
 | **S4** | Signal, vòng đời tiến trình, container | 8 | P2 (3h) + P4 (5h) | 1.9 · 3.4 · 4.4 | Bảng signal và `systemd` đọc khi viết unit ở 1.9 (không tính giờ); 3h khi làm drain ở 3.4; 5h khi G4 đủ ở 4.4 | `docker stop` chờ 10 giây rồi giết; drain không sạch; `kill -9` mất trận |
-| | **Tổng** | **32** | | | | |
+| **S5** | JVM nhìn từ bên trong | 20 | P2 | 2.5 | Sau lab ba mô hình của 2.5 và sau S2; JMH học ở đây, **trước** lab S6 phần P2 | Vòng `System.nanoTime` đo tay ra số lệch 10× giữa hai lần chạy; `-Xlog:gc*` mở ra không đọc được; "G1 hay ZGC" trả lời bằng blog |
+| **S6** | CAS và mô hình bộ nhớ | 16 | P1 (8h) + P2 (8h) | 1.3 · 2.5 | Khái niệm 8h ngay sau race đầu tiên của 1.3, cùng tuần với S1; lab JMH 8h trong 2.5, **sau** S5 | "Atomic là nguyên tử ở mức CPU" là câu giải thích duy nhất bạn có; counter 16 thread chậm hơn 4 thread; hai biến không liên quan làm chậm nhau |
+| | **Tổng** | **68** | | | | |
 
-**32h là giờ biên** — giờ mới so với bản 755h lộ trình sản phẩm, và **đã nằm trong 839h**: P1 13h (S1 3 + S3 6 + S3b 4) · P2 14h (S1 3 + S2 8 + S4 3) · P4 5h (S4), phân bổ ở bảng bổ sung 84h của [Roadmap](/roadmap). Phần trùng với module đã có không tính hai lần: lab 2.000 kết nối và phần virtual thread đã có trong 14h của 2.5, lab EMFILE đã có trong 1.8, drain `SIGTERM` đã có trong 3.4 — vì thế S1 chỉ cần 6h chứ không phải 10h, và 4h dôi ra trả cho S3b, tầng mà không module nào khác trả. Trục này chỉ trả tiền cho phần các module đó không trả: cơ chế bên dưới, phép đo phía OS, và câu giải thích.
+**68h là giờ biên** — giờ trục này thêm vào so với lộ trình sản phẩm, và **đã nằm trong 1.100h**: **P1 21h** (S1 3 + S3 6 + S3b 4 + S6 8) · **P2 42h** (S1 3 + S2 8 + S4 3 + S5 20 + S6 8) · **P4 5h** (S4), phân bổ ở bảng ba trục nền tảng của [Roadmap](/roadmap). Trong đó S1–S4 là 32h của bản 05/09; S5 20h và S6 16h thêm ngày 07/09 sau đợt rà soát chấm bốn tầng kernel ở mức 4/5 nhưng hai tầng liền kề — JVM bên trong và concurrency — ở mức 2/5: không một lần nhắc TLAB, safepoint, escape analysis; `AtomicInteger` được giải thích bằng một câu rồi hết. Phần trùng với module đã có không tính hai lần: lab 2.000 kết nối và phần virtual thread đã có trong 14h của 2.5, lab EMFILE đã có trong 1.8, drain `SIGTERM` đã có trong 3.4 — vì thế S1 chỉ cần 6h chứ không phải 10h, và 4h dôi ra trả cho S3b, tầng mà không module nào khác trả. Trục này chỉ trả tiền cho phần các module đó không trả: cơ chế bên dưới, phép đo phía OS, và câu giải thích.
 
 **Luật sắt:** mỗi tầng kết thúc bằng một phép đo trên chính server CARO, không phải trên ví dụ. Không có số ghi vào `bench/` thì tầng đó chưa xảy ra.
 
 **Gói cần cài trên VPS** (luật 7, máy mình — AI được hướng dẫn từng bước): `perf` (Ubuntu `linux-tools-$(uname -r)` — kernel cloud thì `linux-tools-aws`/`-gcp`…; Debian `linux-perf`; Fedora/RHEL `perf`), `strace`, `smem`, `sysstat` (`pidstat`), `websocat`; `ss` và `nstat` nằm trong `iproute2`, thường có sẵn. Các event `context-switches`, `cpu-migrations`, `task-clock`, `page-faults`, `minor/major-faults` là **software event**, chạy được trong KVM; event phần cứng (TLB, cache) trên phần lớn VPS trả `<not supported>` — không phải bạn cài sai.
+
+**Phiên bản:** mọi lab trên trang này chạy trên **JDK 25 LTS**, không phải 21. Khác biệt không nằm ở cờ mới mà ở **JEP 491** (JDK 24): virtual thread vào `synchronized` hoặc `Object.wait()` **không còn pin** carrier — chỉ còn pin khi trên stack có frame native (JNI) hoặc `<clinit>`. Mọi blog, sách và câu trả lời phỏng vấn trước 2025 nói "đổi `synchronized` sang `ReentrantLock` để virtual thread khỏi pin" đã hết hiệu lực, và bảng ba mô hình của S1 lẫn bảng số của S6 phải đo trên JDK 25 — mang số đo JDK 21 sang là so hai thứ khác nhau. `-Djdk.tracePinnedThreads` đã bị gỡ; muốn thấy pin còn lại dùng sự kiện JFR `jdk.VirtualThreadPinned`. Ghi `java -version` vào đầu mọi file `bench/`.
 
 ## S1 — Tiến trình, thread và bộ lập lịch · 6h · P1 3h cạnh 1.3 + P2 3h trong 2.5
 
@@ -378,6 +384,177 @@ Chạy trong cgroup có `MemoryMax` (lab OOM của S2 là nửa đầu). Nửa s
 
 **Ngưỡng đạt S4:** một file `bench/` có hai hàng — `kill -9` và `kill -TERM` — cùng cột "trận đứt", "trận khôi phục", "thời gian tới khi thoát", số khác nhau đo được trên chính server. Kèm dòng `dmesg` OOM và dòng `journalctl` tương ứng. Nói được vì sao `Restart=on-failure` không khởi động lại sau drain sạch, và vì sao hàng `kill -9` chỉ chứng minh mức 2 chứ không chứng minh chống mất điện.
 
+## S5 — JVM nhìn từ bên trong · 20h · P2, trong 2.5, sau S2
+
+Mở khi bảng ba mô hình của 2.5 có cột GC pause mà bạn chỉ chép được từ log chứ không giải thích được, hoặc khi bạn viết một vòng `System.nanoTime` đo hai cách serialize gói tin của 1.5 và ra hai con số lệch nhau 10× giữa hai lần chạy. S2 cho bạn thấy heap là một vùng `mmap` nhìn từ OS; S5 đi vào trong vùng đó: object được cấp ở đâu, chết thế nào, ai dọn, và vì sao mọi con số đo "bên trong JVM" phải qua JMH trước khi được tin. Học JMH ở đây, **trước** lab S6 của P2 — S6 không có JMH thì chỉ đo được bẫy.
+
+### Khái niệm, theo thứ tự phụ thuộc
+
+| # | Khái niệm | Một câu | Bạn thấy nó ở đâu |
+|---|---|---|---|
+| 1 | Vòng đời một object | `new` → bump-pointer trong TLAB → Eden → sống sót vài chu kỳ young thì qua survivor rồi lên old → không còn ai trỏ tới → được **bỏ qua** khi copy (young) hoặc bị sweep/compact (old). Object chết không tốn công dọn; object **sống** mới tốn — mọi thứ dưới đây xoay quanh câu này | `jcmd <pid> GC.heap_info`; `-Xlog:gc+heap` |
+| 2 | TLAB | Thread-Local Allocation Buffer: mỗi thread giữ riêng một lát Eden; cấp phát = cộng con trỏ + so sánh, **không lock, không free-list**. Hết lát thì xin lát mới (đường chậm); Eden hết thì young GC | `-Xlog:gc+tlab=debug`; JFR `jdk.ObjectAllocationOutsideTLAB` |
+| 3 | Vì sao rẻ hơn `malloc` | `malloc` phải tìm khối vừa cỡ trong free-list, khoá arena (S2 hàng glibc), và `free` từng khối. JVM đổi cái giá đó lấy cái giá khác: **GC** tìm object sống và dọn theo lô. Cấp phát là 10–20 lệnh máy; tiền thật trả lúc dọn, và trả theo số object **sống**, không theo số object đã cấp | JMH `-prof gc` cột `gc.alloc.rate.norm` (byte/op) |
+| 4 | Escape analysis | C2 chứng minh một object không thoát khỏi phương thức hoặc thread (không lưu vào field, không trả về, không đưa vào lock của người khác) → không cần cấp trên heap. Kotlin: lambda không inline, `Pair`, data class tạm trong hàm nóng đều là ứng viên — nếu được inline đủ | Không có cờ in ở JDK release; bằng chứng duy nhất là `gc.alloc.rate.norm` = 0 B/op, và tăng lên khi chạy với `-XX:-DoEscapeAnalysis` |
+| 5 | Scalar replacement, lock elision | Hệ quả của 4: object bị tách thành các field nằm trong register — **không bao giờ tồn tại**; `synchronized` trên object không thoát bị bỏ luôn. Vì thế "tránh tạo object" trong hàm nóng thường là tối ưu vào chỗ trống — đo trước | Như hàng 4; Shipilëv quark #18 |
+| 6 | Safepoint | Trạng thái mà JVM biết chính xác thread đang giữ tham chiếu nào — điều kiện để GC dọn, để deopt, để `jstack`, để JFR lấy stack. Thread Java **tự** đi tới safepoint bằng cách **poll** một địa chỉ ở mỗi lần return và mỗi back-edge vòng lặp; JVM muốn dừng thì đổi trang đó thành không đọc được → mọi poll `SIGSEGV` (S4 bảng signal) → thread rơi vào handler và đứng yên. "Stop-the-world" dừng ở **đó**, không phải ở dòng code bất kỳ | `-Xlog:safepoint`: mỗi dòng có lý do (`G1CollectForAllocation`, `ThreadDump`, `Deoptimize`, `ICBufferFull`), `Reaching safepoint`, `At safepoint` |
+| 7 | Time-to-safepoint | JVM không dừng được ngay: nó phải **chờ thread chậm nhất** tới poll kế tiếp. Vòng đếm (`for (i in 0 until n)`) được C2 dịch thành counted loop **không poll** — C2 chỉ cắt nó thành từng lát 1.000 vòng có poll nhờ loop strip mining (`-XX:+UseCountedLoopSafepoints`, mặc định bật từ JDK 10); thread trong JNI hoặc `System.arraycopy` lớn cũng không poll. Một thread như vậy giữ **toàn bộ** JVM đứng đợi — 200 thread khác đã tới safepoint và đang ngủ. Hệ quả cho S1: mỗi `jstack` của bạn là một lần stop-the-world | `-Xlog:safepoint` cột `Reaching safepoint` — số phải đo ở LAB 2; `-XX:+SafepointTimeout -XX:SafepointTimeoutDelay=500` in tên thread chậm |
+| 8 | Mark-sweep-compact | Mark: từ root (stack, static, register — safepoint mới cho biết) đi hết đồ thị tham chiếu. Sweep: gom vùng không mark vào free-list — để lại lỗ. Compact: dồn object sống về một phía và **cập nhật mọi tham chiếu** trỏ vào chúng — phần đắt, và là lý do "dời object" cần dừng thế giới hoặc cần barrier | `-Xlog:gc*` dòng `Pause Full` — nếu thấy nó trên CARO, S2 hoặc leak của bạn là nguyên nhân |
+| 9 | Giả thuyết thế hệ | Phần lớn object chết trẻ (DTO gói tin, `ByteBuffer` tạm, lambda). Young GC là **copying**: chỉ chạm object sống, chi phí tỉ lệ với sống chứ không với chết → Eden 100MB toàn xác dọn trong 1ms. Cái giá: phải biết old trỏ vào young ở đâu mà không quét cả old — **card table** / **remembered set**, viết bằng **write barrier** chèn vào mỗi lệnh ghi tham chiếu; đó là hàng "Cấu trúc GC" 5–20% heap ở S2 | `-Xlog:gc+heap` dòng `Eden regions`, `Survivor regions`, `Old regions` |
+| 10 | Concurrent marking | Mark trong khi thread Java vẫn chạy → đồ thị đổi dưới chân GC. Bất biến ba màu: object đen (đã quét xong) không được trỏ vào trắng (chưa thấy) mà GC không hay. G1 giữ bằng **SATB** (write barrier ghi lại tham chiếu **cũ** bị đè — snapshot-at-the-beginning); ZGC giữ bằng **load barrier** + **colored pointer** (vài bit trong địa chỉ ghi màu; mỗi lần **đọc** tham chiếu qua barrier kiểm màu và tự sửa). Hai lựa chọn đó quyết định toàn bộ bảng dưới | `-Xlog:gc*` dòng `Concurrent Mark`, `Pause Remark` (G1) / `Pause Mark End` (ZGC) |
+
+### G1 và ZGC — hai cách trả cùng một món nợ
+
+**Sự thật:** hai collector không phải "cũ và mới". Chúng đặt cùng một công việc — tìm sống, dời sống, sửa tham chiếu — vào hai chỗ khác nhau: G1 dời object **trong lúc dừng**, ZGC dời object **trong lúc chạy** và bắt mỗi lệnh đọc tham chiếu của bạn trả tiền. Bảng này để bạn **dự đoán** trước LAB 3, không phải để chép.
+
+| Cơ chế | G1 (mặc định JDK 25) | ZGC thế hệ (`-XX:+UseZGC`; bản không thế hệ đã gỡ ở JDK 24, JEP 490) |
+|---|---|---|
+| Đơn vị heap | Region cỡ cố định, `-Xmx512m` → 1MB; object lớn hơn nửa region là **humongous**, cấp thẳng vào old — `ByteArray(1 shl 30)` của S2 là một | Region động cỡ nhỏ/vừa/lớn; không có humongous theo nghĩa G1 |
+| Mark | Concurrent, SATB write barrier; hai pause ngắn `Pause Remark`, `Pause Cleanup` | Concurrent, load barrier; ba pause cỡ **µs**: `Pause Mark Start`, `Pause Mark End`, `Pause Relocate Start` |
+| Dời object (evacuate / relocate) | **Stop-the-world**: `Pause Young` copy toàn bộ sống của collection set, sửa tham chiếu tại chỗ. Pause ∝ **số byte sống** trong Eden + survivor + vài region old (mixed) | **Concurrent**: object được copy trong lúc thread Java chạy; thread nào đọc tham chiếu cũ thì load barrier tự chuyển sang địa chỉ mới (forwarding table). Pause **không phụ thuộc** cỡ heap hay số sống |
+| Núm vặn chính | `-XX:MaxGCPauseMillis` (mặc định 200ms): G1 chọn cỡ Eden để pause vừa mục tiêu — đặt 5ms thì Eden nhỏ, GC dày | `-XX:SoftMaxHeapSize`, `-XX:ZAllocationSpikeTolerance`; không có núm pause vì pause đã cố định |
+| Cái giá bạn trả | Pause cỡ ms tới chục ms; remembered set ăn RAM; barrier ghi rẻ, đọc miễn phí → throughput cao hơn | **Mọi lệnh đọc tham chiếu** đi qua barrier (vài lệnh máy) → throughput thấp hơn 5–15%; GC thread chạy song song với server → trên 2 vCPU chúng **tranh CPU** với tick loop; cần headroom heap — cấp phát nhanh hơn GC dọn thì thread bị **Allocation Stall** (một pause trá hình, chỉ thấy trong log); RSS thường cao hơn |
+| Khi nào chọn | Throughput, RAM chật, pause 20–50ms chấp nhận được — hầu hết REST service | Pause là SLO (ARENA 20Hz, jitter dưới 5ms ở 3.2) **và** có CPU rảnh để trả |
+
+### JIT, deoptimization và vì sao vòng đo tay nói dối
+
+| # | Khái niệm | Một câu | Bạn thấy nó ở đâu |
+|---|---|---|---|
+| 11 | Tiered compilation | Bytecode chạy ở interpreter (tier 0) → C1 có profiling (tier 3) sau ~200 lần gọi → C2 (tier 4) sau cỡ 5.000–15.000 lần gọi hoặc vòng lặp, dùng profile để tối ưu **theo những gì đã thấy** (kiểu nào hay gặp, nhánh nào hay đi). Cùng một hàm có tới bốn bản mã máy khác nhau trong 10 giây đầu — đó là lý do phải warm-up | `-XX:+PrintCompilation` (cột tier 0–4; `%` = OSR; `!` có exception handler); `jcmd <pid> Compiler.codecache` |
+| 12 | Deoptimization | C2 đặt cược (call site chỉ thấy một kiểu, nhánh chưa bao giờ đi, giá trị luôn dương). Cược sai → **uncommon trap** → vứt mã C2, rơi về interpreter, profile lại, biên dịch lại. Server chậm đột ngột vài trăm ms sau khi client kiểu mới xuất hiện — đó là deopt, không phải GC | `-XX:+PrintCompilation` dòng `made not entrant`; JFR `jdk.Deoptimization` |
+| 13 | OSR — on-stack replacement | Vòng lặp dài đang chạy ở interpreter được biên dịch **giữa chừng** và nhảy vào mã máy ngay tại back-edge. Mã OSR khác mã bình thường (khác entry, khác unroll) — vòng `while` đo tay của bạn đang đo **mã OSR**, không phải mã hàm sẽ chạy trong server | `-XX:+PrintCompilation` dòng có `%` |
+| 14 | Dead code elimination | Kết quả không ai đọc → C2 xoá luôn phép tính. Vòng tay gọi `serialize(move)` rồi bỏ kết quả có thể ra 0,3ns/op — bạn đang đo một vòng lặp rỗng | JMH `Blackhole.consume` hoặc `return` kết quả từ `@Benchmark` |
+| 15 | Constant folding | Input là hằng (`val x = 42` trong hàm, `final` field) → C2 tính trước lúc biên dịch; bạn đo tốc độ đọc một hằng | JMH giữ input trong field **không final** của `@State` |
+| 16 | JMH | Không phải thư viện đo giờ — là bộ **chống lại JIT**: mỗi `@Fork` là một JVM mới (profile sạch), `@Warmup` bỏ tier 0–3, `@Measurement` nhiều lần để có phương sai, `Blackhole` chặn DCE, `@State` chặn folding, bench không có vòng lặp bên trong để không đo OSR. Số JMH vẫn là số của **một microbenchmark**: nó nói hàm A nhanh hơn hàm B trong điều kiện cô lập, không nói server nhanh hơn | Gradle plugin `me.champeau.jmh`, bench ở `src/jmh/kotlin`; `./gradlew jmh`; JMH samples 08, 10, 11, 34 |
+
+```bash
+PID=$(pgrep -f caro-server)
+# JIT: theo dõi 60 giây đầu sau khi bot swarm 1.7 bắt đầu — đếm bản C2, OSR, deopt
+java -XX:+PrintCompilation -jar caro.jar > compile.log 2>&1 &
+grep -c ' 4 ' compile.log; grep -c '%' compile.log; grep -c 'made not entrant' compile.log
+# Safepoint: mỗi dòng một lần dừng, kèm lý do và Reaching safepoint
+java -Xlog:safepoint:file=safepoint.log:uptime -jar caro.jar
+# GC: đủ để đọc một chu kỳ; gc* = mọi tag con (heap, phases, cpu, tlab…)
+java -Xlog:gc*:file=gc.log:time,uptime,level,tags -Xmx512m -jar caro.jar
+jcmd $PID GC.heap_info
+jcmd $PID Compiler.codecache
+jcmd $PID JFR.start duration=60s filename=caro.jfr   # jdk.ObjectAllocationOutsideTLAB, jdk.Deoptimization, jdk.SafepointBegin
+```
+
+### Đọc một chu kỳ GC — G1
+
+Dạng bạn sẽ thấy trong `gc.log` (số là minh hoạ; đọc log của chính bạn). Mỗi dòng có một trường bạn phải gọi tên được:
+
+```text
+[2027-06-12T21:14:03.412+0700][12.345s][info][gc,start    ] GC(7) Pause Young (Normal) (G1 Evacuation Pause)
+[...][12.345s][info][gc,task     ] GC(7) Using 2 workers of 2 for evacuation
+[...][12.348s][info][gc,phases   ] GC(7)   Pre Evacuate Collection Set: 0.1ms
+[...][12.348s][info][gc,phases   ] GC(7)   Evacuate Collection Set: 2.4ms
+[...][12.348s][info][gc,phases   ] GC(7)   Post Evacuate Collection Set: 0.4ms
+[...][12.348s][info][gc,heap     ] GC(7) Eden regions: 24->0(25)
+[...][12.348s][info][gc,heap     ] GC(7) Survivor regions: 2->3(4)
+[...][12.348s][info][gc,heap     ] GC(7) Old regions: 10->10
+[...][12.348s][info][gc,heap     ] GC(7) Humongous regions: 1->1
+[...][12.348s][info][gc          ] GC(7) Pause Young (Normal) (G1 Evacuation Pause) 74M->28M(256M) 3.112ms
+[...][12.348s][info][gc,cpu      ] GC(7) User=0.01s Sys=0.00s Real=0.00s
+```
+
+| Trường | Nghĩa | Câu hỏi bạn phải trả lời được |
+|---|---|---|
+| `GC(7)` | Số thứ tự chu kỳ — mọi dòng cùng số là **một** chu kỳ | Chu kỳ này cách chu kỳ trước bao lâu? Byte cấp phát giữa hai lần chia cho khoảng đó = **tốc độ cấp phát** của server dưới tải |
+| `Pause Young (Normal)` | Young GC thường. Biến thể: `(Concurrent Start)` — young GC kiêm khởi động concurrent mark; `Pause Young (Mixed)` — kèm vài region old; `Pause Remark`, `Pause Cleanup` — hai pause của concurrent mark; `Pause Full` — thất bại, mark-compact toàn heap, stop-the-world dài | Thấy `Mixed` bao lâu một lần? Thấy `Full` — vì sao: humongous, leak, hay `-Xmx` quá sát? |
+| `Evacuate Collection Set: 2.4ms` | Phần copy object sống — phần **tỉ lệ với sống** | Sống là gì trên CARO: 2.000 session, room state, buffer Netty? Ước tính rồi đối chiếu |
+| `Eden regions: 24->0(25)` | 24 region Eden đầy → 0 (đã evacuate); mục tiêu kỳ sau 25 (G1 chỉnh theo `MaxGCPauseMillis`) | Region cỡ bao nhiêu (`-Xlog:gc+init`)? 24 × cỡ = Eden byte |
+| `Survivor 2->3`, `Old 10->10` | Sống sót từ Eden vào survivor; old không đổi vì young GC không chạm old | Có object nào **lẽ ra phải chết** đang leo lên old không? Leak hay cache có chủ đích? |
+| `74M->28M(256M)` | Used trước → used sau (committed) | 28M sau GC là **live set** thật của server — số duy nhất đáng dùng để đặt `-Xmx` (S2) |
+| `User=0.01s Sys=0.00s Real=0.00s` | CPU của GC thread; User lớn hơn Real vì song song | 2 worker trên 2 vCPU: trong 3ms đó tick loop của bạn có CPU không? |
+
+Với ZGC, cùng chu kỳ trải thành `Pause Mark Start` → `Concurrent Mark` → `Pause Mark End` → `Concurrent Relocate`, ba `Pause` cỡ 0,01–0,05ms, và dòng tổng dạng `Minor Collection (Allocation Rate) 120M(47%)->40M(16%) 0.040s` — **0,040s là thời gian chu kỳ, không phải pause**; pause là ba dòng kia. Tìm thêm `Allocation Stall` — nếu có, thread của bạn đã đứng chờ GC mà không dòng `Pause` nào ghi nhận.
+
+### LAB 1 — cùng một hàm, đo tay và đo JMH
+
+Hàm được đo là **của bạn**: serialize một `Move` thành `ByteArray` hoặc parse một frame (1.5). Không chọn hàm ví dụ.
+
+| Cách đo | Kỳ vọng | Vì sao — gọi đúng tên bẫy |
+|---|---|---|
+| Vòng `for` 1 triệu lần quanh `System.nanoTime`, chạy **lần đầu** trong tiến trình | Chậm 5–50× so với JMH | Tier 0 → 1 → 3 → 4 trộn vào nhau; OSR giữa chừng (hàng 11, 13) |
+| Cùng vòng, lặp 10 lượt trong cùng tiến trình, **không dùng** kết quả | Lượt 5+ nhanh vô lý, có thể dưới 1ns/op | DCE (hàng 14); nếu `move` là hằng cục bộ thì thêm constant folding (hàng 15) |
+| Cùng vòng, có dùng kết quả (cộng `size` vào một biến `@Volatile`) | Gần JMH nhưng dao động ±30% giữa các lượt | Vẫn đo mã OSR; không có fork nên profile lượt trước ảnh hưởng lượt sau |
+| JMH: `@State` giữ `move`, `@Benchmark` trả về `ByteArray`, `@Fork(2) @Warmup(5) @Measurement(5)` | Ổn định ±5% giữa hai fork | Mỗi bẫy có một tấm khiên (hàng 16) |
+| JMH + `-prof gc`; chạy lại với `-XX:-DoEscapeAnalysis` | `gc.alloc.rate.norm` **tăng** khi tắt EA — hoặc không đổi | Nếu tăng: có object tạm đã được scalar-replace (hàng 4–5). Nếu không đổi: hàm của bạn không có gì để thoát — cũng là một kết quả |
+
+Ghi cả năm hàng vào `bench/`, kèm `-XX:+PrintCompilation` của lượt đo tay có đánh dấu dòng `%` và `made not entrant`.
+
+### LAB 2 — đo time-to-safepoint trên chính server
+
+1. Chạy CARO với `-Xlog:safepoint:file=safepoint.log:uptime`, bot swarm 1.7 ở mức 500 kết nối. Chạy `jstack` 10 lần; trong log tìm 10 dòng lý do `ThreadDump` và ghi `Reaching safepoint` — số nền, thường dưới 100µs.
+2. Thêm một endpoint debug (code của bạn) chạy một vòng đếm số nguyên 2 tỉ lần trên một thread — không I/O, không cấp phát. Gọi nó rồi `jstack` ngay: `Reaching safepoint` vẫn nhỏ, vì C2 đã cắt lát vòng lặp (hàng 7).
+3. Chạy lại với `-XX:-UseCountedLoopSafepoints`, lặp bước 2: `Reaching safepoint` bằng đúng thời gian vòng lặp — hàng trăm ms tới vài giây — và **mọi** thread khác đứng đợi. Đối chiếu p99 của bot swarm tại đúng giây đó trong HdrHistogram.
+4. Bật lại cờ, ghi ba số vào `bench/`. Bài học không phải "đừng tắt cờ" — là: **một** thread không poll làm 500 kết nối đứng, và `jstack` bạn chạy ở S1 không miễn phí.
+
+### LAB 3 — G1 và ZGC trên CARO, dự đoán trước, đo sau
+
+Cùng server, cùng `-Xmx512m`, cùng 2.000 kết nối từ bot swarm 1.7 trong 10 phút, hai lần chạy: `-XX:+UseG1GC` và `-XX:+UseZGC`. Điền cột dự đoán **trước** khi chạy, bằng bảng cơ chế ở trên.
+
+| Số đo | Lấy ở đâu | Dự đoán G1 | Dự đoán ZGC | Đo được |
+|---|---|---|---|---|
+| Pause tối đa, pause p99 | `gc.log` dòng `Pause` — với ZGC là ba dòng `Pause`, không phải dòng tổng | | | |
+| Tổng CPU của GC | Cộng cột `User` trong `gc,cpu`; đối chiếu `pidstat -t` các thread `GC Thread#`, `ZWorker` | | | |
+| Throughput | msg/giây từ bot swarm 1.7 | | | |
+| p99 của message | HdrHistogram 1.7 — số duy nhất người dùng thấy | | | |
+| RSS | `/proc/<pid>/status` (S2) — `VmSize` có thể gấp nhiều lần `-Xmx` vì đặt chỗ ảo (S2 hàng 7); cột phải so là RSS | | | |
+| `Allocation Stall` | `grep -c 'Allocation Stall' gc.log` — chỉ ZGC | 0 | | |
+
+**Ngưỡng đạt S5:** bảng năm hàng của LAB 1 với tên bẫy đúng từng hàng; ba số `Reaching safepoint` của LAB 2 và một câu giải thích poll nằm ở đâu trong mã máy; một chu kỳ G1 và một chu kỳ ZGC từ `gc.log` của chính server, chú thích từng dòng theo bảng "Đọc một chu kỳ"; và câu trả lời cho "vì sao ZGC pause ngắn hơn G1, cái giá là gì" bằng sáu số của LAB 3 và bằng chữ **load barrier**, **concurrent relocate**, **evacuation**, **allocation stall** — không bằng "ZGC hiện đại hơn", không bằng bảng của Oracle.
+
+## S6 — CAS và mô hình bộ nhớ · 16h · P1 8h cạnh 1.3 + P2 8h trong 2.5, sau S5
+
+Mở khi 1.3 bắt bạn sửa race đầu tiên và bạn có ba cách — `synchronized`, `AtomicInteger`, `Mutex` — mà câu giải thích duy nhất là "atomic là nguyên tử ở mức CPU". Câu đó đúng và vô dụng: không nói CPU làm **gì**, không nói khi nào nó **thua** `synchronized`, không nói vì sao hai biến không liên quan có thể làm chậm nhau 5×. P1 8h là bảng khái niệm cộng phép quan sát bằng đồ nghề S1 (`jstack`, `perf stat`, `pidstat`) — cùng tuần với S1 phần P1. P2 8h là bảng số JMH — làm **sau** S5, vì trước S5 bạn chưa biết vì sao vòng đo tay nói dối, và mọi số CAS đo tay đều là bẫy DCE.
+
+### Khái niệm, theo thứ tự phụ thuộc
+
+| # | Khái niệm | Một câu | Bạn thấy nó ở đâu |
+|---|---|---|---|
+| 1 | Cache line và coherence | CPU không đọc từng byte; nó kéo cả **dòng 64 byte** vào L1 của core. Nhiều core giữ bản sao cùng dòng; core nào **ghi** phải chiếm dòng ở trạng thái độc quyền và bản sao ở core khác bị vô hiệu (MESI) — lần đọc kế tiếp của core kia phải kéo lại. Đây là đơn vị tiền tệ của mọi thứ dưới đây: chi phí không phải "ghi bộ nhớ", mà là **dòng cache đổi chủ** | `getconf LEVEL1_DCACHE_LINESIZE`; `lscpu`; `perf stat -e cache-misses` là hardware event — trên VPS `<not supported>`, đo bằng throughput JMH |
+| 2 | CAS ở mức lệnh | `compareAndSet(kỳ vọng, mới)`: nếu ô nhớ đang bằng kỳ vọng thì ghi mới, trả `true` — **trong một lệnh máy**: x86 `lock cmpxchg`, ARM `ldxr`/`stxr` hoặc `casal`. Tiền tố `lock` bắt core giữ dòng cache độc quyền suốt lệnh **và** là một hàng rào đầy đủ (hàng 9). Không tranh chấp: cỡ 20 chu kỳ; tranh chấp: dòng cache ping-pong giữa các core theo mỗi lần thử | Mã máy: `-XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly` cần `hsdis`, chỉ trên máy thật; trên VPS đọc `Unsafe.compareAndSetInt` trong JDK và tin là intrinsic |
+| 3 | Bên trong `AtomicInteger` | `compareAndSet` → `lock cmpxchg`. `incrementAndGet`/`getAndAdd` → `lock xadd` — **một lệnh, không vòng lặp**, không bao giờ "thử lại". `updateAndGet { }`/`accumulateAndGet` → vòng: đọc, tính, CAS, thất bại thì lặp — dưới tranh chấp, mỗi vòng thất bại là một lần đổi chủ dòng cache. "Nguyên tử ở mức CPU" nghĩa là: một lệnh mà giao thức coherence thực hiện độc quyền | Đọc `AtomicInteger.java`: mọi thứ gọi xuống `Unsafe` |
+| 4 | Vì sao CAS là nền của `java.util.concurrent` | `AbstractQueuedSynchronizer.state` đổi bằng CAS; `ReentrantLock.lock()` đường nhanh = **một** CAS, thất bại mới xếp hàng và `park` (`futex`, S1); `ConcurrentHashMap` chèn vào bin trống bằng CAS; `ConcurrentLinkedQueue` là hàng đợi Michael–Scott toàn CAS; `LongAdder` (hàng 6) là CAS trên cell; `synchronized` đường nhanh (lightweight locking, mặc định từ JDK 23) cũng là CAS trên mark word; `Mutex` của kotlinx.coroutines là CAS trên state cộng hàng đợi continuation. Không có CAS thì mọi thứ này phải xin kernel một lock — mỗi lần | `Striped64`, `AbstractQueuedSynchronizer.compareAndSetState`, `ObjectMonitor` |
+| 5 | `AtomicInteger` vs `synchronized` — và khi nào ngược lại | **Không tranh chấp:** cả hai đều là CAS (enter + exit của `synchronized` = 2 CAS) → chênh nhỏ. **Tranh chấp vừa** (thread ≤ số core): CAS thua vài vòng rồi thắng, thread ở R suốt; `synchronized` phồng thành monitor → `park` → `futex` → context switch tự nguyện (S1 hàng 10) → chậm hơn. **Tranh chấp cao** (thread nhiều hơn core: 16 thread trên 4 vCPU): thread CAS **quay vòng** đốt hết lát CPU rồi bị tước giữa vòng thử (involuntary), dòng cache đổi chủ theo từng vòng thất bại; thread `synchronized` ngủ trong kernel nhường CPU cho người giữ lock → throughput có thể **đảo chiều**. Thứ hạng đổi theo số thread ÷ số core, không có câu trả lời một dòng | LAB dưới; `pidstat -w -t`: cột `cswch/s` (tự nguyện, park) và `nvcswch/s` (bị tước, quay vòng) |
+| 6 | `LongAdder` | Giải bài **counter ghi dồn dập**: thay vì một ô mà 16 thread CAS vào, `Striped64` giữ nhiều cell, mỗi cell riêng một dòng cache (`@Contended`), thread băm vào cell của mình → CAS gần như không tranh chấp; `sum()` cộng tất cả. Cái giá: `sum()` **không phải snapshot** nguyên tử, không có `compareAndSet` trên tổng — không dùng được cho "chỗ ngồi còn lại phải ≥ 0" (cần `AtomicLong.compareAndSet` hoặc lock); mỗi cell 128 byte RAM. Counter msg/giây của bot swarm 1.7 là chỗ đúng của nó | `Striped64.java`; `jdk.internal.vm.annotation.Contended` |
+| 7 | False sharing | Hai biến **không liên quan** — counter của thread A và của thread B — nằm chung một dòng 64 byte: mỗi lần A ghi, bản sao của B vô hiệu, và ngược lại. Không có biến dùng chung, không có lock, mà chậm như có. `LongArray(2)` với hai thread ghi `[0]` và `[1]` là ca kinh điển; hai field kề nhau trong một object cũng vậy. Chữa: đệm cho hai biến cách nhau ≥ 64 byte (stride 16 trong `LongArray`, 7 `Long` đệm quanh field), hoặc `@Contended` (cần `-XX:-RestrictContended` và `--add-exports java.base/jdk.internal.vm.annotation=ALL-UNNAMED`) | JMH sample 22; LAB dưới |
+| 8 | Mô hình bộ nhớ Java — JLS §17.4 | JMM không nói về cache; nó nói về **thứ tự**: compiler và CPU được phép sắp lại gì. Hai thao tác có **happens-before** thì cái sau thấy cái trước; không có thì đọc có thể thấy giá trị cũ, mới, hoặc — với `long`/`double` không `volatile` — nửa nọ nửa kia. Data race = hai truy cập cùng biến, ít nhất một ghi, không HB. Nguồn HB bạn dùng hằng ngày: `synchronized` exit → enter, `volatile` write → read, `Thread.start`, `join`, mọi thao tác `java.util.concurrent`, `Channel.send` → `receive` | JLS §17.4.5; đọc **sau** lab, cùng "Java Memory Model Pragmatics" của Shipilëv |
+| 9 | Memory fence và `volatile` — hàng rào chặn cái gì | Hai kẻ sắp lại: **JIT** (kéo phép đọc ra khỏi vòng lặp — `while (!running)` chạy mãi là do C2 đọc `running` **một lần** rồi giữ trong register, không phải do "cache cũ") và **CPU** (x86 chỉ sắp lại một kiểu: store bị giữ trong store buffer, load sau nó chạy trước — store-load; ARM sắp lại gần như mọi cặp). `volatile` write = **release** + chặn store-load: x86 phát `lock addl $0,(%rsp)` sau ghi; `volatile` read = **acquire**: x86 là `mov` thường cộng cấm JIT sắp lại; ARM cần `stlr`/`ldar`. Hàng rào **không** làm `i++` nguyên tử, **không** "đọc thẳng từ RAM" — coherence luôn bật, cache không bao giờ "cũ" theo nghĩa đó | `VarHandle` bốn chế độ — plain, opaque, acquire/release, volatile — là API đặt tên cho đúng hàng rào bạn trả; Kotlin `@Volatile`; `AtomicInteger.setRelease` |
+| 10 | ABA — đọc hiểu | CAS so **giá trị**, không so lịch sử: A → B → A và CAS vẫn qua dù thế giới đã đổi. Trên JVM hiếm vì GC không tái dùng object còn ai trỏ tới — nhưng quay lại ngay khi bạn **pool object** để tránh cấp phát trong tick (S2 LAB 1, 3.2). Chữa bằng `AtomicStampedReference` (giá trị + số phiên bản) hoặc không tái dùng. Biết để nhận ra, không tự viết cấu trúc lock-free | `AtomicStampedReference`; Herlihy & Shavit ch. 10 nếu tò mò, ở [Mở rộng](/mo-rong) |
+
+### Quan sát ở P1 — bằng đồ nghề S1, chưa cần JMH
+
+Viết một counter tăng bởi N thread theo **ba cách** — `synchronized`, `AtomicLong.incrementAndGet`, `LongAdder.increment` — code của bạn, AI-free (vùng `Atomic`/shared state). Chạy 30 giây ở 4 và 16 thread trên VPS, ghi `nproc` vào đầu file `bench/`, và trong lúc chạy:
+
+```bash
+PID=$(pgrep -f counter)
+ps -eLo tid,stat,pcpu,wchan:20,comm -p $PID    # synchronized: thread S, wchan futex_wait_queue; CAS: mọi thread R
+pidstat -w -t -p $PID 1                         # cswch/s = park qua futex; nvcswch/s = bị tước giữa vòng CAS
+perf stat -e context-switches,cpu-migrations,task-clock -p $PID -- sleep 10
+jstack $PID | grep -cE 'BLOCKED|waiting to lock'
+```
+
+Ba cách cho ba bức tranh khác nhau ở cùng 16 thread — `BLOCKED` và `cswch/s` cao; `RUNNABLE` toàn bộ và `nvcswch/s` cao; `RUNNABLE` và gần như không context switch. Ghi ba bức tranh đó thành chữ. **Chưa ghi ops/giây** — số đó là bẫy cho tới khi có JMH.
+
+### LAB — ba cách, ba mức tranh chấp, bằng JMH (P2, sau S5)
+
+Bốn `@Benchmark` trên cùng counter: `synchronized`, `AtomicLong.incrementAndGet` (`lock xadd`), `AtomicLong.updateAndGet { it + 1 }` (vòng CAS), `LongAdder.increment`; `Mode.Throughput`, `@Fork(2) @Warmup(5) @Measurement(5)`, chạy ba lần với `-t 1`, `-t 4`, `-t 16`. Điền dự đoán **thứ hạng** trước, theo hàng 5–6.
+
+| Cách | 1 thread | 4 thread | 16 thread | Dự đoán thứ hạng và vì sao |
+|---|---|---|---|---|
+| `synchronized` | | | | |
+| `AtomicLong.incrementAndGet` | | | | |
+| `AtomicLong.updateAndGet` (vòng CAS) | | | | |
+| `LongAdder` | | | | |
+
+Rồi false sharing: `-t 2` với `@State(Scope.Benchmark)` giữ một `LongArray`, mỗi thread ghi vào chỉ số **của mình** — chạy hai lần: chỉ số `0` và `1` (cùng dòng), rồi `0` và `16` (khác dòng). Chênh lệch là số bạn phải giải thích bằng hàng 1 và 7, không bằng chữ "cache".
+
+**Ngưỡng đạt S6:** bảng bốn cách × ba mức tranh chấp trong `bench/` kèm `nproc`, và một đoạn giải thích vì sao **thứ hạng đổi** khi đi từ 4 lên 16 thread — dùng từ **dòng cache đổi chủ**, **`xadd`**, **`futex`**, **bị tước giữa vòng thử**, không dùng từ "lock chậm"; hai số false sharing trước/sau đệm và tỉ lệ; trả lời "`volatile` chặn cái gì" bằng hai kẻ sắp lại ở hàng 9, không bằng "đọc từ RAM"; và quay lại race của 1.3: nói được trong ba cách sửa bạn đã chọn cách nào, và số nào ở bảng trên biện hộ cho lựa chọn đó.
+
 ## 📚 Nguồn học
 
 | Nguồn | Dùng cho | Ghi chú |
@@ -387,7 +564,13 @@ Chạy trong cgroup có `MemoryMax` (lab OOM của S2 là nửa đầu). Nửa s
 | Brendan Gregg — *Systems Performance* ch. 6 CPU, 7 Memory; trang Flame Graphs | Phương pháp đo, USE method | Nối thẳng vào 4.3 |
 | LWN.net — "An EEVDF CPU scheduler for Linux" (2023), loạt bài cgroups v2; `Documentation/scheduler/sched-eevdf.rst` trong cây kernel | Bộ lập lịch và cgroup | Đọc khi cần giải thích `nr_throttled` hoặc trả lời "EEVDF chọn task thế nào" |
 | Julia Evans — zine *strace*, *Networking* | Cửa vào dễ nhất cho S3 | Đọc trước lab strace |
-| JEP 444 (virtual thread), JEP 425 | S1 — phần Motivation và Scheduling | 1.4 đã đọc phần Motivation |
+| JEP 444 (virtual thread, JDK 21), JEP 425; **JEP 491** (không pin khi `synchronized`, JDK 24); JEP 505 (structured concurrency, preview JDK 25) | S1 — Motivation và Scheduling của 444; 491 đổi kết luận lab ba mô hình; 505 chỉ đọc Motivation | 1.4 đã đọc phần Motivation của 444 |
+| Aleksey Shipilëv — shipilev.net: *JVM Anatomy Quarks* (#2 THP, #3 GC design and pauses, #4 TLAB allocation, #12 NMT, #13 intergenerational barriers, #18 scalar replacement, #22 safepoint polls), *Nanotrusting the Nanotime*, *Java Memory Model Pragmatics*, *Safe Publication and Safe Initialization* | S5 gần như toàn bộ; S6 hàng 8–9 | Mỗi quark 10 phút, đọc **sau** hàng khái niệm tương ứng; *Nanotrusting* đọc trước LAB 1 của S5 |
+| JLS §17.4 *Memory Model* (17.4.4 synchronization order, 17.4.5 happens-before) | S6 hàng 8 | Đọc sau lab, cùng *Pragmatics* ở trên — JLS một mình rất khó nuốt |
+| JMH samples — `openjdk/jmh`, thư mục `jmh-samples`: 03 States, 08 DeadCode, 10 ConstantFold, 11 Loops, 22 FalseSharing, 34 SafeLooping; `-prof gc` | S5 LAB 1, S6 LAB | Chạy từng sample **trước** khi viết bench của mình; mỗi sample là một bẫy có tên |
+| Oracle *HotSpot Virtual Machine Garbage Collection Tuning Guide* (JDK 25) — chương G1 và ZGC; JEP 158 *Unified JVM Logging* | S5 đọc `gc.log` | Đọc sau khi đã có log của mình |
+
+Bảng này chỉ là phần của trục. Bảng chung toàn lộ trình — nguồn nào, miễn phí không, cho module nào, chương nào, đọc trước hay sau lab — ở [Nguồn học](/nguon-hoc).
 
 ## Không học ở đây
 
@@ -400,15 +583,20 @@ Cố ý để ngoài. Tất cả nằm ở [Mở rộng](/mo-rong), năm 3, và 
 | `io_uring` thực chiến | Netty và JDK chưa dùng mặc định; biết tên là đủ |
 | NUMA | VPS 1–2 vCPU không có |
 | Real-time scheduling (`SCHED_FIFO`, `chrt -f`) | Tick 20Hz với jitter dưới 5ms đạt được bằng cấp phát trước và không bị throttle |
+| Tự viết cấu trúc lock-free (queue, stack) | ABA ở mức đọc hiểu là đủ; `java.util.concurrent` đã trả giá đó rồi |
+| Chỉnh 30 cờ GC theo blog | S5 chỉ dạy đọc một chu kỳ và chọn giữa hai collector bằng số; `-Xmx`, `-Xms`, `AlwaysPreTouch`, `MaxGCPauseMillis` là đủ cho CARO |
+| `hsdis`, `-prof perfasm`, đọc mã máy JIT | Event phần cứng không có trên VPS; biết `lock cmpxchg` tồn tại là đủ |
 
 ## 🔒 Hợp đồng AI cho trục này
 
-Theo mục [Đọc hiện vật](/he-thong-hoc#đọc-hiện-vật) và [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-thêm--bản-server) của hợp đồng AI. Trục này là vùng **đọc hiện vật**, và luật ở đó có hai vế.
+Theo mục [Đọc hiện vật](/he-thong-hoc#đọc-hiện-vật) và [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-thêm--bản-server) của hợp đồng AI. Trục này là vùng **đọc hiện vật**, và luật ở đó có hai vế. S6 còn nằm trong vùng AI-free `Atomic`/shared state: mọi counter, padding, vòng CAS trong lab là code của bạn.
 
 | AI được | AI không được |
 |---|---|
 | Dạy **cơ chế**: `clone` khác `fork` ở đâu, ET khác LT ở đâu, `oom_score` tính thế nào; giải thích một dòng man page | Nhìn `strace` log, `dmesg`, flame graph, `jstack` dump **của bạn** rồi nói nguyên nhân nằm ở đâu |
-| Sinh **hiện vật giả có bệnh cài sẵn**: 5 `jstack` có deadlock hoặc leak, 5 đoạn `strace` có partial read bị bỏ qua, 3 dòng `dmesg` OOM — bạn chẩn đoán, AI chấm | Viết code bắt `SIGTERM`, drain, shutdown hook, vòng `Selector`, đóng session — session/connection và shared state là vùng AI-free 26 tháng, kể cả pseudo-code |
+| Sinh **hiện vật giả có bệnh cài sẵn**: 5 `jstack` có deadlock hoặc leak, 5 đoạn `strace` có partial read bị bỏ qua, 3 dòng `dmesg` OOM — bạn chẩn đoán, AI chấm | Viết code bắt `SIGTERM`, drain, shutdown hook, vòng `Selector`, đóng session — session/connection và shared state là vùng AI-free 27 tháng, kể cả pseudo-code |
+| Đặt bench giả có bệnh: 3 file JMH cài sẵn DCE, constant folding, vòng lặp trong bench để bạn tìm bẫy; đưa mẫu `build.gradle.kts` cấu hình plugin JMH (đồ nghề, không phải nội dung) | Viết thân benchmark của S6 — counter, padding, vòng CAS là vùng `Atomic`/shared state, AI-free 27 tháng |
+| Giải thích một dòng `-Xlog:gc*` hoặc `-Xlog:safepoint` **mẫu** — không phải log của bạn | Đọc `gc.log` của bạn rồi nói "ZGC đi" — chọn GC là câu trả lời bằng sáu số của LAB 3, của bạn |
 | Cài `perf`, `strace`, `smem` trên máy bạn (luật 7, máy mình) | Đưa unit file hoàn chỉnh không có 3 lỗi cố ý (luật 7, server) |
 | Hỏi đúng một câu về bug concurrency: "cái gì có thể chạy đồng thời với dòng này?" (luật 2+) | Nêu giả thuyết hộ bạn khi `HUNT.md` trống |
 
@@ -417,5 +605,6 @@ Mọi phiên AI của trục này ghi nguyên văn prompt vào `notes/ai-session
 ## → Tiếp theo
 
 - [Android core](/android-core) — copy-on-write và Zygote, tiến trình bị giết và process death: cùng kernel này nhìn từ phía client
-- [Roadmap 26 tháng](/roadmap) — 32h giờ biên của trục này (S1–S4 cộng S3b) nằm ở đâu trong bảng bổ sung 84h và bảng tuần, và điều gì bị cắt trước nó
+- [Roadmap 27 tháng](/roadmap) — 68h giờ biên của trục này (S1–S4 32h · S5 20h · S6 16h; P1 21 · P2 42 · P4 5) nằm ở đâu trong bảng ba trục nền tảng và bảng tuần — P1 W16–35, P2 W36–64, P4 W86–109 — và điều gì bị cắt trước nó
+- [Nguồn học](/nguon-hoc) — bảng chung toàn lộ trình; shipilev.net, JLS §17.4, JMH samples, JEP 444/491/505 của S5 và S6 nằm ở đó cùng OSTEP, Beej, TLPI
 - [Mở rộng](/mo-rong) — eBPF, `io_uring`, real-time scheduling, lab treo bằng `kill -STOP`: năm 3, chỉ khi số cho phép

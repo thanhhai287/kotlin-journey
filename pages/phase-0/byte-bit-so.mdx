@@ -1,6 +1,6 @@
 # Byte, bit & số
 
-Trang này tồn tại vì hai câu hỏi rất cụ thể mà bạn sẽ bị hỏi đúng hai lần trong 26 tháng: **"vàng trong game lưu kiểu gì để không tràn"** và **"làm sao nhét trạng thái 4 entity vào 60 byte"**. Câu một trả lời ở Project 1 — tháng 3, W10–11. Câu hai ở ARENA — P3, W68–84. Mở trang này ở **tuần 8**, ngay sau khi xong module 4.6 ở tuần 7.
+Trang này tồn tại vì hai câu hỏi rất cụ thể mà bạn sẽ bị hỏi đúng hai lần trong 27 tháng: **"vàng trong game lưu kiểu gì để không tràn"** và **"làm sao nhét trạng thái 4 entity vào 60 byte"**. Câu một trả lời ở Project 1 — tháng 3, W10–11. Câu hai ở ARENA — P3, W68–84. Mở trang này ở **tuần 8**, ngay sau khi xong module 4.6 ở tuần 7.
 
 ---
 
@@ -170,7 +170,7 @@ fun encodeInt(v: Int): ByteArray          // 4 byte, big endian
 fun decodeInt(b: ByteArray, off: Int = 0): Int
 ```
 
-**Đây là vùng AI-free.** Serialize/deserialize gói tin nằm trong danh sách cấm suốt 26 tháng — AI không đưa cả pseudo-code, chỉ được trả lời bằng tên khái niệm, link docs, hoặc câu hỏi ngược. Nếu bạn chép được hai hàm này từ đâu đó, bạn vẫn trượt ở lần blank-file kế tiếp.
+**Đây là vùng AI-free.** Serialize/deserialize gói tin nằm trong danh sách cấm suốt 27 tháng — AI không đưa cả pseudo-code, chỉ được trả lời bằng tên khái niệm, link docs, hoặc câu hỏi ngược. Nếu bạn chép được hai hàm này từ đâu đó, bạn vẫn trượt ở lần blank-file kế tiếp.
 
 Gợi ý duy nhất được phép nói ra: `Byte` trong Kotlin **có dấu**. Khi giải mã, mỗi byte phải nâng lên `Int` rồi mới mask: `b.toInt() and 0xFF` (viết `b and 0xFF` thẳng trên `Byte` không compile — `0xFF` không nằm trong dải `Byte`). Vì `toInt()` mở rộng dấu (sign-extend), byte 0x80..0xFF thành số âm 32-bit và mang theo một đống bit 1 vào kết quả nếu không mask.
 

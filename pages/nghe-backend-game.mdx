@@ -18,7 +18,7 @@ Trang này trả lời ba câu: backend game là làm gì, ở Việt Nam nó t�
 
 **Sự thật:** phần lớn game mobile doanh thu cao là async/PvE — match-3, idle, gacha, 4X. Không có tick loop nào cả. Cái quyết định doanh thu là economy, live-ops event, anti-cheat kinh tế. Đó là nhánh 1, và đó là distributed systems + data, không phải game math.
 
-**Quyết định của lộ trình:** nhắm nhánh 1. Nhánh 2 học **một lát mỏng nhưng thật** — tick server 20Hz authoritative có snapshot + reconnect, đo được tick jitter, determinism L1 — 40h ở P3, không bao giờ xuống 0. Vì sao không hơn: "realtime netcode engineer" trong 26 tháng part-time với nền CS ≈ 0 là số học, không phải ý kiến. Vì sao không ít hơn: không có số tick jitter của chính mình thì không trả lời được 5 câu netcode ở vòng phỏng vấn.
+**Quyết định của lộ trình:** nhắm nhánh 1. Nhánh 2 học **một lát mỏng nhưng thật** — tick server 20Hz authoritative có snapshot + reconnect, đo được tick jitter, determinism L1 — 40h ở P3, không bao giờ xuống 0. Vì sao không hơn: "realtime netcode engineer" trong 27 tháng part-time với nền CS ≈ 0 là số học, không phải ý kiến. Vì sao không ít hơn: không có số tick jitter của chính mình thì không trả lời được 5 câu netcode ở vòng phỏng vấn.
 
 ---
 
@@ -43,7 +43,7 @@ Bảng này để bạn biết mình đang học để làm **việc gì**, khô
 | 2 | Prediction: client tự đoán kết quả để không chờ server, rồi sửa lại khi server nói khác | Reconciliation |
 | 2 | Lag compensation: server "tua lại" thời gian để xử lý phát bắn của client ping 150ms | Lịch sử state, interpolation |
 
-Hai dòng cuối của nhánh 2 (prediction + reconciliation, lag compensation) nằm ở [trang mở rộng](/mo-rong), không nằm trong 839h Lõi. Bạn cần **biết chúng tồn tại** để trả lời phỏng vấn, không cần tự viết chúng trước khi có việc. Snapshot thì **có trong Lõi** — module 3.1–3.2 ở P3, ngưỡng "4 entity dưới 60 byte" là ngưỡng bắt buộc, không phải tuỳ chọn.
+Hai dòng cuối của nhánh 2 (prediction + reconciliation, lag compensation) nằm ở [trang mở rộng](/mo-rong), không nằm trong 1.100h Lõi. Bạn cần **biết chúng tồn tại** để trả lời phỏng vấn, không cần tự viết chúng trước khi có việc. Snapshot thì **có trong Lõi** — module 3.1–3.2 ở P3, ngưỡng "4 entity dưới 60 byte" là ngưỡng bắt buộc, không phải tuỳ chọn.
 
 ---
 
@@ -103,7 +103,7 @@ Studio Việt Nam có thật, để bạn biết mình đang nhắm vào đâu �
 
 ## Vì sao vào bằng cửa backend chung
 
-**Lập luận bằng số:** 2 cửa game backend (cả hai Middle) so với 180–250 cửa backend chung. Chênh **khoảng 100 lần**. Nhắm thẳng studio ở entry level là đặt cược vào thị trường có dưới 5 cửa, gần như tất cả đòi kinh nghiệm — kỳ vọng gần bằng 0 trong 26 tháng.
+**Lập luận bằng số:** 2 cửa game backend (cả hai Middle) so với 180–250 cửa backend chung. Chênh **khoảng 100 lần**. Nhắm thẳng studio ở entry level là đặt cược vào thị trường có dưới 5 cửa, gần như tất cả đòi kinh nghiệm — kỳ vọng gần bằng 0 trong 27 tháng.
 
 **Lập luận bằng kỹ năng:** hai cửa này đòi gần hết cùng một thứ.
 
@@ -191,15 +191,15 @@ Có việc sớm là **THẮNG** — đi làm rút phần còn lại của lộ 
 
 ## Mốc thời gian trung thực
 
-Giả định: commit đầu ≤21/09/2026; 94 tuần chạy ±10 (nhịp **8,9h/tuần chạy không đổi** so với bản 755h — lộ trình chỉ dài thêm 2 tháng vì +84h ba trục nền tảng [/nen-tang-he-thong](/nen-tang-he-thong), [/android-core](/android-core), [/backend-core](/backend-core)); hợp đồng AI giữ; thị trường backend VN không co hơn 20%; chấp nhận job 10–16tr, cả outsourcing, cả không-game (dưới 10tr xét theo hai điều kiện của DP8 ở trên).
+Giả định: commit đầu ≤21/09/2026; 97 tuần chạy ±10 (nhịp **11,3h/tuần chạy** sau khi quỹ giờ thật được xác nhận là 12–15h/tuần — lộ trình dày lên 1.100h nhờ +84h ba trục nền tảng [/nen-tang-he-thong](/nen-tang-he-thong), [/android-core](/android-core), [/backend-core](/backend-core)); hợp đồng AI giữ; thị trường backend VN không co hơn 20%; chấp nhận job 10–16tr, cả outsourcing, cả không-game (dưới 10tr xét theo hai điều kiện của DP8 ở trên).
 
 | Kịch bản | Điều kiện | Đợt 0 | Đợt 1 | **Job backend chung** | Job game backend |
 |---|---|---|---|---|---|
-| **P10** | ≥10h/tuần từ W9, ≥94 tuần chạy, ≥200 đơn tích luỹ đến tháng 22 | Tháng 9 (06/2027 — W39–41, ngay sau ship `v0.1` W38) | 21/02/2028 (tháng 18, rơi vào P3 — giữ ngày để bám sóng tuyển sau Tết) | **Tháng 21–24 (05–08/2028)** | Tháng 33–42, pivot nội bộ |
-| **P50** | 9h/tuần, 84–94 tuần chạy, áp bậc cắt 1–4 | Tháng 9 | Tháng 18–19 | **Tháng 24–29 (08/2028–01/2029)** — một phần nằm ngoài 26 tháng | Tháng 36–47 |
+| **P10** | ≥13h/tuần từ W16, ≥97 tuần chạy, ≥200 đơn tích luỹ đến tháng 22 | Tháng 9 (05/2027 — W36–38, ngay sau ship `v0.1` W35) | 21/02/2028 (tháng 18, rơi vào P3 — giữ ngày để bám sóng tuyển sau Tết) | **Tháng 21–24 (05–08/2028)** | Tháng 33–42, pivot nội bộ |
+| **P50** | 11h/tuần, 88–97 tuần chạy, áp bậc cắt 1–4 | Tháng 9 | Tháng 18–19 | **Tháng 25–30 (09/2028–02/2029)** — một phần nằm ngoài 27 tháng | Tháng 37–48 |
 | **P90** | Lặp lại mẫu 5 tuần vừa qua | — | — | Không | Không |
 
-Cột cuối không phải số riêng: nó là cột "Job backend chung" **cộng 12–18 tháng production thật** — đúng luật ở mục "Vì sao vào bằng cửa backend chung". Tháng ở đây đếm từ W1 (07/09/2026), tháng 26 kết thúc 05/11/2028.
+Cột cuối không phải số riêng: nó là cột "Job backend chung" **cộng 12–18 tháng production thật** — đúng luật ở mục "Vì sao vào bằng cửa backend chung". Tháng ở đây đếm từ W1 (07/09/2026), tháng 27 kết thúc 03/12/2028.
 
 **Vì sao 200 đơn chứ không phải 100:** tỉ lệ phản hồi của kênh apply lạnh ở VN là 3–7% với người tự học không kinh nghiệm, nên 200 đơn mới sinh khoảng 10 lượt phản hồi. Con số thấp đó là **đặc điểm của kênh lạnh**, không phải dấu hiệu hồ sơ kém — referral và bài viết kỹ thuật công khai là hai kênh nâng tỉ lệ, không phải "học thêm cái mới".
 
@@ -220,7 +220,7 @@ Bảng này không có việc gì để làm ở tuần 1, và đọc nó ở tu
 
 Hai cột chỉ tách ở dòng thứ ba. Bằng cấp không quyết định bạn có ngồi vào bàn hay không — nó chỉ đóng bớt cửa lúc nộp đơn, đúng như bảng ở mục "Bằng cấp lọc ở đâu". Đọc đúng cột của bạn: đừng tự dồn mình vào kịch bản xấu hơn thực tế, cũng đừng đọc cột trái nếu bạn không có bằng.
 
-**Không có con số 50–60% không điều kiện nào.** Job game backend trong 26 tháng: dưới 10% ở cả hai cột — lộ trình không tối ưu cho nó, nhưng không bỏ phần game.
+**Không có con số 50–60% không điều kiện nào.** Job game backend trong 27 tháng: dưới 10% ở cả hai cột — lộ trình không tối ưu cho nó, nhưng không bỏ phần game.
 
 Đọc bảng này đúng cách: 12–17% là số của người **chưa làm gì**. Mỗi cổng bạn đi qua, số đổi. Rủi ro lớn nhất không nằm ở tháng 26 — nằm ở DP2, tức là ở 14 tuần đầu tiên. Và DP2 chỉ hỏi một thứ: bạn có ngồi vào bàn không.
 
@@ -230,5 +230,5 @@ Hai cột chỉ tách ở dòng thứ ba. Bằng cấp không quyết định b�
 
 Bạn đã biết nghề này là gì và cửa vào nằm ở đâu. Giờ xem đường đi.
 
-1. Đọc [Roadmap 26 tháng](/roadmap) — 6 phase, 839h, thang 12 bậc, thứ tự cắt khi chậm, và DP0–DP8.
+1. Đọc [Roadmap 27 tháng](/roadmap) — 6 phase, 1.100h, thang 12 bậc, thứ tự cắt khi chậm, và DP0–DP8.
 2. Mở [Phase 0 — Kotlin viết được](/phase-0) — 14 tuần đầu, và việc duy nhất của Ngày 1: 90 phút, một file Kotlin chạy được, một commit, một tag.

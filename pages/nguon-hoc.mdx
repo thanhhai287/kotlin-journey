@@ -1,0 +1,94 @@
+# Nguồn học — một bảng cho cả lộ trình
+
+Trang này trả lời một câu: *module bạn đang làm lấy mô hình từ đâu?* Bộ tài liệu này có ~95.000 từ, ~30 đường dẫn ra ngoài và đúng ba bảng "Nguồn học" — cả ba ở ba trục nền tảng. Lộ trình sản phẩm, module 0.x tới 5.x, gần như không có nguồn gốc. Không có nguồn gốc, bạn chỉ học được **cách làm**; người phỏng vấn tách hai loại người bằng một câu "tại sao".
+
+Ba bảng của ba trục nền tảng vẫn là bản gốc cho trục của chúng; trang này chỉ nhắc lại nguồn nào phục vụ cả module sản phẩm. Tài liệu Kotlin đã gắn từng trang trong Phase 0, không lặp ở đây.
+
+---
+
+## 🎯 Đọc thế nào cho vào đầu
+
+Năm luật, không thương lượng:
+
+| # | Luật | Nghĩa là |
+|---|---|---|
+| 1 | **Nguồn gốc trước, tiếng Việt chỉ để đối chiếu** | Bài tiếng Việt đọc *sau* bản gốc, chỉ để kiểm tra thuật ngữ. Dịch lệch một từ (*isolation*, *happens-before*) là hiểu sai cả chương |
+| 2 | **Trước lab = lấy mô hình** | Đọc đúng chương, gấp lại, vẽ mô hình ≤5 dòng vào `notes/`. Vào lab với mô hình đó, không với sách mở |
+| 3 | **Sau lab = đặt tên cho thứ vừa thấy** | Có số trong `bench/` hoặc một dòng `INCIDENTS.md` rồi mới mở nguồn, để tìm *tên* của triệu chứng. Chưa có số thì chưa phải "sau lab" |
+| 4 | **Mỗi nguồn gắn một module, không đọc rời** | "Đọc DDIA từ đầu đến cuối" không có trong lộ trình. Hết chương của module thì đóng sách, kể cả đang hay |
+| 5 | **Khe đọc cố định** | "Trước" đọc trong T2 INPUT của tuần module mở; "Sau" đọc ở T5 READ. Không có buổi đọc riêng — đọc nằm trong phần 30 của tỷ lệ 30/70 ở [Hệ thống học](/he-thong-hoc) |
+
+Dấu hiệu đã vào đầu: viết lại được mô hình từ trí nhớ trong 10' warm-up buổi sau. Không được thì đọc lại chương cũ, không mở chương mới.
+
+## 📚 Bảng nguồn
+
+✅ đọc ngay trên web · ❌ sách phải mua hoặc mượn. **Trước** = lấy mô hình trước lab · **Sau** = đặt tên sau lab · **Tra cứu** = mở khi cần. Mã module theo [Roadmap](/roadmap); S1–S4, B1–B4 là tầng của hai trục nền tảng.
+
+| Nguồn | Miễn phí | Module | Chương/phần | Đọc trước hay sau lab |
+|---|---|---|---|---|
+| **Hệ điều hành / Linux** | | | | |
+| [OSTEP — *Operating Systems: Three Easy Pieces*](https://pages.cs.wisc.edu/~remzi/OSTEP/) | ✅ | 0.5 · 1.3 · 2.5 · S1 · S2 | Ch.4 *The Process*, 6 *Limited Direct Execution*, 7 *Scheduling*, 13 *Address Spaces*, 26 *Concurrency: An Introduction*, 28 *Locks*, 32 *Common Concurrency Problems*, 33 *Event-based Concurrency* | **Trước** — đọc trước TLPI: OSTEP là mô hình, TLPI là tra cứu. Ch.26–28 **Sau** lab 0.5; ch.33 **Trước** lab ba mô hình 2.5 |
+| Michael Kerrisk — *The Linux Programming Interface* | ❌ | 1.8 · 1.9 · S1–S4 | Ch.24–28 process, 29–33 thread, 49 `mmap`, 61 socket nâng cao, 63 I/O đa kênh (`epoll`), 20–22 signal | **Sau**, rồi tra cứu |
+| Brendan Gregg — *Systems Performance* (2nd ed.) | ❌ | 1.1 · 4.2 · 4.3 · S2 | Ch.2 *Methodologies* (USE method), 6 *CPUs*, 7 *Memory*, 10 *Network*; [Flame Graphs](https://www.brendangregg.com/flamegraphs.html) miễn phí | Ch.2 **Trước** 1.1; còn lại **Sau** |
+| [man7.org](https://man7.org/linux/man-pages/) | ✅ | 1.2 · 1.8 · S3 · S4 | `proc(5)`, `epoll(7)`, `signal(7)`, `cgroups(7)`, `namespaces(7)` | Tra cứu — `proc(5)` là bản đồ mọi file `/proc` |
+| Kernel docs: [`sched-eevdf.rst`](https://docs.kernel.org/scheduler/sched-eevdf.html), [`cgroup-v2.rst`](https://docs.kernel.org/admin-guide/cgroup-v2.html) | ✅ | S1 · S4 · 4.4 | EEVDF toàn bài; cgroup v2 mục *CPU* (`cpu.max`, `nr_throttled`) và *Memory* (`memory.max`) | **Sau** — khi phải giải thích throttle hoặc OOM |
+| **Mạng** | | | | |
+| [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/) | ✅ | 1.2 | §5 *System Calls or Bust*; §7.1–7.5 blocking, `poll`, `select`, partial `send`, serialization | **Trước** 1.2 — mô hình socket trước khi chạm `java.nio` |
+| [High Performance Browser Networking](https://hpbn.co/) | ✅ | 1.2 · P1 tầng giao thức (sau 1.2) · 1.9 · 3.1 | Ch.1 *Latency and Bandwidth*, 2 *Building Blocks of TCP* (slow-start, HOL blocking), 3 *UDP*, 4 *TLS*, 17 *WebSocket* | Ch.1–3 **Trước** 1.2; ch.4, 17 **Trước** lab dựng HTTP/TLS/WS frame bằng tay |
+| Stevens, Fall — *TCP/IP Illustrated, Vol. 1* (2nd ed.) | ❌ | S3b · 3.1 | Ch.13 *Connection Management*, 14 *Timeout and Retransmission*, 15 *Data Flow and Window Management* (Nagle, delayed ACK), 16 *Congestion Control* | **Sau** — khi p99 kẹt và đã có `tcpdump` |
+| [RFC 9110 *HTTP Semantics*](https://www.rfc-editor.org/rfc/rfc9110) · [RFC 9457 *Problem Details*](https://www.rfc-editor.org/rfc/rfc9457) | ✅ | P1 tầng giao thức · 3.0 · B1 | 9110 §9.2.2 idempotent methods, §15 status codes; 9457 đọc trọn | 9110 **Trước** lab HTTP GET bằng socket thuần; 9457 **Trước** 3.0 |
+| [RFC 6455 *The WebSocket Protocol*](https://www.rfc-editor.org/rfc/rfc6455) | ✅ | 1.5 · P1 tầng giao thức | §4 opening handshake; §5.2 base framing (FIN, opcode, mask, payload length 7/16/64 bit); §7 closing | **Trước** lab đọc frame bằng tay; **Sau** 1.5 để đối chiếu Ktor |
+| [`tcp(7)`](https://man7.org/linux/man-pages/man7/tcp.7.html), [`ss(8)`](https://man7.org/linux/man-pages/man8/ss.8.html) | ✅ | 1.7 · 1.8 · S3b | `tcp(7)`: `TCP_NODELAY`, buffer, `TIME_WAIT`; `ss(8)`: `-s`, `-tin` | Tra cứu, mở cùng lúc chạy bot swarm |
+| **CSDL** | | | | |
+| [The Internals of PostgreSQL](https://www.interdb.jp/pg/) (Hironobu Suzuki) | ✅ | 2.1 · 2.7 · B2 | Ch.3 *Query Processing* (planner, cost, vì sao Seq Scan), 5 *Concurrency Control* (MVCC, `xmin`/`xmax`, snapshot, `40001`), 6 *Vacuum*, 9 *WAL* và checkpoint, 10 *Base Backup & PITR* | **Nguồn chính** cho MVCC/WAL/planner của 2.1. Ch.5, 9 **Trước**; ch.3 **Sau** khi có `EXPLAIN ANALYZE` của mình; ch.10 **Trước** 2.7 |
+| [Use The Index, Luke](https://use-the-index-luke.com/) | ✅ | 2.1 · 2.3 · B2 | *Anatomy of an SQL Index*, *The Where Clause*, *Sorting and Grouping*, *Partial Results* (keyset pagination) | **Sau** — khi N+1 leaderboard đã đo |
+| [Postgres docs — ch.13 *Concurrency Control*](https://www.postgresql.org/docs/current/mvcc.html), ch.14 *Performance Tips* | ✅ | 2.1 · 3.3 · P3 job queue | 13.2 *Transaction Isolation*, 13.3 *Explicit Locking* (`FOR UPDATE`; `SKIP LOCKED` ở trang `SELECT`), 14.1 *Using EXPLAIN* | 13.2 **Sau** lab lost update 2 phiên `psql`; 13.3 **Trước** 3.3 |
+| Martin Kleppmann — *Designing Data-Intensive Applications* | ❌ | 1.5 · 2.1 · 4.4 · 4.8 · B1 | Ghi theo **tên chương** vì bản 2 đánh số lại: *Encoding and Evolution* (1.5), *Transactions* (isolation, write skew), *The Trouble with Distributed Systems*, *Consistency and Consensus*, *Stream Processing* (log-based broker, outbox, CDC), *Partitioning* (4.8) | *Transactions* **Sau** lab 2.1; ba chương phân tán **Trước** lab 2 instance, outbox và Kafka/NATS ở 4.4 |
+| Alex Petrov — *Database Internals* | ❌ | 2.1 · 4.4 | *B-Tree Basics*, *Transaction Processing and Recovery* (WAL, ARIES); *Failure Detection*, *Leader Election*, *Replication and Consistency* | **Sau** interdb, khi interdb chưa đủ "vì sao" |
+| [Redis docs](https://redis.io/docs/latest/) | ✅ | 2.3 | *Pub/Sub* (fire-and-forget), *Streams* (consumer group), *Diagnosing latency issues*; event loop: source `ae.c` ở T5 | *Pub/Sub* **Sau** lab `kill -9` subscriber; *Latency* **Trước** lab stampede |
+| **JVM / concurrency** | | | | |
+| [shipilev.net](https://shipilev.net/) (Aleksey Shipilëv) | ✅ | 1.3 · 2.5 · 4.3 | *JVM Anatomy Quarks* #3 *GC Design and Pauses*, #4 *TLAB Allocation*, #18 *Scalar Replacement*, #22 *Safepoint Polls*; *Java Memory Model Pragmatics* (talk có transcript); *Safe Publication and Safe Initialization* | **Nguồn chính** cho JVM bên trong ở 2.5. Mỗi Quark **Trước** lab của nó; *JMM Pragmatics* **Sau** lab `volatile` 1.3 |
+| Goetz et al. — *Java Concurrency in Practice* | ❌ | 0.5 · 1.3 · 2.5 | Ch.2 *Thread Safety*, 3 *Sharing Objects*, 10 *Avoiding Liveness Hazards*, 15 *Atomic Variables and Nonblocking Synchronization* (CAS), 16 *The Java Memory Model* | Ch.2–3 **Sau** lab 0.5; ch.16 **Trước** 1.3; ch.15 **Trước** lab CAS 2.5 |
+| [JLS §17.4 *Memory Model*](https://docs.oracle.com/javase/specs/) | ✅ | 1.3 | §17.4.4 synchronization order, §17.4.5 happens-before | **Sau** ch.16 JCIP |
+| [JEP 444](https://openjdk.org/jeps/444) · [JEP 491](https://openjdk.org/jeps/491) · [JEP 505](https://openjdk.org/jeps/505) | ✅ | 1.4 · 2.5 · S1 | 444 *Virtual Threads*: Motivation, Scheduling, Pinning; 491 *Synchronize Virtual Threads without Pinning* — đổi kết luận lab 2.5 trên JDK 25; 505 *Structured Concurrency* | 444 Motivation **Trước** 1.4; Scheduling + 491 **Trước** lab ba mô hình 2.5; 505 **Sau** 1.4 |
+| [JMH samples](https://github.com/openjdk/jmh/tree/master/jmh-samples) | ✅ | 2.5 · 4.1 | `JMHSample_08_DeadCode`, `09_Blackholes`, `10_ConstantFold`, `11_Loops`, `22_FalseSharing`, `34_SafeLooping` | **Trước** benchmark đầu tiên — gõ lại, không copy; sample 22 là lab false sharing |
+| **Hệ phân tán** | | | | |
+| Lamport 1978 — [*Time, Clocks, and the Ordering of Events in a Distributed System*](https://lamport.azurewebsites.net/pubs/time-clocks.pdf) | ✅ | 3.2 · 4.4 | Toàn bài, 8 trang: happens-before giữa tiến trình, đồng hồ logic, thứ tự toàn phần | **Sau** lab determinism hash 3.2 — đặt tên cho "cùng input, cùng thứ tự"; đọc lại trước 4.4 |
+| Kleppmann — [*How to do distributed locking*](https://martin.kleppmann.com/2016/02/08/how-to-do-distributed-locking.html) | ✅ | 4.4 | Toàn bài: vì sao lock có TTL chưa đủ, GC pause, fencing token | **Trước** lab 2 instance — `SET NX PX` → `kill -STOP` → fencing token là kịch bản của bài |
+| **Game server / netcode** | | | | |
+| [Gaffer On Games](https://gafferongames.com/) | ✅ | 0.6 · 0.7 · 3.1 · 3.2 · ARENA v2 | *Fix Your Timestep!* (0.6); *Reading and Writing Packets*, *Serialization Strategies* (bit packer — 0.7, 3.1); *Deterministic Lockstep* (3.2 S3); *Snapshot Interpolation* (3.2 M3, M5); *State Synchronization* (ARENA v2) | *Fix Your Timestep* **Trước** 0.6 — bài gốc của accumulator; còn lại **Trước** đúng lát, mỗi lần một bài |
+| [Valve — *Source Multiplayer Networking*](https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking) | ✅ | 3.2 · ARENA v2 | *Entity interpolation*, *Input prediction*, *Lag compensation*; các con số tick rate | **Sau** lab tick 20Hz — đối chiếu jitter của mình với số của Source |
+| [Gabriel Gambetta — *Fast-Paced Multiplayer*](https://www.gabrielgambetta.com/client-server-game-architecture.html) | ✅ | 1.6 · 3.2 · ARENA v2 | Part I *Client-Server Game Architecture*; II *Client-Side Prediction and Server Reconciliation*; III *Entity Interpolation*; demo tương tác | Part I **Trước** 1.6; II–III **Trước** ARENA v2 — chạy demo trước khi đọc chữ |
+| GDC 2017 — Tim Ford, *Overwatch Gameplay Architecture and Netcode* ([GDC Vault](https://www.gdcvault.com/)) | ✅ | 3.2 · ARENA v2 | Nửa sau: input buffering, favor the shooter | **Sau** 3.2 — talk có slide; note theo timestamp |
+| **Vận hành / SRE** | | | | |
+| [Google SRE Book](https://sre.google/sre-book/table-of-contents/) | ✅ | 2.10 · 4.2 · 5.3 · B4 | Ch.4 *Service Level Objectives*, 6 *Monitoring Distributed Systems* (four golden signals), 15 *Postmortem Culture* | Ch.6 **Trước** 2.10; ch.4 **Trước** 4.2 — SLO trước khi đo; ch.15 **Trước** 5.3 |
+| Michael Nygard — *Release It!* (2nd ed.) | ❌ | 2.4 · 3.3 · 4.4 | Ch.4 *Stability Antipatterns*, 5 *Stability Patterns*: Timeouts, Circuit Breaker, Bulkheads, Fail Fast, Backpressure | Ch.4 **Sau** một sự cố thật của mình; ch.5 **Trước** 4.4 |
+| [12factor.net](https://12factor.net/) | ✅ | 1.9 · 4.4 · B4 | III *Config*, IX *Disposability* (graceful shutdown), X *Dev/prod parity*, XI *Logs* | **Trước** 1.9 — 20 phút |
+| [OpenTelemetry docs](https://opentelemetry.io/docs/concepts/signals/traces/) | ✅ | P4 OTel · 5.5 | *Concepts → Signals → Traces* (span, context propagation); *Instrumentation → Java* | **Trước** trace đầu tiên; không đọc reference API |
+| **Bảo mật** | | | | |
+| [OWASP Top 10](https://owasp.org/Top10/) · [OWASP API Security Top 10](https://owasp.org/API-Security/) | ✅ | 3.4 · B1 · B3 | Top 10: *Broken Access Control*, *Injection*; API: *BOLA*, *Broken Authentication*, *Unrestricted Resource Consumption* | **Trước** 3.4 — chọn 3 request tấn công từ đây |
+| [OWASP Cheat Sheet — *Password Storage*](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) | ✅ | 2.2 · B3 | Tham số argon2id / bcrypt, salt, pepper; *Upgrading Legacy Hashes* | **Trước** lab account 2.2 — 15 phút, rồi tự đo hash |
+| [RFC 9700 *OAuth 2.0 Security BCP*](https://www.rfc-editor.org/rfc/rfc9700) | ✅ | 3.0 · B3 | §2 recommendations: PKCE bắt buộc, refresh token rotation; còn lại theo [Backend core](/backend-core) | **Sau** khi session token tự viết ở 2.2 đã chạy |
+| **Kiến trúc / nghề** | | | | |
+| John Ousterhout — *A Philosophy of Software Design* | ❌ | 0.9 · 1.6 · P4 ports & adapters | Ch.2 *The Nature of Complexity*, 4 *Modules Should Be Deep*, 5 *Information Hiding*, 10 *Define Errors Out of Existence* | Ch.4–5 **Sau** khi `caro-engine` đã vào server và đổi API một lần |
+| Forsgren, Humble, Kim — *Accelerate* | ❌ | 2.6 · 4.4 · 4.5 | Ch.2 *Measuring Performance*, 4 *Technical Practices* (CD, trunk-based) | **Sau** CI xanh 2.6; ch.2 dùng cho README có trade-off ở 4.5 |
+
+Nguồn gắn với **ARENA v2**, **tầng giao thức P1**, **job queue P3**, **Kafka/NATS**, **ports & adapters** chỉ mở khi hạng mục đó tới lượt.
+
+## ⚠️ Không có trong danh mục này
+
+| Loại | Vì sao không | Ngoại lệ |
+|---|---|---|
+| Video khoá học trả phí | Tối ưu cho cảm giác tiến bộ, không cho mô hình; không đối chiếu được với spec | Không |
+| Tutorial blog không nguồn gốc (bài SEO, bài không dẫn spec) | Sai đúng ở chỗ quan trọng, và bạn không có cách nào biết | Bài có tác giả chịu trách nhiệm và dẫn spec — đã ở bảng trên |
+| Talk hội nghị | — | **Được**, nếu có slide và transcript: GDC Vault, JVMLS, Devoxx, PGConf. Note theo timestamp, coi như một chương |
+| Sách dịch tiếng Việt | Không cấm — chỉ để đối chiếu, theo luật 1 | — |
+| Bản tóm tắt sách do AI viết | Không phải nguồn. AI được dịch thuật ngữ và trả lời "chương này nói gì" theo [hợp đồng AI](/he-thong-hoc); bản tóm tắt không thay chương | — |
+
+Muốn thêm nguồn vào bảng, nó phải trả lời ba câu: module nào, chương nào, trước hay sau lab. Không trả lời được thì nó là "cho biết", và "cho biết" không có khe giờ.
+
+## → Tiếp theo
+
+1. Đang ở Phase 0? Nguồn ngoài của P0 chỉ có ba: OSTEP ch.26–28 và JCIP ch.2–3 **sau** lab 0.5, *Fix Your Timestep!* **trước** 0.6. Không đọc gì khác trong 14 tuần đầu; tài liệu Kotlin ở [Kotlin Core I](/phase-0/kotlin-core-1) và [II](/phase-0/kotlin-core-2).
+2. Mã module: [Roadmap](/roadmap), [Phase 1](/phase-1). Khe đọc T2/T5 và tỷ lệ 30/70: [Hệ thống học](/he-thong-hoc).
+3. Bản gốc cho S1–S4, B1–B4, A–H: [Nền tảng hệ thống](/nen-tang-he-thong), [Backend core](/backend-core), [Android core](/android-core).

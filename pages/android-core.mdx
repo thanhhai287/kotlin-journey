@@ -402,7 +402,7 @@ Cố ý để ngoài — quyết định, không phải "chưa kịp".
 |---|---|
 | Compose sâu: animation, custom layout, Navigation, Hilt, Room, Paging, CameraX, Wear OS | Client 1–3 màn là phương tiện. Mục 8 spec cắt ~100h; 2.9 đủ cho một màn Canvas + reconnect UI |
 | ViewModel / Lifecycle library ở mức thư viện | Bạn học **cơ chế** process death; wrapper Jetpack không phải nội dung |
-| AOSP nặng: tự build AOSP, viết Binder service C++, kernel module, SELinux policy, Perfetto phân tích sâu | Không đổi kết quả xin việc trong 26 tháng; cần khối thời gian liền mà lộ trình part-time không có |
+| AOSP nặng: tự build AOSP, viết Binder service C++, kernel module, SELinux policy, Perfetto phân tích sâu | Không đổi kết quả xin việc trong 27 tháng; cần khối thời gian liền mà lộ trình part-time không có |
 
 Tất cả nằm ở tầng "năm 3" của [Mở rộng](/mo-rong).
 
@@ -414,7 +414,7 @@ Giữ nguyên [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-th�
 |---|---|---|
 | Cơ chế: Binder, Zygote, ART, `lmkd` | Giải thích, link docs, hỏi ngược "thread nào đang ngủ ở đâu?" | — |
 | Hiện vật: trace ANR, `meminfo`, log `lmkd` | Dạy cách đọc một **loại** hiện vật; sinh trace và log **giả có bệnh cài sẵn** để luyện | **Nhìn trace/log của bạn rồi chỉ nguyên nhân.** Bạn đọc, bạn kết luận |
-| Looper / tick loop, reconnect, session, mọi thứ chạm shared state | Tên khái niệm, câu hỏi | Pseudo-code, skeleton — vùng AI-free suốt 26 tháng |
+| Looper / tick loop, reconnect, session, mọi thứ chạm shared state | Tên khái niệm, câu hỏi | Pseudo-code, skeleton — vùng AI-free suốt 27 tháng |
 | Máy của bạn: SDK, driver USB, `adb` không thấy máy, wizard IDE | Hướng dẫn từng bước, đọc log | — (luật 7) |
 
 Máy dò copy-paste: "Binder pool 4 thread thay vì 15 thì cái gì vỡ trước?" và "ANR là 500ms thay vì 5s thì app của bạn sống không?". Trả lời bằng cơ chế, không bằng tên thư viện.
@@ -422,5 +422,5 @@ Máy dò copy-paste: "Binder pool 4 thread thay vì 15 thì cái gì vỡ trư�
 ## → Tiếp theo
 
 - Cơ chế Linux bên dưới trang này — `fork()`, COW, `epoll`, `/proc`, OOM killer: [Nền tảng hệ thống](/nen-tang-he-thong). Đọc lại mục S3 ngay sau lab E.
-- Module này nằm đâu trong 26 tháng, và 2.4 nhận gì từ bảng 6 kịch bản: [Roadmap 26 tháng](/roadmap).
+- Module này nằm đâu trong 27 tháng, và 2.4 nhận gì từ bảng 6 kịch bản: [Roadmap 27 tháng](/roadmap).
 - Tầng AOSP nặng (~90h) — build AOSP, system service riêng, kernel module, SELinux policy — nhãn "năm 3": [Mở rộng](/mo-rong).

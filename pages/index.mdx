@@ -1,6 +1,6 @@
-# Hành trình 26 tháng: từ "biết cú pháp" đến Backend Engineer — sản phẩm là một game server
+# Hành trình 27 tháng: từ "biết cú pháp" đến Backend Engineer — sản phẩm là một game server
 
-Đây là cửa vào không gian học của Hải — lộ trình, hợp đồng với AI, và bằng chứng tiến độ nằm ở đây. Mở trang này khi bạn mất phương hướng và cần nhớ mình đang đứng ở đâu trong 26 tháng. Lần đầu mở: đọc đúng mục "Ngày 1", rồi mở IntelliJ.
+Đây là cửa vào không gian học của Hải — lộ trình, hợp đồng với AI, và bằng chứng tiến độ nằm ở đây. Mở trang này khi bạn mất phương hướng và cần nhớ mình đang đứng ở đâu trong 27 tháng. Lần đầu mở: đọc đúng mục "Ngày 1", rồi mở IntelliJ.
 
 ---
 
@@ -12,11 +12,12 @@
 | Tuần | **W1** — tuần học đầu tiên. Không có Tuần 0 |
 | Ngày bắt đầu | **Thứ Hai 07/09/2026** |
 | Project đang làm | Chưa có. Project 1 "Túi đồ & Ví CLI" mở ở **W10** |
-| Giờ mỗi tuần | Bậc ramp: **6h** (W1–4) → 8h (W5–8) → 10h (W9+). Khung 20:00–22:00 các tối trong tuần + một block 3h ban ngày thứ Bảy. Cấm vượt bậc |
+| Quỹ giờ thật | **12–15h/tuần** — con số bạn đã xác nhận. Kế hoạch chỉ tính ở **11,3h/tuần chạy** để luôn có biên an toàn |
+| Giờ mỗi tuần ở P0 | Bậc ramp không đổi: **6h** (W1–4) → 8h (W5–8) → 10h (W9+). Khung 20:00–22:00 các tối trong tuần + một block 3h ban ngày thứ Bảy. Cấm vượt bậc, kể cả khi quỹ cho phép |
 | Độ dài Phase 0 | **14 tuần chạy + 1 tuần buffer** (W15), kết thúc 20/12/2026. Không có phiên bản 8/10/12 tuần, không có bài test đầu vào |
-| Kết thúc lộ trình | Chủ Nhật 05/11/2028 |
+| Kết thúc lộ trình | Chủ Nhật 03/12/2028 |
 
-Ba con số khung của toàn bộ site: **113 tuần lịch · 94 tuần chạy · 839h giờ đồng hồ tại bàn**. Trang nào in con số khác, trang đó sai. Trung bình vẫn là **8,9h/tuần chạy** — nhịp không đổi so với bản 755h, lộ trình chỉ dài thêm 2 tháng để chứa 84h ba trục nền tảng.
+Ba con số khung của toàn bộ site: **117 tuần lịch · 97 tuần chạy · 1.100h giờ đồng hồ tại bàn**, trong đó 20 tuần lịch là buffer. Trang nào in con số khác, trang đó sai. Trung bình **11,3h/tuần chạy** — nhịp cao hơn bản 839h, và đó là lý do lộ trình dày thêm 261h mà chỉ dài thêm 4 tuần.
 
 ---
 
@@ -25,17 +26,18 @@ Ba con số khung của toàn bộ site: **113 tuần lịch · 94 tuần chạy
 Ba điều này quyết định toàn bộ thiết kế phía sau. Không đồng ý thì nói ngay để chỉnh, đừng đồng ý cho xong.
 
 **1. Không tồn tại cửa Junior game backend ở Việt Nam.**
-Đếm tay ITviec ngày 05/09/2026: tag `games` có 16 tin (8 art/design · 3 Unity/client · 1 QA · 2 backend/data · 2 khác), trong đó 2 tin backend/data, cả hai đòi Middle. Tag backend gộp với tag `back end`: cộng thô 123 + 125 + 47 + 41 = **336** tin, nhưng một tin Java backend gần như luôn mang cả hai tag, nên sau khi trừ trùng chỉ còn ước **180–250 tin** (tổng các phần là cận trên; hợp thật luôn nhỏ hơn). Ước lượng: dưới 5 vị trí Junior game backend cả nước, hầu hết đòi 2+ năm. Đường đi duy nhất có người đi qua được: **vào bằng cửa backend chung**, rồi chuyển nội bộ hoặc nhảy sau 12–18 tháng production. Game là vỏ của sản phẩm, backend là đích của đơn xin việc. Đến DP5 (W45) bạn tự đếm lại.
+Đếm tay ITviec ngày 05/09/2026: tag `games` có 16 tin (8 art/design · 3 Unity/client · 1 QA · 2 backend/data · 2 khác), trong đó 2 tin backend/data, cả hai đòi Middle. Tag backend gộp với tag `back end`: cộng thô 123 + 125 + 47 + 41 = **336** tin, nhưng một tin Java backend gần như luôn mang cả hai tag, nên sau khi trừ trùng chỉ còn ước **180–250 tin** (tổng các phần là cận trên; hợp thật luôn nhỏ hơn). Ước lượng: dưới 5 vị trí Junior game backend cả nước, hầu hết đòi 2+ năm. Đường đi duy nhất có người đi qua được: **vào bằng cửa backend chung**, rồi chuyển nội bộ hoặc nhảy sau 12–18 tháng production. Game là vỏ của sản phẩm, backend là đích của đơn xin việc. Đến DP5 bạn tự đếm lại.
 
-**2. Ba con số giờ, và chúng khác nhau vì đo ba thứ khác nhau.**
+**2. Bốn con số giờ, và chúng khác nhau vì đo bốn thứ khác nhau.**
 
 | Con số | Là gì | Vì sao |
 |---|---|---|
-| 6–8h/tuần | Năng lực **khởi điểm** | Bạn chưa ghi được giờ nào, nên bắt đầu ở 6h |
-| 9h/tuần | **Kế hoạch** sau ramp | Lịch chuẩn 10,5h, điểm danh 90%. Rơi một buổi mỗi 2 tuần là bình thường, không phải thất bại |
+| 12–15h/tuần | Quỹ **thật** bạn xác nhận 07/09/2026 | Đây là số bạn nói mình có. Mọi thứ dưới đây đều tính thấp hơn nó |
+| 11,3h/tuần chạy | **Kế hoạch** trung bình toàn lộ trình | 1.100h ÷ 97 tuần chạy. Cố ý đặt dưới quỹ thật để rơi một buổi không thành nợ |
+| 6h/tuần | Năng lực **khởi điểm** W1–4 | Bạn chưa ghi được giờ nào, nên bắt đầu ở 6h dù quỹ là 12–15h. Ramp là để chứng minh, không phải để tiết kiệm |
 | ≥10h thật 4 tuần liên tiếp | Điều kiện **mở trang mở rộng** | Chỉ khi số cho phép, không phải khi hứng |
 
-Tổng quỹ là **839h** = 755h lộ trình sản phẩm + 84h ba trục nền tảng, trên 94 tuần chạy. Cơ cấu: **680h nội dung + 132h nghi thức + 27h dự phòng** (nghi thức = 1,4h × 94 tuần chạy). Bản này trừ hẳn **19 tuần lịch** (17%) ra khỏi kế hoạch: Tết 2027 ×2, Tết 2028 ×3, 14 tuần ốm/đời sống/deload rải đều. Vì sao không phải con số cũ: xem [Roadmap](/roadmap). Chạy không đủ 94 tuần thì Roadmap cũng đã công bố sẵn thứ tự cắt 8 bậc — quyết định lúc tỉnh táo, không phải lúc hoảng.
+Tổng quỹ là **1.100h** trên 97 tuần chạy. Cơ cấu: **937h nội dung + 136h nghi thức + 27h dự phòng** (nghi thức = 1,4h × 97 tuần chạy). Bản này trừ hẳn **20 tuần lịch** (17%) ra khỏi kế hoạch: Tết 2027 ×2, Tết 2028 ×3, 15 tuần ốm/đời sống/deload rải đều. Vì sao không phải con số cũ: xem [Roadmap](/roadmap). Chạy không đủ 97 tuần thì Roadmap cũng đã công bố sẵn thứ tự cắt 8 bậc — quyết định lúc tỉnh táo, không phải lúc hoảng.
 
 **3. Năm tuần trượt ở 0h là thất bại kích hoạt, không phải lười.**
 Nguyên nhân nằm ngay trong repo này. Phiên bản cũ đặt **27 ô checklist chặn trước Tuần 1** (trang chủ 9, hệ thống học 10, tiến độ 8), cộng thêm bài test đầu vào 12 câu, 2 giờ, không AI, không Google. Một người chưa ghi được giờ nào phải qua 28 cổng mới được gõ dòng Kotlin đầu tiên. Bộ tài liệu cũ chính là cái phanh. Bản này **xoá cả 27 ô và bài test**. Ngày 1 là 90 phút, một file chạy được, một commit, một tag. Không nghi thức nào tồn tại trước tag đó.
@@ -44,45 +46,48 @@ Vẫn còn rủi ro cũ: bạn đọc hiểu cả monorepo ERP do AI sinh ra, nh
 
 ---
 
-## 🎯 Bản đồ 26 tháng
+## 🎯 Bản đồ 27 tháng
 
-Một sản phẩm duy nhất, phát hành theo phiên bản: **CARO** — cờ caro online async có economy thật, cộng một chế độ ARENA realtime 20Hz — tự dựng từ socket thô lên tới báo cáo load test hai máy.
+Một sản phẩm duy nhất, phát hành theo phiên bản: **CARO** — cờ caro online async có economy thật, cộng một chế độ ARENA realtime 20Hz — tự dựng từ socket thô lên tới báo cáo load test hai máy, chạy hai instance.
 
 | Mã | Tháng | Tuần lịch | Tuần chạy | Giờ | Tên | Đầu ra kiểm chứng được |
 |---|---|---|---|---|---|---|
 | **P0** | 1–4 | W1–15 | 14 | **116** | Kotlin viết được | Tag `v0.0.1` ≤14 ngày; 2 repo tag `v1.0`; `caro-engine` seed + log → cùng bàn cờ 100/100; blank-file ≥3/5; trang tĩnh thế cờ public |
-| **P1** | 4–9 | W16–38 | 19 | **169** | Server đầu tiên, người thật chơi qua web | G1 race đỏ→xanh; bench TCP vs UDP; 100 bot loopback; server từ chối gian 100%; `wss://` public; `v0.1` web client; ≥1 người ngoài chơi ≥1 trận |
-| **P2** | 9–16 | W39–67 | 24 | **218** | Dữ liệu bền + Android client + kênh apply mở | `v1.0` APK; `kill -9` @50 CCU → trận dở khôi phục đúng; Testcontainers xanh trong GH Actions; restore từ backup dưới 15'; 20 đơn apply đợt 0 + bảng gap |
-| **P3** | 16–20 | W68–84 | 13 | **120** | ARENA tick slice + kinh tế | Tick jitter p99 dưới 5ms trong 10'; hash khớp 100%; 2 điện thoại; G5 lệch 0; outbox `kill -9` ×20 = 0 sai; `v1.5` |
-| **P4** | 20–24 | W85–103 | 16 | **144** | Spring Boot + chịu tải + apply đợt 1 | Repo Spring Boot có Security/JWT + bench so Ktor; G2, G3, G4 đủ; 40 đơn đợt 1 + bảng gap; take-home công khai |
-| **P5** | 24–26 | W104–113 | 8 | **72** | Đi làm hoặc sửa-và-apply-lại | Nhánh A: hợp đồng lao động. Nhánh B: bảng gap có cột "đã sửa", 40 đơn đợt 2, 5 postmortem công khai |
-| | | **113** | **94** | **839** | | |
+| **P1** | 4–8 | W16–35 | 16 | **187** | Server đầu tiên, người thật chơi qua web | G1 race đỏ→xanh; bench TCP vs UDP; HTTP GET bằng socket thuần + frame WebSocket tự tay đọc; 100 bot loopback; server từ chối gian 100%; `wss://` public; `v0.1` web client; ≥1 người ngoài chơi ≥1 trận |
+| **P2** | 8–15 | W36–64 | 24 | **282** | Dữ liệu bền + Android client + kênh apply mở | `v1.0` APK; `kill -9` @50 CCU → trận dở khôi phục đúng; đọc được `EXPLAIN` và giải thích MVCC/WAL bằng lời mình; Redis đơn luồng: đo được lúc nào nó là nút thắt; Grafana 6 panel; Testcontainers xanh trong GH Actions; SBOM + image non-root; restore từ backup dưới 15'; 20 đơn apply đợt 0 + bảng gap |
+| **P3** | 15–20 | W65–85 | 17 | **209** | ARENA + kinh tế + netcode thật | Tick jitter p99 dưới 5ms trong 10'; client prediction + server reconciliation chạy được ở 150ms RTT giả lập; hash khớp 100%; 2 điện thoại; G5 lệch 0; outbox `kill -9` ×20 = 0 sai; job queue `SKIP LOCKED` + DLQ; `v1.5` |
+| **P4** | 20–25 | W86–109 | 20 | **234** | Spring + chịu tải + phân tán + apply đợt 1 | Repo Spring Boot có Security/JWT + bench so Ktor; **2 instance thật**: rolling deploy sticky WS, lock `SET NX PX`, fencing token, ép treo bằng `kill -STOP`; Kafka/NATS + gRPC; trace OTel xuyên hai service; G2, G3, G4 đủ; 40 đơn đợt 1 + bảng gap; take-home công khai |
+| **P5** | 25–27 | W110–117 | 6 | **72** | Đi làm hoặc sửa-và-apply-lại | Nhánh A: hợp đồng lao động. Nhánh B: bảng gap có cột "đã sửa", 40 đơn đợt 2, 5 postmortem công khai |
+| | | **117** | **97** | **1.100** | | |
 
-**Tổng 839h.** Không có phép màu ở đây — chỉ có kỷ luật cộng dồn.
+**Tổng 1.100h.** Không có phép màu ở đây — chỉ có kỷ luật cộng dồn.
+
+**Vì sao lộ trình vừa dày lên.** Một đợt rà soát 10 hướng chấm lộ trình cũ theo từng tầng. Kết quả: mạnh ở tầng hệ điều hành (**mức 4/5**), nhưng chỉ **mức 1–2** ở CSDL, JVM bên trong, concurrency và hệ phân tán — đúng bốn tầng mà vòng phỏng vấn backend đào sâu nhất. Đã cộng **261h** để lấp đúng bảy tầng đó: Postgres MVCC/WAL/planner 18h · JVM GC/JIT/JMH 20h · concurrency tới mức CAS và false sharing 16h · chạy 2 instance thật 14h · Redis đơn luồng 6h · tầng giao thức mạng 10h · chuỗi cung ứng và CI 10h — cộng ARENA prediction/reconciliation, Kafka, gRPC, ports & adapters, OTel. Điểm mấu chốt: **+261h nội dung nhưng chỉ +4 tuần lịch**, vì nhịp lên 11,3h/tuần chạy thay cho 8,9h cũ. Và nếu bạn giữ được **15h/tuần thật**, 1.100h chỉ còn ≈73 tuần chạy — về đích sớm hơn **~5,5 tháng**. Lịch là hệ quả của năng lực đo được, không phải mục tiêu.
 
 Năm điểm dễ hiểu sai, nói rõ luôn:
 
 | Điểm | Sự thật |
 |---|---|
 | Backend là dòng chính, không phải Android | Android native chỉ 30h [Android core](/android-core) + client Compose **16h Lõi, cap 20h** ở P2. Client là phương tiện, server là sản phẩm |
-| Apply là hoạt động nền, không phải phần thưởng cuối | Đợt 0 ngay sau `v0.1` (W39–41) — kênh apply mở từ tháng 9 (06/2027); 1 đơn/tuần từ W42; đợt 1 vẫn từ **21/02/2028** để bám sóng tuyển sau Tết — theo lịch mới ngày đó rơi vào P3, và điều đó là cố ý: mốc thị trường neo theo lịch dương, không theo tuần chạy. Có offer backend chung ≥12tr không bond → **nhận**. Đó là thắng |
+| Apply là hoạt động nền, không phải phần thưởng cuối | Đợt 0 ngay sau `v0.1`, đầu P2 — kênh apply mở từ tháng 8 (05/2027); 1 đơn/tuần từ W39; đợt 1 vẫn từ **21/02/2028** để bám sóng tuyển sau Tết — theo lịch mới ngày đó rơi vào P3, và điều đó là cố ý: mốc thị trường neo theo lịch dương, không theo tuần chạy. Có offer backend chung ≥12tr không bond → **nhận**. Đó là thắng |
 | Spring Boot quay lại | 40h Lõi ở P4, sau raw socket + Ktor + Postgres. 40% JD ghi Spring, gần 100% JD Java. Repo Spring ghim #1 trên GitHub |
-| ARENA realtime là lát mỏng nhưng thật | 40h ở P3, không bao giờ xuống 0. Đủ để trả lời 5 câu netcode bằng số của chính mình — không hơn, và đó là cố ý |
-| Ba trục nền tảng là 84h đan vào P1–P4, không phải phase riêng | [Nền tảng hệ thống](/nen-tang-he-thong) 32h · [Android core](/android-core) **+22h** (8h cũ → 30h) · [Backend core](/backend-core) 30h — cộng đúng 32 + 22 + 30 = 84h. Nguyên tắc chia: cái gì quyết định được nhận thì ở Lõi, cái gì làm thành senior thì học tiếp khi đi làm — 144h phần senior của ba trục đã đẩy sang [Mở rộng](/mo-rong) theo đúng nguyên tắc đó (trang đó tổng 363h = 219h danh mục gốc + 144h) |
+| ARENA realtime không còn là lát mỏng | 40h lát gốc + 60h prediction/reconciliation + 8h interpolation = **108h ở P3**. Đủ để trả lời 5 câu netcode bằng số của chính mình, và để chạy được ở mạng thật chứ không chỉ loopback |
+| Ba trục nền tảng là 84h đan vào P1–P4, không phải phase riêng | [Nền tảng hệ thống](/nen-tang-he-thong) 32h · [Android core](/android-core) **+22h** (8h cũ → 30h) · [Backend core](/backend-core) 30h — cộng đúng 32 + 22 + 30 = 84h. Nguyên tắc chia: cái gì quyết định được nhận thì ở Lõi, cái gì làm thành senior thì học tiếp khi đi làm — phần senior nằm ở [Mở rộng](/mo-rong), trang đó nay còn **~230h** sau khi 133h được rút thẳng vào Lõi |
 
-Thang 12 bậc dự án, thứ tự cắt 8 bậc, sàn không bao giờ cắt, các điểm quyết định DP0–DP8 → [Roadmap 26 tháng](/roadmap).
+Thang 12 bậc dự án, thứ tự cắt 8 bậc, sàn không bao giờ cắt, các điểm quyết định DP0–DP8 → [Roadmap 27 tháng](/roadmap).
 
 ---
 
 ## Cách chúng ta làm việc
 
-Hợp đồng giữa bạn và tôi, năm dòng:
+Hợp đồng giữa bạn và tôi, năm dòng — cộng một dòng về lịch mở dần:
 
-- **Tôi là mentor / examiner / reviewer — không bao giờ là author.** Suốt Phase 0 tôi không gõ một dòng code nào vào project của bạn. Và có một **vùng AI-free suốt 26 tháng**: vòng tick, serialize/deserialize gói tin, session/connection, mọi thứ chạm `Mutex`/`Channel`/`Atomic`/shared state, reconnect và state sync. Ở đó tôi không đưa cả pseudo-code — chỉ tên khái niệm, link docs, câu hỏi.
+- **Tôi là mentor / examiner / reviewer — không bao giờ là author.** Suốt Phase 0 tôi không gõ một dòng code nào vào project của bạn. Và có một **vùng AI-free suốt 27 tháng**: vòng tick, serialize/deserialize gói tin, session/connection, mọi thứ chạm `Mutex`/`Channel`/`Atomic`/shared state, reconnect và state sync. Ở đó tôi không đưa cả pseudo-code — chỉ tên khái niệm, link docs, câu hỏi.
 - **Socratic là mặc định.** Bạn hỏi một khái niệm, tôi hỏi ngược 1–2 câu định hướng trước. Bí tiếp thì tôi chỉ *vùng* vấn đề và section docs cần đọc, không chỉ thẳng dòng lỗi. Bug concurrency: tôi không nêu giả thuyết, chỉ hỏi "cái gì có thể chạy đồng thời với dòng này?"
 - **Luật 30 phút vật lộn.** Tôi từ chối debug hộ cho tới khi bạn trình ra ba thứ trong `notes/ERRORS.md`: giả thuyết của bạn, hai thí nghiệm đã thử, kết quả quan sát được của từng thí nghiệm. Riêng câu hỏi **hiệu năng**: vé vào cửa là một phép đo. Không có số thì chưa có câu hỏi.
 - **Explain-back bắt buộc.** Tôi giải thích xong, bạn nói lại bằng lời của bạn, rồi tôi hỏi xoáy hai tầng "tại sao". Code review của tôi trả về câu hỏi kèm nhãn `[BLOCKER]` / `[SHOULD]` / `[NIT]`, không trả về bản sửa. Trả lời bằng tên thư viện = trượt.
 - **Blank-file test, 2 tuần một lần, 45 phút — bật từ W6.** Tôi chọn ngẫu nhiên một thành phần bạn đã viết; bạn viết lại từ file trống, không internet, không AI. Commit nguyên trạng — kể cả không compile — vào `rebuild/<ngày>-<tên>.kt` kèm diff so bản gốc. Fail 2 lượt liên tiếp → chế độ sửa chữa. Không còn Friday Rebuild.
+- **Thang R0–R4 — mở dần cách dùng AI chuyên nghiệp, bắt đầu từ P2, và chỉ ở VÙNG NGOÀI vùng cấm.** Vùng AI-free ở dòng đầu không nới một chữ, không bao giờ. **R0** (P0–P1) là đúng năm dòng trên, không đổi. **R1** (P2, sau khi qua G1): dùng AI đọc hiện vật giả có bệnh cài sẵn — log, flame graph, `EXPLAIN` — để luyện chẩn đoán; hiện vật thật của bạn vẫn tự đọc. **R2** (cuối P2): AI viết test cho code bạn đã viết xong và đã tự test; việc của bạn là tìm test nào AI viết sai hoặc bỏ sót. **R3** (P3): AI viết code ở vùng ngoài — script, tooling, migration nháp — bạn review theo BLOCKER/SHOULD/NIT và phải tìm được ít nhất 1 lỗi thật. **R4** (P4): làm việc với agent trên codebase thật, giao việc có phạm vi, đọc diff, bác bỏ có lý do; hiện vật tốt nghiệp là 5 lần AI sai mà bạn bắt được. Lý do tồn tại của thang này: cấm suốt 27 tháng rồi thả thẳng ra thị trường là đào tạo ra người không biết làm việc theo cách ngành 2026 đang làm; còn cho dùng sớm thì không bao giờ có cơ bắp.
 
 Hợp đồng chỉ đắt ở đúng chỗ. **Máy của bạn** — JDK, Gradle wrapper, SSH/PAT GitHub, wizard IDE — không phải nội dung học: tôi hướng dẫn từng bước, đọc log hộ, toàn phần. Thêm một luật hạ tầng: AI autocomplete và Copilot trong IDE tắt hoàn toàn suốt Phase 0.
 
@@ -124,8 +129,9 @@ Không có gì phải đọc trước tag `v0.0.1`. Bảng này dành cho buổi
 | Trang | Mở khi nào |
 |---|---|
 | [Nghề backend game](/nghe-backend-game) | Buổi thứ hai, 20 phút. Hai nhánh của nghề, vì sao nhắm nhánh Platform/Services. Đọc tới hết mục Stack rồi **dừng** — chuỗi xác suất ở cuối trang để dành cho DP2 và DP5 |
-| [Roadmap 26 tháng](/roadmap) | Tuần 1, sau tag. Sáu phase, thang 12 bậc, thứ tự cắt, sàn không bao giờ cắt, DP0–DP8 |
-| [Hệ thống học & luật AI](/he-thong-hoc) | Tuần 1, đọc cùng roadmap. Nhịp buổi, 5 luật AI gốc + 6 luật bản server, ba nghi thức, bảng tuần |
+| [Roadmap 27 tháng](/roadmap) | Tuần 1, sau tag. Sáu phase, thang 12 bậc, thứ tự cắt, sàn không bao giờ cắt, DP0–DP8 |
+| [Hệ thống học & luật AI](/he-thong-hoc) | Tuần 1, đọc cùng roadmap. Nhịp buổi, 5 luật AI gốc + 6 luật bản server, thang R0–R4, ba nghi thức, bảng tuần |
+| [Nguồn học](/nguon-hoc) | Mỗi lần mở một module mới, 2 phút. Một bảng duy nhất: nguồn → module → chương → đọc trước hay đọc sau lab. Ưu tiên nguồn miễn phí và nguồn gốc: OSTEP, Beej, hpbn.co, interdb.jp, shipilev.net, gabrielgambetta.com, sre.google, RFC, Postgres docs, JEP |
 | [Phase 0 — Kotlin viết được](/phase-0) | Từ buổi thứ hai. Trang bạn sống cùng 14 tuần tới; từ đó mở [bảng tốt nghiệp 10 tiêu chí](/phase-0/tot-nghiep) |
 | [Tiến độ](/progress) | Cuối mỗi buổi (journal 3 dòng) và mỗi Chủ nhật từ W3 (bảng tuần) |
 | [Phase 1](/phase-1) | Khoá. Chỉ mở khi qua DP2 cuối W14: bảng tốt nghiệp P0 ≥8/10, mục 1–5 bắt buộc |

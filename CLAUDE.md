@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this repo is
 
 A **Nextra 2 documentation site** (Next.js 14, pages router) holding the study plan and progress
-tracker for a 26-month Kotlin/JVM **game-server backend** roadmap. There is **no Kotlin code
+tracker for a 27-month Kotlin/JVM **game-server backend** roadmap. There is **no Kotlin code
 here** — the learner's code lives in separate repos. Everything in `pages/` is Vietnamese prose.
 
 ## Commands
@@ -66,11 +66,11 @@ Changing any of these means updating every page that prints them, plus `theme.co
 | Fact | Value |
 |---|---|
 | Start | **W1 = Monday 07/09/2026** (01/08/2026 is dead) |
-| End | Sunday 05/11/2028 — **26.0 months** |
-| Weeks | 113 calendar · 19 buffer · **94 running** |
-| Hours | **839h** clock-hours = 680h content + 132h rituals + 27h reserve (= 755h product roadmap + 84h three foundation tracks) |
-| Phases | P0 W1–15 116h · P1 W16–38 169h · P2 W39–67 218h · P3 W68–84 120h · P4 W85–103 144h · P5 W104–113 72h |
-| Pace | ramp 6h → 8h → 10h in P0, then ~9h per running week |
+| End | Sunday 03/12/2028 — **26.9 months** |
+| Weeks | 117 calendar · 20 buffer · **97 running** |
+| Hours | **1,100h** clock-hours (839h + 261h: 133h pulled back from `/mo-rong`, 128h closing seven depth gaps) |
+| Phases | P0 W1–15 116h · P1 W16–35 187h · P2 W36–64 282h · P3 W65–85 209h · P4 W86–109 234h · P5 W110–117 72h |
+| Pace | ramp 6h → 8h → 10h in P0 (unchanged), then 12h/week tier from W16, cap 14h; plan is 11.3h per running week |
 
 **Market milestones anchor to the calendar, not to running weeks.** If 21/02/2028 arrives while
 the learner is still mid-P3, they apply anyway with whatever artifacts exist.
@@ -95,7 +95,7 @@ Commit messages: conventional-commit prefix, Vietnamese subject (`docs: đồng 
 `pages/he-thong-hoc.mdx` is the authority. It binds how AI is used for the learner's **Kotlin
 work**; editing this docs site is normal work and is not covered by it.
 
-**AI-free for all 26 months** — no code, not even pseudo-code; only concept names, doc links and
+**AI-free for all 27 months** (an R0–R4 ladder from P2 teaches professional AI use *outside* these zones — it never opens them) — no code, not even pseudo-code; only concept names, doc links and
 questions: tick loop · packet serialize/deserialize · session and connection handling · anything
 touching `Mutex`/`Channel`/`Atomic`/shared state · reconnect and state sync.
 

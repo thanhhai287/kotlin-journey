@@ -1,13 +1,13 @@
 # 🚀 Hành trình Game Server của Hải
 
-Tài liệu học tập và tracker tiến độ cho lộ trình **26 tháng: từ "biết cú pháp Kotlin" đến
+Tài liệu học tập và tracker tiến độ cho lộ trình **27 tháng: từ "biết cú pháp Kotlin" đến
 Game Server / Backend Engineer**. Dựng bằng [Nextra](https://nextra.site), deploy trên
 [Vercel](https://vercel.com).
 
-🌐 **Site:** _cập nhật URL sau khi deploy_ · 📅 **W1 = Thứ Hai 07/09/2026** → 05/11/2028 · 📍 **Đang ở:** Phase 0, W1
+🌐 **Site:** _cập nhật URL sau khi deploy_ · 📅 **W1 = Thứ Hai 07/09/2026** → 03/12/2028 · 📍 **Đang ở:** Phase 0, W1
 
-**Ba con số:** 113 tuần lịch · 94 tuần chạy · **839h** giờ đồng hồ tại bàn
-(755h lộ trình sản phẩm + 84h ba trục nền tảng).
+**Ba con số:** 117 tuần lịch · 97 tuần chạy · **1.100h** giờ đồng hồ tại bàn.
+Nhịp 11,3h/tuần chạy — giữ được 15h/tuần thì về đích sớm hơn ~5,5 tháng.
 
 ## 🎯 Lộ trình này đánh cược vào cái gì
 
@@ -19,11 +19,11 @@ Cửa xin việc là **backend chung** ở một công ty bất kỳ tại Việ
 | Phase | Tuần | Giờ | Tên gọi |
 |---|---|---|---|
 | **P0** | W1–15 | 116h | Kotlin viết được, không chỉ đọc được |
-| **P1** | W16–38 | 169h | Server đầu tiên, người thật chơi qua web |
-| **P2** | W39–67 | 218h | Dữ liệu bền + Android client + kênh apply mở |
-| **P3** | W68–84 | 120h | ARENA tick slice + kinh tế |
-| **P4** | W85–103 | 144h | Spring Boot + chịu tải + apply đợt 1 |
-| **P5** | W104–113 | 72h | Đi làm hoặc sửa-và-apply-lại |
+| **P1** | W16–35 | 187h | Server đầu tiên, người thật chơi qua web |
+| **P2** | W36–64 | 282h | Dữ liệu bền + client + kênh apply mở |
+| **P3** | W65–85 | 209h | ARENA + kinh tế + netcode thật |
+| **P4** | W86–109 | 234h | Spring Boot + chịu tải + phân tán + apply |
+| **P5** | W110–117 | 72h | Đi làm hoặc sửa-và-apply-lại |
 
 ## 📚 Nội dung
 
@@ -33,7 +33,7 @@ Markdown sources trong [`pages/`](pages/):
 |---|---|
 | [`index.mdx`](pages/index.mdx) | Trang chủ — toạ độ hiện tại, ba sự thật, **Ngày 1 = 90 phút** |
 | [`nghe-backend-game.mdx`](pages/nghe-backend-game.mdx) | Nghề backend game — hai nhánh, thị trường VN, stack, mốc thời gian trung thực |
-| [`roadmap.mdx`](pages/roadmap.mdx) | Roadmap 26 tháng — 6 phase, thang 12 bậc, danh sách cắt, DP0–DP8 |
+| [`roadmap.mdx`](pages/roadmap.mdx) | Roadmap 27 tháng — 6 phase, thang 12 bậc, danh sách cắt, DP0–DP8 |
 | [`he-thong-hoc.mdx`](pages/he-thong-hoc.mdx) | Hệ thống học & luật AI — nhịp buổi tối, ba nghi thức, hợp đồng với AI |
 | [`nen-tang-he-thong.mdx`](pages/nen-tang-he-thong.mdx) | Nền tảng hệ thống — Linux, kernel, thread, `epoll`, signal, cgroup |
 | [`android-core.mdx`](pages/android-core.mdx) | Android core — Binder, Zygote, ART, Looper, vòng đời tiến trình |
@@ -131,6 +131,6 @@ trong sidebar.
 ## 🤝 Vai trò của AI trong repo này
 
 Hợp đồng đầy đủ ở trang [Hệ thống học & luật AI](pages/he-thong-hoc.mdx). Tóm tắt: AI là
-**mentor / examiner / reviewer — không bao giờ là author**. Vùng AI-free suốt 26 tháng: vòng
+**mentor / examiner / reviewer — không bao giờ là author**, cộng thang R0–R4 dạy dùng AI đúng cách từ P2. Vùng AI-free suốt 27 tháng: vòng
 tick, serialize gói tin, session/connection, mọi thứ chạm shared state, reconnect và state sync.
 Site này chứa tài liệu và đề bài; code Kotlin nằm ở repo project riêng và phải do người học tự gõ.

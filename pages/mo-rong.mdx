@@ -1,6 +1,6 @@
 # Mở rộng — kho để dành
 
-Trang này liệt kê những thứ bị đẩy ra khỏi 26 tháng nhưng chưa bị vứt đi: cộng đúng từ ba bảng dưới là **363h** (219h danh mục gốc + 54h backend nâng cao + 90h tầng AOSP nặng), không nằm trong bất kỳ tổng nào của lộ trình. Mở nó khi — và chỉ khi — bảng tuần cho phép.
+Trang này liệt kê những thứ bị đẩy ra khỏi 27 tháng nhưng chưa bị vứt đi: cộng đúng từ ba bảng dưới là **363h** (219h danh mục gốc + 54h backend nâng cao + 90h tầng AOSP nặng), không nằm trong bất kỳ tổng nào của lộ trình. Mở nó khi — và chỉ khi — bảng tuần cho phép.
 
 **Chỉ mở khi bảng tuần cho phép** (≥10h thật 4 tuần liên tiếp **và** giờ tích luỹ ≥90% kế hoạch). **Không mở được không phải bạn dốt — là số chưa cho phép.**
 
@@ -10,8 +10,8 @@ Trang này liệt kê những thứ bị đẩy ra khỏi 26 tháng nhưng chưa
 
 | Luật | Nội dung |
 |---|---|
-| **Không cộng vào tổng nào** | Lộ trình vẫn là **839h giờ đồng hồ tại bàn** = 680h nội dung + 132h nghi thức + 27h dự phòng, trên **94 tuần chạy** trong 113 tuần lịch. Trang này không thêm một phút nào vào con số đó, và không xuất hiện ở cột nào của bảng phase |
-| **Không module Lõi nào phụ thuộc đầu ra ở đây** | Không ngưỡng, không cổng kỹ thuật phase, không tiêu chí G1–G6 nào cần một dòng code sinh ra ở đây. Không bao giờ mở nó vẫn tốt nghiệp đủ 26 tháng |
+| **Không cộng vào tổng nào** | Lộ trình vẫn là **1.100h giờ đồng hồ tại bàn** = 941h nội dung + 132h nghi thức + 27h dự phòng, trên **97 tuần chạy** trong 117 tuần lịch. Trang này không thêm một phút nào vào con số đó, và không xuất hiện ở cột nào của bảng phase |
+| **Không module Lõi nào phụ thuộc đầu ra ở đây** | Không ngưỡng, không cổng kỹ thuật phase, không tiêu chí G1–G6 nào cần một dòng code sinh ra ở đây. Không bao giờ mở nó vẫn tốt nghiệp đủ 27 tháng |
 | **Ẩn khỏi thanh điều hướng** | Chỉ vào được bằng link trực tiếp. Cám dỗ được xử lý bằng cơ chế, không bằng ý chí |
 
 Điều kiện mở là **hai vế cùng đúng**, không phải một:
@@ -49,10 +49,10 @@ Cột cuối là phần quan trọng nhất: mỗi dòng bị đẩy ra vì mộ
 | HTTP GET bằng socket thuần | 4 | Mạng thô | `1.2` đã có echo TCP/UDP/NIO + `tcpdump` + bảng p50/p99. Món này vui, không thêm ngưỡng nào |
 | MTU binary search + jitter theo RFC 3550 | 6 | Mạng thô | `3.1` đo HOL blocking dưới `tc netem` theo quy trình predict-then-measure là đủ để trả lời 5 câu netcode bằng số của mình |
 | Replay ×100 | 2 | Determinism | lát **S3 của module 3.2 (ARENA)** đã yêu cầu 10 lần replay hash khớp 100%. ×100 là con số đẹp hơn, không phải năng lực mới |
-| DSA thêm 40 bài | 15 | Nghề | Warm-up DSA của Lõi từ W20 — nhịp, số phút và chỗ ngồi của nó trong quỹ giờ do [Hệ thống học](/he-thong-hoc) chốt — đã chiếm hết phần DSA nằm trong 839h. Nó có giá đồng hồ thật, không phải giờ nhặt được: 40 bài thêm là giờ mới, ngoài quỹ. Ngưỡng DSA là ngưỡng của Lõi và đo bằng chất lượng (1 bài test 60' pass + 7/7 pattern rebuild), không đo bằng số bài — thêm 40 bài không đổi ngưỡng đó |
+| DSA thêm 40 bài | 15 | Nghề | Warm-up DSA của Lõi từ W20 — nhịp, số phút và chỗ ngồi của nó trong quỹ giờ do [Hệ thống học](/he-thong-hoc) chốt — đã chiếm hết phần DSA nằm trong 1.100h. Nó có giá đồng hồ thật, không phải giờ nhặt được: 40 bài thêm là giờ mới, ngoài quỹ. Ngưỡng DSA là ngưỡng của Lõi và đo bằng chất lượng (1 bài test 60' pass + 7/7 pattern rebuild), không đo bằng số bài — thêm 40 bài không đổi ngưỡng đó |
 | **Tổng bảng này** | **219** | | Cộng được — nhưng đây không phải phase thứ bảy |
 
-**Sự thật về cột giờ:** đó là ước lượng thô cho một trang không có ngân sách. Nó cộng được, và ba dòng tổng đã in ra: 219 + 54 + 90 = **363h**. Nhưng 363h đó không phải một phase thứ bảy — trang này không có phase, không có lịch, không có DP, và không trừ vào tuần nào trong 113 tuần lịch.
+**Sự thật về cột giờ:** đó là ước lượng thô cho một trang không có ngân sách. Nó cộng được, và ba dòng tổng đã in ra: 219 + 54 + 90 = **363h**. Nhưng 363h đó không phải một phase thứ bảy — trang này không có phase, không có lịch, không có DP, và không trừ vào tuần nào trong 117 tuần lịch.
 
 ---
 
@@ -78,9 +78,9 @@ Thứ tự gợi ý nếu đi làm ở công ty product: job queue → flag/cana
 
 ## 🔧 Tầng AOSP nặng — ~90h, nhãn "năm 3"
 
-Phần tiếp nối của [Android core](/android-core). Trang đó dừng ở mức **đọc hiện vật và nối với server** — `ps`, `dumpsys meminfo`, trace ANR, log `lmkd`. Tầng này là mức **sờ vào máy**: build, flash, viết service, viết driver. Không hạng mục nào ở đây được mở trong 26 tháng, kể cả khi bảng tuần cho phép mở các hạng mục khác của trang này — nhãn "năm 3" là nhãn thời điểm, không phải nhãn độ khó.
+Phần tiếp nối của [Android core](/android-core). Trang đó dừng ở mức **đọc hiện vật và nối với server** — `ps`, `dumpsys meminfo`, trace ANR, log `lmkd`. Tầng này là mức **sờ vào máy**: build, flash, viết service, viết driver. Không hạng mục nào ở đây được mở trong 27 tháng, kể cả khi bảng tuần cho phép mở các hạng mục khác của trang này — nhãn "năm 3" là nhãn thời điểm, không phải nhãn độ khó.
 
-**Lý do chung, áp cho mọi dòng:** không hạng mục nào đổi được kết quả xin việc backend trong 26 tháng — không JD Junior nào hỏi, không cổng G1–G6 nào cần — và mỗi hạng mục đòi một **khối thời gian liền** (một cuối tuần trọn, hoặc nhiều buổi tối liên tiếp không đứt) mà lộ trình 20:00–22:00 không có. Build AOSP dở dang lúc 22:00 sáng mai không tiếp được; một buổi 2h không đủ để kernel module compile, nạp, panic, đọc log, sửa.
+**Lý do chung, áp cho mọi dòng:** không hạng mục nào đổi được kết quả xin việc backend trong 27 tháng — không JD Junior nào hỏi, không cổng G1–G6 nào cần — và mỗi hạng mục đòi một **khối thời gian liền** (một cuối tuần trọn, hoặc nhiều buổi tối liên tiếp không đứt) mà lộ trình 20:00–22:00 không có. Build AOSP dở dang lúc 22:00 sáng mai không tiếp được; một buổi 2h không đủ để kernel module compile, nạp, panic, đọc log, sửa.
 
 | Hạng mục | Giờ | Vì sao không nằm trong Lõi |
 |---|---|---|
@@ -102,7 +102,7 @@ Ba luật của trang này áp nguyên: không cộng vào tổng nào, không m
 
 ## 🌱 Năm 3 trở đi
 
-Một tầng nữa, nằm ngoài cả trang này. Không phải "để dành" — là **từ chối trong 26 tháng**, kể cả khi có chuyên gia đề xuất:
+Một tầng nữa, nằm ngoài cả trang này. Không phải "để dành" — là **từ chối trong 27 tháng**, kể cả khi có chuyên gia đề xuất:
 
 | Nhóm | Cụ thể |
 |---|---|
@@ -111,7 +111,7 @@ Một tầng nữa, nằm ngoài cả trang này. Không phải "để dành" �
 | Game engine | Unity, Godot, LibGDX, KorGE |
 | Hạ tầng lớn | Kubernetes / Agones (Lõi 2h đọc) |
 
-**Vì sao:** mỗi dòng đòi một nền không dựng nổi part-time trong 26 tháng song song với việc kiếm job đầu tiên. Chúng không sai — chúng **sai thời điểm**. Năm 3 bạn học chúng bằng lương, không bằng buổi tối.
+**Vì sao:** mỗi dòng đòi một nền không dựng nổi part-time trong 27 tháng song song với việc kiếm job đầu tiên. Chúng không sai — chúng **sai thời điểm**. Năm 3 bạn học chúng bằng lương, không bằng buổi tối.
 
 ---
 
@@ -130,5 +130,5 @@ Cấm dùng trang này để né một module Lõi đang khó. Đo bằng chứn
 
 ## → Tiếp theo
 
-- Quay lại bản đồ, thứ tự cắt và sàn không bao giờ cắt: [Roadmap 26 tháng](/roadmap)
+- Quay lại bản đồ, thứ tự cắt và sàn không bao giờ cắt: [Roadmap 27 tháng](/roadmap)
 - Hai con số điều kiện nằm ở bảng tuần: [Tiến độ](/progress)

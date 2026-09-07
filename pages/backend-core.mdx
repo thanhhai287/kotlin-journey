@@ -1,6 +1,6 @@
 # Backend core — API, dữ liệu, danh tính, vận hành
 
-Trang này trả lời một câu: trong CARO, phần nào là năng lực backend mà fintech, outsourcing, e-commerce sẽ hỏi — học ở đâu, bao nhiêu giờ. Mở lần đầu sau module 1.5; mở lại đầu P2, đầu P3, tuần đầu P4 — mỗi lần đúng một khối.
+Trang này trả lời một câu: trong CARO, phần nào là năng lực backend mà fintech, outsourcing, e-commerce sẽ hỏi — học ở đâu, bao nhiêu giờ. Mở lần đầu sau module 1.5; mở lại đầu P2 (W36), đầu P3 (W65), tuần đầu P4 (W86) — mỗi lần đúng một khối.
 
 ---
 
@@ -13,14 +13,14 @@ Nguyên tắc chọn nội dung: **cái gì quyết định việc bạn đượ
 | Khối | Giờ biên | Học ở | Sau module | Đã có ở module — nhắc, không dạy lại |
 |---|---|---|---|---|
 | **B1** API và hợp đồng | 10 | P1 muộn 3h + P2 7h | 1.5 (3h — đọc B1, sửa envelope) · 2.3 (7h — LAB B1 khi có leaderboard thật) | 1.5 type + version · 4.1 springdoc, `@RestControllerAdvice` |
-| **B2** Dữ liệu và migration | 10 | P2 10h (sau 2.1) | 2.1 | 2.1 index, `EXPLAIN`, isolation, Flyway · 2.7 backup · 3.3 ledger |
+| **B2** Postgres bên trong + dữ liệu và migration | 18 + 10 = **28** | P2 28h (sau 2.1) | 2.1 (18h — B2a Postgres bên trong, làm **trước**) · 2.1 (10h — B2b migration) | 2.1 index, `EXPLAIN`, isolation, Flyway · 2.7 backup · 3.3 ledger |
 | **B3** Danh tính và phân quyền | 6 | P2 3h + P3 3h | 2.2 (3h — rotation) · 3.6 (3h — authz, OIDC) | 2.2 session token · 2.4 hai thiết bị · 3.6 authz, IDOR · 4.1 Security/JWT |
-| **B4** Vận hành chuẩn | 4 | P4 4h | 4.3 (sau G3, trước 4.4) | 2.10 log, Micrometer, JFR · 4.4 rollback · 5.5 OTel |
-| | **30** | P1 3 · P2 20 · P3 3 · P4 4 | | + 24h đẩy sang mục "Backend nâng cao — năm 3 hoặc tháng đầu đi làm" của [Mở rộng](/mo-rong), nằm trong khối 54h ở đó |
+| **B4** Vận hành chuẩn + chuỗi cung ứng + observability | 4 + 10 + 10 = **24** | P4 24h | 4.3 (4h — B4a SLO, runbook; sau G3, trước 4.4) · 4.4 (10h — B4c OpenTelemetry, ngay sau outbox) · 4.15 (10h — B4b chuỗi cung ứng và CI, cạnh CD và rollback theo digest) | 1.9 Dockerfile, Compose · 2.6 GitHub Actions · 2.10 log, Micrometer, JFR · 4.4 rollback, outbox |
+| | **68** | P1 3 · P2 38 · P3 3 · P4 24 | | 30h gốc + 38h thêm ngày 07/09/2026 (Postgres bên trong 18 · chuỗi cung ứng 10 · observability 10). OpenTelemetry **đã rút khỏi bậc cắt**. Phần còn đẩy sang [Mở rộng](/mo-rong): mục cuối trang |
 
 Cột "Sau module" là neo duy nhất: bảng của [Phase 1](/phase-1) và các phase sau phải khớp từng dòng với cột này. Mã `4.x` ở trang này là module của **Phase 4** (4.1 Spring, 4.3 profiling, 4.4 CD) — không phải dãy 4.1–4.8 Kotlin core của Phase 0.
 
-**Sự thật:** 30h là **giờ biên** — chỉ đếm phần chưa có ở module nào. Idempotency key học ở 3.3 thì B1 không tính lại; Flyway ở 2.1 thì B2 chỉ dạy phần 2.1 không dạy. Theo giáo trình thường, bốn khối này là 60–70h; hơn nửa đã nằm rải trong 26 tháng của lộ trình (các module 1.5–5.5). Trang này gom về một trục, bịt đúng lỗ còn hở. 30h này **đã nằm trong 839h** của lộ trình (P1 3 · P2 20 · P3 3 · P4 4), phân bổ ở bảng bổ sung của [Roadmap](/roadmap) — không phải giờ cộng thêm ngoài khung.
+**Sự thật:** 68h là **giờ biên** — chỉ đếm phần chưa có ở module nào. Idempotency key học ở 3.3 thì B1 không tính lại; Flyway ở 2.1 thì B2 chỉ dạy phần 2.1 không dạy. 38h thêm ngày 07/09/2026 bịt ba lỗ đợt rà soát chỉ ra: tầng PostgreSQL ở **mức 2 trên thang 5** — biết làm, không giải thích được vì sao (0 lần nhắc MVCC, VACUUM, checkpoint, query planner; `40001` dạy như một luật) — chuỗi cung ứng 0h, OpenTelemetry nằm ở bậc cắt. Theo giáo trình thường, bốn khối này là trên 130h; hơn nửa đã nằm rải trong 27 tháng của lộ trình (các module 1.5–4.4). Trang này gom về một trục, bịt đúng lỗ còn hở. 68h này **đã nằm trong 1.100h** của lộ trình (P1 3 · P2 38 · P3 3 · P4 24), phân bổ ở bảng bổ sung của [Roadmap](/roadmap) — không phải giờ cộng thêm ngoài khung.
 
 **Luật sắt:** mỗi khối có bảng khái niệm theo thứ tự phụ thuộc, một LAB trên chính CARO, một ngưỡng đo được, câu hỏi phỏng vấn thật. Đọc mà chưa làm LAB thì chưa tính giờ.
 
@@ -51,9 +51,9 @@ Cột "Sau module" là neo duy nhất: bảng của [Phase 1](/phase-1) và các
 
 **Phân trang.** Offset là "bỏ N dòng đầu theo thứ tự lúc chạy truy vấn". Giữa hai trang, leaderboard đổi — một người bị ban, ba người lên hạng — ranh giới dịch: có bản ghi hiện hai lần, có bản ghi không bao giờ hiện. Giá thứ hai của offset — lý do trang 37 của leaderboard 100k người chậm: `OFFSET N` buộc Postgres đọc rồi **vứt** N dòng, kể cả khi có index; trang càng sâu càng chậm tuyến tính theo N, tải DB tăng đều khi người dùng lật sâu. Cursor mã hoá **vị trí bản ghi cuối đã thấy**, cặp `(rating, player_id)`; trang sau là "mọi thứ sau vị trí đó": `WHERE (rating, player_id) < (?, ?) ORDER BY rating DESC, player_id DESC LIMIT 50` — đi thẳng vào index bằng range scan, mỗi trang tốn như nhau. Chèn hay xoá ở đâu cũng không dịch ranh giới. Giá: không nhảy tới trang 37. Giới hạn ghi vào test: khoá sắp xếp **tự đổi** thì cursor cũng sót — leaderboard nghiêm túc dùng snapshot theo mùa.
 
-**Mô hình lỗi.** Lỗi dạng chuỗi tự do là nợ kỹ thuật: client parse tiếng Việt để rẽ nhánh, đổi câu chữ là client vỡ. RFC 9457 *Problem Details for HTTP APIs* (2023, thay RFC 7807 — cùng hình; gặp tên cũ trong code cũ thì nhận ra) cho một hình cố định: `type` là URI máy đọc (`.../errors/insufficient-gold`), `title`, `status`, `detail` cho người, cộng trường mở rộng (`required: 500, available: 120`) để client hành động. Content-Type là `application/problem+json` — client rẽ nhánh theo header này trước, theo `type` sau. Mọi handler lỗi — kể cả `@RestControllerAdvice` ở 4.1 và validation — trả đúng hình này. Spring 6 có sẵn `ProblemDetail`/`ErrorResponse`, bật `spring.mvc.problemdetails.enabled=true` ở 4.1; Ktor dùng `StatusPages` và tự đặt content type.
+**Mô hình lỗi.** Lỗi dạng chuỗi tự do là nợ kỹ thuật: client parse tiếng Việt để rẽ nhánh, đổi câu chữ là client vỡ. RFC 9457 *Problem Details for HTTP APIs* (2023, thay RFC 7807 — cùng hình; gặp tên cũ trong code cũ thì nhận ra) cho một hình cố định: `type` là URI máy đọc (`.../errors/insufficient-gold`), `title`, `status`, `detail` cho người, cộng trường mở rộng (`required: 500, available: 120`) để client hành động. Content-Type là `application/problem+json` — client rẽ nhánh theo header này trước, theo `type` sau. Mọi handler lỗi — kể cả `@RestControllerAdvice` ở 4.1 và validation — trả đúng hình này. Spring Framework 7 / Boot 4 (GA 11/2025; Boot 3.5 hết hỗ trợ OSS 06/2026 — 3.0 mở đầu 2028 thì Boot 3 đã là bản cũ) có sẵn `ProblemDetail`/`ErrorResponse`, bật `spring.mvc.problemdetails.enabled=true` ở 4.1. Boot 4 tách lại module và đổi tên nhiều starter (ví dụ `spring-boot-starter-web` → `spring-boot-starter-webmvc`), nên **mọi tên property và starter in trên trang này phải kiểm lại ở tuần mở 3.0**, phiên bản chọn ghi vào `notes/ADR.md` — không tin số đã in. Ktor dùng `StatusPages` và tự đặt content type.
 
-**Versioning.** Được: thêm trường response, thêm trường tuỳ chọn request, thêm endpoint, thêm giá trị enum nếu client bỏ qua giá trị lạ. Không được: xoá, đổi tên, biến tuỳ chọn thành bắt buộc, đổi **ý nghĩa** trường (`gold` sang đơn vị ×100). Buộc phải đổi nghĩa: trường mới tên mới, trường cũ `deprecated`, header `Sunset`, và **số đếm** client cũ còn gọi — không có số thì không bao giờ dám tắt. Giữ luật này thì hiếm khi cần `/v2`. Khi buộc phải có v2: đặt trên URL (`/v2/players`) — route, cache, log, `Sunset` theo đường dẫn đều dễ, hai bản chạy song song được; version trong header (`Accept: application/vnd.caro.v2+json`) giữ URI bất biến nhưng khó debug, khó cache, proxy dễ bỏ qua — chỉ hợp khi URI phải bất biến. Không bao giờ version từng trường bằng header.
+**Versioning.** Được: thêm trường response, thêm trường tuỳ chọn request, thêm endpoint, thêm giá trị enum nếu client bỏ qua giá trị lạ. Không được: xoá, đổi tên, biến tuỳ chọn thành bắt buộc, đổi **ý nghĩa** trường (`gold` sang đơn vị ×100). Buộc phải đổi nghĩa: trường mới tên mới, trường cũ `deprecated`, header `Sunset`, và **số đếm** client cũ còn gọi — không có số thì không bao giờ dám tắt. Giữ luật này thì hiếm khi cần `/v2`. Khi buộc phải có v2: đặt trên URL (`/v2/players`) — route, cache, log, `Sunset` theo đường dẫn đều dễ, hai bản chạy song song được; version trong header (`Accept: application/vnd.caro.v2+json`) giữ URI bất biến nhưng khó debug, khó cache, proxy dễ bỏ qua — chỉ hợp khi URI phải bất biến. Không bao giờ version từng trường bằng header. Spring Framework 7 có versioning **dựng sẵn** — thuộc tính `version` trên mapping, nguồn version (đoạn path, header, query, media type) khai một chỗ ở `ApiVersionConfigurer`. Nó không thay luật trên: framework chỉ định tuyến, thêm-không-đổi-nghĩa vẫn là việc của bạn. Câu hỏi khi dùng: nó đặt version ở đâu, và điều đó có mâu thuẫn với luật tương thích ngược không.
 
 **Contract-first.** Sinh spec từ annotation là tài liệu mô tả **thứ đã lỡ viết**. Viết spec trước rồi sinh stub và client là hợp đồng được review **trước dòng code đầu tiên**; diff spec là diff hợp đồng.
 
@@ -77,9 +77,92 @@ Cột "Sau module" là neo duy nhất: bảng của [Phase 1](/phase-1) và các
 
 **Câu hỏi phỏng vấn thật rơi vào đây:** #1–5 bảng cuối trang.
 
-## B2 — Mô hình dữ liệu và migration an toàn (10h · P2)
+## B2 — Postgres bên trong, mô hình dữ liệu và migration an toàn (28h · P2 — 18h bên trong + 10h migration)
 
-B2 dạy hai thứ 2.1 không dạy: **vẽ schema đúng**, và **đổi schema khi bảng đang có người dùng**. Phần thứ hai phân loại junior với người từng chạm production.
+Hai nửa, làm theo thứ tự. **B2a** gọi tên cơ chế mà 2.1 chỉ dạy hệ quả — MVCC, WAL, VACUUM, planner, `40001` — và kiểm bằng số trên Postgres thật. **B2b** là phần cũ: vẽ schema đúng và đổi schema khi bảng đang có người dùng. Làm B2b trước B2a thì mọi bẫy ở B2b vẫn là mẹo; làm đúng thứ tự thì chúng là hệ quả bạn đoán trước được.
+
+### B2a — Postgres bên trong (18h · P2, ngay sau 2.1, trước B2b)
+
+2.1 cho bạn tám mẹo: `EXPLAIN`, B-tree, isolation, `FOR UPDATE`, `lock_timeout`, CIC, Flyway, `pg_dump`. Đợt rà soát 07/09/2026 chấm tầng này **mức 2 trên thang 5**: biết làm, không giải thích được vì sao. Mọi hiện tượng B2b dạy — CIC treo, `idle in transaction` giết site, `40001`, bảng phình sau khi xoá — đều là **hệ quả của một cơ chế** chưa được gọi tên. B2a gọi tên nó. Đích: mức 4 — giải thích bằng cơ chế, đo bằng lab, đoán trước được hiện tượng chưa gặp.
+
+| # | Khái niệm | Câu phải trả lời được | Giờ |
+|---|---|---|---|
+| 1 | MVCC: snapshot, `xmin`/`xmax`, tuple version, HOT | Vì sao `SELECT` không chặn `UPDATE`; `UPDATE` làm gì với dòng cũ | 4 |
+| 2 | WAL và checkpoint | Vì sao ghi tuần tự nhanh hơn ghi tại chỗ; `fsync` nằm ở đâu trong một `COMMIT` | 3 |
+| 3 | VACUUM, bloat, wraparound | Vì sao `DELETE` triệu dòng mà bảng không nhỏ đi; XID 32-bit hết thì sao | 3 |
+| 4 | Query planner đọc được: statistics, cost model | Vì sao có index mà planner vẫn Seq Scan — và khi nào nó đúng | 4 |
+| 5 | `40001` là cơ chế | Serialization failure sinh ra từ đâu trong MVCC; vì sao retry chứ không phải lock chặt hơn | 4 |
+
+Luật đọc: mỗi mục **lab trước, đọc sau** (làn T5). Nguồn chính: *The Internals of PostgreSQL* (Hironobu Suzuki, interdb.jp/pg — miễn phí, chương ngắn, có hình) và Postgres docs; chương cụ thể ở bảng Nguồn học cuối trang và ở [Nguồn học](/nguon-hoc).
+
+**1 · MVCC — Postgres không sửa dòng tại chỗ.** Mỗi dòng trên heap là một **tuple version** mang hai số: `xmin` (transaction tạo nó) và `xmax` (transaction xoá hoặc thay nó; 0 nếu còn sống). `UPDATE` không ghi đè: nó ghi tuple **mới** với `xmin` của mình và điền `xmax` vào tuple cũ — cả hai bản cùng nằm trên đĩa. Mỗi transaction (mỗi câu lệnh, ở READ COMMITTED) chụp một **snapshot**: tập transaction đang chạy tại thời điểm đó. Một tuple *nhìn thấy được* khi `xmin` đã commit và nằm trước snapshot, còn `xmax` chưa commit hoặc nằm sau snapshot. Đó là toàn bộ lý do **đọc không chặn ghi, ghi không chặn đọc**: reader nhìn bản cũ, writer tạo bản mới, không ai xếp hàng sau ai. Giá trả sau: bản cũ chiếm chỗ tới khi có người dọn (mục 3), và một transaction mở lâu **giữ snapshot cũ** — mọi tuple nó *có thể* còn cần đều không được dọn; đây là nửa cơ chế còn thiếu của "CIC treo" và "`idle in transaction` giết site" ở B2b. Thêm `ctid` (địa chỉ vật lý: page, offset) và **HOT**: `UPDATE` cột không nằm trong index nào, page còn chỗ → tuple mới nằm cùng page, index **không** ghi thêm entry. Đó là vì sao `fillfactor` tồn tại, và vì sao ledger append-only của 3.3 rẻ hơn `UPDATE gold = gold - ?` về lâu dài.
+
+**LAB 1** — Postgres thật, hai phiên `psql`:
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | Phiên A: `BEGIN; SELECT xmin, xmax, ctid, gold FROM wallet WHERE id = 1;` giữ mở. Phiên B: `UPDATE wallet SET gold = gold + 1 WHERE id = 1; COMMIT;`. Phiên A đọc lại cùng câu — làm ở READ COMMITTED rồi ở REPEATABLE READ | Hai bảng `xmin/xmax/ctid` trước/sau ở mỗi mức trong `bench/mvcc.md`; giải thích **bằng chữ snapshot** vì sao REPEATABLE READ vẫn thấy giá trị cũ |
+| 2 | `CREATE EXTENSION pageinspect;` rồi `SELECT lp, t_xmin, t_xmax, t_ctid FROM heap_page_items(get_raw_page('wallet', 0));` sau 5 lần `UPDATE` cùng một dòng | Một page có 6 tuple version của một dòng; chỉ ra tuple nào đang sống và vì sao |
+| 3 | `UPDATE` cột không index trên bảng `fillfactor = 70` và `fillfactor = 100`; so `n_tup_hot_upd` trong `pg_stat_user_tables` | Hai số HOT; câu giải thích "cùng page, index không ghi" |
+
+**Ngưỡng đạt:** giải thích "vì sao `SELECT` không chặn `UPDATE`" **chỉ bằng ba chữ** snapshot / `xmin` / `xmax`, không dùng tên isolation level; `bench/mvcc.md` có ba số đo trên.
+
+**2 · WAL và checkpoint — vì sao ghi tuần tự lại nhanh.** Một `COMMIT` không ghi page dữ liệu xuống đĩa. Nó ghi một bản ghi **WAL** (Write-Ahead Log — "dòng nào đổi thành gì") vào cuối một file tuần tự, rồi `fsync` **đúng file WAL đó** trước khi trả `COMMIT` về client. Page dữ liệu vẫn nằm bẩn trong shared buffers; **checkpointer** và background writer đẩy xuống đĩa sau, theo `checkpoint_timeout` / `max_wal_size`. Vì sao nhanh hơn: một `fsync` tuần tự vào một file thay vì N `fsync` ngẫu nhiên vào N page ở N chỗ — đĩa, kể cả SSD, thích append. Vì sao an toàn: crash thì replay WAL từ checkpoint cuối, page bẩn chưa kịp ghi được dựng lại — đó là **redo**. Hai nút vặn có giá: `synchronous_commit = off` không chờ `fsync` — nhanh gấp nhiều lần và mất tối đa ~3 × `wal_writer_delay` giao dịch **đã báo commit** khi mất điện; `full_page_writes` ghi trọn page ở lần đụng đầu tiên sau mỗi checkpoint để chống torn page — đó là vì sao WAL phình vọt ngay sau checkpoint, và vì sao backfill ở B2b "WAL phình". Nối thẳng vào hàng `fsync` của S2 và ba mức chết của S4 ở [Nền tảng hệ thống](/nen-tang-he-thong).
+
+**LAB 2:**
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | `pg_test_fsync` trên VPS: số `fsync`/giây của từng `wal_sync_method` | Bảng số — đó chính là **trần commit/giây** của một Postgres một đĩa |
+| 2 | Bơm 100.000 nước đi (bot 1.7) với `synchronous_commit = on` rồi `off`; đo TPS và p99 | Hai hàng trong `bench/wal.md`; giải thích chênh lệch bằng "chờ `fsync` hay không" |
+| 3 | `SELECT pg_current_wal_lsn();` trước/sau một `UPDATE` một dòng; `pg_waldump` đoạn đó — đọc ra record `HEAP` và `COMMIT` | Dán record; kích thước WAL của một `UPDATE` một dòng ngay sau `CHECKPOINT` (có full page) và lần thứ hai (không) |
+| 4 | Mức 3 của S4: `synchronous_commit = off`, hard-reset VM giữa lúc bot đánh; đếm trận đã ack mà mất | Số trận mất, ghi cạnh giá trị `synchronous_commit` chọn cho CARO trong `notes/ADR.md` |
+
+**Ngưỡng đạt:** trả lời "`fsync` nằm ở đâu trong một `COMMIT`" bằng đường đi WAL → `fsync` → trả client → checkpoint sau; `bench/wal.md` có trần `fsync`/giây và hai hàng TPS on/off.
+
+**3 · VACUUM, bloat và wraparound — vì sao xoá không giải phóng chỗ.** `DELETE` chỉ điền `xmax`; `UPDATE` để lại tuple cũ. Chúng là **dead tuple**: vẫn chiếm page, vẫn bị quét, vẫn làm `count(*)` chậm (phải kiểm visibility từng tuple). **VACUUM** đánh dấu chỗ của dead tuple là *tái sử dụng được* — bảng không nhỏ đi, chỉ ngừng phình; chỉ `VACUUM FULL` (viết lại bảng dưới `ACCESS EXCLUSIVE` — cùng bẫy với `ALTER` ở B2b) hoặc `pg_repack` mới trả chỗ về OS. Autovacuum chạy theo ngưỡng `autovacuum_vacuum_scale_factor` (mặc định 20% — bảng 10 triệu dòng phải chết 2 triệu tuple mới được dọn) và **không dọn được** tuple mà một snapshot đang mở còn có thể thấy; `backend_xmin` trong `pg_stat_activity` chỉ đích danh transaction đang giữ. Bloat là kết quả: bảng ví bị `UPDATE` liên tục có 90% page là xác. Wraparound: XID là số 32-bit, ~2 tỉ; khi `age(relfrozenxid)` tiến gần `autovacuum_freeze_max_age` (mặc định 200 triệu) Postgres phải **đóng băng** tuple cũ để chúng "luôn nhìn thấy được" bất kể XID quay vòng — không ai để nó chạy thì DB **từ chối ghi** để tự cứu. Một transaction treo nhiều ngày làm freeze không tiến: đó là cách một session `idle in transaction` bị quên hạ được cả hệ thống sau vài tuần.
+
+**LAB 3:**
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | Bot `UPDATE` 1 triệu lần trên bảng `wallet` 10.000 dòng; đo `pg_total_relation_size`, `n_dead_tup`, `n_live_tup` trước / sau `VACUUM` / sau `VACUUM FULL`; `pgstattuple` cho `dead_tuple_percent` | Bảng ba cột trong `bench/vacuum.md`; câu "VACUUM không trả chỗ, FULL trả nhưng khoá" có số |
+| 2 | Phiên A: `BEGIN; SELECT 1;` rồi treo 5 phút. Chạy lại lô `UPDATE`, rồi `VACUUM VERBOSE` — đọc dòng "dead but not yet removable"; `SELECT pid, backend_xmin, state, xact_start FROM pg_stat_activity` chỉ ra A | Log `VACUUM VERBOSE` + dòng `pg_stat_activity` — **nửa cơ chế còn lại của "CIC treo" ở B2b** |
+| 3 | `SELECT pg_current_xact_id();` và `SELECT datname, age(datfrozenxid) FROM pg_database;` | Hai số; một câu giải thích wraparound bằng chữ freeze |
+
+**Ngưỡng đạt:** giải thích "vì sao `idle in transaction` nguy hiểm" bằng chữ `backend_xmin` và dead tuple không dọn được; `bench/vacuum.md` có `n_dead_tup` trước/sau.
+
+**4 · Query planner đọc được — vì sao có index mà vẫn Seq Scan.** Planner không nhìn dữ liệu; nó nhìn **statistics** mà `ANALYZE` thu về `pg_stats`: số dòng, tỉ lệ null, giá trị phổ biến, histogram, tương quan vật lý. Từ đó nó ước lượng *selectivity* của mỗi điều kiện và tính **cost** theo một mô hình: `seq_page_cost` 1.0, `random_page_cost` 4.0 mặc định (số của đĩa quay — SSD/NVMe hợp lý hơn ở 1.1), `cpu_tuple_cost`… Index Scan phải trả tiền đọc ngẫu nhiên vào heap **cho mỗi dòng khớp**; khi điều kiện chọn ra vài phần trăm bảng trở lên, đọc tuần tự cả bảng **rẻ hơn thật** — planner đúng, trực giác của bạn sai. Ở giữa là Bitmap Heap Scan: gom địa chỉ từ index, đọc heap theo thứ tự vật lý. Ba lý do plan xấu bạn sẽ gặp: statistics cũ (bulk insert xong chưa `ANALYZE` — ước lượng `rows=1` trong khi thật một triệu), `random_page_cost` mặc định trên NVMe, và cột tương quan nhau (`default_statistics_target`, `CREATE STATISTICS`). Postgres 18 có AIO (`io_method`) — seq scan đọc trước theo lô, khoảng cách với index scan còn nới rộng; đó là mô hình I/O của DB, không phải phép màu. Đọc `EXPLAIN (ANALYZE, BUFFERS)` theo thứ tự: node nào **rows ước lượng lệch rows thật** nhiều nhất → node nào tốn `shared read` nhiều nhất → mới tới thời gian.
+
+**LAB 4:**
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | Bơm `match` 1 triệu dòng bằng `generate_series`, **không** `ANALYZE`; `EXPLAIN (ANALYZE, BUFFERS)` một truy vấn theo `player_x_id`; rồi `ANALYZE`; chạy lại | Hai plan khác nhau trong `bench/planner.md`; khoanh dòng rows ước lượng vs thật |
+| 2 | Cùng truy vấn với điều kiện chọn 0,01% / 1% / 30% dòng — ghi plan chọn (Index / Bitmap / Seq) và thời gian | Bảng ba hàng; câu "index vô dụng từ ngưỡng nào" có số của chính bảng này |
+| 3 | `SET enable_seqscan = off` ép Index Scan ở trường hợp 30% — đo lại; rồi `SET random_page_cost = 1.1` trên NVMe, xem plan đổi | Hai số chứng minh planner đúng khi chọn Seq Scan; một số chứng minh cost model cần tham số đúng đĩa |
+| 4 | Đọc `pg_stats` của `match.player_x_id`: `n_distinct`, `most_common_vals`, `correlation` | Ba giá trị và một câu: mỗi cái ảnh hưởng plan ở đâu |
+
+**Ngưỡng đạt:** giải thích một plan bằng cost model (selectivity × giá đọc ngẫu nhiên vs tuần tự), không bằng "Postgres tự chọn"; `bench/planner.md` có hai plan trước/sau `ANALYZE` và bảng ngưỡng selectivity.
+
+**5 · `40001` là cơ chế, không phải luật.** 2.1 dạy "REPEATABLE READ báo `40001` → retry". Đây là vì sao. Ở REPEATABLE READ, transaction đọc **một snapshot** suốt đời. Khi nó `UPDATE` một dòng mà transaction khác đã commit `UPDATE` **sau** snapshot đó, Postgres không thể vừa giữ snapshot vừa ghi đè bản mới — nó chọn **first-updater-wins**: kẻ đến sau nhận `could not serialize access due to concurrent update`, mã `40001`. Không có lock nào bị vi phạm — chỉ có snapshot đã cũ. Ở SERIALIZABLE, Postgres dùng **SSI** (Serializable Snapshot Isolation): vẫn snapshot, vẫn không khoá đọc, nhưng theo dõi **rw-dependency** giữa các transaction (bạn đọc thứ tôi ghi, tôi đọc thứ bạn ghi) qua `SIReadLock` trong `pg_locks`; thấy chu trình nguy hiểm thì huỷ một bên — cũng `40001`, câu lỗi `read/write dependencies among transactions`. Đó là cách nó bắt được **write skew**: "hai người cùng mua vật phẩm cuối kho" — mỗi người `SELECT` thấy còn 1, mỗi người `INSERT` đơn của mình, cả hai commit, bán 2. `FOR UPDATE` trên một dòng **không** chặn được vì hai người không cùng sửa một dòng. Vì sao retry là câu trả lời đúng: đây là **phát hiện sau** (optimistic) — Postgres đã cho cả hai chạy song song không chờ nhau, chỉ huỷ khi thật sự có xung đột. Lock chặt hơn (`FOR UPDATE` mọi dòng liên quan, hoặc lock bảng) biến mọi giao dịch thành xếp hàng **kể cả khi không xung đột**, và vẫn không giải quyết write skew trên dòng chưa tồn tại. Retry là chấp nhận trả giá **chỉ khi** có xung đột. Điều kiện để retry đúng: transaction **idempotent trong lần chạy lại** (không gửi mail, không cộng ví ngoài transaction), vòng retry có giới hạn và backoff — nối thẳng vào idempotency key 3.3 và retry của B4a.
+
+**LAB 5** — hai phiên `psql`, bảng `wallet` và `inventory`:
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | Lost update tái diễn ở **ba** mức: READ COMMITTED (hai phiên cùng `SELECT gold` rồi cùng `UPDATE gold = 90` — mất một lần trừ, không lỗi) · REPEATABLE READ (phiên sau nhận `40001`) · SERIALIZABLE (cũng `40001`, câu lỗi khác) | Bảng 3 mức × kết quả, dán nguyên văn hai câu lỗi |
+| 2 | Write skew: `inventory` còn 1 vật phẩm; hai phiên REPEATABLE READ cùng `SELECT count(*)` rồi cùng `INSERT INTO purchase`; commit cả hai → **bán 2**. Lặp ở SERIALIZABLE → một phiên `40001`. Trong lúc chạy: `SELECT relation::regclass, mode FROM pg_locks WHERE mode = 'SIReadLock'` | Số vật phẩm bán ở hai mức; dòng `SIReadLock` |
+| 3 | Chứng minh "lock chặt hơn không phải câu trả lời": sửa bước 2 bằng `SELECT ... FOR UPDATE` trên dòng vật phẩm, vẫn REPEATABLE READ — ghi vì sao lần này nó chặn được (hai người **cùng** sửa một dòng) và trường hợp nào không (vật phẩm **chưa có dòng**) | Hai câu kết luận có số |
+| 4 | Viết vòng retry cho ví 3.3 (shared state — vùng AI-free): tối đa 3 lần, backoff + jitter, chỉ bắt `40001`; bắn 10.000 request mua với 20% trùng (G5) ở SERIALIZABLE | Tỉ lệ `40001`, số lần retry, số dư cuối khớp ledger 100% |
+
+**Ngưỡng đạt:** giải thích `40001` **bằng chữ snapshot và rw-dependency**, không bằng tên isolation level; nói được vì sao retry đúng bằng "phát hiện sau, chỉ trả giá khi xung đột"; `bench/isolation.md` có bảng 3 mức × 2 dị thường (lost update, write skew) và tỉ lệ retry ở G5.
+
+**Câu hỏi phỏng vấn thật rơi vào đây:** #23–26 bảng cuối trang, cộng #10.
+
+### B2b — Mô hình dữ liệu và migration an toàn (10h · P2, sau B2a)
+
+B2b dạy hai thứ 2.1 không dạy: **vẽ schema đúng**, và **đổi schema khi bảng đang có người dùng**. Phần thứ hai phân loại junior với người từng chạm production.
 
 | # | Khái niệm | Câu phải trả lời được |
 |---|---|---|
@@ -92,7 +175,7 @@ B2 dạy hai thứ 2.1 không dạy: **vẽ schema đúng**, và **đổi schema
 | 7 | Backfill theo lô; `CREATE INDEX CONCURRENTLY` | Vì sao không `UPDATE` triệu dòng một transaction |
 | 8 | Hai phiên bản app song song | Bản cũ chưa biết cột mới thì sao |
 | 9 | Migration trong CI/CD; roll forward | Rollback migration có tồn tại không |
-| 10 | Lost update và isolation | READ COMMITTED (mặc định) không chặn read-modify-write; REPEATABLE READ / SERIALIZABLE báo `40001` → app phải retry; hoặc `SELECT ... FOR UPDATE` / `UPDATE ... SET gold = gold - ? WHERE gold >= ?` nguyên tử — ví 3.3 chọn gì |
+| 10 | Lost update và isolation | READ COMMITTED (mặc định) không chặn read-modify-write; REPEATABLE READ / SERIALIZABLE báo `40001` → app phải retry; hoặc `SELECT ... FOR UPDATE` / `UPDATE ... SET gold = gold - ? WHERE gold >= ?` nguyên tử — ví 3.3 chọn gì. **Vì sao** `40001` tồn tại: B2a mục 5 |
 
 **Chuẩn hoá bằng CARO.** `match` có `player_x_name` — người đổi tên thì mọi trận cũ sai: sự thật lưu hai chỗ. Đây là phụ thuộc bắc cầu đúng nghĩa 3NF: `match_id → player_x_id → player_x_name`. Sửa: chỉ giữ `player_x_id`. `move.player_id` là chuyện khác: thuộc tính **dẫn xuất** (suy từ `seq` chẵn lẻ cộng `match.player_x_id`/`player_o_id`) — dư thừa liên bảng, cùng loại với `move_count` bên dưới: bỏ, hoặc giữ kèm ADR và `CHECK`/trigger đối soát. **Khi nào cố ý phá chuẩn:** đọc rất nhiều lần phải join hoặc đếm — và có số. Trang lịch sử cần `move_count`; đếm `move` mỗi lần là N+1 dạng khác. Lưu `move_count` trên `match`, cập nhật cùng transaction với `move`. Điều kiện: `EXPLAIN ANALYZE` trước/sau; một nguồn sự thật và script đối soát như 3.3; ADR.
 
@@ -106,13 +189,13 @@ Khoá tự nhiên (`email`, `install_id`) là `UNIQUE`, không làm khoá chính
 
 **Ban và xoá mềm — hai trạng thái, đừng gộp.** Ban là cột `banned_at`, không `DELETE`: FK từ `match` trỏ vào, admin cần gỡ ban, audit 3.7 cần dấu vết. Giá: mọi truy vấn đăng nhập/ghép trận nhớ `WHERE banned_at IS NULL`. **Không** đổi `UNIQUE(email)` — ban giữ nguyên danh tính, email vẫn bị chiếm. Làm partial unique index `WHERE banned_at IS NULL` là chép nhầm mẫu của xoá mềm: người bị ban đăng ký lại đúng email đó, có account mới, ban vô hiệu — và mâu thuẫn với luật "không merge tự động" ở B3. Xoá mềm/GDPR mới là cột `deleted_at`: lúc đó mới cân nhắc partial unique index `WHERE deleted_at IS NULL`, kèm rủi ro tái sử dụng email ghi vào ADR. Ví 3.3 đã append-only — số dư là tổng.
 
-**Sự thật:** `ALTER TABLE` lấy `ACCESS EXCLUSIVE`. Thay đổi 5ms cũng phải **xếp sau mọi transaction đang giữ khoá** trên bảng — một báo cáo 30 giây là đủ — và trong lúc xếp hàng, **mọi truy vấn mới kể cả `SELECT` xếp sau nó**. Bảng lớn không phải vấn đề; hàng đợi khoá mới là. **Luật sắt:** mọi migration `SET lock_timeout = '2s'` và retry — trừ script `CREATE INDEX CONCURRENTLY`, xem bảng.
+**Sự thật:** `ALTER TABLE` lấy `ACCESS EXCLUSIVE`. Thay đổi 5ms cũng phải **xếp sau mọi transaction đang giữ khoá** trên bảng — một báo cáo 30 giây là đủ — và trong lúc xếp hàng, **mọi truy vấn mới kể cả `SELECT` xếp sau nó**. Bảng lớn không phải vấn đề; hàng đợi khoá mới là — và transaction dài còn giữ **snapshot** (B2a mục 3), nửa cơ chế còn lại. **Luật sắt:** mọi migration `SET lock_timeout = '2s'` và retry — trừ script `CREATE INDEX CONCURRENTLY`, xem bảng.
 
 | Thao tác | Bẫy | Cách đúng |
 |---|---|---|
 | Thêm cột có default | Default **không hằng** (`gen_random_uuid()`) ghi lại toàn bảng; default hằng từ PG 11 chỉ sửa catalog | Default hằng, hoặc nullable rồi backfill |
 | `SET NOT NULL` cột đang có | Quét toàn bảng dưới `ACCESS EXCLUSIVE` | `CHECK (x IS NOT NULL) NOT VALID` → `VALIDATE` (không chặn ghi) → `SET NOT NULL` (PG 12+ không quét lại) → bỏ check |
-| Thêm index | `CREATE INDEX` chặn ghi suốt lúc build. `CONCURRENTLY` (CIC) có bẫy riêng: nó **chờ mọi transaction mở trước nó** kết thúc (hai pha, kể cả `idle in transaction`) — long transaction làm CIC treo; `lock_timeout`/`statement_timeout` ngắn sẽ **huỷ CIC giữa chừng** và để lại index `INVALID` vẫn tốn ghi mỗi lần `INSERT` | CIC — ngoài transaction, chậm hơn; script CIC đặt `lock_timeout` riêng (0 hoặc dài), chạy ngoài giờ cao điểm; kiểm `pg_index.indisvalid`, `INVALID` thì `DROP INDEX CONCURRENTLY` rồi chạy lại. Flyway: file `.conf` cạnh migration với `executeInTransaction=false` |
+| Thêm index | `CREATE INDEX` chặn ghi suốt lúc build. `CONCURRENTLY` (CIC) có bẫy riêng: nó **chờ mọi transaction mở trước nó** kết thúc (hai pha, kể cả `idle in transaction` — vì snapshot của chúng còn có thể thấy tuple mà index chưa ghi, B2a mục 1) — long transaction làm CIC treo; `lock_timeout`/`statement_timeout` ngắn sẽ **huỷ CIC giữa chừng** và để lại index `INVALID` vẫn tốn ghi mỗi lần `INSERT` | CIC — ngoài transaction, chậm hơn; script CIC đặt `lock_timeout` riêng (0 hoặc dài), chạy ngoài giờ cao điểm; kiểm `pg_index.indisvalid`, `INVALID` thì `DROP INDEX CONCURRENTLY` rồi chạy lại. Flyway: file `.conf` cạnh migration với `executeInTransaction=false` |
 | Đổi tên cột | `RENAME` — app cũ vỡ ngay | Thêm cột mới → ghi cả hai → backfill → đọc mới → ngừng ghi cũ → xoá cũ. Năm bước, năm deploy |
 | Backfill | Một `UPDATE` triệu dòng: row lock lâu, WAL phình | Lô 5.000 theo khoá chính, `lock_timeout`, nghỉ giữa lô |
 | Xoá cột | `DROP` ngay khi app mới lên — rollback app là mất dữ liệu | Deploy sau, khi số đo nói không còn bản cũ |
@@ -189,9 +272,13 @@ Câu trả lời gần như luôn là **cả hai**: access JWT 5–15 phút, ref
 
 **Câu hỏi phỏng vấn thật rơi vào đây:** #12–15 bảng cuối trang, cộng #1.
 
-## B4 — Vận hành chuẩn: quan sát được, SLO và cấu hình (4h Lõi · P4)
+## B4 — Vận hành chuẩn: quan sát được, SLO, cấu hình, chuỗi cung ứng (24h · P4)
 
-2.10 cho bạn log, Micrometer, JFR; 4.3 cho bạn G3. B4 là **ngôn ngữ vận hành** để nói về chúng theo cách một team SRE hiểu. 4h vì công cụ đã có — thiếu là khung suy nghĩ.
+Ba phần. **B4a** 4h ngôn ngữ vận hành (P4, sau G3) — công cụ đã có, thiếu là khung suy nghĩ. **B4b** 10h chuỗi cung ứng và CI (P4, module 4.15, cạnh CD và rollback theo digest ở 4.4) — OWASP Top 10:2025 xếp A03 *Software Supply Chain Failures* hạng 3, lộ trình cũ có 0h. **B4c** 10h observability theo OpenTelemetry (P4, ngay sau 4.4 outbox) — dời từ 5.5/P5 lên và **rút khỏi bậc cắt**, vì OTLP là định dạng tín hiệu mặc định của ngành 2026.
+
+### B4a — Ngôn ngữ vận hành: ba trụ, SLO, cấu hình (4h · P4, 4.3)
+
+2.10 cho bạn log, Micrometer, JFR; 4.3 cho bạn G3. B4a là **ngôn ngữ vận hành** để nói về chúng theo cách một team SRE hiểu.
 
 | # | Khái niệm | Câu phải trả lời được |
 |---|---|---|
@@ -218,7 +305,7 @@ Câu trả lời gần như luôn là **cả hai**: access JWT 5–15 phút, ref
 | Error budget | 0,5% — 100.000 nước đi/tháng thì được hỏng 500 | Đốt quá 50% giữa tháng → đóng băng deploy rủi ro; còn nhiều → được thử ZGC. Budget biến "ổn định" từ cãi nhau thành số |
 | SLO vs SLA | SLO là mục tiêu nội bộ; SLA là hợp đồng có phạt tiền, luôn **lỏng hơn** SLO | Câu phỏng vấn thẳng |
 
-**Correlation id.** Sinh ở rìa — cấu hình Caddy sinh `X-Request-Id`, hoặc tự sinh ở tầng ngoài cùng của server nếu chưa có, đưa vào MDC, in trong mọi dòng log của request. WebSocket: `session_id` lúc handshake, `msg_id` mỗi message. Bẫy thật: MDC gắn với thread, coroutine đổi thread — dùng `MDCContext` của `kotlinx-coroutines-slf4j`. Bẫy thứ hai của chính `MDCContext`: nó **chụp** MDC lúc tạo và khôi phục mỗi lần resume — `MDC.put` gọi sau đó không lan sang coroutine con và có thể mất sau suspend. Thứ tự đúng: `MDC.put` xong mới `withContext(MDCContext()) { ... }`; mỗi message WS tạo `MDCContext` mới sau khi put `msg_id`. REST trên Ktor dùng plugin `CallId` + `callIdMdc("request_id")`.
+**Correlation id — theo chuẩn, không tự chế.** Sinh ở rìa (Caddy, hoặc tầng ngoài cùng của server nếu chưa có) nhưng **theo W3C Trace Context**: header `traceparent` = `00-<trace id 16 byte hex>-<span id 8 byte hex>-<flags>`, không đặt `X-Request-Id` riêng — khi vào công ty, header đầu tiên bạn gặp là `traceparent`, và nó chính là correlation id cộng cây span (B4c). Đưa `trace_id` vào MDC, in trong mọi dòng log của request. WebSocket: `session_id` lúc handshake, `msg_id` mỗi message. Bẫy thật: MDC gắn với thread, coroutine đổi thread — dùng `MDCContext` của `kotlinx-coroutines-slf4j`. Bẫy thứ hai của chính `MDCContext`: nó **chụp** MDC lúc tạo và khôi phục mỗi lần resume — `MDC.put` gọi sau đó không lan sang coroutine con và có thể mất sau suspend. Thứ tự đúng: `MDC.put` xong mới `withContext(MDCContext()) { ... }`; mỗi message WS tạo `MDCContext` mới sau khi put `msg_id`. REST trên Ktor dùng plugin `CallId` + `callIdMdc("request_id")`.
 
 | Log | Tuyệt đối không log |
 |---|---|
@@ -235,24 +322,100 @@ Câu trả lời gần như luôn là **cả hai**: access JWT 5–15 phút, ref
 | # | Việc | Bằng chứng |
 |---|---|---|
 | 1 | `docs/SLO.md` một trang: SLI, điểm đo, SLO, cửa sổ, chính sách budget | File trong repo |
-| 2 | Dashboard 3 panel RED cho `move` từ Prometheus text (2.10) — Grafana hay đồ thị Prometheus đều được; 6 panel + alert rule ở [Mở rộng](/mo-rong) | Ảnh + query |
+| 2 | Dashboard 3 panel RED cho `move` trên Grafana, nguồn Prometheus text (2.10) lúc này; B4c đổi nguồn sang OTLP, lên 6 panel + alert rule (phương án C đã kéo "Grafana 6 panel" về Lõi) | Ảnh + query |
 | 3 | Runbook một trang "p99 tăng gấp 10": xác nhận (một endpoint hay tất cả, trùng deploy không) → saturation (pool, GC) → giảm thiệt hại (rollback 4.4, rate limit, hạ timeout / mở breaker) → bằng chứng (JFR, `pg_stat_activity`) → postmortem `INCIDENTS.md` | File; diễn tập một lần bằng cách tự gây (G3) |
 
 **Ngưỡng đạt:** tài liệu SLO một trang + runbook một trang + dashboard đủ ba chỉ số RED cho `move`, và một lần diễn tập runbook có timestamp.
 
 **Câu hỏi phỏng vấn thật rơi vào đây:** #16–19 bảng cuối trang.
 
-## Học tiếp khi đi làm — 24h đẩy sang Mở rộng, trong khối 54h Backend nâng cao
+### B4b — Chuỗi cung ứng và CI (10h · P4, module 4.15)
 
-Bốn hạng mục có tên, có giờ, **không dạy ở trang này**. Chúng nằm trong mục **"Backend nâng cao — năm 3 hoặc tháng đầu đi làm"** của [Mở rộng](/mo-rong): 24h này + 30h nâng cao = khối **54h** ở đó, không cộng vào tổng nào của lộ trình. Lý do chung: chúng làm bạn thành senior chứ không quyết định bạn có được nhận hay không, và ở công ty bạn gặp chúng trong codebase thật với người review — học ở đó nhanh gấp nhiều lần. Nhãn: **năm 3 hoặc tháng đầu đi làm**.
+Sự cố **tj-actions/changed-files, 14/03/2025** (CVE-2025-30066): kẻ tấn công chiếm được quyền đẩy vào repo của action, **đổi mọi tag phiên bản** (`v1` … `v45`) trỏ về một commit độc; commit đó đọc bộ nhớ tiến trình runner và in secret của workflow ra log build — log của repo public thì ai cũng đọc được. Khoảng 23.000 repo dùng action này; repo nào viết `uses: tj-actions/changed-files@v45` chạy code độc ngay lần CI kế tiếp; repo nào ghim theo **SHA commit** thì không — SHA không đổi được, tag thì đổi được. Nó xảy ra đúng trên GitHub Actions, CI của 2.6. OWASP Top 10:2025 đưa **A03 *Software Supply Chain Failures*** lên hạng 3 (mở rộng A08:2021 *Software and Data Integrity Failures*). Câu phỏng vấn 2026: "image của bạn ai ký? dependency có CVE thì biết bằng cách nào?" — lộ trình cũ không có câu trả lời.
 
-| Hạng mục | Giờ | Vì sao hoãn |
+| # | Khái niệm | Câu phải trả lời được |
 |---|---|---|
-| Job queue trên Postgres với `SKIP LOCKED` + DLQ | 8 | Outbox 3.4 đã giải "trận kết thúc → ELO/vàng". Queue tổng quát là bài của ngày có việc nền thứ ba |
-| Ports & adapters, ranh giới module của modular monolith | 8 | `caro-engine` 0 I/O đã là bài học thật. Kiến trúc đầy đủ cần codebase đủ lớn để đau — của công ty |
-| OpenTelemetry trace phân tán đầy đủ | 4 | 5.5 có một trace end-to-end. Sampling, propagation qua outbox — khi có hơn một service |
-| Feature flag, canary / blue-green | 4 | Một VPS, một instance. Canary cần instance thứ hai và lưu lượng thật để chia |
-| | **24** | Nằm trong khối 54h của mục "Backend nâng cao — năm 3 hoặc tháng đầu đi làm" ở [Mở rộng](/mo-rong) — bảng đủ 8 dòng ở đó: 24h này + 30h nâng cao (Kafka/NATS, CQRS, sharding, gRPC) |
+| 1 | Ghim theo SHA, không theo tag | Tag đổi được, SHA không — ai cập nhật SHA cho bạn |
+| 2 | SBOM (CycloneDX) | Bill of materials là gì, ai đọc; CVE mới ra thì bạn tra ở đâu trong 5 phút |
+| 3 | Dependency scanning | Quét cái gì: jar trong image, OS package của base image, checksum jar tải về; quét ở bước nào của CI |
+| 4 | Image multi-stage, non-root, base ghim digest | Vì sao JDK không được nằm trong image chạy; `USER` non-root chặn gì; `:latest` vs digest |
+| 5 | Ký và xác minh (cosign keyless, OIDC) | Image trên registry là của CI bạn hay của ai; VPS kiểm trước khi `docker pull` bằng gì |
+| 6 | Rollback theo digest | Vì sao rollback bằng tag không đảm bảo là bản cũ; digest là gì |
+| 7 | Secret trong CI | Secret vào log bằng những đường nào; `permissions:` tối thiểu; `gitleaks` |
+
+**Tag đổi được, digest không.** Tag Git, tag Docker, `@v4` của action — đều là **con trỏ**: ai có quyền ghi thì trỏ lại được. SHA commit và digest image (`sha256:…`) là **hash nội dung** — không ai đổi được nội dung mà giữ nguyên hash. Luật: `uses: actions/checkout@<40 ký tự hex> # v4.2.2` (tag ghi ở comment cho người đọc), `FROM eclipse-temurin:25-jre@sha256:…`, deploy bằng `image: ghcr.io/you/caro@sha256:…`. Giá: SHA không tự lên bản mới — bật Dependabot cho ba hệ sinh thái `github-actions`, `gradle`, `docker`; nó mở PR đổi SHA kèm changelog, bạn review. Gradle: `./gradlew --write-verification-metadata sha256 help` sinh `gradle/verification-metadata.xml` — mọi jar tải về phải khớp checksum; cộng action `gradle/actions/wrapper-validation` kiểm `gradle-wrapper.jar`.
+
+**SBOM và quét.** SBOM là danh sách mọi thành phần của bản build — jar, phiên bản, license — ở định dạng máy đọc (CycloneDX); plugin `org.cyclonedx.bom` sinh từ Gradle, đính vào release. Trivy quét ba lớp: `trivy fs .` (dependency Gradle), `trivy image` (OS package của base image + jar), `trivy sbom` (chính file SBOM). Đặt làm **required check** với `--severity HIGH,CRITICAL --exit-code 1`; CVE không có đường khai thác trong CARO thì `.trivyignore` **kèm lý do và ngày hết hạn** — không bao giờ tắt cả bước. CodeQL miễn phí cho repo public: bật, đọc một cảnh báo thật.
+
+**Image.** Stage 1 `eclipse-temurin:25-jdk` build jar; stage 2 `eclipse-temurin:25-jre` (hoặc distroless) chỉ có jar và JRE — không Gradle, không source, không shell nếu được. `USER 10001:10001` — container bị chiếm thì kẻ tấn công không có root trong container; filesystem read-only, `tmpfs` cho `/tmp`. Base ghim digest. cosign **keyless**: workflow xin `permissions: id-token: write`, GitHub cấp OIDC token, cosign ký image với danh tính "workflow X của repo Y" và ghi vào log công khai Rekor; trên VPS, script deploy chạy `cosign verify --certificate-identity-regexp '^https://github.com/you/caro/' --certificate-oidc-issuer https://token.actions.githubusercontent.com <image>@<digest>` **trước** `docker compose up` — sai thì dừng. Không có khoá riêng để lộ.
+
+**Rollback theo digest.** Deploy 4.4 ghi digest đang chạy vào `deploy/CURRENT` và digest trước vào `deploy/PREVIOUS`; rollback = `compose` với digest cũ, không phải "pull lại tag v1.4" (tag có thể đã bị push đè, hoặc trỏ tới image build lại với dependency khác). Kết hợp expand/contract của B2b: bản cũ chạy được trên schema mới thì rollback mới là một lệnh.
+
+**Secret.** Secret vào log bằng: `echo`, `set -x`, stack trace, `curl -v`, action độc in `${{ secrets }}`. `permissions:` mặc định `contents: read`, mở từng quyền theo job; `gitleaks` pre-commit và trong CI; bật secret scanning + push protection của GitHub. Secret vào VPS bằng file ngoài image (3.6), không bằng env commit trong Compose.
+
+**LAB B4b** — theo Luật 7 của [hợp đồng AI](/he-thong-hoc): Dockerfile, workflow, Compose là nội dung học, AI đưa mẫu có **ba lỗi cố ý**, bạn tìm, sửa, giải thích:
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | Nhận mẫu workflow + Dockerfile có 3 lỗi cố ý (đợt rà soát gợi ý: một action chưa ghim SHA, một secret in ra log, một image chạy root); tìm đủ 3, sửa, viết lý do từng lỗi | Commit sửa + ba mục trong `notes/ERRORS.md` |
+| 2 | Ghim mọi action theo SHA; Dependabot cho `github-actions`, `gradle`, `docker`; `verification-metadata.xml` + wrapper validation | PR đầu tiên Dependabot mở được merge; CI đỏ khi bạn cố tình sửa một checksum |
+| 3 | CycloneDX SBOM đính vào release; Trivy `fs` + `image` làm required check | Một CVE thật bị chặn (chọn phiên bản cũ có CVE để chứng minh), nâng phiên bản, CI xanh |
+| 4 | Multi-stage, `USER` non-root, base ghim digest; `docker run --rm <image> id` in `uid=10001` | Kích thước image trước/sau; output `id` |
+| 5 | cosign keyless ký trong Actions; VPS `cosign verify` trước khi chạy; thử deploy một image build tay không ký → script dừng | Log `verify` đậu và log dừng |
+| 6 | Rollback theo digest: deploy v1.4 → ghi `CURRENT`/`PREVIOUS` → rollback bằng một lệnh, bấm giờ; diễn tập lại ở 4.4 khi có outbox | Thời gian rollback trong `bench/`; ADR |
+
+**Ngưỡng đạt:** tìm đủ 3/3 lỗi cố ý; CI có bốn cổng đỏ được (checksum sai, action chưa ghim, CVE HIGH, image không ký); rollback theo digest dưới 60 giây có số đo; trả lời "image của bạn ai ký" bằng tên workflow và issuer OIDC, không bằng tên công cụ.
+
+**Câu hỏi phỏng vấn thật rơi vào đây:** #21–22 bảng cuối trang.
+
+### B4c — Observability theo OpenTelemetry (10h · P4, ngay sau 4.4)
+
+**Vì sao dời lên và rút khỏi bậc cắt.** Bản cũ dạy Micrometer → Prometheus text ở 2.10 và để OpenTelemetry ở 5.5 (P5) — thứ bị cắt gần đầu tiên khi trễ. Năm 2026 **OTLP là định dạng tín hiệu mặc định của ngành**: Spring Boot 4 có `spring-boot-starter-opentelemetry` một dòng; Micrometer vẫn là API nhưng xuất OTLP; OTel Java agent gắn vào Ktor 3 không sửa code; Grafana, Datadog, Honeycomb đều nhận OTLP; Prometheus 3 nhận OTLP thẳng. Dạy Prometheus text rồi 24 tháng sau mới chạm OTel là dạy cách 2020. Về chiều sâu: bẫy `MDCContext` ở B4a **chính là** bài toán context propagation của trace — học một lần cho cả log và trace. Về vị trí: outbox 4.4 là chỗ trace **đứt** (worker chạy sau không biết request nào sinh ra nó) — điểm triệu chứng, nên đặt ngay sau 4.4.
+
+| # | Khái niệm | Câu phải trả lời được |
+|---|---|---|
+| 1 | OTLP, SDK, agent, Collector | Ba tín hiệu đi đường nào từ JVM tới Grafana; agent khác SDK chỗ nào; Collector để làm gì |
+| 2 | W3C Trace Context | `traceparent` chứa gì; nó đi qua Caddy, WebSocket, outbox thế nào |
+| 3 | Span, attribute, resource | Một `move` là mấy span; attribute nào là cardinality bomb |
+| 4 | Propagation qua coroutine | Vì sao span cha mất sau `withContext`; `opentelemetry-extension-kotlin` làm gì |
+| 5 | Sampling head vs tail | 100% trace tốn gì; tail sampling giữ được lỗi hiếm bằng cách nào |
+| 6 | Log ↔ trace ↔ metric nối nhau | `trace_id` trong log; exemplar từ histogram nhảy sang trace |
+| 7 | Grafana đọc OTLP | Tempo (trace), Loki (log), Prometheus/Mimir (metric); LGTM một container |
+
+**Đường đi của tín hiệu.** App → OTel SDK (hoặc Java agent `-javaagent:opentelemetry-javaagent.jar`, zero-code, có instrumentation Ktor 3 và JDBC) → OTLP (gRPC 4317 / HTTP 4318) → **OTel Collector** (nhận, lọc, sample, đổi định dạng, fan-out) → Tempo / Loki / Prometheus → Grafana. Collector không bắt buộc nhưng là chỗ đặt tail sampling và là nơi đổi backend mà app không đổi. Trong Compose, image `grafana/otel-lgtm` gói cả bốn — một dịch vụ, một cổng 4317. Spring 4.1 dùng `spring-boot-starter-opentelemetry`; Ktor dùng agent hoặc `opentelemetry-ktor-3.0`. Micrometer của 2.10 **không bỏ**: nó là API metric, `micrometer-registry-otlp` xuất OTLP — RED/USE của B4a đọc từ đây.
+
+**`traceparent` qua ba chặng khó.** REST: Caddy chuyển tiếp header nguyên trạng; agent đọc, tạo span con. WebSocket: một kết nối sống hàng giờ — **một trace cho cả session là sai** (trace vô hạn, không sample được); một trace cho **mỗi message** là đúng. `traceparent` không có trong frame, bạn đặt nó vào envelope 1.5 (`meta.traceparent`, tuỳ chọn, client bỏ qua được — luật versioning B1); server tạo root span cho mỗi message nếu thiếu. Outbox: hàng `outbox` phải **lưu `traceparent`** lúc ghi; worker đọc ra và tạo span có link (hoặc parent) về trace gốc — không làm thì trace đứt đúng ở "trận kết thúc → cộng vàng", chỗ G4 quan tâm nhất. Coroutine: span nằm trong `Context` gắn thread, đổi thread là mất — `opentelemetry-extension-kotlin` cho `span.asContextElement()`, cùng vị trí và cùng bẫy chụp-lúc-tạo với `MDCContext`. Agent tự đưa `trace_id`/`span_id` vào MDC — log của B4a nối thẳng vào trace.
+
+**Sampling.** Head: quyết ở root span (`parentbased_traceidratio`, ví dụ 10%) — rẻ, nhưng lỗi hiếm 0,1% rơi mất 90%. Tail: Collector giữ trace trong RAM vài giây, xem trọn rồi mới quyết (giữ 100% trace có lỗi hoặc chậm, 5% phần còn lại) — chính xác, tốn RAM Collector. CARO một VPS: head 100% lúc dev; production dùng tail với luật "mọi trace có `error` hoặc dài hơn 300ms" — đúng con số SLI của B4a.
+
+**Cardinality.** Attribute có giá trị vô hạn (`player_id`, `match_id`) hợp với span, **cấm** trên label metric — mỗi giá trị là một time series, RAM Prometheus nổ theo số người chơi. Luật: label metric chỉ nhận tập hữu hạn (`type`, `status`, `version`); id đi vào span attribute và log.
+
+**LAB B4c:**
+
+| # | Việc | Bằng chứng |
+|---|---|---|
+| 1 | `grafana/otel-lgtm` vào Compose; agent OTel vào jar CARO; Micrometer đổi sang OTLP registry; 6 panel RED/USE của B4a trên Grafana đọc từ OTLP; một alert rule theo **tốc độ đốt error budget** | Ảnh dashboard + query; alert bắn khi tự gây G3 |
+| 2 | Một trace hoàn chỉnh `purchase`: WS frame → room actor → ledger → outbox → worker → Postgres, hiện trên Tempo, **không đứt** ở outbox | Ảnh trace; cột `outbox.traceparent` trong migration |
+| 3 | Test propagation: span cha còn sau `withContext(Dispatchers.IO)` và trong coroutine con — đỏ trước khi thêm `asContextElement()`, xanh sau | Hai commit |
+| 4 | Tail sampling "error hoặc dài hơn 300ms"; bắn 10.000 `move` với 1% lỗi cài sẵn; đếm trace giữ lại | Số trace giữ / tổng; RAM Collector |
+| 5 | Từ histogram p99 `move` bấm exemplar nhảy sang đúng trace chậm; từ trace nhảy sang log cùng `trace_id`; runbook B4a #3 đổi bước "xác nhận" sang dùng trace | Ảnh ba bước; runbook đã sửa |
+
+**Ngưỡng đạt:** một trace `purchase` end-to-end qua outbox không đứt, có ảnh trong README; test propagation đỏ → xanh hai commit; dashboard 6 panel + 1 alert rule chạy từ OTLP; giải thích "trace đi qua WebSocket thế nào" bằng quyết định thiết kế của mình, không bằng tên thư viện.
+
+**Câu hỏi phỏng vấn thật rơi vào đây:** #27–28 bảng cuối trang, cộng #18.
+
+## Đã kéo về Lõi — và phần còn đẩy sang Mở rộng
+
+Bản cũ đẩy bốn hạng mục 24h sang mục "Backend nâng cao" của [Mở rộng](/mo-rong). Quyết định 07/09/2026 kéo phần lớn về Lõi — không vì tham vọng, mà vì quỹ giờ thật 12–15h/tuần cho phép, và vì mỗi cái là lab duy nhất tái hiện một cơ chế mà trang này hỏi tới bốn lần ("2 instance thì sao?") nhưng chưa bao giờ chạy.
+
+| Hạng mục | Trước | Nay |
+|---|---|---|
+| OpenTelemetry trace phân tán | 5.5 ở P5, bậc cắt 2; "đầy đủ" ở Mở rộng | **B4c, 10h, P4** — rút khỏi bậc cắt; sampling và propagation qua outbox nằm ngay trong đó |
+| Job queue trên Postgres với `SKIP LOCKED` + DLQ | Mở rộng, 8h | Lõi P3, 8h (phương án C) — giờ tính ở module, không tính vào 68h trang này |
+| Ports & adapters, ranh giới module của modular monolith | Mở rộng, 8h | Lõi P4, 8h (phương án C) — giờ tính ở module |
+| Feature flag, canary / blue-green | Mở rộng, 4h | Phần "chạy 2 instance thật" — rolling deploy sticky WS, lock `SET NX PX`, fencing token, ép treo bằng `kill -STOP` — về Lõi P4 cạnh 4.4, 14h (giờ ở module). Feature flag và canary chia lưu lượng thật vẫn ở [Mở rộng](/mo-rong) |
+
+Phần còn ở Mở rộng giữ nhãn **năm 3 hoặc tháng đầu đi làm**: ở công ty bạn gặp chúng trong codebase thật với người review — học ở đó nhanh gấp nhiều lần.
 
 ## Câu hỏi phỏng vấn thật rơi vào trang này
 
@@ -280,20 +443,37 @@ Trả lời bằng tên thư viện là trượt (luật 9); trả lời bằng 
 | 18 | p99 tăng gấp 10 — nhìn cái gì đầu tiên? | B4, 4.3 |
 | 19 | Postgres chậm gấp 10 — request thread làm gì, chờ bao lâu, bỏ ở đâu? Retry ở đâu thì an toàn? | B4, B1 |
 | 20 | Backup để đâu, restore mất bao lâu? Deploy lên đâu? | B2, 2.7 |
+| 21 | Image production của bạn ai ký? Dependency có CVE thì biết bằng cách nào? | B4b |
+| 22 | Vì sao ghim GitHub Action theo SHA chứ không theo tag? Chuyện gì xảy ra với tj-actions? | B4b |
+| 23 | Vì sao Postgres đọc không chặn ghi? `UPDATE` làm gì với dòng cũ? | B2a |
+| 24 | Xoá một triệu dòng rồi mà bảng không nhỏ đi — vì sao? `idle in transaction` thì nguy hiểm chỗ nào? | B2a |
+| 25 | Có index mà planner vẫn Seq Scan — vì sao, kiểm bằng gì, và khi nào nó đúng? | B2a |
+| 26 | `40001` là lỗi gì? Vì sao retry chứ không phải lock chặt hơn? | B2a, 3.3 |
+| 27 | `traceparent` là gì? Trace đi qua WebSocket và outbox thế nào? | B4c |
+| 28 | Log, metric, trace — bạn xuất ra định dạng gì, ai đọc, sample ở đâu? | B4c |
 
 ## 📚 Nguồn học
 
+Bảng gộp toàn lộ trình — nguồn · miễn phí hay không · module · chương · đọc trước hay sau lab — ở [Nguồn học](/nguon-hoc). Dưới đây chỉ là nguồn của bốn khối này. DDIA trích theo **tên chương**, không theo số: bản 1 (2017) và bản 2 (Kleppmann + Riccomini, 2026) đánh số khác nhau, và bạn mua sách năm 2026 gần như chắc chắn cầm bản 2.
+
 | Nguồn | Khối | Đọc phần nào |
 |---|---|---|
-| Martin Kleppmann — *Designing Data-Intensive Applications* | B1, B2 | Ch.7, 9, 11 đã dùng ở 3.3/3.4; thêm ch.4 *Encoding and Evolution* |
+| Martin Kleppmann, Chris Riccomini — *Designing Data-Intensive Applications*, bản 2 (2026) | B1, B2 | *Encoding and Evolution* (B1 versioning) · *Storage and Retrieval* (B2a: B-tree, WAL, vì sao Postgres không dùng LSM) · *Transactions* (B2a mục 5: snapshot isolation, write skew, serializability) · *The Trouble with Distributed Systems* và *Consistency and Consensus* — đọc ở lát D3/D4 của [Roadmap](/roadmap) trước 3.3/3.4, không phải "đã dùng" |
+| Hironobu Suzuki — *The Internals of PostgreSQL* (interdb.jp/pg, miễn phí, có hình) | B2a | *Database Cluster, Databases and Tables* (bố cục heap page — mục 1) · *Query Processing* (cost estimation, plan tree — mục 4) · *Concurrency Control* (MVCC, snapshot, visibility, SSI — mục 1 và 5) · *Vacuum Processing* (mục 3) · *Heap Only Tuple and Index-Only Scans* (HOT — mục 1) · *Write Ahead Logging* (mục 2). Đọc **sau** lab của từng mục |
+| Postgres docs | B2a, B2b | *Concurrency Control* đọc trọn (isolation, `40001`, SSI) · *Routine Vacuuming* (wraparound) · *Using EXPLAIN* và *Statistics Used by the Planner* · *Reliability and the Write-Ahead Log* · Notes của `ALTER TABLE` · *Building Indexes Concurrently* |
+| Bruce Momjian — *MVCC Unmasked* (slide, miễn phí) | B2a | Bản 20 phút của chương Concurrency Control — xem trước LAB 1 nếu cần hình |
+| Martin Kleppmann — *Hermitage* (GitHub, miễn phí); Jepsen — bài phân tích PostgreSQL | B2a | Isolation thật khác nhãn: bảng dị thường × mức của từng DB — đối chiếu bảng LAB 5 |
 | Roy Fielding — luận án, chương 5 | B1 | Chỉ phần REST constraints |
 | RFC 9110 *HTTP Semantics*; RFC 9457 *Problem Details for HTTP APIs* (thay RFC 7807) | B1 | Idempotent methods, conditional requests, status codes; 9457 đọc trọn — 7807 chỉ để nhận ra khi gặp trong code cũ |
+| Spring Framework 7 reference — *API Versioning*; Spring Boot 4 release notes | B1 | Versioning dựng sẵn; tên starter và property đổi — kiểm ở tuần mở 3.0 |
 | RFC 6749 + RFC 7636; RFC 8252; RFC 9700; RFC 7519; OpenID Connect Core | B3 | Authorization code, PKCE — đọc hiểu; 8252: vì sao native app phải PKCE + trình duyệt hệ thống; 9700 *OAuth 2.0 Security BCP*: PKCE bắt buộc, refresh rotation + reuse detection, §4.14 liên kết theo `sub`; JWT registered claims, mục `alg`; OIDC Core mục 3.1.3.7 xác minh ID token |
 | *Use The Index, Luke* | B2 | Đã dùng ở 2.1; thêm phần khoá ngẫu nhiên và pagination |
-| Google SRE Book | B4 | *Service Level Objectives*; *Monitoring Distributed Systems* |
-| OWASP API Security Top 10; Cheat Sheet *Password Storage*, *JSON Web Token* | B1, B3 | BOLA (chính là IDOR); tham số argon2id/bcrypt; bẫy JWT |
-| Postgres docs: `ALTER TABLE`, `CREATE INDEX` | B2 | Mục Notes của `ALTER TABLE`; *Building Indexes Concurrently* |
-| 12factor.net | B4 | III Config, X Dev/prod parity |
+| Google SRE Book | B4a | *Service Level Objectives*; *Monitoring Distributed Systems* |
+| OWASP Top 10:2025 — A03 *Software Supply Chain Failures*; OWASP API Security Top 10; Cheat Sheet *Password Storage*, *JSON Web Token* | B1, B3, B4b | A03 đọc trọn mục; BOLA (chính là IDOR); tham số argon2id/bcrypt; bẫy JWT |
+| GitHub Docs — *Security hardening for GitHub Actions*; bài phân tích sự cố tj-actions/changed-files (CVE-2025-30066) | B4b | Ghim SHA, `permissions:`, OIDC; đọc sự cố để hiểu vì sao tag không tin được |
+| Sigstore cosign docs; CycloneDX; Trivy docs; Gradle — *Dependency verification*; slsa.dev | B4b | Keyless signing và verify; SBOM; quét image/fs; `verification-metadata.xml`; SLSA chỉ để gọi tên các mức |
+| OpenTelemetry docs — Java agent, *Kotlin coroutines* (`opentelemetry-extension-kotlin`), Collector *tail sampling*; W3C *Trace Context*; Grafana — *OpenTelemetry LGTM* | B4c | Đường đi tín hiệu; propagation qua coroutine; sampling; `traceparent`; Compose một container |
+| 12factor.net | B4a | III Config, X Dev/prod parity |
 
 ## 🔒 Hợp đồng AI cho trục này
 
@@ -304,7 +484,10 @@ Theo [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-thêm--bản
 | Thiết kế API, mô hình dữ liệu (B1, B2 schema) | Giải thích khái niệm; **ra đề** — take-home giả, schema có lỗi cài sẵn (luật 8, 9); review bản thiết kế **bằng câu hỏi** | Đưa bản thiết kế; đưa bản sửa. Review trả về câu hỏi, không trả về schema mới |
 | Đọc hiện vật (`pg_locks`, `pg_stat_activity`, dashboard) | Dạy cách đọc một **loại** hiện vật: `wait_event_type` nghĩa gì, panel nào là saturation | Nhìn output **của bạn** và nói nguyên nhân |
 | Migration chạm dữ liệu thật (LAB B2); session, refresh token, shared state (LAB B3) | Tên khái niệm, link RFC, câu hỏi | Vùng AI-free suốt lộ trình — kể cả pseudo-code |
-| Runbook, tài liệu SLO (B4) | Hỏi "runbook này thiếu bước nào?" | Viết hộ — runbook không phải của bạn thì 2h sáng bạn không dùng được |
+| Runbook, tài liệu SLO (B4a) | Hỏi "runbook này thiếu bước nào?" | Viết hộ — runbook không phải của bạn thì 2h sáng bạn không dùng được |
+| Postgres bên trong (B2a) | Ra đề: bảng có bloat cài sẵn, `EXPLAIN` giả có plan sai, log `VACUUM VERBOSE` giả (bậc R1 — sau G1); hỏi "node nào lệch rows nhiều nhất?" | Nhìn `EXPLAIN` hay `pg_stat_activity` **của bạn** và nói nguyên nhân; viết vòng retry `40001` cho ví — shared state, AI-free |
+| Chuỗi cung ứng (B4b) — Dockerfile, workflow, Compose | Luật 7: mẫu có ba lỗi cố ý; giải thích một cơ chế (OIDC keyless là gì) | Đưa bản đúng; sửa hộ lỗi bạn chưa tìm ra |
+| Observability (B4c) | Dạy đọc một **loại** hiện vật: span nào là critical path, exemplar là gì; ra đề trace giả có chỗ đứt | Nhìn trace **của bạn** và chỉ chỗ chậm; code propagation chạm session và room actor — AI-free |
 
 Mọi phiên AI ghi prompt nguyên văn vào `notes/ai-sessions/`.
 
@@ -313,4 +496,5 @@ Mọi phiên AI ghi prompt nguyên văn vào `notes/ai-sessions/`.
 1. Đọc lần đầu ngay sau 1.5 — chỉ B1; làm LAB B1 sau 2.3, khi có leaderboard thật. Phần còn lại đóng tới đúng phase của nó.
 2. Nền chạy dưới cả bốn khối — tiến trình, bộ nhớ, mạng, Linux — ở [Nền tảng hệ thống](/nen-tang-he-thong).
 3. Phía client chạm B3 (token trên thiết bị, install-id) ở [Android core](/android-core).
-4. Vị trí 30h này trong bức tranh lớn và thứ tự cắt khi trễ: [Roadmap 26 tháng](/roadmap). Bốn hạng mục 24h, nằm trong khối 54h của mục "Backend nâng cao — năm 3 hoặc tháng đầu đi làm": [Mở rộng](/mo-rong).
+4. Vị trí 68h này trong bức tranh lớn và thứ tự cắt khi trễ: [Roadmap 27 tháng](/roadmap). Phần còn đẩy sang mục "Backend nâng cao — năm 3 hoặc tháng đầu đi làm": [Mở rộng](/mo-rong).
+5. Mọi nguồn của trang này, cùng nguồn của phần còn lại trong 1.100h, ở một bảng duy nhất — ưu tiên miễn phí, ghi rõ chương và đọc trước hay sau lab: [Nguồn học](/nguon-hoc).

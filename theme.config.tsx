@@ -8,7 +8,7 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/thanhhai287/kotlin-journey/blob/main',
   footer: {
-    text: 'Hành trình Kotlin của Hải · Game Server & Backend Engineer · W1 = Thứ Hai 07/09/2026 → 05/11/2028',
+    text: 'Hành trình Kotlin của Hải · Game Server & Backend Engineer · W1 = Thứ Hai 07/09/2026 → 03/12/2028',
   },
   editLink: {
     text: 'Sửa trang này trên GitHub →',
@@ -34,7 +34,7 @@ const config: DocsThemeConfig = {
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta
         name="description"
-        content="Lộ trình 26 tháng từ biết cú pháp Kotlin đến Game Server / Backend Engineer — 839h, 94 tuần chạy, một sản phẩm CARO chạy public."
+        content="Lộ trình 27 tháng từ biết cú pháp Kotlin đến Game Server / Backend Engineer — 1.100h, 97 tuần chạy, một sản phẩm CARO chạy public."
       />
     </>
   ),
