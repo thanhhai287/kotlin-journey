@@ -60,9 +60,9 @@ Vai trò từng buổi, cấu trúc buổi và luật cấm vượt bậc nằm 
 | Giai đoạn | Bậc lịch | Kế hoạch tính | Luật |
 |---|---|---|---|
 | **P0 · W1–15** | ramp **6h → 8h → 10h** — giữ nguyên | 8,3h/tuần chạy (116h / 14 tuần) | Cổng lên bậc là **DP1a (cuối W4)** và **DP1b (cuối W8)**, đo bằng số khối deep-work trọn 70' — xem bảng Điểm quyết định. Không có bậc 12h trong P0 |
-| **P1–P5 · W16–117** | **bậc 12h/tuần**: T2 INPUT 2h · T3 BUILD 2h · T4 BUILD 2h · T5 READ 1,5h · T7 LONG BUILD 4h · CN 30' | **11,9h/tuần chạy** (984h / 83 tuần) — tức điểm danh gần đủ bậc; P3 ở 12,3h cần dùng tới khoảng trần vài tuần | **Trần 14h.** T6 vẫn = 0. Tối Chủ Nhật vẫn nghỉ. Tuần rơi một buổi thì bù bằng trần 14h ở tuần kế — không bù thì tuần đó ăn vào 20 buffer, không ăn vào nội dung |
+| **P1–P5 · W16–117** | **bậc 12h/tuần**: T2 INPUT 2h · T3 BUILD 2h · T4 BUILD 2h · T5 READ 1,5h · T6 LONG BUILD 4h · CN 30' | **11,9h/tuần chạy** (984h / 83 tuần) — tức điểm danh gần đủ bậc; P3 ở 12,3h cần dùng tới khoảng trần vài tuần | **Trần 14h.** T7 vẫn = 0. Tối Chủ Nhật vẫn nghỉ. Tuần rơi một buổi thì bù bằng trần 14h ở tuần kế — không bù thì tuần đó ăn vào 20 buffer, không ăn vào nội dung |
 
-**T7 là slot mặc định cho lab đo đạc** (LONG BUILD 4h); từ P2 T4 cũng là slot lab; P3–P4 chạy chế độ hai-slot-lab.
+**T6 là slot mặc định cho lab đo đạc** (LONG BUILD 4h); từ P2 T4 cũng là slot lab; P3–P4 chạy chế độ hai-slot-lab.
 
 Bốn con số giờ khác nhau vì đo bốn thứ khác nhau: 6–8h/tuần là năng lực **khởi điểm** (P0) · 12h/tuần là **bậc lịch** từ W16, 11,3h/tuần chạy là **kế hoạch** tính trên cả 97 tuần kể cả ramp P0 · 15h/tuần thật là mức **về đích sớm ~5,5 tháng** · ≥10h thật 4 tuần liên tiếp cộng giờ tích luỹ ≥90% là điều kiện **mở trang mở rộng** (giữ nguyên).
 
@@ -265,7 +265,7 @@ Bảng xếp theo **thời điểm**, không theo số hiệu — vì vậy DP5 
 |---|---|---|---|---|
 | **DP0** | 21/09/2026 | Có kích hoạt được không? | Tag `v0.0.1` tồn tại? | Chưa có → trang duy nhất còn mở là trang Ngày 1 (90'). Thử lại. Không có câu "vấn đề nằm ở bạn" |
 | **DP1a** | Cuối W4 | 6h → 8h? | ≥3 trong 4 tuần W1–4 có ≥3 khối deep-work trọn 70' (journal có commit cùng ngày; Ngày 1 đếm là một khối) | Không đạt → giữ 6h |
-| **DP1b** | Cuối W8 | 8h → 10h? | ≥3 trong 4 tuần W5–8 có ≥4 khối deep-work trọn 70' — T7 3h đếm là 2 khối, T5 1h không đếm; bậc 8h có đúng 4 khối lịch (T2, T4, T7×2), không có khối dự phòng | Không đạt → giữ 8h; P0 kéo tối đa 3 tuần (W15 đã tiêu ở tuần lịch 14/09): 2 tuần buffer đời sống của P1 (2 tuần buffer còn lại của P1 là Tết, không dời được) + 1 tuần lấy từ 5 tuần buffer của P2 |
+| **DP1b** | Cuối W8 | 8h → 10h? | ≥3 trong 4 tuần W5–8 có ≥4 khối deep-work trọn 70' — T6 3h đếm là 2 khối, T5 1h không đếm; bậc 8h có đúng 4 khối lịch (T2, T4, T6×2), không có khối dự phòng | Không đạt → giữ 8h; P0 kéo tối đa 3 tuần (W15 đã tiêu ở tuần lịch 14/09): 2 tuần buffer đời sống của P1 (2 tuần buffer còn lại của P1 là Tết, không dời được) + 1 tuần lấy từ 5 tuần buffer của P2 |
 | **DP2** | Cuối W14 | Mở P1? | Bảng tốt nghiệp P0 ≥8/10, mục 1–5 bắt buộc | Thiếu → kéo P0 ≤4 tuần (cùng nguồn như DP1b), không mở trang mở rộng cả năm |
 | **DP3** | Cuối W35 | Client hết cap? Có người chơi? | Giờ web client vs cap 14; log trận từ IP ngoài | Hết cap → đóng băng. Chưa 5 người → vẫn mở P2, 2h/tuần tìm người ≤4 tuần từ dự phòng P2 |
 | **DP5** | W42 (4 tuần sau đợt 0) | Trục apply: backend chung hay game? | Tỉ lệ phản hồi 20 đơn; bảng gap; **tự đếm** tin ITviec/TopDev theo 3 truy vấn ghi sẵn | Backend chung là trục. Gap chỉ ra Spring → 3.0/4.1 giữ; gap chỉ ra SQL/Docker → dồn dự phòng P2 vào đó |

@@ -6,21 +6,21 @@ Trang này là hệ điều hành của cả 27 tháng: nhịp một buổi tố
 
 ## Một buổi tối 2h
 
-Đơn vị cơ bản của lộ trình không phải tháng hay phase — là **một buổi tối 2 giờ**, cấu trúc 10/70/30/10 cố định. Mọi số giờ trên site là giờ đồng hồ tại bàn theo cấu trúc này: một buổi 2h có đúng **một khối deep work 70'**, không hơn. Hai buổi lệch chuẩn có cấu trúc riêng, ghi ở bảng lịch tuần bên dưới: T5 1h (10/45/5) và T7 3h (10/70/10/70/20/10 — **hai khối 70'**). Từ W16 hai buổi ấy dài ra theo bậc 12h — T5 1,5h (10/45/30/5, vẫn không có khối 70') và T7 4h (10/70/10/70/10/70/10 — **ba khối 70'**).
+Đơn vị cơ bản của lộ trình không phải tháng hay phase — là **một buổi tối 2 giờ**, cấu trúc 10/70/30/10 cố định. Mọi số giờ trên site là giờ đồng hồ tại bàn theo cấu trúc này: một buổi 2h có đúng **một khối deep work 70'**, không hơn. Hai buổi lệch chuẩn có cấu trúc riêng, ghi ở bảng lịch tuần bên dưới: T5 1h (10/45/5) và T6 3h (10/70/10/70/20/10 — **hai khối 70'**). Từ W16 hai buổi ấy dài ra theo bậc 12h — T5 1,5h (10/45/30/5, vẫn không có khối 70') và T6 4h (10/70/10/70/10/70/10 — **ba khối 70'**).
 
 ```text
-20:00–20:10  WARM-UP (10')      Active recall, KHÔNG mở note:
+T+0:00–0:10   WARM-UP (10')     Active recall, KHÔNG mở note:
                                 • từ W3: thẻ notes/RECALL.md đến hạn hôm nay — tối đa 5 thẻ, ~4'.
                                   Nói đáp án ra TRƯỚC rồi mới lật; sai → thẻ về hộp 1
                                 • Phase 0: trả lời 3 câu tự kiểm của buổi trước
                                 • từ W20 (T2, T4): đọc 1 bài DSA easy/medium, gọi tên
                                   pattern, phác thảo — KHÔNG giải. 10', không hơn;
                                   hôm đó thẻ RECALL đến hạn dời sang buổi kế
-20:10–21:20  DEEP WORK (70')    MỘT mục tiêu duy nhất, đã ghi sẵn từ hôm trước.
+T+0:10–1:20   DEEP WORK (70')   MỘT mục tiêu duy nhất, đã ghi sẵn từ hôm trước.
                                 Điện thoại ở phòng khác. Notification off.
-21:20–21:50  CONSOLIDATE (30')  Chốt bằng SẢN PHẨM: commit code (dù dở dang),
+T+1:20–1:50   CONSOLIDATE (30') Chốt bằng SẢN PHẨM: commit code (dù dở dang),
                                 cập nhật 1 note, chạy lại test. Ghi thẻ RECALL mới nếu có (≤3, ~30")
-21:50–22:00  CHỐT (10')         Commit cuối + journal 3 dòng (5'), dòng NEXT viết kỹ nhất.
+T+1:50–2:00   CHỐT (10')        Commit cuối + journal 3 dòng (5'), dòng NEXT viết kỹ nhất.
                                 Tắt máy đúng giờ
 ```
 
@@ -56,7 +56,7 @@ Sai ở hộp nào cũng về hộp 1. Không có "gần đúng".
 | **Trần** | ≤3 thẻ mới mỗi buổi · ≤5 thẻ đến hạn mỗi warm-up (~4'). Quá 5 thì thẻ hộp cao chờ hôm sau — **không dồn**, không kéo warm-up quá 10' |
 | **Ghi thẻ khi nào** | ~30" trong 30' CONSOLIDATE, cùng lúc cập nhật note — không phải việc riêng |
 | **Trả lời thế nào** | Nói ra miệng hoặc gõ 1 dòng **trước** khi nhìn đáp án. Nhìn đáp án rồi "à đúng rồi" tính là sai |
-| **Ngày DSA** | Từ W20, warm-up T2 và T4 là bài DSA đọc-phân loại; thẻ đến hạn hôm đó dời sang T3, T5, T7. Hộp lệch một ngày không sao — lệch 0 buổi mới sao |
+| **Ngày DSA** | Từ W20, warm-up T2 và T4 là bài DSA đọc-phân loại; thẻ đến hạn hôm đó dời sang T3, T5, T6. Hộp lệch một ngày không sao — lệch 0 buổi mới sao |
 | **Bảo trì** | 2' trong 30' REVIEW mỗi CN: xoá thẻ hộp 5 đã thành phản xạ, gộp thẻ trùng. File quá 150 dòng là dấu hiệu thẻ quá vụn, không phải dấu hiệu chăm |
 
 Bật ở **W3**, cùng lúc với bảng tuần — khi đã có hai tuần nội dung để hỏi. Tổng chi phí: ~4' warm-up + 30" consolidate + 2' CN, tất cả nằm trong các khung giờ đã tồn tại.
@@ -90,16 +90,16 @@ Bản cũ có 5 trường. FLASH không còn là trường journal — thẻ ôn
 
 ## Lịch tuần theo vai trò
 
-Mỗi ngày có một vai trò cố định. Bạn không quyết định "hôm nay làm loại việc gì" — chỉ quyết định nội dung cụ thể trong vai trò đó. Bảng dưới là **lịch chuẩn 10h** (W9–15); từ W16 vai trò y nguyên, chỉ T5 và T7 dài ra thành **bậc 12h** — ghi trong ngoặc:
+Mỗi ngày có một vai trò cố định. Bạn không quyết định "hôm nay làm loại việc gì" — chỉ quyết định nội dung cụ thể trong vai trò đó. Bảng dưới là **lịch chuẩn 10h** (W9–15); từ W16 vai trò y nguyên, chỉ T5 và T6 dài ra thành **bậc 12h** — ghi trong ngoặc:
 
 | Ngày | Vai trò | Nội dung | Giờ |
 |---|---|---|---|
 | **T2** | INPUT | Lý thuyết mới + lab nhỏ ngay tại chỗ (gõ lại mọi example) | 2h |
 | **T3** | BUILD | Deep work vào project hiện tại | 2h |
 | **T4** | BUILD | Tiếp tục project. 15 phút cuối: recall lý thuyết T2 bằng cách áp vào code | 2h |
-| **T5** | READ CODE | Tuần blank-file: 45' đầu là blank-file test + 15' đọc. Tuần khác: cấu trúc 10/45/5; từ W20, 30' đầu của khối 45' là 1 bài DSA giải thật. Phần đọc: source của lớp **đã tự viết xong** tuần trước, ghi 1 note. **Từ W16: 1,5h** (20:00–21:30), cấu trúc 10/45/30/5 — thêm 30' đọc source, vẫn không có khối 70' | 1h (1,5h) |
-| **T6** | LIGHT / BUFFER | **Không xếp gì.** Đây là van xả — ở mọi bậc, kể cả 12h | 0 |
-| **T7** | LONG BUILD | **Thứ Bảy ban ngày, 14:00–17:00** (hoặc 09:00–12:00), block 3h liền, cấu trúc 10/70/10/70/20/10 — hai khối deep-work 70'. Phần khó nhất của project; slot mặc định cho lab đo đạc. **Từ W16: 4h** (14:00–18:00 hoặc 09:00–13:00), cấu trúc 10/70/10/70/10/70/10 — ba khối | 3h (4h) |
+| **T5** | READ CODE | Tuần blank-file: 45' đầu là blank-file test + 15' đọc. Tuần khác: cấu trúc 10/45/5; từ W20, 30' đầu của khối 45' là 1 bài DSA giải thật. Phần đọc: source của lớp **đã tự viết xong** tuần trước, ghi 1 note. **Từ W16: 1,5h** (22:00–23:30), cấu trúc 10/45/30/5 — thêm 30' đọc source, vẫn không có khối 70' | 1h (1,5h) |
+| **T6** | LONG BUILD | **Tối Thứ Sáu, 21:30–00:30**, block 3h liền, cấu trúc 10/70/10/70/20/10 — hai khối deep-work 70'. Phần khó nhất của project; slot mặc định cho lab đo đạc. **Từ W16: 4h** (20:30–00:30), cấu trúc 10/70/10/70/10/70/10 — ba khối. Ở bậc 6h chỉ 2h như mọi buổi | 3h (4h) |
+| **T7** | LIGHT / BUFFER | **Không xếp gì.** Đây là van xả — ở mọi bậc, kể cả 12h | 0 |
 | **CN** | REVIEW + PLAN | Điền bảng tuần, gửi public log, 1 dòng mục tiêu tuần tới, 2' dọn `notes/RECALL.md`. Tối CN nghỉ tuyệt đối — ở mọi bậc | 30' |
 
 Hai buổi BUILD đứng ngay sau buổi INPUT duy nhất là cố ý: lý thuyết không được áp vào code trong vòng 48 giờ là lý thuyết sắp bốc hơi. Từ P2, T4 cũng là slot lab khi module có ≥10h lab.
@@ -110,15 +110,15 @@ Vai trò không đổi trong 27 tháng. Thứ thay đổi là **số buổi và 
 
 | Bậc | Buổi | Giờ/tuần | Khối deep-work 70' | T5 READ CODE | Blank-file |
 |---|---|---|---|---|---|
-| **6h** (W1–4) | T2 INPUT 2h · T4 BUILD 2h · T7 LONG BUILD 2h · CN 30' (từ W3) | 6–6,5 | **3** (T2 · T4 · T7 2h = 1 khối) | 20' cuối T4: đọc lại code của chính mình tuần trước | Chưa có |
-| **8h** (W5–8) | T2 INPUT 2h · T4 BUILD 2h · T5 READ 1h · T7 LONG BUILD 3h · CN 30' | 8,5 | **4** (T2 · T4 · T7 3h = 2 khối; T5 1h không đếm) | 1h, đọc source của lớp đã tự viết xong tuần trước | 45' đầu T5, từ W6 |
-| **10h chuẩn** (W9–15) | T2 INPUT 2h · T3 BUILD 2h · T4 BUILD 2h · T5 READ 1h · T7 LONG BUILD 3h · CN 30' | 10,5 | **5** (T2 · T3 · T4 · T7 = 2 khối) | Như trên | 45' đầu T5 |
-| **12h** (W16–117) | T2 INPUT 2h · T3 BUILD 2h · T4 BUILD 2h · T5 READ 1,5h · T7 LONG BUILD 4h · CN 30' | 12 — **trần 14** | **6** (T2 · T3 · T4 · T7 4h = 3 khối; T5 vẫn không đếm) | 1,5h theo bảng T5 của từng module; từ W20 chứa 1 bài DSA giải thật ở tuần không blank-file | 45' đầu T5 |
+| **6h** (W1–4) | T2 INPUT 2h · T4 BUILD 2h · T6 LONG BUILD 2h · CN 30' (từ W3) | 6–6,5 | **3** (T2 · T4 · T6 2h = 1 khối) | 20' cuối T4: đọc lại code của chính mình tuần trước | Chưa có |
+| **8h** (W5–8) | T2 INPUT 2h · T4 BUILD 2h · T5 READ 1h · T6 LONG BUILD 3h · CN 30' | 8,5 | **4** (T2 · T4 · T6 3h = 2 khối; T5 1h không đếm) | 1h, đọc source của lớp đã tự viết xong tuần trước | 45' đầu T5, từ W6 |
+| **10h chuẩn** (W9–15) | T2 INPUT 2h · T3 BUILD 2h · T4 BUILD 2h · T5 READ 1h · T6 LONG BUILD 3h · CN 30' | 10,5 | **5** (T2 · T3 · T4 · T6 = 2 khối) | Như trên | 45' đầu T5 |
+| **12h** (W16–117) | T2 INPUT 2h · T3 BUILD 2h · T4 BUILD 2h · T5 READ 1,5h · T6 LONG BUILD 4h · CN 30' | 12 — **trần 14** | **6** (T2 · T3 · T4 · T6 4h = 3 khối; T5 vẫn không đếm) | 1,5h theo bảng T5 của từng module; từ W20 chứa 1 bài DSA giải thật ở tuần không blank-file | 45' đầu T5 |
 
-- **Khối deep-work 70' là đơn vị đếm của cổng lên bậc và của bảng tuần**, không phải "buổi": T7 3h chứa hai khối, T7 4h chứa ba, T5 không chứa khối nào ở bậc nào. Mục tiêu 3/4/5/6 khối ở bốn bậc là **đúng bằng số khối lịch có** — không có khối dự phòng. Cổng: **DP1a** (cuối W4) = ≥3 khối/tuần trong **≥3 của 4 tuần** W1–4 — Ngày 1 (90') đếm là một khối; rơi đúng một tuần là trong kế hoạch, khớp luật 90% bên dưới. **DP1b** (cuối W8) = ≥4 khối/tuần ở W5–8. Hiện vật và cách chấm ở [Lịch 14 tuần](/phase-0/lich-14-tuan).
+- **Khối deep-work 70' là đơn vị đếm của cổng lên bậc và của bảng tuần**, không phải "buổi": T6 3h chứa hai khối, T6 4h chứa ba, T5 không chứa khối nào ở bậc nào. Mục tiêu 3/4/5/6 khối ở bốn bậc là **đúng bằng số khối lịch có** — không có khối dự phòng. Cổng: **DP1a** (cuối W4) = ≥3 khối/tuần trong **≥3 của 4 tuần** W1–4 — Ngày 1 (90') đếm là một khối; rơi đúng một tuần là trong kế hoạch, khớp luật 90% bên dưới. **DP1b** (cuối W8) = ≥4 khối/tuần ở W5–8. Hiện vật và cách chấm ở [Lịch 14 tuần](/phase-0/lich-14-tuan).
 - **Cột giờ và giờ đồng hồ của P0:** cột giờ module của P0 là ramp 6/8/10 = 116h — journal và blank-file nằm trong buổi nên đã ở trong cột đó; buổi CN 30' (W3–14, 6h) nằm **ngoài** cột này — giờ đồng hồ thật của P0 là **122h**. 15h nghi thức của P0 = 9h trong buổi (journal + blank-file) + 6h CN ngoài buổi. **P0 không đổi một chữ** so với bản trước: W1–15, 116h, ramp 6→8→10, mọi mốc DP0/DP1a/DP1b/DP2 và blank-file W6/8/10/12/14.
-- **Trần 14h là trần, không phải mục tiêu.** Bậc 12h không có bậc trên. Tuần nào dư sức thì được thêm **tối đa 2h** — một khối nữa ở T7, hoặc T5 kéo lên 2h — và chỉ để bù buổi rơi **trong cùng tuần**; T6 và tối CN không bao giờ nhận giờ. Vượt 14h là vi phạm hard stop, ghi vào `notes/INCIDENTS.md` như một sự cố: tuần 16h là cách nhanh nhất để có tuần 0h kế tiếp.
-- **T6 không xếp gì ở mọi bậc.** Mất T6 không tính lỡ lịch.
+- **Trần 14h là trần, không phải mục tiêu.** Bậc 12h không có bậc trên. Tuần nào dư sức thì được thêm **tối đa 2h** — một khối nữa ở T6, hoặc T5 kéo lên 2h — và chỉ để bù buổi rơi **trong cùng tuần**; T7 và tối CN không bao giờ nhận giờ. Vượt 14h là vi phạm hard stop, ghi vào `notes/INCIDENTS.md` như một sự cố: tuần 16h là cách nhanh nhất để có tuần 0h kế tiếp.
+- **T7 không xếp gì ở mọi bậc.** Mất T7 không tính lỡ lịch.
 - Tuần chạy = tuần lịch có ≥1 commit và ≥1 journal. Tiến độ đếm bằng tuần chạy: **97 tuần chạy trong 117 tuần lịch** (26,9 tháng, 07/09/2026 → 03/12/2028), 20 tuần còn lại là Tết, ốm, đời sống.
 - **Nhịp mới:** 1.100h / 97 tuần chạy = **11,3h/tuần chạy** (P0 riêng 8,3h vì ramp; P1–P5 = 984h / 83 tuần chạy = 11,9h). So bản 839h / 94 tuần chạy (8,9h/tuần): +261h nội dung nhưng chỉ +3 tuần chạy và +4 tuần lịch — dài thêm 1 tháng, không phải 8 — vì nhịp lên bậc 12h, không vì kéo lịch. 261h ấy là 133h phương án C (ARENA v2 prediction/reconciliation, job queue, Kafka/NATS, gRPC, HikariCP theo Little's Law…) và 128h lấp bảy tầng đang mỏng (Postgres bên trong, JVM bên trong, concurrency ở mức lệnh CPU, chạy 2 instance thật, Redis, tầng giao thức thô, chuỗi cung ứng/CI, OTel, thang AI 18h) — chi tiết ở [Roadmap](/roadmap). Ba trục nền tảng ([Nền tảng hệ thống](/nen-tang-he-thong) · [Android core](/android-core) · [Backend core](/backend-core), 84h) vẫn đan vào P1–P4 như cũ.
 - **Không còn hệ số 90% giấu sẵn.** Bản 839h tính ở 9h/tuần = 90% điểm danh của lịch 10,5h. Bản này từ W16 cần 11,9h/tuần chạy trên lịch 12h — gần điểm danh đủ; đệm nằm ở trần 14h (bù buổi rơi trong tuần) và 20 tuần buffer (hấp thụ tuần mất), không nằm ở hệ số. **Lịch là hệ quả của năng lực đo được, không phải mục tiêu:** giữ được 14h thật thì P1–P5 cần ~70 tuần chạy thay vì 83, về đích sớm ~3 tháng; chỉ giữ được 10h thì cần ~98 tuần chạy — ăn gần hết 19 tuần buffer của P1–P5, vẫn về 03/12/2028 nhưng không còn chỗ cho Tết và ốm, và thứ tự cắt ở [Roadmap](/roadmap) sẽ được áp. P3 (12,3h/tuần chạy) là phase duy nhất đứng trên lịch 12h — đó là nơi trần 14h được dùng đến, không phải ngoại lệ.
@@ -141,13 +141,13 @@ Thứ giết một lộ trình 27 tháng không phải tuần bận — mà là 
 
 | Tình huống | Quy tắc |
 |---|---|
-| Đơn vị đếm | Mọi luật dưới đây đếm bằng **buổi đã xếp** theo bậc (T2 · T4 · T7 ở bậc 6h; thêm T5 ở 8h; thêm T3 ở 10h; bậc 12h cùng năm buổi ấy, chỉ T5 và T7 dài hơn), không đếm ngày lịch. **Ngày không xếp buổi là ngày nghỉ** — T6 ở mọi bậc, T3 và T5 ở bậc 6h, T3 ở bậc 8h — không tính, không phải "lỡ", không cần 20 phút gì cả |
+| Đơn vị đếm | Mọi luật dưới đây đếm bằng **buổi đã xếp** theo bậc (T2 · T4 · T6 ở bậc 6h; thêm T5 ở 8h; thêm T3 ở 10h; bậc 12h cùng năm buổi ấy, chỉ T5 và T6 dài hơn), không đếm ngày lịch. **Ngày không xếp buổi là ngày nghỉ** — T7 ở mọi bậc, T3 và T5 ở bậc 6h, T3 ở bậc 8h — không tính, không phải "lỡ", không cần 20 phút gì cả |
 | Quá mệt đúng ngày có buổi | **Buổi tối thiểu 20 phút**, không được về 0: 10 phút đọc lại journal tuần + 10 phút chạy lại project, gõ lại 1 hàm nhỏ. Giữ identity "mình là người đang học Kotlin" |
-| Lỡ 1 buổi đã xếp | OK, không sao. **Never miss twice** — không lỡ **2 buổi đã xếp liên tiếp** (lỡ T4 rồi lỡ tiếp T7 là vi phạm; T5–T6 trống ở bậc 6h thì không phải) |
+| Lỡ 1 buổi đã xếp | OK, không sao. **Never miss twice** — không lỡ **2 buổi đã xếp liên tiếp** (lỡ T4 rồi lỡ tiếp T6 là vi phạm; T3, T5 và T7 trống ở bậc 6h thì không phải) |
 | Lỡ ≥3 buổi đã xếp liên tiếp | **KHÔNG học bù.** Buổi tái nhập chỉ làm 3 việc: đọc journal 2 tuần → chạy lại project, đọc code của mình → gõ lại 1 thành phần nhỏ từ trí nhớ. Buổi sau mới quay lại `NEXT:` |
 | Lỡ ≥2 tuần | Recalibrate với AI: co scope tuần tới còn 50%. Bảng tuần ghi "tuần chạy đã mất / buffer còn lại" |
 | Mệt 5 buổi liên tiếp (năng lượng ≤2/5) | **Tuần deload tự động**, không thương lượng: không nội dung mới, chỉ polish + ôn |
-| Đang "vào flow" lúc hết giờ buổi (22:00 tối trong tuần — T5 từ W16 là 21:30; 17:00 T7 — 18:00 từ W16) | **Hard stop.** Ghi dòng suy nghĩ dở vào `NEXT:` rồi tắt máy. Ngủ dưới 6 tiếng → buổi kế tiếp tự động là buổi tối thiểu |
+| Đang "vào flow" lúc hết giờ buổi (T+2:00, và muộn nhất **00:30** dù bắt đầu trễ — T5 ngắn hơn; T6 dài 3h/4h vẫn dừng ở 00:30) | **Hard stop.** Ghi dòng suy nghĩ dở vào `NEXT:` rồi tắt máy. Ngủ dưới 6 tiếng → buổi kế tiếp tự động là buổi tối thiểu |
 
 Học bù là cái bẫy: nó biến một tuần lỡ thành hai tuần kiệt sức. Hệ thống này thà mất vài buổi còn hơn mất người học. **Cấm dồn giờ** — giờ thiếu của tuần trước không cộng vào tuần sau; bù trong cùng tuần dưới trần 14h là giới hạn duy nhất được phép.
 
@@ -206,7 +206,7 @@ Cuối Phase 0, blank-file là tiêu chí tốt nghiệp bắt buộc: ≥3/5 l�
 
 | Cột | Đo | Báo động |
 |---|---|---|
-| **Khối deep-work trọn 70'** | Số khối (mục tiêu 3 ở bậc 6h, 4 ở 8h, 5 ở 10h, 6 ở 12h — T7 3h đếm là 2 khối, T7 4h là 3 khối, T5 không đếm) | ≤50% mục tiêu 2 tuần liên tiếp |
+| **Khối deep-work trọn 70'** | Số khối (mục tiêu 3 ở bậc 6h, 4 ở 8h, 5 ở 10h, 6 ở 12h — T6 3h đếm là 2 khối, T6 4h là 3 khối, T5 không đếm) | ≤50% mục tiêu 2 tuần liên tiếp |
 | **Rebuild pass** | Đạt/tổng (để trống W1–5) | Fail 2 liên tiếp → chế độ sửa chữa |
 | **Phép đo mới** | Số file `bench/` có commit hash (từ P1) | 0 trong tuần có BUILD → tuần chưa xong |
 | **Cap** | % cap của module đang chạy | ≥80% → cờ vàng, CN ghi "còn thiếu gì để dừng" |
@@ -397,7 +397,7 @@ Lịch trượt thì mốc quý vẫn giữ theo tuần lịch, còn đề bài 
 
 ## 🛠️ Thiết lập hệ thống
 
-Không có việc setup nào chặn Ngày 1. Bản cũ có 10 ô checklist ở đây — đã xoá, vì chúng là một phần lý do 5 tuần vừa qua ở 0h. Bốn nghi thức bật ở ba mốc: **W1** journal 3 dòng (kèm chốt khung giờ 20:00–22:00 với gia đình, tắt autocomplete trong IDE) · **W3** bảng tuần + public log **và** `notes/RECALL.md` — một file text tạo bằng `touch`, không cài gì · **W6** blank-file test. Bậc 12h bật ở **W16**, sau DP2, với khung giờ mới cho T5 (đến 21:30) và T7 (4h) đã chốt với gia đình. `notes/ERRORS.md`, `notes/ai-sessions/`, `notes/AI-WRONG.md`, `bench/`, `rebuild/` được tạo lần đầu tiên bạn cần đến chúng, không phải trước. Một thư mục trống không phải tiến độ.
+Không có việc setup nào chặn Ngày 1. Bản cũ có 10 ô checklist ở đây — đã xoá, vì chúng là một phần lý do 5 tuần vừa qua ở 0h. Bốn nghi thức bật ở ba mốc: **W1** journal 3 dòng (kèm chốt khung giờ ~22:00–00:00 với gia đình, tắt autocomplete trong IDE) · **W3** bảng tuần + public log **và** `notes/RECALL.md` — một file text tạo bằng `touch`, không cài gì · **W6** blank-file test. Bậc 12h bật ở **W16**, sau DP2, với khung giờ mới cho T5 (đến 23:30) và T6 (4h, từ 20:30) đã chốt với gia đình. `notes/ERRORS.md`, `notes/ai-sessions/`, `notes/AI-WRONG.md`, `bench/`, `rebuild/` được tạo lần đầu tiên bạn cần đến chúng, không phải trước. Một thư mục trống không phải tiến độ.
 
 ## → Tiếp theo
 
