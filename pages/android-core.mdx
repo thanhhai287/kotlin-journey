@@ -7,7 +7,7 @@ Trang này trả lời một câu: *client Android của bạn chết như thế
 | Mục | Giá trị |
 |---|---|
 | Module | 2.8 — Android core. Thay và mở rộng trọn module "Android tối thiểu" 8h cũ |
-| Giờ | **30h** — thay trọn module 8h cũ, tức **+22h** mới so với bản 755h; đã nằm trong 839h, phân bổ ở bảng bổ sung của [Roadmap](/roadmap). Slot T4 + T6, T5 đọc source AOSP |
+| Giờ | **30h** — thay trọn module 8h cũ, tức **+22h** mới so với bản 755h; đã nằm trong 839h, phân bổ ở bảng bổ sung của [Roadmap](/roadmap). Slot hai buổi BUILD, buổi READ đọc source AOSP |
 | Khi | P2, W39–67 (31/05–19/12/2027), sau 2.5. Bảng 6 kịch bản (F) viết nháp trước ngày đầu của 2.4, kiểm lại bằng lab sau khi xong trang này |
 | Đứng trước | 1.8 Linux giới hạn một máy · 2.2 persistence · 2.4 reconnect bản đầu (dùng bảng nháp F) · 2.5 và [Nền tảng hệ thống](/nen-tang-he-thong) S2 (copy-on-write, học cạnh 2.5) + S3 (`epoll`) |
 | Dẫn tới | 2.4 reconnect — bản kiểm lại của bảng 6 kịch bản quay về sửa 2.4 · 2.9 Compose client v1 (16h Lõi, cap 20h) · 3.2 ARENA tick loop |
@@ -208,7 +208,7 @@ adb shell dumpsys meminfo com.example.caro
 
 ## E. Looper, Handler, MessageQueue và ANR — 5h
 
-Phần quan trọng nhất về nghề. Đọc source thật ở T5: `Looper.java`, `MessageQueue.java`, `Handler.java`.
+Phần quan trọng nhất về nghề. Đọc source thật ở buổi READ: `Looper.java`, `MessageQueue.java`, `Handler.java`.
 
 **Sự thật:** main thread không phải thứ đặc biệt của Android. Nó là thread đã gọi `Looper.loop()` trong `ActivityThread.main` — vòng `for (;;)` lấy `Message` khỏi `MessageQueue` rồi gọi `msg.target.dispatchMessage(msg)`. `onCreate`, `onClick`, `onDraw` — tất cả là một `Message` lấy ra từ hàng đợi đó. Hàng đợi trống, thread ngủ trong `nativePollOnce`. Trong trace, `MessageQueue.nativePollOnce(Native method)` **không** phải kẹt — là đang rảnh.
 

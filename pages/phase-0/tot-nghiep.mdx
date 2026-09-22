@@ -76,7 +76,7 @@ Ngưỡng: **≥10/12**. Câu 10–12 trả lời ở mức nhập môn của mo
 
 ## 📦 Benchmark: đo tiến bộ so với chính mình
 
-Hai bài, mỗi bài làm hai lần, **bấm giờ cả hai lần và ghi số vào đây**. Khoảng tuần 3–5, đỉnh ở W4 — rơi đúng vào DP1a — bạn sẽ chững lại và nghi ngờ bản thân; plateau đó nằm trong giáo án, ai cũng gặp. Đúng lúc đỉnh plateau thì hai bảng dưới vẫn trống — số đầu tiên của chúng rơi vào W5 và W7. Thứ mở ra đọc ngay ở W4 là ba dòng bấm giờ kata Tier 1 (W2, W3, W4) ở [bài tập và drill](/phase-0/bai-tap); hai bảng dưới là phép đo dài hơi, đọc lại ở W14 khi cả bốn ô đã đầy. Cảm xúc không cãi được số liệu. Ở W14, module 0.10 chạy 5 kata bấm giờ và đo lại trên cùng thang này.
+Hai bài, mỗi bài làm hai lần, **bấm giờ cả hai lần và ghi số vào đây**. Khoảng tuần 3–5, đỉnh ở W4, bạn sẽ chững lại và nghi ngờ bản thân; plateau đó nằm trong giáo án, ai cũng gặp. Đúng lúc đỉnh plateau thì hai bảng dưới vẫn trống — số đầu tiên của chúng rơi vào W5 và W7. Thứ mở ra đọc ngay ở W4 là ba dòng bấm giờ kata Tier 1 (W2, W3, W4) ở [bài tập và drill](/phase-0/bai-tap); hai bảng dưới là phép đo dài hơi, đọc lại ở W14 khi cả bốn ô đã đầy. Cảm xúc không cãi được số liệu. Ở W14, module 0.10 chạy 5 kata bấm giờ và đo lại trên cùng thang này.
 
 **Bảng 1 — FizzBuzz biến thể + tổng** (kata Tier 1 số 4 của [bài tập và drill](/phase-0/bai-tap); mục tiêu lần 2: ≤5 phút):
 
@@ -96,7 +96,7 @@ Hai bài, mỗi bài làm hai lần, **bấm giờ cả hai lần và ghi số v
 
 ## Log blank-file test — 5 lần
 
-Nghi thức bật từ W6, 2 tuần một lần, 45 phút đầu buổi T5 (thứ Năm) — W6 đã ở bậc 8h nên có buổi T5; nếu trượt DP1a và vẫn ở bậc 6h thì blank-file chiếm 45 phút đầu buổi T6. AI chọn ngẫu nhiên **một thành phần bạn đã viết** — một hàm, một `sealed class`, một bộ parser — bạn viết lại từ file trống, không internet, không AI. **Commit nguyên trạng**, kể cả không compile, vào `rebuild/<ngày>-<tên>.kt`, kèm diff so bản gốc trong commit riêng. Lỡ lượt → dồn sang tuần sau, không tính fail. Chi tiết luật ở [hệ thống học và luật AI](/he-thong-hoc).
+Nghi thức bật từ W6, 2 tuần một lần, 45 phút đầu buổi READ (thứ Năm) — ở bậc 8h trở lên thì nó nằm trong buổi READ; nếu còn ở bậc 6h (chưa có buổi READ) thì nó chiếm 45 phút đầu buổi LONG BUILD. AI chọn ngẫu nhiên **một thành phần bạn đã viết** — một hàm, một `sealed class`, một bộ parser — bạn viết lại từ file trống, không internet, không AI. **Commit nguyên trạng**, kể cả không compile, vào `rebuild/<ngày>-<tên>.kt`, kèm diff so bản gốc trong commit riêng. Lỡ lượt → dồn sang tuần sau, không tính fail. Chi tiết luật ở [hệ thống học và luật AI](/he-thong-hoc).
 
 **Luật sắt — chế độ sửa chữa:** fail **2 lượt liên tiếp** → 3 buổi kế tiếp mỗi buổi viết lại từ trống một thành phần đã fail; buổi thứ 3 thi lại. Pass → mở lại ngay. Fail lần 2 → hạ độ khó xuống nửa nhỏ hơn. Trần 2 tuần, hết trần thì mở lại và ghi một dòng vào `notes/ADR.md`.
 

@@ -59,8 +59,8 @@ Vai trò từng buổi, cấu trúc buổi và luật cấm vượt bậc nằm 
 
 | Giai đoạn | Bậc lịch | Kế hoạch tính | Luật |
 |---|---|---|---|
-| **P0 · W1–15** | ramp **6h → 8h → 10h** — giữ nguyên | 8,3h/tuần chạy (116h / 14 tuần) | Cổng lên bậc là **DP1a (cuối W4)** và **DP1b (cuối W8)**, đo bằng số khối deep-work trọn 70' — xem bảng Điểm quyết định. Không có bậc 12h trong P0 |
-| **P1–P5 · W16–117** | **bậc 12h/tuần**: T2 INPUT 2h · T3 BUILD 2h · T4 BUILD 2h · T5 READ 1,5h · T6 LONG BUILD 4h · CN 30' | **11,9h/tuần chạy** (984h / 83 tuần) — tức điểm danh gần đủ bậc; P3 ở 12,3h cần dùng tới khoảng trần vài tuần | **Trần 14h.** T7 vẫn = 0. Tối Chủ Nhật vẫn nghỉ. Tuần rơi một buổi thì bù bằng trần 14h ở tuần kế — không bù thì tuần đó ăn vào 20 buffer, không ăn vào nội dung |
+| **P0 · W1–15** | ramp **6h → 8h → 10h** — giữ nguyên | 8,3h/tuần chạy (116h / 14 tuần) | Cổng lên bậc là **DP1 trượt**: hai tuần lịch liên tiếp đủ số buổi của bậc hiện tại (3 → 4 → 5). Đo bằng `git log` + journal, chấm cuối mỗi tuần — xem bảng Điểm quyết định. Không có bậc 12h trong P0 |
+| **P1–P5 · W16–117** | **bậc 12h/tuần**: INPUT 2h · BUILD 2h · BUILD 2h · READ 1,5h · LONG BUILD 4h · CN 30' | **11,9h/tuần chạy** (984h / 83 tuần) — tức điểm danh gần đủ bậc; P3 ở 12,3h cần dùng tới khoảng trần vài tuần | **Trần 14h.** T7 vẫn = 0. Tối Chủ Nhật vẫn nghỉ. Tuần rơi một buổi thì bù bằng trần 14h ở tuần kế — không bù thì tuần đó ăn vào 20 buffer, không ăn vào nội dung |
 
 **T6 là slot mặc định cho lab đo đạc** (LONG BUILD 4h); từ P2 T4 cũng là slot lab; P3–P4 chạy chế độ hai-slot-lab.
 
@@ -128,7 +128,7 @@ Bảng này là lịch sử cắt của bản 755h. Các dòng đánh dấu **Q�
 | P3 cũ "Săn việc Android, LeetCode medium" | 135 | Apply sai JD |
 | KMP, Crashlytics, crash-free ≥99% | ~80 | KPI client |
 | Compose sâu (Navigation, Room, ViewModel, Hilt) | ~100 | Client 1–3 màn; phần nền Android giữ lại nay là 30h [Android core](/android-core), không phải Compose sâu |
-| LeetCode medium sprint | ~100 | Thay bằng DSA rải từ W20: đọc-phân-loại 10' trong warm-up T2/T4 + 1 bài giải thật 30' đầu T5 ở tuần không blank-file — nằm trong buổi vốn có, đổi lại T5 tuần đó đọc source ít hơn, không phải giờ ẩn. Ngưỡng và 7 pattern định nghĩa ở [Hệ thống học](/he-thong-hoc), kiểm ở 4.7. **QĐ3** trả lại 15h cho 40 bài thêm (3.8, 4.7) |
+| LeetCode medium sprint | ~100 | Thay bằng DSA rải từ W20: đọc-phân-loại 10' trong warm-up T2/T4 + 1 bài giải thật 30' đầu buổi READ ở tuần không blank-file — nằm trong buổi vốn có, đổi lại T5 tuần đó đọc source ít hơn, không phải giờ ẩn. Ngưỡng và 7 pattern định nghĩa ở [Hệ thống học](/he-thong-hoc), kiểm ở 4.7. **QĐ3** trả lại 15h cho 40 bài thêm (3.8, 4.7) |
 | Sổ Chi Tiêu CLI, Flashcard CLI | — | Đổi đề tài để tái dùng: Túi đồ & Ví, `caro-engine` |
 | Bài test đầu vào + 27 ô checklist Tuần 0 | ~5 | Nguyên nhân thất bại kích hoạt |
 | Android field trip | 3 | Đổi thành server field trip |
@@ -212,7 +212,7 @@ Bản cũ ghi: "Chỉ có chỗ cho MỘT backend stack. Ktor thắng." Quyết 
 **Có học Java, SAU Kotlin. Đọc từ P1; viết thật ở 3.0/4.1.** Đây là chính kiến, không phải gợi ý — và nó đã đổi so với bản "chỉ đọc": ghi "Java" lên CV mà không viết được Java là trượt ở phút thứ ba của vòng kỹ thuật, và nhiều online test/take-home của công ty VN ra đề bằng Java.
 
 - Học Java **trước** Kotlin vẫn bị từ chối: nó nhiễm đúng những thói quen phải *bỏ* khi sang Kotlin — null tự do, mutable mặc định, getter/setter, checked exception ceremony. Thứ tự là Kotlin viết được (P0–P2) rồi mới Java.
-- Từ P1, Java là **ngôn ngữ đọc**: đọc stack trace, đọc source JDK/Netty/Spring, đọc JD. T5 READ CODE là nhu cầu đọc thật, mỗi tuần.
+- Từ P1, Java là **ngôn ngữ đọc**: đọc stack trace, đọc source JDK/Netty/Spring, đọc JD. READ CODE là nhu cầu đọc thật, mỗi tuần.
 - Từ 3.0 (W65), Java là **ngôn ngữ viết**: `ledger-service` viết bằng Java thay vì Kotlin — cùng domain account/leaderboard/wallet, đặt cạnh bản Ktor Kotlin trong tài khoản GitHub để so sánh, và đó là một điểm cộng phỏng vấn. Take-home Spring (4.6) và online test (4.7) cũng làm bằng Java.
 - Cái bạn thiếu không chỉ là Java-the-language mà còn là **JVM-the-platform** — và cái đó học qua Kotlin còn tốt hơn: JMM ở 1.3, virtual thread ở 2.5, JFR/async-profiler ở 4.3. Từ bản này 2.5 mở tới TLAB, safepoint, thuật toán GC, JIT — nên câu "JVM bên trong" không còn là điểm mù. Nhưng vòng phỏng vấn Java junior ở VN hỏi **đặc trưng ngôn ngữ Java** mà Kotlin che mất: hợp đồng `equals`/`hashCode`, `HashMap` hoạt động thế nào (hashing + collision), Collection Framework, checked vs unchecked exception, `static`/`final`, autoboxing, String pool. Vì thế 4.1 có **3h drill Java core** đúng danh sách đó, nằm trong 40h Spring, không có dòng giờ Java riêng.
 
@@ -264,9 +264,8 @@ Bảng xếp theo **thời điểm**, không theo số hiệu — vì vậy DP5 
 | DP | Khi | Câu hỏi | Dữ liệu (hiện vật) | Mặc định |
 |---|---|---|---|---|
 | **DP0** | 21/09/2026 | Có kích hoạt được không? | Tag `v0.0.1` tồn tại? | Chưa có → trang duy nhất còn mở là trang Ngày 1 (90'). Thử lại. Không có câu "vấn đề nằm ở bạn" |
-| **DP1a** | Cuối W4 | 6h → 8h? | ≥3 trong 4 tuần W1–4 có ≥3 khối deep-work trọn 70' (journal có commit cùng ngày; Ngày 1 đếm là một khối) | Không đạt → giữ 6h |
-| **DP1b** | Cuối W8 | 8h → 10h? | ≥3 trong 4 tuần W5–8 có ≥4 khối deep-work trọn 70' — T6 3h đếm là 2 khối, T5 1h không đếm; bậc 8h có đúng 4 khối lịch (T2, T4, T6×2), không có khối dự phòng | Không đạt → giữ 8h; P0 kéo tối đa 3 tuần (W15 đã tiêu ở tuần lịch 14/09): 2 tuần buffer đời sống của P1 (2 tuần buffer còn lại của P1 là Tết, không dời được) + 1 tuần lấy từ 5 tuần buffer của P2 |
-| **DP2** | Cuối W14 | Mở P1? | Bảng tốt nghiệp P0 ≥8/10, mục 1–5 bắt buộc | Thiếu → kéo P0 ≤4 tuần (cùng nguồn như DP1b), không mở trang mở rộng cả năm |
+| **DP1** | Cuối mỗi tuần | Lên bậc chưa? | Hai tuần lịch liên tiếp đủ số buổi của bậc hiện tại: 3 buổi ở 6h → 4 ở 8h → 5 ở 10h. Đếm từ `git log` + journal, không tự khai | Ở lại bậc, đo lại tuần sau. Hai tuần hụt liên tiếp → tụt một bậc. Kẹt lâu → P0 kéo tối đa 3 tuần (W15 đã tiêu): 2 tuần buffer đời sống của P1 + 1 tuần từ 5 tuần buffer của P2 |
+| **DP2** | Cuối W14 | Mở P1? | Bảng tốt nghiệp P0 ≥8/10, mục 1–5 bắt buộc | Thiếu → kéo P0 ≤4 tuần (cùng nguồn như DP1), không mở trang mở rộng cả năm |
 | **DP3** | Cuối W35 | Client hết cap? Có người chơi? | Giờ web client vs cap 14; log trận từ IP ngoài | Hết cap → đóng băng. Chưa 5 người → vẫn mở P2, 2h/tuần tìm người ≤4 tuần từ dự phòng P2 |
 | **DP5** | W42 (4 tuần sau đợt 0) | Trục apply: backend chung hay game? | Tỉ lệ phản hồi 20 đơn; bảng gap; **tự đếm** tin ITviec/TopDev theo 3 truy vấn ghi sẵn | Backend chung là trục. Gap chỉ ra Spring → 3.0/4.1 giữ; gap chỉ ra SQL/Docker → dồn dự phòng P2 vào đó |
 | **DP4** | Cuối W64 | ARENA mở ở mức nào? | G1; 2.2 xong; giờ tích luỹ ≥90% kế hoạch | Đủ → cap 50h cho 3.2. Thiếu → vẫn 40h Lõi. Sàn 32h. Không bao giờ 0. 3.6 (v2, 68h) chỉ mở sau khi 3.2 đã ra số tick jitter + hash |

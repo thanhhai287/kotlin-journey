@@ -23,11 +23,11 @@ Ngân sách P0: **116h** = 97h nội dung + 15h nghi thức + 4h dự phòng, r�
 | W1 | 6h | **Ngày 1** → tag `v0.0.1` · git CLI · Kotlin 4.1–4.2 | ⬜ | — |
 | W2 | 6h | 4.2 · buổi debugger 2h | ⬜ | — |
 | W3 | 6h | 4.3 null-safety · Error Zoo (20 phút/buổi) · **bật bảng tuần + public log** | ⬜ | — |
-| W4 | 6h | 4.3–4.4 sealed class · test 3 tầng (JUnit5/Kotest) · **DP1a** · chốt người chứng kiến | ⬜ | — |
+| W4 | 6h | 4.3–4.4 sealed class · test 3 tầng (JUnit5/Kotest) · chốt người chứng kiến | ⬜ | — |
 | W5 | 8h | 4.4–4.5 · Git Disaster Recovery 1,5h · **benchmark #1** (FizzBuzz biến thể) lần 1 | ⬜ | — |
 | W6 | 8h | 4.5 collections (bài: log trận, bảng loot) · **blank-file #1** | ⬜ | — |
-| W7 | 8h | 4.6 lambda + extension + `let`/`apply` (6h) · **bài Tier 2** đọc log trận → `groupBy` (2h, trọn buổi T6) = **benchmark #2** lần 1 | ⬜ | — |
-| W8 | 8h | **Byte, bit & số** (5h) · 4.7 generics đọc-hiểu + `Result` (3h) · **blank-file #2** · **DP1b** | ⬜ | — |
+| W7 | 8h | 4.6 lambda + extension + `let`/`apply` (6h) · **bài Tier 2** đọc log trận → `groupBy` (2h, trọn buổi LONG BUILD) = **benchmark #2** lần 1 | ⬜ | — |
+| W8 | 8h | **Byte, bit & số** (5h) · 4.7 generics đọc-hiểu + `Result` (3h) · **blank-file #2** | ⬜ | — |
 | W9 | 10h | 4.8 interface + composition (2h) · **Concurrency nhập môn** (8h) | ⬜ | — |
 | W10 | 10h | **Game loop & state machine** · mở Project 1 · **blank-file #3** | ⬜ | — |
 | W11 | 10h | Project 1 — Túi đồ & Ví CLI, tag `v1.0` · **Bug Hunt Kata #2** (90', buổi BUILD) | ⬜ | — |
@@ -38,7 +38,7 @@ Ngân sách P0: **116h** = 97h nội dung + 15h nghi thức + 4h dự phòng, r�
 
 Chú thích: ⬜ chưa tới · 🔄 đang làm · ✅ xong
 
-**Bậc là trần, không phải chỉ tiêu**: 6h ở W1–4 · 8h ở W5–8 · 10h ở W9–14 (giờ module; CN 30' là buổi riêng ngoài trần, còn blank-file 45' kéo T5 dài thành 1h45' ở tuần chẵn W6/8/10/12/14 chứ không ăn vào 1h READ CODE — cả hai nằm trong 15h nghi thức). Tuần nào cộng giờ module vượt trần là lịch xếp sai, không phải bạn chậm — cắt độ rộng, không cắt ngưỡng.
+**Bậc là trần, không phải chỉ tiêu**: 6h ở W1–4 · 8h ở W5–8 · 10h ở W9–14 (giờ module; CN 30' là buổi riêng ngoài trần, còn blank-file 45' kéo buổi READ dài thành 1h45' ở tuần chẵn W6/8/10/12/14 chứ không ăn vào 1h READ CODE — cả hai nằm trong 15h nghi thức). Tuần nào cộng giờ module vượt trần là lịch xếp sai, không phải bạn chậm — cắt độ rộng, không cắt ngưỡng.
 
 Cột **Bằng chứng** điền link commit, tên file, hoặc số đo — không điền cảm giác. Một tuần không có bằng chứng nào là một tuần chưa xảy ra. Chi tiết từng buổi nằm ở [lịch 14 tuần](/phase-0/lich-14-tuan).
 
@@ -90,7 +90,7 @@ Cách đọc từng cột:
 
 | Cột | Đo cái gì | Báo động |
 |---|---|---|
-| **Buổi deep-work trọn 70'** | Số buổi bạn ngồi trọn 70 phút deep work. Mục tiêu bằng đúng số buổi **có chỗ** cho một khối 70' ở bậc đó: **3** ở bậc 6h (T2 · T4 · T6) · **3** ở bậc 8h (T2 · T4 · T6 — T5 chỉ 1h, không chứa nổi khối 70') · **4** ở bậc 10h (T2 · T3 · T4 · T6) | Từ 50% mục tiêu trở xuống, 2 tuần liên tiếp |
+| **Buổi deep-work trọn 70'** | Số buổi bạn ngồi trọn 70 phút deep work. Mục tiêu bằng đúng số buổi **có chỗ** cho một khối 70' ở bậc đó: **3** ở bậc 6h (INPUT · BUILD · LONG BUILD) · **3** ở bậc 8h (INPUT · BUILD · LONG BUILD — buổi READ chỉ 1h, không chứa nổi khối 70') · **4** ở bậc 10h (INPUT · BUILD · BUILD · LONG BUILD) | Từ 50% mục tiêu trở xuống, 2 tuần liên tiếp |
 | **Rebuild pass** | Đạt/tổng của blank-file test, 2 tuần một lần. Để trống W1–5 vì nghi thức chưa bật | Fail 2 lượt liên tiếp → vào **chế độ sửa chữa**: 3 buổi kế tiếp mỗi buổi viết lại từ file trống 1 thành phần đã fail, buổi 3 thi lại |
 | **Phép đo mới** | Số file `bench/` có commit hash trong tuần. Bật từ P1 — trong P0 để dấu gạch | 0 trong một tuần có buổi BUILD → tuần đó chưa xong |
 | **Cap** | % hard-cap của module đang chạy (cap = Lõi + khoảng 25%) | Từ 80% → cờ vàng; Chủ nhật phải ghi "còn thiếu gì để dừng được" |
