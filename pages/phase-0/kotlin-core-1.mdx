@@ -1,6 +1,6 @@
 # Kotlin Core I — module 4.1–4.5
 
-Trang này là giáo trình nửa đầu Kotlin Core: từ "Kotlin khác Java chỗ nào" đến Collections — **20h** trong 97h nội dung của Phase 0. Mở nó vào đầu mỗi buổi INPUT của tuần 1–6, học đúng thứ tự.
+Trang này là giáo trình nửa đầu Kotlin Core: từ "Kotlin khác Java chỗ nào" đến Collections — **16h** trong 97h nội dung của Phase 0. Mở nó vào đầu mỗi buổi INPUT của tuần 1–6, học đúng thứ tự.
 
 ---
 
@@ -8,9 +8,11 @@ Trang này là giáo trình nửa đầu Kotlin Core: từ "Kotlin khác Java ch
 |---|---|---|---|
 | 4.1 | "Kotlin khác Java/C chỗ nào" | 1h | W1 |
 | 4.2 | `val`/`var`, kiểu, hàm | 3h | W1–2 |
-| 4.3 | Null-safety — cách nghĩ mới | 5h | W3–4 |
-| 4.4 | `data class`, `enum`, `sealed class` + `when` | 5h | W4–5 |
-| 4.5 | Collections + functional operators | 6h | W5–6 |
+| 4.3 | Null-safety — cách nghĩ mới | 4h | W3–4 |
+| 4.4 | `data class`, `enum`, `sealed class` + `when` | 4h | W4–5 |
+| 4.5 | Collections + functional operators | 4h | W5–6 |
+
+**Lõi và Mở rộng — sửa 05/10/2026.** Bài tập không ghi gì là **Lõi**: bắt buộc, và nó là ngưỡng của module. Bài ghi *(Mở rộng)* chỉ làm khi dự án thật đòi tới, hoặc khi tuần dư giờ — bỏ nó không chặn module sau. Lý do cắt: bản trước đẩy 31h Kotlin core trước khi có dự án nào phải tiếp tục chạy; giờ cắt được chuyển sang hai project, tổng 97h không đổi. Luật đầy đủ ở [Hệ thống học](/he-thong-hoc).
 
 **Cảnh báo số hiệu:** `4.1–4.8` ở đây là module Kotlin core của Phase 0. Ở Phase 4 cũng có dãy `4.1–4.8` (Spring, profiling, rollback, take-home, system design) — xem [Roadmap](/roadmap). Hai dãy trùng ký hiệu, không trùng nội dung; khi đọc trang khác hãy nhìn phase trước khi nhìn số.
 
@@ -135,7 +137,7 @@ val diem = diemCuoiTran(diemGoc = 120, thuongChuoi = 30)
 
 ---
 
-## 4.3. Null-safety — 5h, tuần 3–4
+## 4.3. Null-safety — 4h, tuần 3–4
 
 ### 🎯 Sau module này bạn làm được
 
@@ -197,7 +199,7 @@ val luotCua = phien?.luotCua ?: "chua-bat-dau"   // kế hoạch B tường minh
 
 ---
 
-## 4.4. `data class`, `enum`, `sealed class` + `when` — 5h, tuần 4–5
+## 4.4. `data class`, `enum`, `sealed class` + `when` — 4h, tuần 4–5
 
 ### 🎯 Sau module này bạn làm được
 
@@ -240,7 +242,7 @@ enum class OQuanCo { TRONG, X, O }
 
 - [ ] **Trạng thái phiên chơi** — model `Waiting`, `Playing`, `Finished`, `Abandoned`, mỗi cái mang đúng dữ liệu nó cần, + hàm `thongBaoChoClient(trangThai): String` bằng `when`. Đạt khi: không `else`; thêm thử `Paused`, xác nhận compiler chỉ đúng mọi chỗ cần sửa, rồi gỡ ra. 60 phút
 - [ ] **Máy chuyển trạng thái phiên** — hàm trả trạng thái kế tiếp: `Waiting` sang `Playing` hoặc `Abandoned`; `Playing` sang `Finished` hoặc `Abandoned`; hai cái sau là điểm cuối. Đạt khi: cú chuyển sai luật (`Finished` quay lại `Playing`) là **không thể viết ra được**. 45 phút
-- [ ] **Khai tử `int status`** — nhờ AI sinh class "kiểu trường học" quản lý trận đấu bằng `int status` + so sánh `status == 2` rải rác; refactor thành sealed class. Đạt khi: số ma thuật biến mất; status bằng 7 không còn biểu diễn được. 45 phút
+- [ ] *(Mở rộng)* **Khai tử `int status`** — nhờ AI sinh class "kiểu trường học" quản lý trận đấu bằng `int status` + so sánh `status == 2` rải rác; refactor thành sealed class. Đạt khi: số ma thuật biến mất; status bằng 7 không còn biểu diễn được. 45 phút
 
 ### 🏁 Bài tự kiểm
 
@@ -260,7 +262,7 @@ enum class OQuanCo { TRONG, X, O }
 
 ---
 
-## 4.5. Collections + functional operators — 6h, tuần 5–6
+## 4.5. Collections + functional operators — 4h, tuần 5–6
 
 ### 🎯 Sau module này bạn làm được
 
@@ -318,9 +320,9 @@ val tongSatThuong = nhatKyTran
 Bốn bài trên dữ liệu game. Nhờ AI sinh file dữ liệu test là đúng luật ("log 300 nước đi, 5 dòng hỏng") — nhờ AI viết lời giải là phạm luật. Trước mỗi bài ghi 1 dòng "cấu trúc dữ liệu đã chọn + vì sao".
 
 - [ ] **Đọc log trận** — file mỗi dòng một nước đi (số thứ tự, mã trận, người chơi, toạ độ, mốc thời gian) → `groupBy` theo trận: số nước mỗi trận, ai đi nước cuối, trận nào dài nhất. Đạt khi: dòng hỏng bị loại và có ghi log; không vòng lặp lồng nhau. 90 phút
-- [ ] **Bảng loot** — vật phẩm rơi ra (tên, loại, độ hiếm, giá vàng, số lượng) → tổng giá trị theo loại, top 5 đắt nhất, đếm theo độ hiếm (`groupBy` + `mapValues`). Đạt khi: mỗi báo cáo là một chuỗi operators đọc được thành lời. 60 phút
-- [ ] **Nối trận với hồ sơ người chơi** — hai danh sách, nối theo id (`associateBy` rồi tra). Đạt khi: giải thích được vì sao bài này dùng `associateBy` chứ không `groupBy`, và vì sao bài log trận thì ngược lại. 45 phút
-- [ ] **Túi đồ bằng `fold`** — từ log giao dịch (nhặt, bán, mất), dựng lại túi đồ cuối cùng bằng đúng một `fold`. Đạt khi: kể được bằng lời giá trị tích luỹ biến đổi ra sao. 45 phút
+- [ ] *(Mở rộng)* **Bảng loot** — vật phẩm rơi ra (tên, loại, độ hiếm, giá vàng, số lượng) → tổng giá trị theo loại, top 5 đắt nhất, đếm theo độ hiếm (`groupBy` + `mapValues`). Đạt khi: mỗi báo cáo là một chuỗi operators đọc được thành lời. 60 phút
+- [ ] *(Mở rộng)* **Nối trận với hồ sơ người chơi** — hai danh sách, nối theo id (`associateBy` rồi tra). Đạt khi: giải thích được vì sao bài này dùng `associateBy` chứ không `groupBy`, và vì sao bài log trận thì ngược lại. 45 phút
+- [ ] **Túi đồ bằng `fold`** — làm **thẳng trong Project 1**, không phải bài tập rời: từ log giao dịch (nhặt, bán, mất), dựng lại túi đồ cuối cùng bằng đúng một `fold`. Đạt khi: kể được bằng lời giá trị tích luỹ biến đổi ra sao. 45 phút
 
 ### 🏁 Bài tự kiểm
 

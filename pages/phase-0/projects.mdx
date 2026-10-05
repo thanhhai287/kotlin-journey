@@ -1,6 +1,6 @@
 # Hai project của Phase 0
 
-Trang này chứa đề bài đầy đủ, định nghĩa hoàn thành và rubric chấm điểm của hai project Phase 0. Mở nó khi bước vào tuần 10 (Project 1) và tuần 12 (Project 2) — trước đó, việc của bạn nằm ở [Bài tập & drill](/phase-0/bai-tap) và ba trang nền [Concurrency nhập môn](/phase-0/concurrency-nhap-mon), [Game loop & state machine](/phase-0/game-loop-co-ban), [Byte, bit & số](/phase-0/byte-bit-so).
+Trang này chứa đề bài đầy đủ, định nghĩa hoàn thành và rubric chấm điểm của hai project Phase 0. Mở nó khi bước vào **tuần 5** (Project 1) và **tuần 11** (Project 2) — sửa 05/10/2026, bản trước mở ở W10 và W12. Trước đó, việc của bạn nằm ở [Bài tập & drill](/phase-0/bai-tap) và ba trang nền [Concurrency nhập môn](/phase-0/concurrency-nhap-mon), [Game loop & state machine](/phase-0/game-loop-co-ban), [Byte, bit & số](/phase-0/byte-bit-so).
 
 ---
 
@@ -10,10 +10,12 @@ Cả hai project đều lên GitHub **public từ ngày đầu**. Không có chu
 
 | Project | Tuần | Giờ | Tag | Sống tiếp ở đâu |
 |---|---|---|---|---|
-| 1 — Túi đồ & Ví CLI | W10–11 | 12 | `v1.0` | Domain model tái dùng ở P3, module economy |
-| 2 — `caro-engine` + `caro-cli` | W12–14 | 20 | `v1.0` | `caro-engine` nhúng vào server P1, chạy tới tháng 26 |
+| 1 — Túi đồ & Ví CLI | **W5–10** | **14** | `v1.0` | Domain model tái dùng ở P3, module economy |
+| 2 — `caro-engine` + `caro-cli` | **W11–14** | **23** | `v1.0` | `caro-engine` nhúng vào server P1, chạy tới tháng 26 |
 
-Giờ là giờ đồng hồ tại bàn ở bậc 10h/tuần theo [Lịch 14 tuần](/phase-0/lich-14-tuan). Blank-file #3 (W10), #4 (W12) và #5 (W14) rơi đúng vào ba tuần project — không hoãn vì "đang bận project".
+Giờ là giờ đồng hồ tại bàn theo [Lịch 14 tuần](/phase-0/lich-14-tuan). Blank-file #3 (W10), #4 (W12) và #5 (W14) rơi đúng vào ba tuần project — không hoãn vì "đang bận project".
+
+**Project 1 mở sớm — sửa 05/10/2026.** Bản trước mở nó ở W10, nghĩa là chín tuần đầu mọi buổi BUILD làm bài tập minh hoạ chứ không có thứ gì **phải tiếp tục chạy** — đúng hình dạng tutorial hell. Nay nó mở ngay sau 4.4 và chạy song song với 4.5–4.8: **module là buổi INPUT, dự án là buổi BUILD**, và lý thuyết được kéo vào khi dự án đòi. Bài tập "Túi đồ bằng `fold`" của 4.5 và bài Tier 2 ở W7 làm **thẳng trong dự án này**, không phải bài rời.
 
 ## Vì sao đổi đề tài
 
@@ -26,7 +28,7 @@ Bản cũ của trang này là Sổ Chi Tiêu CLI và Flashcard Từ Vựng CLI.
 
 Khung của trang — luật sắt DoD, `BACKLOG.md` theo IOSTV, rubric 100 điểm, tuần cuối AI-free, checklist tag `v1.0` — giữ nguyên. Kỹ năng từ đề cũ (parse input ác, lưu file, persistence) vẫn nằm trong đề mới, chỉ đổi domain. Cái mất duy nhất là bài HTTP — nó chuyển sang Phase 1, nơi có Ktor client và timeout thật.
 
-## 🛠️ Project 1: Túi đồ & Ví CLI — tuần 10–11, 12h
+## 🛠️ Project 1: Túi đồ & Ví CLI — tuần 5–10, 14h
 
 Project đầu tiên bạn tự build từ số 0. Nó không dạy Kotlin mới — mọi thứ cần dùng bạn đã học ở tuần 1–9. Nó tồn tại để bạn đi trọn một vòng: nhận đề → phân rã → build → test → tag. Trải nghiệm đó, không phải kiến thức, mới là sản phẩm chính.
 
@@ -61,7 +63,7 @@ Scope creep là kẻ giết project số một. Phạm vi ở trên là **trần
 - **Không** shop, không giá cả, không chỉ số sức mạnh vật phẩm.
 - **Không** thêm bất kỳ feature nào ngoài đề trước khi đạt định nghĩa hoàn thành. Ý tưởng hay đến đâu cũng chỉ được ghi vào mục "Còn thiếu gì" của README rồi để đó.
 
-12h nghĩa là W10 (BACKLOG + walking skeleton, chung tuần với [Game loop & state machine](/phase-0/game-loop-co-ban)) và W11 (build đến `v1.0`). Hết W11 chưa đạt: không âm thầm kéo dài — mang lên bảng tuần Chủ nhật, cắt phạm vi có ghi chép, không cắt chất lượng.
+14h rải trên sáu tuần W5–10, không phải một khối: W5 BACKLOG + walking skeleton, W6 nạp 4.5 Collections vào (log giao dịch, `fold`), W7 nạp Tier 2, W8–9 tuần khít bậc nên dự án chỉ nhận commit nhỏ, W10 đóng tới `v1.0`. Hết W10 chưa đạt: không âm thầm kéo dài — mang lên bảng tuần Chủ nhật, cắt phạm vi có ghi chép, không cắt chất lượng.
 
 ### Định nghĩa hoàn thành
 
@@ -75,7 +77,7 @@ Tick đủ mới được gọi là xong. Mỗi lần tick là một lần sửa
 - [ ] README đủ 5 mục: là gì / chạy thế nào / cấu trúc code / quyết định đáng chú ý / còn thiếu gì
 - [ ] Đã `git tag v1.0`
 
-Project 1 không có mục demo cho người ngoài — mốc ngoài của Phase 0 nằm ở Project 2. DoD này thấp hơn bản cũ (≥15 commit, ≥4 branch) có chủ đích: 12h là 12h.
+Project 1 không có mục demo cho người ngoài — mốc ngoài của Phase 0 nằm ở Project 2. DoD này thấp hơn bản cũ (≥15 commit, ≥4 branch) có chủ đích. Trải trên sáu tuần thì số commit tự nhiên cao hơn — nhưng ngưỡng vẫn là ngưỡng, không nâng theo.
 
 **Vì sao 1.000 lần chuyển là tiêu chí số một:** đây là phiên bản mức-file của G5 ở P3 — 10.000 request mua, 20% trùng, lệch bằng 0. Nếu ở mức file, một luồng, không mạng mà bạn còn làm mất vàng, thì ở mức server bạn không có cơ hội. Cách bơm lỗi cố ý là của bạn — một cờ, một `Random(seed)` quyết định bước nào ném exception, một file ghi hỏng — miễn là lỗi xảy ra **giữa** hai nửa của một lần chuyển.
 
@@ -104,11 +106,11 @@ Quy tắc vàng của IOSTV áp dụng nguyên văn: không viết được ví 
 5. **File có một dòng hỏng thì sao?** Bỏ qua dòng đó và báo số dòng lỗi, hay dừng cả chương trình? Người dùng cần biết gì?
 6. **Xoá vật phẩm định danh bằng gì?** Hai stack kiếm giống hệt nhau trong cùng một túi — làm sao phân biệt?
 
-Nếu bạn định hỏi tôi đáp án: sai cửa. Đây chính là phần "tự build" của project. Tôi chỉ review lựa chọn của bạn *sau khi* bạn đã chọn và nêu được lý do. Model bạn vẽ ở tuần 10 là model bạn gặp lại ở P3 module economy với Postgres thay cho file — vẽ cho tử tế.
+Nếu bạn định hỏi tôi đáp án: sai cửa. Đây chính là phần "tự build" của project. Tôi chỉ review lựa chọn của bạn *sau khi* bạn đã chọn và nêu được lý do. Model bạn vẽ ở tuần 5 là model bạn gặp lại ở P3 module economy với Postgres thay cho file — vẽ cho tử tế.
 
-## 🛠️ Project 2: `caro-engine` + `caro-cli` — tuần 12–14, 20h
+## 🛠️ Project 2: `caro-engine` + `caro-cli` — tuần 11–14, 23h
 
-Capstone của Phase 0. W12 BACKLOG + ADR luật cờ và `caro-engine`, W13 đóng engine + mở `caro-cli` + xuất JSON + dựng trang tĩnh (mốc ngoài #1), W14 `caro-cli` `v1.0` trong chế độ AI-free. Rubric dưới đây là **thang tự chấm chất lượng, không phải một cổng riêng** — cổng tốt nghiệp duy nhất của Phase 0 là bảng 10 tiêu chí ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep).
+Capstone của Phase 0. W11 BACKLOG + ADR luật cờ + bàn cờ/luật/win-check, W12 đóng engine (replay, seed, 20 case biên), W13 mở `caro-cli` + xuất JSON + dựng trang tĩnh (mốc ngoài #1), W14 `caro-cli` `v1.0` trong chế độ AI-free. Rubric dưới đây là **thang tự chấm chất lượng, không phải một cổng riêng** — cổng tốt nghiệp duy nhất của Phase 0 là bảng 10 tiêu chí ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep).
 
 **Sự thật:** đây là dòng code đầu tiên của bạn chạy production. Bạn viết `caro-engine` ở tháng 3; tháng 6 nó nằm trong CARO server và nhận nước đi của người lạ. Cách bạn cắt module hôm nay quyết định bạn khổ bao nhiêu ở tháng 9.
 
@@ -150,11 +152,11 @@ Ba thứ đắt nhất đã bị bỏ có chủ đích. Không thêm lại chún
 | **HTTP** | Tải từ mạng cần timeout, fallback offline, log lỗi mạng — cần Ktor client | P1 module Ktor: `caro-cli` tải JSON từ GitHub raw của chính repo, timeout 3 giây, offline → fallback local |
 | **Biến thể luật** | Mỗi biến thể nhân đôi số case biên | Không đi đâu, trừ khi ADR nói khác |
 
-Cộng thêm luật của Project 1: không máy đi thông minh, không màu, không ASCII art, không thư viện TUI. 20h được định giá **sau khi** đã cắt ba hạng mục trên. Thêm lại một hạng mục là tự vay tuần của P1 — W15 đã tiêu từ 18/09.
+Cộng thêm luật của Project 1: không máy đi thông minh, không màu, không ASCII art, không thư viện TUI. 23h được định giá **sau khi** đã cắt ba hạng mục trên. Thêm lại một hạng mục là tự vay tuần của P1 — W15 đã tiêu từ 18/09.
 
 ### Yêu cầu bắt buộc
 
-- [ ] `BACKLOG.md` theo IOSTV nộp **trước khi code** — W12 dành cho việc này, cùng ADR luật cờ
+- [ ] `BACKLOG.md` theo IOSTV nộp **trước khi code** — W11 dành cho việc này, cùng ADR luật cờ
 - [ ] `caro-engine` là module Gradle riêng, **0 dependency, 0 I/O** — `grep` chứng minh
 - [ ] Có persistence — phiên dở sống giữa hai lần chạy
 - [ ] **Test tái lập:** cùng seed + cùng log → cùng bàn cờ, chạy **100/100** lần, có test tự động — kết quả: ____ / 100

@@ -1,19 +1,19 @@
 # Kho bài tập Phase 0
 
-Trang này là toàn bộ bài tập rời của Phase 0 — mọi thứ nằm ngoài hai project lớn. Mở nó mỗi tuần: kata Tier 1 ở tuần 2–6, Error Zoo ở tuần 3–6, Docs Quest ở tuần 2–5, Tier 2 ở tuần 7, Bug Hunt ở tuần 2 và tuần 11, decomposition drill ở tuần 12–13 — lịch cụ thể từng tuần ở [Lịch 14 tuần](/phase-0/lich-14-tuan).
+Trang này là toàn bộ bài tập rời của Phase 0 — mọi thứ nằm ngoài hai project lớn. Mở nó mỗi tuần: kata Tier 1 ở tuần 4–8, Error Zoo ở tuần 4–7, Docs Quest ở tuần 5–8, Tier 2 ở tuần 7, Bug Hunt ở tuần 2 và tuần 11, decomposition drill ở tuần 12–13 — lịch cụ thể từng tuần ở [Lịch 14 tuần](/phase-0/lich-14-tuan).
 
 ---
 
 | Loại | Là gì | Khi nào | Luật AI |
 |---|---|---|---|
-| Tier 1 — kata 30 phút | 5 bài nhỏ, làm đi làm lại, bấm giờ | Tuần 2–6, mỗi tuần một bài | **AI-free tuyệt đối** |
+| Tier 1 — kata 30 phút | 5 bài nhỏ, làm đi làm lại, bấm giờ | Tuần 4–8, mỗi tuần một bài — **30' mở đầu buổi LONG BUILD**, ngoài khối 70' | **AI-free tuyệt đối** |
 | Tier 2 — bài một buổi | 1 bài 2h, có file, có test | Tuần 7 | Docs thoải mái, **không AI sinh code** |
-| Error Zoo | 10 chương trình có lỗi cài sẵn, tự chẩn đoán | Tuần 3–6, 20 phút/buổi | AI chỉ chấm **sau khi** bạn chẩn đoán xong |
-| Docs Quest | 4 câu hỏi chỉ trả lời được bằng docs | Tuần 2–5, mỗi tuần một câu, 30–45 phút | Cấm AI — đáp án nằm trong docs |
+| Error Zoo | 10 chương trình có lỗi cài sẵn, tự chẩn đoán | Tuần 4–7, 20 phút/buổi — **trong 30' consolidate**, ngoài khối 70' | AI chỉ chấm **sau khi** bạn chẩn đoán xong |
+| Docs Quest | 4 câu hỏi chỉ trả lời được bằng docs | Tuần 5–8, mỗi tuần một câu, 30–45 phút — **dời về sau Collections**, ba trong bốn câu hỏi đúng về Collections | Cấm AI — đáp án nằm trong docs |
 | Decomposition drill | Đề mơ hồ, chỉ nộp bản phân rã, không code | Tuần 12 và 13 | AI chấm bản phân rã, không phân rã hộ |
 | Bug Hunt Kata | Bài kiểm tra debug có chấm điểm, cấm println | Tuần 2 và tuần 11 | AI ra đề + làm giám khảo |
 
-Error Zoo 10/10 và Tier 1 5/5 là **ngưỡng của module 0.3**; Tier 2 ở tuần 7 là **nguyên liệu bắt buộc** của module 0.4 chứ không phải cổng ra của nó — nó chạy trước cả 4.7 (tuần 8) lẫn 4.8 (tuần 9) nên không kiểm được hai module đó. **Ngưỡng ra của module 0.4 là bài tự kiểm 4.8 ở tuần 9.** Không bài nào trong trang này là việc làm thêm. Hai project lớn ở [Hai project CLI](/phase-0/projects); quy trình IOSTV, đọc lỗi 4 bước, debug 6 bước ở [Meta-skills](/phase-0/meta-skills).
+Error Zoo 10/10 và Tier 1 5/5 là **ngưỡng của module 0.3** — Error Zoo đóng ở tuần 7, Tier 1 ở tuần 8 — trễ hơn nội dung 0.3 một đến hai tuần, và điều đó được phép: ngưỡng trả sau, không trả trước; Tier 2 ở tuần 7 là **nguyên liệu bắt buộc** của module 0.4 chứ không phải cổng ra của nó — nó chạy trước cả 4.7 (tuần 8) lẫn 4.8 (tuần 9) nên không kiểm được hai module đó. **Ngưỡng ra của module 0.4 là bài tự kiểm 4.8 ở tuần 9.** Không bài nào trong trang này là việc làm thêm. Hai project lớn ở [Hai project CLI](/phase-0/projects); quy trình IOSTV, đọc lỗi 4 bước, debug 6 bước ở [Meta-skills](/phase-0/meta-skills).
 
 ---
 
@@ -152,7 +152,7 @@ Bài này chính là **Bảng 2 của benchmark tốt nghiệp** — phép đo "
 
 ## ⚠️ Error Zoo — 10 con thú
 
-Sở thú lỗi: 10 chương trình Kotlin ngắn, **mỗi con chứa đúng một lỗi cài sẵn**. Chơi ở tuần 3–6, mỗi buổi 20 phút, thuần hoá 1–2 con. Ngưỡng: 10/10 trước khi hết tuần 6.
+Sở thú lỗi: 10 chương trình Kotlin ngắn, **mỗi con chứa đúng một lỗi cài sẵn**. Chơi ở tuần 4–7, mỗi buổi 20 phút trong 30' consolidate, thuần hoá 1–2 con. Ngưỡng: 10/10 trước khi hết tuần 7.
 
 Cách chơi với từng con:
 
@@ -321,16 +321,16 @@ Thuần hoá đủ 10 con, `notes/ERRORS.md` có 10 mục — trophy nhìn thấ
 
 ## 📚 Docs Quest
 
-Bốn câu hỏi cố định, mỗi tuần một câu từ **tuần 2 đến tuần 5**, chỉ trả lời được bằng cách **đọc docs** — kotlinlang.org, tiếng Anh, không AI, không tutorial. 30–45 phút một câu, **mở đầu buổi BUILD** — 4 câu × 30–45' nằm trong 10h của module 0.2, không phải giờ thêm. Quy trình cố định: **viết dự đoán ra giấy → chạy trong scratch file → đối chiếu**. Dự đoán sai là kết quả tốt — nó chỉ đúng chỗ mental model của bạn cần sửa.
+Bốn câu hỏi cố định, mỗi tuần một câu từ **tuần 5 đến tuần 8** (sửa 05/10/2026 — bản trước đặt ở tuần 2–5, tức hỏi về Collections một đến ba tuần **trước khi** dạy Collections ở 4.5; cả bốn câu vì thế bị bỏ), chỉ trả lời được bằng cách **đọc docs** — kotlinlang.org, tiếng Anh, không AI, không tutorial. 30–45 phút một câu, **mở đầu buổi BUILD** — 4 câu × 30–45' nằm trong 10h của module 0.2, không phải giờ thêm. Quy trình cố định: **viết dự đoán ra giấy → chạy trong scratch file → đối chiếu**. Dự đoán sai là kết quả tốt — nó chỉ đúng chỗ mental model của bạn cần sửa.
 
 Docs Quest **không** phải nghi thức thứ tư: Phase 0 chỉ có ba nghi thức — journal 3 dòng, bảng tuần, blank-file. Tuần 1 cũng không có Docs Quest: tuần 1 chỉ có Ngày 1 và tag `v0.0.1`, không nghi thức nào bật trước tag.
 
-- [ ] **Tuần 2** — `split` với `limit = 2` cho ra gì với chuỗi `"a,b,c"`? Dự đoán trước, chạy sau. Thử thêm `limit = 0` — có đúng như bạn nghĩ không?
-- [ ] **Tuần 3** — `sortedBy` và `sortedWith` khác nhau thế nào? Tìm một tình huống **bắt buộc** phải dùng `sortedWith`, viết ví dụ chạy được cho tình huống đó
-- [ ] **Tuần 4** — `associateBy` và `groupBy` khác nhau ở đâu? Viết mỗi hàm một ví dụ với tình huống dùng đúng — và giải thích vì sao đổi chỗ hai hàm là sai. Kết quả dùng ngay cho bài Tier 2
-- [ ] **Tuần 5** — tìm cách format số `1250000` thành `1.250.000` theo locale Việt Nam. Câu này **cố ý** không trả lời được chỉ bằng kotlinlang.org — Kotlin đứng trên vai JVM, và biết lúc nào phải bước sang Java docs là kỹ năng thật. Kết quả dùng ngay cho bài log trận Tier 2
+- [ ] **Tuần 8** — `split` với `limit = 2` cho ra gì với chuỗi `"a,b,c"`? Dự đoán trước, chạy sau. Thử thêm `limit = 0` — có đúng như bạn nghĩ không?
+- [ ] **Tuần 7** — `sortedBy` và `sortedWith` khác nhau thế nào? Tìm một tình huống **bắt buộc** phải dùng `sortedWith`, viết ví dụ chạy được cho tình huống đó
+- [ ] **Tuần 5** — `associateBy` và `groupBy` khác nhau ở đâu? Viết mỗi hàm một ví dụ với tình huống dùng đúng — và giải thích vì sao đổi chỗ hai hàm là sai. Kết quả dùng ngay cho bài Tier 2
+- [ ] **Tuần 6** — tìm cách format số `1250000` thành `1.250.000` theo locale Việt Nam. Câu này **cố ý** không trả lời được chỉ bằng kotlinlang.org — Kotlin đứng trên vai JVM, và biết lúc nào phải bước sang Java docs là kỹ năng thật. Kết quả dùng ngay cho bài log trận Tier 2
 
-**Tự ra câu mới từ tuần 6** — không phải chỉ tiêu tuần nào cũng phải có, mà là phản xạ khi gặp chỗ mờ. Công thức: gặp (a) một hàm có tham số bạn chưa từng đụng, hoặc (b) hai hàm na ná nhau (`first` với `firstOrNull`), biến nó thành một câu Docs Quest: câu hỏi + dự đoán, chạy, ghi vào note. Được nhờ AI ra đề — sinh đề nằm trong whitelist: *"Ra cho tôi 1 câu Docs Quest về Collections, đáp án phải nằm trong docs kotlinlang.org, không nói đáp án."*
+**Tự ra câu mới từ tuần 9** — không phải chỉ tiêu tuần nào cũng phải có, mà là phản xạ khi gặp chỗ mờ. Công thức: gặp (a) một hàm có tham số bạn chưa từng đụng, hoặc (b) hai hàm na ná nhau (`first` với `firstOrNull`), biến nó thành một câu Docs Quest: câu hỏi + dự đoán, chạy, ghi vào note. Được nhờ AI ra đề — sinh đề nằm trong whitelist: *"Ra cho tôi 1 câu Docs Quest về Collections, đáp án phải nằm trong docs kotlinlang.org, không nói đáp án."*
 
 ---
 

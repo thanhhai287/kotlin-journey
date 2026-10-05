@@ -178,12 +178,23 @@ Trong máy bạn có cả một kho project do AI sinh ra, và bạn vẫn chưa
 | Kiến trúc, concept | 40 : 60 |
 | Đọc source người khác (buổi READ) | 70 : 30 |
 
+### Lõi nhanh, thực hành dày — sửa 05/10/2026
+
+Ba lỗi thiết kế lộ ra sau bốn tuần chạy thật, và đã sửa:
+
+1. **Dự án vào sớm.** Bản trước mở Project 1 ở W10 — chín tuần đầu mọi buổi BUILD làm bài tập minh hoạ, không có gì *phải tiếp tục chạy*. Đó chính là hình dạng tutorial hell, kể cả khi tỷ lệ 30/70 vẫn giữ. Nay **Project 1 mở ngay sau 4.4**: module thành buổi INPUT, dự án thành buổi BUILD, và 4.5–4.8 được **kéo vào khi dự án cần**, không học trước cho đủ bộ.
+2. **Lõi và Mở rộng.** Mỗi module nay chia bài tập thành **Lõi** (bắt buộc, là ngưỡng) và **Mở rộng** (chỉ làm khi dự án đòi, hoặc khi dư giờ). Cắt **độ rộng**, không cắt **ngưỡng**. Giờ tiết kiệm được chuyển thẳng sang hai project — tổng 97h nội dung **không đổi**, chỉ đổi chỗ từ đọc sang gõ.
+3. **Một drill một lúc.** Chạy Error Zoo, Docs Quest và Tier 1 kata song song trong một tuần 6h là cách chắc chắn nhất để không drill nào xong — bằng chứng: sau bốn tuần cả ba đều ở 0/n. Nay mỗi drill có **một slot riêng không chồng lên khối 70'** — Tier 1 mở đầu buổi LONG BUILD, Error Zoo nằm trong 30' consolidate — và Docs Quest, thứ duy nhất từng ăn vào khối 70', dời hẳn về sau Collections vì ba trong bốn câu của nó hỏi đúng về Collections. Hai câu có hạ nguồn (Tier 2 ở tuần 7) được xếp lên trước.
+
+**Nguyên tắc chung:** lý thuyết được **kéo** vào bởi một thứ đang hỏng hoặc đang thiếu trong dự án, không được **đẩy** vào trước theo mục lục. Độ kỹ không phải mục tiêu — thứ chạy được mới là mục tiêu.
+
 **4 luật chống tutorial hell:**
 
 1. Video/tutorial chỉ mở khi *đang bí một thứ cụ thể*, không xem "cho biết". Không quá 20 phút liên tục mà không pause để tự gõ.
 2. **Closed-book rebuild:** mỗi tutorial dùng đúng 1 lần. Sau đó build một *biến thể* (đổi domain, thêm 1 tính năng) mà không mở lại. Không rebuild được = chưa học được gì từ nó.
 3. Không bao giờ có 2 buổi INPUT liên tiếp.
 4. Thước đo tuần: **dưới 4 ngày có commit = tuần đó đọc nhiều hơn làm** → tuần sau đảo tỷ lệ.
+5. **Từ khi Project 1 mở, không buổi BUILD nào kết thúc mà không có commit trong dự án** — kể cả buổi vừa học module mới. Module không để lại dấu trong thứ đang chạy được thì module đó chưa học xong.
 
 ## 📦 Bốn nghi thức — bật dần, không hơn
 
@@ -272,6 +283,8 @@ Hợp đồng chỉ đắt ở đúng chỗ: vòng tick, protocol, session, shar
 ### Năm luật cũ — giữ bốn, thay một
 
 **Luật 1 — không ai gõ code vào project ngoài bạn.** Trong Phase 0: tuyệt đối, không ngoại lệ, nài nỉ cũng vô ích. Từ Phase 1: AI vẫn không viết code cho bất kỳ khái niệm nào thuộc phase hiện tại hoặc chưa có bằng chứng `mastered`. Nếu AI buộc phải đưa ví dụ khi giải thích khái niệm, nghĩa vụ của bạn là đóng cửa sổ và gõ lại từ trí nhớ — gõ lại không nổi nghĩa là chưa hiểu. Ngoại lệ duy nhất mở về sau là thang R0–R4 bên dưới — chỉ ở vùng ngoài vùng cấm, chỉ từ P2, và mỗi bậc mở bằng hiện vật.
+
+**Luật 2b — trần hai lượt, sửa 05/10/2026.** Một câu explain-back hay một khái niệm được probe **tối đa hai lượt**. Sai lượt thứ hai thì AI **dừng hẳn**, biến nó thành một thẻ `notes/RECALL.md` có mốc ngày, và buổi học đi tiếp. Lý do có số: ngày 21–28/09 một câu bị probe sáu lượt qua hai buổi, ăn mất giờ deep-work và chất lượng trả lời **giảm** theo từng lượt. Cùng câu đó, sau ba ngày nghỉ, learner tự trả lời đúng không cần gợi ý. Ép liên tục không dạy được thứ mà cách quãng dạy được.
 
 **Luật 2 — câu trả lời mặc định là câu hỏi ngược.** Hỏi về khái niệm hay bug, bạn nhận lại 1–2 câu định hướng trước. Vẫn tắc → AI chỉ vùng vấn đề + đúng section docs, không chỉ thẳng dòng lỗi. Chỉ khi bạn đã mô tả lại vấn đề bằng lời của mình mà vẫn tắc → pseudo-code hoặc ví dụ ở domain khác, không bao giờ là code của bài đang làm.
 
