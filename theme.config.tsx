@@ -2,13 +2,13 @@ import React from 'react';
 import type { DocsThemeConfig } from 'nextra-theme-docs';
 
 const config: DocsThemeConfig = {
-  logo: <span style={{ fontWeight: 600 }}>🚀 Hành trình Game Server</span>,
+  logo: <span style={{ fontWeight: 600 }}>🚀 Kotlin/Java · Game Server & Android</span>,
   project: {
     link: 'https://github.com/thanhhai287/kotlin-journey',
   },
   docsRepositoryBase: 'https://github.com/thanhhai287/kotlin-journey/blob/main',
   footer: {
-    text: 'Hành trình Kotlin của Hải · Game Server & Backend Engineer · W1 = Thứ Hai 07/09/2026 → 03/12/2028',
+    text: 'Hành trình Kotlin/Java của Hải · Game Server & Android · Tự code, hiểu cơ chế, kiểm chứng',
   },
   editLink: {
     text: 'Sửa trang này trên GitHub →',
@@ -27,14 +27,14 @@ const config: DocsThemeConfig = {
   darkMode: true,
   faviconGlyph: '🚀',
   useNextSeoProps() {
-    return { titleTemplate: '%s — Hành trình Game Server' };
+    return { titleTemplate: '%s — Kotlin/Java · Game Server & Android' };
   },
   head: (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta
         name="description"
-        content="Lộ trình 27 tháng từ biết cú pháp Kotlin đến Game Server / Backend Engineer — 1.100h, 97 tuần chạy, một sản phẩm CARO chạy public."
+        content="Học Kotlin/Java để tự xây game server và ứng dụng Android qua tính năng, debug, kiểm thử và giải thích nền tảng. Web chỉ phụ trợ."
       />
     </>
   ),

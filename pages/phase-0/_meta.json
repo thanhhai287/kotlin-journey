@@ -1,13 +1,14 @@
 {
-  "index": "Tổng quan Phase 0",
-  "lich-14-tuan": "Lịch 14 tuần",
-  "meta-skills": "Meta-skills",
-  "kotlin-core-1": "Kotlin Core I — tuần 1–6",
-  "kotlin-core-2": "Kotlin Core II — tuần 7–9",
-  "concurrency-nhap-mon": "Concurrency nhập môn",
-  "game-loop-co-ban": "Game loop & state machine",
-  "byte-bit-so": "Byte, bit & số",
-  "bai-tap": "Bài tập & drill",
-  "projects": "Hai project CLI",
-  "tot-nghiep": "Tốt nghiệp Phase 0"
+  "xuong-thuc-hanh": "Code ngay — K01 đến K06",
+  "index": "Mục tiêu chặng Kotlin",
+  "lich-14-tuan": "Bốn tuần đầu — 9–12h/tuần",
+  "projects": "Sản phẩm & phạm vi",
+  "tot-nghiep": "Cổng năng lực",
+  "kotlin-core-1": "Tra cứu Kotlin I",
+  "kotlin-core-2": "Tra cứu Kotlin II",
+  "meta-skills": "Phân rã, debug, test",
+  "bai-tap": "Bài phụ khi cần",
+  "concurrency-nhap-mon": "Lab concurrency",
+  "byte-bit-so": "Lab byte, bit & số",
+  "game-loop-co-ban": "Lab game loop"
 }

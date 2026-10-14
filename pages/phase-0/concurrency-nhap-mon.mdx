@@ -1,5 +1,7 @@
 # Concurrency nhập môn — module 0.5, 8h, tuần 9
 
+> **Tra cứu theo nhu cầu.** Ticket hiện tại ở [Xưởng thực hành](/phase-0/xuong-thuc-hanh), cổng hiện tại ở [Tốt nghiệp P0](/phase-0/tot-nghiep). Số tuần/giờ/ngưỡng của phần lab dưới đây thuộc giáo án trước, không là nghĩa vụ thêm. Được hỏi giải thích và gợi ý theo [luật mới](/he-thong-hoc).
+
 Trang này trả lời một câu: *chuyện gì xảy ra khi hai luồng code cùng chạm vào một biến?* Mở nó ở tuần 9, sau khi xong 4.8 ở [Kotlin Core II](/phase-0/kotlin-core-2) — và mở lại đúng một lần nữa ở P1, module 1.3, để thấy mình đã hiểu sai chỗ nào.
 
 ---
@@ -194,7 +196,7 @@ Bạn sẽ gặp các từ này trong docs ngay tuần này. Biết tên để k
 
 **Vì sao hoãn:** viết code shared-state trước khi hiểu mô hình bộ nhớ là "lắp ráp trước, hiểu sau" — đúng cái bệnh cả lộ trình này đang chữa. Bạn sẽ vào 1.3 với một server thật đang chạy, và mỗi luật JMM sẽ ứng với một bug bạn đã tự gây. Học bây giờ là học thuộc; học ở đó là học được.
 
-**Cấm:** copy `Mutex`, `Channel`, `withContext(Dispatchers.IO)` từ docs vào Project 1–2. Hai project CLI của Phase 0 chạy một thread, không có lý do gì để chúng xuất hiện.
+K01–K06 hiện chạy một luồng. Chưa cần thêm `Mutex`/`Channel` khi chưa có thao tác đồng thời; tới Android/server, chọn chúng theo ownership và lifecycle thực tế.
 
 ## 🏁 Ngưỡng đạt: 1 commit đỏ, 1 commit xanh
 
@@ -212,19 +214,9 @@ Bạn sẽ gặp các từ này trong docs ngay tuần này. Biết tên để k
 
 Không có commit đỏ thì commit xanh vô nghĩa — bằng chứng là **cặp** commit, không phải bản sửa. Đo bằng chứng cứ, không đo bằng cảm tính.
 
-## 🔒 Vùng AI-free
+## Trợ giúp khi học concurrency
 
-Theo [hợp đồng AI bản server](/he-thong-hoc): mọi thứ chạm tới shared state, `Mutex`, `Channel`, `Atomic` nằm trong vùng AI **không được viết hộ suốt 27 tháng — kể cả pseudo-code**. Trang này là lần đầu bạn bước vào vùng đó.
-
-| Được hỏi AI | Không được hỏi AI |
-|---|---|
-| "Cái gì có thể chạy đồng thời với dòng này?" — câu duy nhất AI trả lời về bug concurrency (Luật 2+) | "Sửa race này giúp tôi" |
-| Tên khái niệm, link đúng section docs | Pseudo-code cho `synchronized`, `Atomic`, `Channel`, `Mutex` |
-| Sinh đề: "cho tôi 3 đoạn `launch` + `delay`, tôi đoán thứ tự in" | "Viết test race cho tôi" |
-| Cài `kotlinx-coroutines` vào Gradle (máy mình, Luật 7) | "Code này có race không?" — bạn tự trả lời bằng bảng thread A/B ở trên |
-| Review trả về checklist cố định (Luật 5+): thread nào? ai giữ lock? 2 gói cùng lúc? | Bản sửa |
-
-**Vì sao khắt khe đúng chỗ này:** đây là nơi hợp đồng AI đắt nhất, và cũng là nơi nó sinh lợi nhất. Người để AI viết phần shared-state sẽ vượt qua P0 và chết ở G1. Prompt của mọi phiên AI tuần này ghi nguyên văn vào `notes/ai-sessions/` như thường lệ.
+AI được giải thích atomicity, visibility, interleaving, cancellation và giúp thu nhỏ hiện tượng. Bạn tự dự đoán một lịch thực thi, chạy/quan sát và triển khai cách sửa. Review nêu bằng chứng và lý do, không chỉ hỏi ngược hoặc gửi patch. Trong lượt kiểm tra độc lập, tạm dừng trợ giúp tới khi nộp; sau đó giải thích lại ngay. [Luật đầy đủ](/he-thong-hoc).
 
 ## ⚠️ Bẫy thường gặp
 
@@ -268,7 +260,7 @@ Trượt bài nào: làm lại bài đó vào buổi kế, không đọc lại l
 3. Hai coroutine cùng `add` vào một `MutableList` — có hỏng không? Vì sao coroutine không tự cứu bạn?
 4. Vì sao roadmap bắt bạn thấy lost update **trước** khi học JMM, thay vì học luật trước rồi làm lab?
 
-Ba câu vấn đáp concurrency ở bảng tốt nghiệp: "hai coroutine cùng sửa `MutableList`" — trang này trả lời trọn. Hai câu còn lại — huỷ scope cha, và vì sao `Channel`/actor/`Dispatchers` được hoãn sang 1.4 — phải trả lời được ở **mức cơ chế** (cái gì xảy ra và vì sao), không phải ở mức tên. [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) chốt cùng một ngưỡng: **≥10/12**, câu 10–12 đúng ở mức nhập môn của module 0.5 là đủ, và **trả lời bằng tên thư viện thay vì cơ chế là trượt câu đó**. Mức nhập môn của hai câu ấy nằm ngay dưới đây — thêm mục Cancellation trong "Đọc gì" là hết phần phải thuộc.
+Các câu sau dùng tự kiểm khi bạn chọn lab concurrency: giải thích một interleaving, hủy scope cha ảnh hưởng gì tới con, và khi nào cần Channel/dispatcher. Đây không phải kỳ thi 12 câu của P0; cổng hiện tại ở [Tốt nghiệp P0](/phase-0/tot-nghiep).
 
 **Đủ cho mức nhập môn — hai câu đó, mỗi câu một đoạn:**
 

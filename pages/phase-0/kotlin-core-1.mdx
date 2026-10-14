@@ -1,26 +1,14 @@
-# Kotlin Core I — module 4.1–4.5
+# Kotlin Core I — tra cứu khi triển khai
 
-Trang này là giáo trình nửa đầu Kotlin Core: từ "Kotlin khác Java chỗ nào" đến Collections — **16h** trong 97h nội dung của Phase 0. Mở nó vào đầu mỗi buổi INPUT của tuần 1–6, học đúng thứ tự.
+Bạn đã rõ cú pháp cơ bản: **không học lại trang này từ đầu**. Đề chính ở [K01–K06](/phase-0/xuong-thuc-hanh). Mở đúng mục khi cần giải thích, thử nghiệm hoặc chữa lỗ hổng.
 
----
+| Ticket | Mục cần tra |
+|---|---|
+| K01 | 4.2 kiểu/hàm; 4.3 null/parse |
+| K02–K03 | 4.4 model, equality, mutation |
+| K05 | 4.5 collections, biến đổi dữ liệu |
 
-| Module | Nội dung | Giờ | Tuần |
-|---|---|---|---|
-| 4.1 | "Kotlin khác Java/C chỗ nào" | 1h | W1 |
-| 4.2 | `val`/`var`, kiểu, hàm | 3h | W1–2 |
-| 4.3 | Null-safety — cách nghĩ mới | 4h | W3–4 |
-| 4.4 | `data class`, `enum`, `sealed class` + `when` | 4h | W4–5 |
-| 4.5 | Collections + functional operators | 4h | W5–6 |
-
-**Lõi và Mở rộng — sửa 05/10/2026.** Bài tập không ghi gì là **Lõi**: bắt buộc, và nó là ngưỡng của module. Bài ghi *(Mở rộng)* chỉ làm khi dự án thật đòi tới, hoặc khi tuần dư giờ — bỏ nó không chặn module sau. Lý do cắt: bản trước đẩy 31h Kotlin core trước khi có dự án nào phải tiếp tục chạy; giờ cắt được chuyển sang hai project, tổng 97h không đổi. Luật đầy đủ ở [Hệ thống học](/he-thong-hoc).
-
-**Cảnh báo số hiệu:** `4.1–4.8` ở đây là module Kotlin core của Phase 0. Ở Phase 4 cũng có dãy `4.1–4.8` (Spring, profiling, rollback, take-home, system design) — xem [Roadmap](/roadmap). Hai dãy trùng ký hiệu, không trùng nội dung; khi đọc trang khác hãy nhìn phase trước khi nhìn số.
-
-Môi trường đã dựng ở **Ngày 1** — trang này không cài lại gì. Chạy song song: **Error Zoo 20 phút mỗi buổi tuần 3–6** (ngưỡng 10/10) và **Tier 1 — 5 kata**, đề ở [Bài tập & drill](/phase-0/bai-tap). Module 4.6–4.8 ở [Kotlin Core II](/phase-0/kotlin-core-2).
-
-**Ví dụ ở đây lấy từ thế giới bạn sắp dựng:** phiên chơi, nước đi, người chơi, vật phẩm, vàng. Hình dạng dữ liệu bạn model ở 4.4 chính là state machine `caro-engine` dùng lại nguyên xi ở [hai project CLI](/phase-0/projects), rồi room actor của server dùng lại lần nữa ở Phase 1.
-
----
+Các bài tập, tự kiểm, nhãn Lõi/Mở rộng và số tuần/giờ trong phần dưới là **ngân hàng bài tham khảo của bản trước**, không là lịch hoặc cổng hiện hành. Chọn tối đa một bài cho lỗ hổng đang gặp rồi quay lại ticket; không bắt đủ Error Zoo/kata. Mentor giải thích trực tiếp theo [luật mới](/he-thong-hoc).
 
 ## 4.1. "Kotlin khác Java/C chỗ nào" — 1h, tuần 1
 
@@ -31,7 +19,7 @@ Môi trường đã dựng ở **Ngày 1** — trang này không cài lại gì.
 
 ### 🌱 Vì sao module này tồn tại
 
-Bạn không cần ai dạy "biến là gì". Module này treo Kotlin vào móc C/Java có sẵn trong đầu bạn — học ngôn ngữ mới nhanh nhất bằng câu hỏi "khác chỗ nào, và vì sao họ chọn khác". Scratch file là phòng thí nghiệm cá nhân: mọi câu "không biết dòng này ra gì" trả lời ở đây bằng thí nghiệm, không phải bằng cách hỏi AI.
+Bạn không cần ai dạy "biến là gì". Module này treo Kotlin vào móc C/Java có sẵn trong đầu bạn — học ngôn ngữ mới nhanh nhất bằng câu hỏi "khác chỗ nào, và vì sao họ chọn khác". Scratch file là phòng thí nghiệm cá nhân: dự đoán hành vi rồi chạy thử; nếu chưa có mô hình để dự đoán, hỏi mentor giải thích trước.
 
 ### Nội dung cốt lõi
 
@@ -174,7 +162,7 @@ val luotCua = phien?.luotCua ?: "chua-bat-dau"   // kế hoạch B tường minh
 
 | Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
 |---|---|---|
-| Rắc `!!` cho hết gạch đỏ | Muốn compiler im nhanh nhất | Grep ra `!!` — cấm tuyệt đối trong project, chấm bài sẽ grep |
+| Rắc `!!` cho hết gạch đỏ | Muốn compiler im nhanh nhất | Có `!!` thì phải giải thích vì sao chắc chắn không null; ưu tiên biểu diễn đúng hợp đồng và xử lý lỗi |
 | Chuỗi `?.let` lồng 3–4 tầng | Tưởng "càng nhiều toán tử càng Kotlin" | Chính bạn đọc lại mất hơn 30 giây |
 | Khai mọi thứ nullable "cho an toàn" | Nullable không an toàn hơn, chỉ *trung thực* hơn | Hàm nhận toàn tham số `?` rồi check null hết ở dòng đầu |
 
@@ -226,9 +214,9 @@ Vì sao `equals` theo giá trị quan trọng: hai nước đi cùng toạ độ
 enum class OQuanCo { TRONG, X, O }
 ```
 
-`enum` dùng khi mọi giá trị **rỗng như nhau**. Khi mỗi trạng thái mang dữ liệu *khác nhau* thì `enum` hết đất, `sealed class` bắt đầu — đúng hình dạng một phiên chơi: `Waiting` cần biết ai đã vào; `Playing` cần biết đến lượt ai; `Finished` cần ai thắng và bằng nước nào; `Abandoned` cần ai bỏ và lúc nào. Cú pháp tra ở mục "Đọc gì"; phần khó là câu hỏi phải trả lời **trước khi** gõ dòng đầu: trạng thái nào mang theo gì, và vì sao đúng thứ đó.
+`enum` biểu diễn tập giá trị cố định và có thể có thuộc tính/hành vi. Khi cần các biến thể mang dữ liệu khác kiểu hoặc dữ liệu riêng cho từng instance, cân nhắc `sealed class` — đúng hình dạng một phiên chơi: `Waiting` cần biết ai đã vào; `Playing` cần biết đến lượt ai; `Finished` cần ai thắng và bằng nước nào; `Abandoned` cần ai bỏ và lúc nào. Cú pháp tra ở mục "Đọc gì"; phần khó là câu hỏi phải trả lời **trước khi** gõ dòng đầu: trạng thái nào mang theo gì, và vì sao đúng thứ đó.
 
-**`when` exhaustive là hợp đồng với tương lai.** Phủ đủ mọi nhánh thì nó thành radar: thêm trạng thái mới là mọi `when` thiếu nhánh **tự đỏ lúc compile**, thay vì thành bug im lặng lúc runtime ba tuần sau — lúc server đã có người chơi thật. **Luật cứng: cấm `else` khi `when` trên sealed/enum.** `else` là công tắc tắt radar; đừng vứt exhaustiveness đi để tiết kiệm một dòng.
+**`when` exhaustive là hợp đồng với tương lai.** Phủ đủ mọi nhánh thì nó thành radar: thêm trạng thái mới là mọi `when` thiếu nhánh **tự đỏ lúc compile**, thay vì thành bug im lặng lúc runtime ba tuần sau — lúc server đã có người chơi thật. Khi muốn compiler nhắc xử lý trạng thái mới, liệt kê các nhánh của `when` trên sealed/enum thay vì gom vào `else`. Nếu cần fallback, phải giải thích hành vi đó và kiểm tra khi thêm trạng thái.
 
 ### ⚠️ Bẫy
 
@@ -258,7 +246,7 @@ enum class OQuanCo { TRONG, X, O }
 
 1. Vì sao hai `data class` cùng nội dung thì `==` ra true, còn hai class thường thì không? Tầng hai: nối với bài tham chiếu ở 4.2 chỗ nào?
 2. Khi nào `enum` đủ, khi nào phải lên `sealed class`? Câu trả lời nằm ở đâu trong dữ liệu?
-3. Vì sao luật cấm `else` làm code **an toàn hơn**?
+3. Khi nào bỏ `else` giúp compiler nhắc bạn xử lý một trạng thái mới?
 
 ---
 
@@ -347,10 +335,6 @@ Ghi cả hai con số vào `PROGRESS.md`. Khi tự nghi ngờ "học mãi vẫn 
 
 ---
 
-## → Tiếp theo
+## Quay lại sản phẩm
 
-Xong 5 module này là bạn đi hết tuần 6 của [lịch 14 tuần](/phase-0/lich-14-tuan). Không có phép màu nào ở đây — chỉ có kỷ luật cộng dồn.
-
-- **[Kotlin Core II — module 4.6–4.8](/phase-0/kotlin-core-2)**: lambda + extension function, `let`/`apply`, generics đọc-hiểu, `Result`, interface + composition
-- Error Zoo 10/10 và Tier 1 (5 kata) là **ngưỡng của module này**, không phải việc làm thêm — đề ở [Bài tập & drill](/phase-0/bai-tap)
-- Bí ở đâu thì mở [Meta-skills](/phase-0/meta-skills) — IOSTV khi không biết bắt đầu từ đâu, quy trình 4 bước khi màn hình đỏ. Lỗi là dữ liệu, không phải bản án
+Áp dụng vào [ticket đang làm](/phase-0/xuong-thuc-hanh), tự thử một case mới. Không cần hoàn thành mọi bài trên trang để sang mục khác.

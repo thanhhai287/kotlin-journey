@@ -1,369 +1,82 @@
-# Meta-skills — bảy kỹ năng nền của Phase 0
+# Phân rã, debug và kiểm chứng
 
-Phase 0 không dạy kiến thức mới là chính — nó dạy bảy kỹ năng nền, và mỗi kỹ năng ở đây là **một quy trình đánh số làm theo được**, không phải lời khuyên kiểu "hãy suy nghĩ logic". Chép các quy trình này vào `PLAYBOOK.md` trong repo của bạn và mở trang này ra mỗi khi bí.
+Đây là kỹ năng dùng ngay trong [K01–K06](/phase-0/xuong-thuc-hanh), rồi dùng lại trên Android và game server. Không cần học hết trang trước khi code. Chọn đúng mục khi gặp khó; mentor được giải thích và cùng thiết kế thí nghiệm theo [luật hướng dẫn](/he-thong-hoc).
 
-**Cách đọc trang:** bảy kỹ năng được đánh số **1–7** ở các đề mục dưới đây — đúng bảy mục mà [Lịch 14 tuần](/phase-0/lich-14-tuan) và [Tổng quan Phase 0](/phase-0) gọi tên. Hai đề mục **không đánh số** — *Tự học một thư viện không có tutorial* và *README 5 mục* — là bài tổng duyệt và hiện vật đi kèm, không phải kỹ năng thứ tám.
+## 1. Chia bài: từ yêu cầu tới một hành vi chạy được
 
----
+Đề bài nói người dùng muốn gì; code cần một hợp đồng đủ rõ để kiểm chứng. Trước mỗi ticket, viết ngắn:
 
-## 1. IOSTV: khi nhận đề bài và không biết bắt đầu từ đâu
+1. **Input/output:** 3 ví dụ bằng dữ liệu thật, có một case bị từ chối.
+2. **State:** điều chương trình phải nhớ giữa hai thao tác.
+3. **Bất biến:** điều không được phá, kể cả khi thao tác thất bại.
+4. **Lát đầu:** một hành vi nhỏ có thể chạy và quan sát ngay.
+5. **Việc tiếp:** chọn sau khi lát đầu cho phản hồi, không đoán toàn bộ kiến trúc từ đầu.
 
-Không biết chia nhỏ bài toán là lỗ hổng lớn nhất và lấp lâu nhất của hồ sơ này. Tê liệt trước đề mơ hồ không đến từ việc bạn kém — nó đến từ việc cố nghĩ **toàn bộ chương trình cùng một lúc**. Thuốc chữa là một quy trình 5 bước ép bạn mỗi lần chỉ nhìn một lát cắt nhỏ:
+Nếu chưa viết được ví dụ, làm rõ yêu cầu hoặc thử một mô hình nhỏ trên giấy. Không cần nộp BACKLOG dài và chờ duyệt trước khi code. Kiểu/class/interface là quyết định sau khi hiểu dữ liệu, không phải checklist hình thức.
 
-| Bước | Tên | Làm gì |
+**Ví dụ khác domain:** tool mượn sách phải nhớ ai mượn cuốn nào. Hai cuốn cùng tên không nhất thiết là cùng một bản sách; câu hỏi về danh tính có trước quyết định dùng `List` hay `Map`. Nếu chưa có ngày trả thì báo cáo trả muộn phải chốt “tới hôm nay” hay “tới ngày đã trả”. Viết ví dụ sẽ làm lộ điều chưa rõ đó.
+
+## 2. Đọc lỗi: compiler, runtime hay sai nghiệp vụ?
+
+| Loại | Quan sát | Bước tiếp |
 |---|---|---|
-| **I** | Input/Output trước tiên | Viết lại đề bằng lời của mình (3–5 câu) + **3 cặp ví dụ input → output bằng số thật** |
-| **O** | Object hoá dữ liệu | Bài toán cần "nhớ" những gì? Mỗi thứ là một `data class`. Mỗi thứ có những trạng thái nào? → ứng viên cho `sealed class` / `enum` |
-| **S** | Steps thành hành vi | Liệt kê hành vi dạng câu "nhận X, trả về Y" — mỗi câu là một hàm |
-| **T** | Thứ tự theo walking skeleton | Sắp xếp để chương trình **chạy được sớm nhất có thể**, dù chỉ in menu và "chưa làm gì". Chạy được từ phút 30, rồi đắp thịt dần |
-| **V** | Việc nào quá 30 phút thì chia tiếp | Ghi ước lượng cạnh mỗi việc; làm xong ghi cả thời gian thực tế — luyện kỹ năng ước lượng miễn phí |
+| Compiler | Chưa tạo được chương trình; báo kiểu/tên/cú pháp không hợp lệ | Đọc vị trí đầu tiên thuộc code mình; so kiểu mong đợi và kiểu thật |
+| Runtime | Đã chạy nhưng có exception | Tìm exception, thông điệp, chuỗi nguyên nhân và frame đầu thuộc code mình |
+| Nghiệp vụ | Không crash nhưng kết quả sai | Ghi input, state trước, kết quả mong đợi và kết quả thật |
 
-**Quy tắc vàng của bước I:** không viết được ví dụ cụ thể bằng số thật = chưa hiểu đề = **cấm code**.
+Một stack trace cho đường gọi tới lỗi, không tự chứng minh nguyên nhân gốc. Một lỗi parse có thể do input bậy, định dạng file đổi, hoặc đọc nhầm trường; cần quan sát để phân biệt.
 
-Bước T là liều thuốc chống tê liệt mạnh nhất: một chương trình chạy được và làm sai còn hơn một chương trình hoàn hảo chưa chạy.
+Khi hỏi trợ giúp, gửi phần liên quan và cách tái hiện. Chưa hiểu log thì hỏi cách đọc ngay. Không cần chờ đủ 30 phút hay có sẵn hai thí nghiệm.
 
-### Ví dụ áp dụng 5 phút
+## 3. Debug như kiểm tra một giả thuyết
 
-Đề mơ hồ: *"Làm tool console quản lý mượn trả sách cho tủ sách của lớp."*
+Giả thuyết tốt có thể bị bác bỏ. “Hàm này lỗi” chưa đủ; “giá trị đã thay đổi trước khi validation kết thúc” cho biết cần quan sát thời điểm nào.
 
-- **I** — viết lại: ghi được lượt mượn (ai, cuốn nào, ngày nào), xem danh sách đang mượn, báo ai quá hạn 14 ngày. Ví dụ số thật: input "Tuấn mượn Dế Mèn ngày 01/08, hôm nay là 20/08" → output "Tuấn quá hạn 5 ngày".
-- **O** — cần nhớ: cuốn sách và lượt mượn → 2 `data class`. Một cuốn sách có trạng thái: trong tủ / đang được mượn / quá hạn → ứng viên `enum`.
-- **S** — "nhận tên người + tên sách + ngày, trả về lượt mượn mới" · "nhận danh sách lượt mượn + ngày hôm nay, trả về danh sách lượt quá hạn".
-- **T** — việc số 1: menu in ra 3 lựa chọn, chọn gì cũng in "chưa làm" — chạy được sau 30 phút đầu tiên.
-- **V** — "báo cáo quá hạn" ước 60 phút → chia ba: tính số ngày trễ của một lượt (20 phút) · lọc danh sách (15 phút) · in kết quả (15 phút).
-
-### Chuẩn một bản phân rã đạt
-
-Toàn bộ output của IOSTV ghi vào `BACKLOG.md` của project. Từ Project 1 trở đi: **nộp `BACKLOG.md` trước khi viết dòng code đầu tiên** — xem [Hai project](/phase-0/projects). Một bản phân rã đạt khi:
-
-- Đủ 3 ví dụ input → output bằng số thật
-- Có ít nhất 1 `data class`
-- ≥10 việc, và việc đầu tiên cho ra chương trình chạy được trong 30 phút
-- Không việc nào ước lượng quá 30 phút
-
-Cơ bắp này luyện bằng **decomposition drill**: hai đề ở tuần 12 và tuần 13, chỉ nộp bản phân rã, **không code**, 30 phút mỗi đề. Đề nằm ở [Bài tập & drill](/phase-0/bai-tap).
-
-- [ ] Chép quy trình IOSTV vào `PLAYBOOK.md` của repo, dán 5 chữ cái I-O-S-T-V cạnh màn hình
-- [ ] Áp IOSTV vào một đề tự chọn (không code) và ra bản phân rã đạt đủ 4 tiêu chí trên — thời gian: ____ phút
-
-## 2. Đọc error và stack trace
-
-"Thấy đỏ là paste vào AI" là lỗ hổng **rẻ nhất để lấp và lãi nhất khi lấp** trong toàn bộ Phase 0. Stack trace không phải hình phạt — nó là bản đồ chỉ gần như thẳng đến chỗ sai, viết bằng một cú pháp học được trong một buổi. Mỗi lần paste lỗi cho AI là một lần từ chối tập đúng cơ này.
-
-### Giải phẫu một stack trace
-
-```text
-Exception in thread "main" java.io.FileNotFoundException: du-lieu/phien-choi.json (The system cannot find the file specified)
-    at java.base/java.io.FileInputStream.open0(FileInputStream.java)  <-- thư viện: nơi lỗi PHÁT NỔ
-    at com.example.caro.LuuTruPhien.tai(LuuTruPhien.kt:24)             <-- CODE CỦA MÌNH: nơi CHÂM NGÒI
-    at com.example.caro.MainKt.main(Main.kt:12)
-Caused by: ...                                                        <-- chuỗi nguyên nhân: đọc cái DƯỚI CÙNG trước
-```
-
-Bốn điểm đọc, theo đúng thứ tự:
-
-1. **Dòng đầu** — tên exception, dịch nghĩa đen (`FileNotFoundException` = "không tìm thấy file") + message. Message thường chứa **chính giá trị gây lỗi** — ở trên là đường dẫn `du-lieu/phien-choi.json`. Đọc nó, và đọc luôn phần trong ngoặc: nó nói *không tìm thấy*, chứ không phải *không có quyền đọc* — hai nguyên nhân khác nhau, hai cách sửa khác nhau.
-2. **Các dòng `at ...`** — đọc từ trên xuống, tìm **dòng đầu tiên thuộc package của mình**. 90% trường hợp bug nằm ở đó. Các dòng thư viện phía trên chỉ là nơi lỗi *phát nổ*, không phải nơi *châm ngòi*.
-3. **`Caused by:`** — chuỗi nguyên nhân, đọc cái **dưới cùng** trước.
-4. **Lỗi compile Kotlin** — đọc cả dòng gạch chân `^` và phần "expected X, found Y".
-
-*Đóng trang này. Vẽ lại giải phẫu 4 phần của một stack trace từ trí nhớ. Vẽ không nổi = chưa hiểu, đọc lại.*
-
-### Quy trình 4 bước trước khi sửa bất kỳ lỗi nào
-
-1. **Đọc to tên exception**, dịch nghĩa đen
-2. **Đọc message**, khoanh giá trị gây lỗi
-3. **Chỉ vào dòng code của mình**
-4. **Viết 1 câu giả thuyết** — rồi mới được sửa
-
-Bước 4 là bước hay bị bỏ qua nhất và là bước tạo khác biệt: mô tả được lỗi thành lời thì rất thường tự ra đáp án, trước khi kịp hỏi ai.
-
-### Ghi `notes/ERRORS.md`
-
-Mỗi lỗi mới thuần hoá được, ghi một mục 3–4 dòng theo mẫu:
-
-```markdown
-## FileNotFoundException khi mở file phiên chơi
-Triệu chứng: crash ngay lúc khởi động, chưa kịp in menu
-Nhận diện lần sau: message chứa chính đường dẫn, kèm lý do trong ngoặc
-```
-
-Đúng **3 dòng**: tên lỗi / triệu chứng / cách nhận diện lần sau. Cố ý **không có dòng "cách sửa"** — cách sửa là thứ bạn phải tự nghĩ lại mỗi lần gặp, không phải thứ tra bảng. Ghi sẵn cách sửa là biến `ERRORS.md` thành phao, mà phao thì không làm cơ nào khoẻ lên.
-
-File này về sau là **trophy tâm lý** — mỗi mục là một con thú đã thuần hoá, nhìn thấy được. Nó cũng là vé vào cửa khi muốn hỏi AI về một lỗi: chưa có giả thuyết + 2 thí nghiệm + kết quả quan sát trong `ERRORS.md` thì chưa được hỏi — xem luật 30 phút ở [Hệ thống học & luật AI](/he-thong-hoc).
-
-Sân tập là **Error Zoo** (tuần 3–6, 20 phút mỗi buổi): 10 chương trình ngắn có lỗi cài sẵn — gọi tên lỗi → chỉ dòng → giải thích → sửa → ghi vào `ERRORS.md`. Đề nằm ở [Bài tập & drill](/phase-0/bai-tap).
-
-- [ ] Nhận một stack trace bất kỳ, chỉ đúng dòng đầu tiên thuộc code của mình trong vòng 30 giây
-- [ ] Hoàn thành Error Zoo — 10/10 con thú có mục tương ứng trong `notes/ERRORS.md`
-- [ ] 2 tuần liên tiếp áp đúng quy trình 4 bước cho mọi lỗi — không lần nào sửa trước khi viết giả thuyết
-
-## 3. Debug có hệ thống
-
-Rải `println` khắp nơi rồi nhìn output đoán là dò mìn bằng chân — thỉnh thoảng trúng, không lặp lại được, và không dạy bạn điều gì. Debug có hệ thống là chạy một quy trình cố định cho đến khi bug hết chỗ trốn.
-
-### Buổi học debugger — tuần 2, 2 giờ
-
-Học IntelliJ debugger **bằng cách làm, không bằng đọc**: mở bài tự kiểm 4.1/4.2, tự cài một bug, rồi lần lượt dùng từng tính năng để tìm lại nó. Tài liệu đối chiếu khi kẹt: [Debug code — JetBrains docs](https://www.jetbrains.com/help/idea/debugging-code.html).
-
-Checklist tính năng phải dùng được trước khi kết thúc buổi:
-
-- [ ] Đặt breakpoint, chạy debug, chương trình dừng đúng dòng
-- [ ] Phân biệt Step Over / Step Into / Step Out bằng một ví dụ hàm-gọi-hàm tự tạo
-- [ ] Đọc giá trị biến trong cửa sổ Variables và thêm được 1 Watch
-- [ ] Evaluate Expression — gọi thử một hàm với tham số tự chọn ngay lúc đang dừng
-- [ ] Conditional breakpoint — chỉ dừng khi `amount < 0`
-- [ ] 2 tuần sau buổi học: mọi bug đều xử lý bằng debugger, không dùng `println`
-
-### Quy trình debug 6 bước
-
-1. **Reproduce ổn định** — tìm input nhỏ nhất làm lỗi xảy ra 100%
-2. **Đọc error** theo quy trình 4 bước ở trên
-3. **Giả thuyết thành lời**: "Tôi nghĩ X sai vì Y"
-4. **Thí nghiệm nhỏ nhất** kiểm chứng giả thuyết — breakpoint đúng chỗ, hoặc gọi riêng hàm đó trong scratch file. **Không sửa mò**
-5. **Sửa**
-6. **Giải thích được vì sao lỗi và vì sao bản sửa đúng.** Chưa giải thích được = chưa xong. Cấm "tự nhiên hết lỗi rồi, kệ nó"
-
-Vì sao cấm sửa mò: bản "sửa" mò thường chỉ che triệu chứng và cài thêm một bug kín hơn. Một thí nghiệm có giả thuyết dạy nhiều hơn năm lần sửa hú hoạ.
-
-### Ba kỹ thuật khi bế tắc
-
-| Kỹ thuật | Cách làm | Dùng khi |
-|---|---|---|
-| **Binary search lỗi** | Comment nửa dưới → còn lỗi không? → khoanh vùng nửa còn lại → lặp. Áp cả cho dữ liệu: file 1000 dòng gây lỗi → thử 500 dòng đầu | Không biết lỗi nằm vùng nào |
-| **Minimal reproduction** | Rút chương trình 150 dòng về ≤15 dòng mà vẫn tái hiện được lỗi | Trước khi hỏi bất kỳ ai — và rất thường bạn tự ra đáp án trước khi rút xong |
-| **"Code sai" vs "hiểu sai"** | Nếu bạn *ngạc nhiên* về output của MỘT dòng lệnh riêng lẻ → mental model của bạn sai, không phải code sai. Kiểm chứng bằng scratch file với giá trị cụ thể | Nhìn mãi vẫn thấy "code đúng mà chạy sai" |
-
-Bài kiểm tra thực địa của kỹ năng này là **Bug Hunt Kata** (tuần 2 — ở buổi ngay sau buổi debugger, không nhét chung — và tuần 11, ở buổi BUILD, để đo hiệu số) — luật chơi: cấm `println`, chỉ dùng debugger, mỗi bug phải ghi giả thuyết trước khi sửa. Đề nằm ở [Bài tập & drill](/phase-0/bai-tap).
-
-## 4. Đọc tài liệu
-
-Sợ docs tiếng Anh khiến bạn bị nhốt trong vòng tutorial tiếng Việt — nguồn vừa ít, vừa cũ, vừa hay sai. Kỹ năng này phá cái lồng đó.
-
-### Bản đồ 4 loại tài liệu
-
-| Loại | Vai trò | Cách đọc đúng |
-|---|---|---|
-| **Tutorial** | Dắt tay từng bước | Đọc tuyến tính, làm theo — mỗi tutorial dùng đúng 1 lần |
-| **Guide** | Giải thích khái niệm | Đọc để hiểu "vì sao", không cần nhớ hết chi tiết |
-| **Reference / API doc** | Tra cứu | **Không đọc tuyến tính** — tra đúng thứ cần, chạy example |
-| **Source code** | Sự thật cuối cùng | Ctrl+Click khi docs chưa đủ |
-
-Người mới chết vì đọc Reference như đọc Tutorial — mở trang API rồi đọc từ trên xuống như tiểu thuyết. Không phải docs khó: bạn đang cầm từ điển và cố đọc nó như truyện.
-
-### Đọc signature như đọc một câu văn
-
-```kotlin
-fun <T> Iterable<T>.filter(predicate: (T) -> Boolean): List<T>
-```
-
-Đọc thành lời: *"trên mọi thứ lặp được chứa T, đưa vào một hàm nhận T trả về Boolean, nhận lại List các T."* Thứ tự đọc một entry: signature trước → mô tả sau → rồi **chạy example trong scratch file với dữ liệu của mình**.
-
-*Đóng trang này. Gõ lại signature trên từ trí nhớ rồi tự đọc nó thành một câu tiếng Việt. Gõ lại không nổi = chưa hiểu, đọc lại.*
-
-**Quy tắc sắt: chưa chạy example = chưa đọc.**
-
-### Kỹ thuật 3 lượt
-
-1. **Skim** heading toàn trang — 2 phút, chỉ để biết trang có những gì
-2. Đọc kỹ **đúng section** đang cần, bỏ qua phần còn lại
-3. Làm lại example **với dữ liệu của mình**, không copy nguyên văn
-
-### Đọc source thư viện
-
-Trong IntelliJ, Ctrl+Click vào `firstOrNull`, `sumOf`, `groupBy` — bạn sẽ thấy phần lớn stdlib chỉ là những hàm 3–10 dòng đọc hiểu được ngay. Hiệu ứng tâm lý quan trọng hơn kiến thức: **thư viện không phải ma thuật**, chỉ là code của người khác.
-
-### Chiến thuật tiếng Anh
-
-Không học tiếng Anh như một môn riêng — học chiến thuật:
-
-- Mỗi tuần nhặt **20 thuật ngữ lặp lại nhiều nhất** từ chính docs đang đọc — deprecated, immutable, inference, receiver, scope, coroutine… — ghi thẳng vào `notes/TU-VUNG.md`: không cài app mới, không nghi thức mới. Không có flashcard, không có deck
-- 4 tuần đầu: được đọc bản dịch trước, nhưng **bắt buộc đối chiếu bản gốc** ngay sau đó
-- Từ tuần 5: docs gốc đọc trước, nguồn tiếng Việt chỉ để đối chiếu
-
-Sân tập là **Docs Quest** — một câu hỏi chỉ trả lời được bằng docs, 30–45 phút, chỉ được dùng [kotlinlang.org](https://kotlinlang.org/docs/home.html) (và Java docs khi Kotlin đứng trên vai JVM). Bốn câu có sẵn ở [Bài tập & drill](/phase-0/bai-tap), rải ở tuần 2–5, mỗi tuần một câu — không có gì trước tag `v0.0.1`; hết bốn câu thì tự ra đề theo công thức ở đó, mỗi khi gặp một hàm lạ. Đây là drill, không phải nghi thức thứ tư.
-
-- [ ] Chọn 1 hàm stdlib chưa từng dùng trong [API reference](https://kotlinlang.org/api/latest/jvm/stdlib/), đọc signature thành một câu tiếng Việt, chạy example với dữ liệu của mình
-- [ ] Ctrl+Click đọc source của 3 hàm stdlib đã dùng tuần này, ghi 1 điều bất ngờ vào note
-
-## Tự học một thư viện không có tutorial
-
-Thử thách tuần 13 (**2h, lấy từ 4h dự phòng của 116h** — không phải giờ thêm ngoài 116h) — cùng tuần `caro-cli` bắt đầu và sắp cần xuất JSON. Đây là bài tổng duyệt của cả bốn kỹ năng trên, và là mô phỏng chính xác Phase 1: Ktor, `kotlinx.coroutines`, HdrHistogram — thư viện server nào cũng chỉ có docs gốc, không có tutorial tiếng Việt tử tế.
-
-**Đề:** chọn 1 thư viện chưa từng dùng, chỉ dùng docs chính thức + source code: `kotlinx-serialization` (JSON — ứng viên mặc định, vì `caro-cli` cần nó ngay tuần 14) · `java.time` (ngày giờ, múi giờ Việt Nam) · `kotlinx-cli`. Build một tool nhỏ dùng nó trong ~2 giờ.
-
-Quy trình tấn công một thư viện lạ:
-
-1. Tìm **trang docs chính thức** — không Google "tên thư viện + tutorial"
-2. Skim 15 phút: trang Getting Started + mục lục — biết docs có những gì, chưa cần hiểu
-3. Chạy được **example nhỏ nhất** của thư viện trong một project rỗng
-4. Sửa example để chạy với **dữ liệu của mình**
-5. Build tool theo IOSTV; mỗi lần cần tính năng mới → quay lại docs, đọc đúng section đó theo kỹ thuật 3 lượt
-6. Bế tắc → ghi vào `LEARNING.md` (bế tắc gì, đã thử gì) → áp quy trình debug 6 bước; docs không đủ thì Ctrl+Click đọc source
-
-**Deliverable — cả hai đều bắt buộc:**
-
-- [ ] Tool chạy được, dùng thư viện đã chọn — mốc 2h; tổng thời gian thực tế: ____ giờ
-- [ ] `LEARNING.md` một trang, đủ 3 phần: mình bắt đầu từ đâu · bế tắc chỗ nào · gỡ bằng cách nào
-
-`LEARNING.md` chính là **bằng chứng kỹ năng tự học** — một trang giấy kể được trong phỏng vấn. Nó cũng nối thẳng vào capstone: ít nhất 1 feature của Project 2 phải dùng thư viện tự học không tutorial, và vì `caro-cli` phải xuất JSON "thế cờ hôm nay" nên `kotlinx-serialization` là ứng viên tự nhiên — xem [Hai project](/phase-0/projects).
-
-## 5. Kỷ luật git
-
-**Luật: git bằng CLI, cấm GUI trong suốt Phase 0.** GUI giấu chính những khái niệm bạn cần nhìn thấy mỗi ngày — staging area, HEAD, branch chỉ là con trỏ. CLI ép bạn chạm vào chúng cho đến khi hết sợ.
-
-Nề nếp hằng ngày, từ tuần 1:
-
-- Mỗi project là một repo; mỗi feature một branch `feature/ten-viec`
-- Commit theo đơn vị "một thay đổi có nghĩa" — một việc trong `BACKLOG.md` ≈ 1–3 commit
-- Message đọc lại hiểu ngay: `them tinh tien theo gio`, hoặc theo chuẩn `feat:` / `fix:`
-- **`git diff` trước mọi commit** — nghi thức bắt buộc, chống commit rác
-
-**Chuẩn "git history sạch"** — dùng để chấm mọi project: người lạ đọc `git log --oneline` phải kể lại được quá trình build. Không có commit "fix", "update", "asdf". Không có commit 800 dòng trộn 5 việc.
-
-### Git Disaster Recovery — bảng cứu hộ 5 kịch bản
-
-Buổi tuần 5, 1,5 giờ: trong một repo nháp, **tự gây ra từng thảm hoạ rồi tự thoát**. Làm xong hết sợ git vĩnh viễn.
-
-| # | Kịch bản | Lối thoát |
-|---|---|---|
-| 1 | Commit nhầm file | `git reset HEAD~1 --soft` rồi unstage file đó |
-| 2 | Message sai (chưa push) | `git commit --amend` |
-| 3 | Huỷ một commit đã lỡ | Đã push: `git revert <hash>` (an toàn, tạo commit mới) · chưa push: `git reset` — hiểu rõ hai lệnh khác nhau chỗ nào trước khi gõ |
-| 4 | Conflict khi merge | Mở file, tìm dấu `<<<<<<<`, sửa tay, `git add`, `git commit` |
-| 5 | "Lỡ `reset --hard` mất code" | `git reflog` → tìm hash cần về → `git reset --hard <hash>` |
-
-- [ ] Kịch bản 1 — commit nhầm file, tự gỡ ra được
-- [ ] Kịch bản 2 — sửa message bằng `--amend`
-- [ ] Kịch bản 3 — giải thích được `revert` khác `reset` chỗ nào, rồi thực hiện cả hai
-- [ ] Kịch bản 4 — tự tạo conflict giữa 2 branch rồi resolve bằng tay
-- [ ] Kịch bản 5 — tự `reset --hard` mất code rồi cứu lại bằng `reflog`
-- [ ] Một tuần sau: làm lại cả 5 kịch bản không nhìn bảng — thời gian: ____ phút
-
-Đọc thêm: [Pro Git](https://git-scm.com/book/en/v2) (miễn phí) — chỉ chương 2, 3 và mục 7.7 "Reset Demystified"; [learngitbranching.js.org](https://learngitbranching.js.org) — trực quan hoá branch/merge/rebase, chơi đúng 1 buổi.
-
-### Format và lint
-
-- `Ctrl+Alt+L` (reformat code) trước mỗi commit
-- Tuần 7 thêm **ktlint** vào project
-- Luật: **warning vàng trong IDE là phải đọc** — không cần sửa hết, nhưng phải biết nó đang nói gì
-
-## 6. Test 3 tầng
-
-"Chạy được" và "đúng" là hai thứ khác nhau — nhầm lẫn hai thứ này là lý do code bài tập lớn ở trường chạy demo thì ổn mà đổi input là sập. Từ tuần 4 bạn học JUnit 5 và áp công thức 3 tầng cho mọi hàm logic:
-
-| Tầng | Nội dung | Ví dụ với hàm tính damage theo bậc |
-|---|---|---|
-| **Happy path** | Input bình thường, đúng như đề mô tả | `power` 150 → đúng damage theo bảng bậc |
-| **Edge case** | 0, rỗng, giá trị biên, số âm, chuỗi có dấu tiếng Việt | `power` 0 · đúng ranh giới bậc (50 và 51) · số âm |
-| **Error case** | Input rác → hàm phản ứng **có chủ đích** | `power` là "abc" → ném exception hay trả về null? **Quyết định trước, rồi test đúng quyết định đó** |
-
-Tầng error đáng chú ý nhất: nó không hỏi "hàm có chết không" mà hỏi "bạn đã *quyết định* hàm sẽ làm gì với input rác chưa". Không có quyết định = hành vi ngẫu nhiên = bug tương lai.
-
-Trình tự viết test cho một hàm:
-
-1. Kẻ bảng 3 tầng ra giấy **trước khi viết dòng test nào**
-2. Điền case: happy ≥1 · edge ≥2 · error ≥1
-3. Viết test, chạy, sửa hàm đến khi tất cả xanh
-4. Case nào làm bạn ngạc nhiên → thêm một mục vào `notes/ERRORS.md`
-
-**Luật từ tuần 4: mọi hàm logic thuần phải có ≥1 test.** Chưa học TDD — quá sớm, cứ viết hàm trước test sau. Nguyên tắc chấm điểm: test behavior, không test implementation — tiêu chí này nằm thẳng trong rubric của Project 2, xem [Hai project](/phase-0/projects). Tra cứu khi cần: [JUnit 5 User Guide](https://junit.org/junit5/docs/current/user-guide/).
-
-Chuyển project sang Gradle và cắm JUnit 5 vào là **máy của bạn**, không phải nội dung học: nó có slot riêng trước tuần 4 trong [Lịch 14 tuần](/phase-0/lich-14-tuan) và AI được phép hướng dẫn toàn phần. Framework chốt luôn là **JUnit 5**, không Kotest — bạn không phải chọn giữa hai thứ chưa biết cái nào.
-
-- [ ] Viết đủ 3 tầng cho 1 hàm tự chọn: ≥1 happy, ≥2 edge, ≥1 error — tất cả xanh
-- [ ] Từ tuần 4: soát lại project hiện tại, mọi hàm logic thuần đều có ≥1 test
-
-## 7. Đọc số đo
-
-Kỹ năng thứ bảy, **30 phút, một lần** — và là kỹ năng duy nhất trong trang này bạn học ở Phase 0 nhưng chỉ dùng thật từ Phase 1 trở đi. Ở đây không đo gì cả, vì chưa có gì để đo. Yêu cầu của Phase 0 đúng hai thứ: hiểu khái niệm, và đọc được một bảng `p50/p99`.
-
-**Sự thật: trung bình là con số dối trá số một của server.**
-
-Một server xử lý 1.000 request: 990 request mất 5ms, 10 request mất 2.000ms. Trung bình = 25ms, nghe rất ổn. Nhưng 10 người đó đã đóng app. Trung bình trộn người sướng với người khổ rồi trả về một con số không mô tả ai cả.
-
-### Percentile: xếp hàng rồi chỉ tay
-
-Percentile không phải công thức, nó là một thao tác: **sắp xếp toàn bộ số đo từ nhỏ đến lớn, rồi chỉ vào một vị trí**.
-
-| Ký hiệu | Đọc là | Nghĩa |
-|---|---|---|
-| `p50` | median | Một nửa request nhanh hơn con số này, một nửa chậm hơn |
-| `p95` | percentile 95 | 95% request nhanh hơn; 5% chậm nhất nằm ngoài |
-| `p99` | percentile 99 | 99% request nhanh hơn; 1% chậm nhất nằm ngoài |
-
-**Vì sao `p99` mới là trải nghiệm người dùng:** một màn hình gọi 20 request. Xác suất cả 20 đều rơi vào nhóm nhanh là `0,99^20 ≈ 0,82` — nghĩa là **gần 1/5 số lần mở màn hình đó, người chơi ăn đúng cái đuôi chậm**. `p99` không phải "trường hợp hiếm"; với người dùng thật nó là chuyện thường ngày. `p50` nói máy bạn *có thể* nhanh; `p99` nói người chơi *thấy* gì. Và cái đuôi đó có nguyên nhân cơ học — GC pause, page fault, retry mạng, một lock bị giữ lâu — tất cả trốn trong 1% cuối và biến mất sạch khỏi con số trung bình.
-
-### Đọc histogram
-
-Histogram là bảng đếm: chia trục thời gian thành các khoảng, đếm mỗi khoảng có bao nhiêu request.
-
-```text
-   0–5ms   ############################## 8.200
-  5–10ms   ########## 1.500
- 10–20ms   ## 250
- 20–50ms   . 40
-50–100ms   . 8
-   100ms+  . 2
-```
-
-Ba thứ cần nhìn, theo thứ tự: **khối lớn nằm ở đâu** (đó là `p50`, hành vi bình thường của hệ thống) · **đuôi kéo dài bao xa** (`p99` — mẫu thứ 9.900 — rơi vào khoảng 10–20ms; 50 request từ 20ms trở lên là nửa phần trăm cuối, chỗ `p99,5` trở đi sống) · **có mấy bướu** (hai cụm tách rời nghĩa là hệ thống đang có hai đường đi khác nhau — cache hit vs cache miss, chạm đĩa vs không chạm đĩa; một bướu = một cơ chế, hai bướu = phải gọi tên được cơ chế thứ hai).
-
-Luật đọc: **không bao giờ tóm một histogram thành một con số duy nhất**. Ghi tối thiểu `p50`, `p99` và số mẫu.
-
-### Coordinated omission: cái bẫy nuốt mất phần tệ nhất
-
-Bạn đứng đo thời gian phục vụ ở một quầy, cứ mỗi phút đo một khách. Quầy tắc 5 phút. Trong 5 phút đó bạn **không đo được khách nào cả** — vì bạn đang đứng chờ cùng họ. Tắc xong, bạn đo tiếp và ghi những con số đẹp. Kết quả: đúng 5 phút tệ nhất của ngày hôm đó **không có mặt trong dữ liệu**.
-
-Đó là coordinated omission. Nó xảy ra khi công cụ đo **chờ request trước xong mới gửi request sau**: server chậm lại thì công cụ tự động gửi thưa đi, những request lẽ ra phải xếp hàng không bao giờ được tạo ra nên không bao giờ được đếm. Hậu quả: `p99` bạn báo cáo có thể đẹp hơn `p99` thật hàng chục lần. Đây không phải sai số nhỏ — đây là báo cáo về một hệ thống không tồn tại.
-
-Ở Phase 1 bạn sẽ **cố ý mắc lỗi này rồi tự sửa**, và ghi lại `p99` nhảy bao nhiêu lần sau khi sửa. Bảng nhận diện để dùng lúc đó:
-
-| Dấu hiệu | Cách chữa |
+| Bước | Việc làm |
 |---|---|
-| Công cụ đo gửi kiểu "xong cái này mới gửi cái sau" (closed model) | Gửi theo lịch cố định (open model): đến giờ là gửi, kệ request trước xong chưa |
-| Throughput đo được tự tụt xuống đúng lúc server chậm | Tính latency từ **thời điểm lẽ ra phải gửi**, không từ lúc thật sự gửi được |
-| Histogram đẹp bất thường, gần như không có đuôi | Dùng thư viện biết bù — `HdrHistogram` có sẵn cơ chế này |
+| Tái hiện | Giữ input nhỏ nhất vẫn ra lỗi, mô tả trạng thái ban đầu |
+| Dự đoán | Viết một câu: nếu nguyên nhân là X, ở điểm Y sẽ thấy Z |
+| Quan sát | Breakpoint/watch/log hoặc test để xem Z có xảy ra không |
+| Thu hẹp | Kết quả không khớp thì đổi giả thuyết, không sửa nhiều chỗ cùng lúc |
+| Sửa | Thay phần nhỏ nhất giải quyết nguyên nhân đã kiểm chứng |
+| Hồi quy | Chạy lại case lỗi và case cũ; giữ test nếu lỗi đáng tái diễn |
 
-### Luật sắt: mọi khẳng định hiệu năng phải kèm cách đo
+Debugger cho xem state ở một thời điểm; log cho thấy chuỗi sự kiện; test giúp lặp lại. Chọn theo câu hỏi, không cấm `println` ngoài bài riêng luyện debugger. Một Bug Hunt có thể giới hạn công cụ trong chính lượt đó.
 
-"Server tôi chịu được 500 người" là câu vô nghĩa cho tới khi kèm cách đo. **Không có cách đo thì không phải khẳng định yếu — mà là chưa xảy ra.**
+## 4. Test hành vi và ranh giới
 
-Từ Phase 1, luật này thành thủ tục: **mọi thay đổi vì hiệu năng phải kèm một file trong thư mục `bench/` của repo, và file đó mở đầu bằng đúng 6 dòng khai báo giàn đo**:
+Đầu tiên phân loại case: bình thường, biên, bị từ chối/lỗi hệ thống. Chọn case có thể làm lộ sai sót, không tạo một test cho từng hàm chỉ để đủ số.
 
-```text
-Máy sinh tải:  laptop ở nhà, 8 core, Ubuntu 24.04
-Máy chịu tải:  VPS 2 core / 4GB, Ubuntu 24.04
-Đường đi:      loopback ngay trên VPS, không qua Internet
-Số client:     100 bot
-Thời lượng:    30 phút
-Số lần chạy:   5
-```
+Một test hữu ích thể hiện **trạng thái ban đầu → hành động → điều phải đúng sau đó**. Với hành động thất bại, kiểm cả lỗi trả về và trạng thái không bị đổi. Với sửa bug, thử xem test có bắt được bản trước sửa không; nếu không, nó chưa kiểm tra đúng lỗi đó.
 
-Sáu dòng này không phải thủ tục hành chính. Thiếu **máy sinh tải**, bạn không biết máy đo có nghẽn trước máy bị đo hay không. Thiếu **đường đi**, `p99` đo loopback và `p99` đo qua 4G là hai kết quả không liên quan gì nhau. Thiếu **số lần chạy**, bạn đang báo cáo một lần may mắn.
+Từ K02, tự viết test nghiệp vụ bằng JUnit; setup runner được hướng dẫn trực tiếp. Unit test core không cần console/file/mạng; test tích hợp kiểm ranh giới storage/API khi ranh giới đó có thật. Không mock mọi thứ chỉ để có test xanh.
 
-**Đo bằng chứng cứ, không đo bằng cảm tính** — và ở Phase 0 thì dừng đúng ở đây: chưa cài `HdrHistogram`, chưa viết bot, chưa tạo `bench/`.
+Bài K01 có thể bắt đầu bằng bảng case chạy tay. Khi hành vi đã rõ, chuyển case quan trọng thành test tự động; không để cấu hình chặn lần chạy đầu tiên.
 
-- [ ] Giải thích bằng lời của mình vì sao `p99` quan trọng hơn trung bình — nói cho một người không biết code nghe hiểu
-- [ ] Cho bảng `p50 = 4ms`, `p99 = 900ms`, 10.000 mẫu: nêu ít nhất 2 nguyên nhân có thể của cái đuôi đó
-- [ ] Chép 6 dòng khai báo giàn đo vào `PLAYBOOK.md`, kèm câu "không có cách đo = chưa xảy ra"
+## 5. Tra docs để giải quyết một câu hỏi
 
-## README 5 mục
+Trước khi mở docs, viết câu hỏi cụ thể: “hàm này trả gì khi không tìm thấy?”, “có đổi collection gốc không?”, “tác vụ sống theo scope nào?”. Đọc signature, hợp đồng và phần ví dụ liên quan. Tạo input của riêng mình để kiểm tra, rồi áp dụng vào ticket.
 
-Mọi project trong 27 tháng tới dùng đúng một template README:
+Tài liệu trả lời hợp đồng của API; test nhỏ kiểm tra bạn đã hiểu đúng cách dùng. Đọc source khi docs không trả lời câu hỏi hoặc bạn cần giải thích hiệu năng; không đọc source mọi hàm như nghĩa vụ.
 
-| Mục | Trả lời câu hỏi |
-|---|---|
-| **Cái này là gì** | 2–3 câu, người không biết code đọc vẫn hiểu |
-| **Chạy thế nào** | Lệnh copy-paste được — từ clone đến chạy trong ≤3 lệnh |
-| **Cấu trúc code** | File/thư mục nào chịu trách nhiệm việc gì |
-| **Quyết định đáng chú ý** | Vì sao chọn CSV thay vì JSON? Vì sao tách file này riêng? |
-| **Còn thiếu gì** | Trung thực về giới hạn hiện tại |
+Tiếng Việt được dùng để hiểu cơ chế; giữ thuật ngữ gốc và link để đối chiếu. Không có quota từ vựng hoặc cấm bản dịch theo tuần. [Nguồn tra cứu](/nguon-hoc).
 
-README có hai độc giả: người lạ muốn chạy thử trong 3 lệnh, và chính bạn của 6 tháng sau. Mục "Còn thiếu gì" đáng giá hơn bạn nghĩ — người phỏng vấn tin một ứng viên biết rõ giới hạn sản phẩm của mình hơn một ứng viên nói cái gì cũng xong.
+## 6. Git giữ bằng chứng của thay đổi
 
-- [ ] README của Project 1 đủ 5 mục; nhờ một người khác làm theo — họ chạy được trong ≤3 lệnh mà không phải hỏi bạn câu nào
+Commit theo một thay đổi có nghĩa, đọc diff trước khi commit. Biết working tree, staging và commit khác nhau; CLI hoặc GUI đều dùng được nếu giải thích được việc mình làm. Tạo branch khi thử một hướng sửa độc lập, không tạo branch chỉ để đủ quota.
 
-## → Tiếp theo
+Muốn thử khôi phục/reset thì dùng repo luyện hoặc branch an toàn, đọc `git status` và giữ công việc chưa commit trước. Với commit đã chia sẻ, thường dùng revert để tạo thay đổi đảo ngược có lịch sử rõ. Không chạy lệnh phá dữ liệu chỉ vì thấy trong một bảng cứu hộ.
 
-Meta-skill không luyện được trong chân không — nó cần vật liệu, và vật liệu của Phase 0 là Kotlin: bắt đầu với [Kotlin Core I — tuần 1–6](/phase-0/kotlin-core-1). Tuần nào làm gì, nghi thức nào rơi vào buổi nào — xem [Lịch 14 tuần](/phase-0/lich-14-tuan).
+README ngắn: chương trình làm gì, chạy/test thế nào, quyết định quan trọng, giới hạn hiện tại. Người khác làm theo được là tiêu chí; không cần đủ số trang.
+
+## 7. Đo khi có câu hỏi hiệu năng
+
+“Sao chậm?” cần thành một câu có thể kiểm chứng: thao tác nào, với bao nhiêu dữ liệu/client, trên máy nào, chậm hơn mức nào. Mentor có thể giúp thiết kế phép đo trước khi bạn có số.
+
+Ghi workload, môi trường, thời lượng, số lần chạy và kết quả. Đổi một yếu tố rồi đo lại. Trung bình, percentile và worst case trả lời các câu khác nhau; không lấy một lần chạy hoặc cảm giác UI mượt làm bằng chứng kết luận.
+
+Khi học server, ghi đường đi client → server → database để không nhầm thời gian mạng với thời gian xử lý. Khi học Android, phân biệt UI thread bị chặn, mạng chậm và dữ liệu cập nhật sai. Chỉ chọn công cụ sau khi câu hỏi đã rõ.
+
+## Quay lại ticket
+
+Sau khi hiểu một kỹ năng, áp dụng nó ngay vào việc đang vướng. Nộp quan sát và kết quả, nhận review, rồi tự thay một điều kiện. Không cần làm thêm một bài tổng hợp chỉ để đánh dấu đã đọc trang này.

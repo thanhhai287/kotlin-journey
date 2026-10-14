@@ -1,0 +1,18 @@
+# Web phụ trợ — một giao diện quản trị nhỏ
+
+Web hỗ trợ sản phẩm game server/Android, **không là trục chuyên môn ngang Kotlin/Java**. Chỉ mở ở P3 hoặc sau đó khi cần một trang quản trị và đã có API thật. Giới hạn bằng một flow dùng được, không đặt quota 24h như bản trước; có thể hoãn trước khi cắt nền tảng chính.
+
+## Một lát đủ dùng
+
+Trang xem danh sách vật phẩm hoặc room, một form cập nhật được phép, và trạng thái loading/rỗng/lỗi. Dùng cùng API với client Android; server vẫn kiểm quyền và dữ liệu. Chưa cần dashboard nhiều màn, SSR, design system hoặc frontend framework.
+
+| Phần | Học tới đâu | Nghiệm thu |
+|---|---|---|
+| HTML/CSS | Cấu trúc, label/form, box model, layout responsive | Dùng bàn phím được, chữ rõ, màn nhỏ không che nút |
+| JavaScript | Event, dữ liệu, DOM, async và lỗi | Dữ liệu API hiển thị đúng; lỗi có phản hồi |
+| HTTP trên trình duyệt | Request/response, JSON, status, origin/cookie khi liên quan | Theo được một thao tác trong Network; không coi validation UI là bảo mật |
+| State bất đồng bộ | Đang tải, request thất bại, dữ liệu cũ | Bấm lại/thay bộ lọc lúc mạng chậm không hiện kết quả sai |
+
+Nguồn nền là [MDN Core](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core): chọn đúng phần HTML, CSS, JavaScript và accessibility phục vụ màn hình đang làm. Không học cả khoá trước khi viết trang.
+
+TypeScript chỉ bổ sung khi cần model dữ liệu rõ hơn; phải hiểu JavaScript trước, theo [TypeScript for the New Programmer](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html). Framework chỉ xem xét khi thật sự giảm vấn đề của trang và có quyết định đổi scope. Hoàn thành một flow dùng được thì quay lại Android/game server.

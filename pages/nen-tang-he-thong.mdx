@@ -1,5 +1,7 @@
 # Nền tảng hệ thống — Linux, kernel, thread & JVM
 
+> **Thư viện lab chuyên sâu.** Chọn bài khi app/server có câu hỏi cần kiểm chứng. Số tuần, giờ, module và các quy định bắt buộc dưới đây thuộc roadmap trước, không tạo giờ hoặc cổng mới. Mã S1–S6 trên trang là nhãn lab cũ, khác S01–S07 của backend hiện hành. Các mốc nền tảng bắt buộc dùng bảng trong roadmap mới. Lộ trình hiện tại ở [Roadmap](/roadmap), luật trợ giúp ở [Hệ thống học](/he-thong-hoc).
+
 Trang này trả lời một câu: *con số hiệu năng bạn vừa đo ra được sinh từ cơ chế nào bên dưới — và bên trong — JVM?* Mở lần đầu ở P1 ngay sau lab `Selector` của 1.2, rồi mở lại từng tầng khi server của bạn tự đẻ ra triệu chứng tương ứng — cột **Sau module** ở bảng dưới nói chính xác lúc nào, không sớm hơn.
 
 ---
@@ -268,7 +270,7 @@ S3 dừng ở fd và `epoll`. Giữa `write()` của bạn và dây mạng còn 
 | 2 | 300 bot connect cùng lúc: một phần **mất im lặng**, không exception ở server, client thấy connect chậm 1s, 3s | Hàng đợi accept đầy: `listen(fd, backlog)` bị trần `net.core.somaxconn` (4096 từ kernel 5.4, trước đó 128); Java NIO mặc định backlog **50**; Netty đọc `somaxconn`. Đầy thì kernel bỏ ACK cuối của handshake, client tưởng đã nối và retransmit | `bind(addr, backlog)` tường minh; `sysctl net.core.somaxconn`; đừng bật `tcp_abort_on_overflow` — nó chỉ đổi mất im lặng thành RST | `ss -lnt`: trên socket listen, `Recv-Q` = số đang chờ accept, `Send-Q` = backlog; `nstat -az TcpExtListenOverflows TcpExtListenDrops` trước và sau |
 | 3 | Reconnect storm ở G4: **máy sinh tải** chết trước server — `EADDRNOTAVAIL: Cannot assign requested address` | Bên đóng trước giữ **TIME_WAIT** 60s (hằng số kernel, `tcp_fin_timeout` không đổi được nó). Mỗi kết nối tới cùng ip:port server tốn một cổng ephemeral trong `ip_local_port_range` (32768–60999 = 28.232 cổng) | Trên máy sinh tải: nới `net.ipv4.ip_local_port_range`, `tcp_tw_reuse=1` (mặc định 2 = chỉ loopback), nhiều IP nguồn, tái dùng kết nối. Trên server: để **client đóng trước** khi có thể | `ss -s` dòng `timewait`; `ss -tan state time-wait \| wc -l`; `sysctl net.ipv4.ip_local_port_range` |
 | 4 | Peer mất sóng, `read` ngủ "vô hạn" — vô hạn là bao lâu? | `SO_KEEPALIVE` mặc định **tắt**; bật lên thì `tcp_keepalive_time` 7200s + 9 probe × 75s ≈ 2h15 mới báo. Dữ liệu chưa ACK thì retransmit theo `tcp_retries2` = 15 lần ≈ 15–30 phút rồi `ETIMEDOUT`. Keepalive TCP là **hop-by-hop**: qua Caddy nó chỉ dò được tới Caddy, không tới client; và nó chỉ phát hiện peer chết, không phát hiện app treo | `TCP_KEEPIDLE`/`TCP_KEEPINTVL`/`TCP_KEEPCNT` từng socket (`jdk.net.ExtendedSocketOptions`); nhưng heartbeat tầng ứng dụng ở 1.5 (ping/pong WebSocket, end-to-end) mới là câu trả lời đúng | `sysctl net.ipv4.tcp_keepalive_time net.ipv4.tcp_keepalive_intvl net.ipv4.tcp_keepalive_probes net.ipv4.tcp_retries2`; `ss -tio` cột `timer:(keepalive,…)` |
-| 5 | Một client 3G chậm, direct memory của server tăng dần rồi OOM (S2) | Send buffer của socket đó đầy (`net.ipv4.tcp_wmem` tự chỉnh tới 4MB); `write` non-blocking ghi một phần hoặc 0 byte; Netty đặt `isWritable()` = false. Nếu bạn vẫn xếp hàng state 20Hz cho nó, hàng đợi phình theo từng client chậm | Backpressure: `WRITE_BUFFER_WATER_MARK`, gộp hoặc bỏ frame state cũ (chỉ gửi state mới nhất), ngắt client quá chậm. Đây là quyết định giao thức của bạn, AI-free | `ss -tmi` dòng `skmem:(… tb… t…)` = send buffer và phần đang dùng; `cwnd`, `unacked`; `ss -tn` cột `Send-Q` |
+| 5 | Một client 3G chậm, direct memory của server tăng dần rồi OOM (S2) | Send buffer của socket đó đầy (`net.ipv4.tcp_wmem` tự chỉnh tới 4MB); `write` non-blocking ghi một phần hoặc 0 byte; Netty đặt `isWritable()` = false. Nếu bạn vẫn xếp hàng state 20Hz cho nó, hàng đợi phình theo từng client chậm | Backpressure: `WRITE_BUFFER_WATER_MARK`, gộp hoặc bỏ frame state cũ (chỉ gửi state mới nhất), ngắt client quá chậm. Đây là quyết định giao thức của bạn, tự triển khai | `ss -tmi` dòng `skmem:(… tb… t…)` = send buffer và phần đang dùng; `cwnd`, `unacked`; `ss -tn` cột `Send-Q` |
 
 ### LAB — hai con số, hai sysctl
 
@@ -361,7 +363,7 @@ cat /sys/fs/cgroup/cpu.stat        # nr_throttled tăng trong lúc bot chạy = 
 
 ### `systemd` — nối vào 1.9
 
-Bản unit file bạn gõ ở 1.9 đi qua luật 7: AI đưa mẫu có chú thích và 3 lỗi cố ý. Ở đây chỉ có bảng nghĩa từng directive để bạn tìm ra 3 lỗi đó.
+Dùng mẫu unit file đúng có chú thích để hiểu directive; tự thay một yêu cầu rồi kiểm tra. Nếu muốn luyện debug, tạo bài Bug Hunt riêng, không cài lỗi vào cấu hình thật.
 
 | Directive | Nghĩa | Sai thường gặp |
 |---|---|---|
@@ -528,7 +530,7 @@ Mở khi 1.3 bắt bạn sửa race đầu tiên và bạn có ba cách — `syn
 
 ### Quan sát ở P1 — bằng đồ nghề S1, chưa cần JMH
 
-Viết một counter tăng bởi N thread theo **ba cách** — `synchronized`, `AtomicLong.incrementAndGet`, `LongAdder.increment` — code của bạn, AI-free (vùng `Atomic`/shared state). Chạy 30 giây ở 4 và 16 thread trên VPS, ghi `nproc` vào đầu file `bench/`, và trong lúc chạy:
+Viết một counter tăng bởi N thread theo **ba cách** — `synchronized`, `AtomicLong.incrementAndGet`, `LongAdder.increment` — code của bạn, tự triển khai (vùng `Atomic`/shared state). Chạy 30 giây ở 4 và 16 thread trên VPS, ghi `nproc` vào đầu file `bench/`, và trong lúc chạy:
 
 ```bash
 PID=$(pgrep -f counter)
@@ -587,20 +589,9 @@ Cố ý để ngoài. Tất cả nằm ở [Mở rộng](/mo-rong), năm 3, và 
 | Chỉnh 30 cờ GC theo blog | S5 chỉ dạy đọc một chu kỳ và chọn giữa hai collector bằng số; `-Xmx`, `-Xms`, `AlwaysPreTouch`, `MaxGCPauseMillis` là đủ cho CARO |
 | `hsdis`, `-prof perfasm`, đọc mã máy JIT | Event phần cứng không có trên VPS; biết `lock cmpxchg` tồn tại là đủ |
 
-## 🔒 Hợp đồng AI cho trục này
+## Cách dùng tài liệu với mentor
 
-Theo mục [Đọc hiện vật](/he-thong-hoc#đọc-hiện-vật) và [Sáu luật thêm — bản server](/he-thong-hoc#sáu-luật-thêm--bản-server) của hợp đồng AI. Trục này là vùng **đọc hiện vật**, và luật ở đó có hai vế. S6 còn nằm trong vùng AI-free `Atomic`/shared state: mọi counter, padding, vòng CAS trong lab là code của bạn.
-
-| AI được | AI không được |
-|---|---|
-| Dạy **cơ chế**: `clone` khác `fork` ở đâu, ET khác LT ở đâu, `oom_score` tính thế nào; giải thích một dòng man page | Nhìn `strace` log, `dmesg`, flame graph, `jstack` dump **của bạn** rồi nói nguyên nhân nằm ở đâu |
-| Sinh **hiện vật giả có bệnh cài sẵn**: 5 `jstack` có deadlock hoặc leak, 5 đoạn `strace` có partial read bị bỏ qua, 3 dòng `dmesg` OOM — bạn chẩn đoán, AI chấm | Viết code bắt `SIGTERM`, drain, shutdown hook, vòng `Selector`, đóng session — session/connection và shared state là vùng AI-free 27 tháng, kể cả pseudo-code |
-| Đặt bench giả có bệnh: 3 file JMH cài sẵn DCE, constant folding, vòng lặp trong bench để bạn tìm bẫy; đưa mẫu `build.gradle.kts` cấu hình plugin JMH (đồ nghề, không phải nội dung) | Viết thân benchmark của S6 — counter, padding, vòng CAS là vùng `Atomic`/shared state, AI-free 27 tháng |
-| Giải thích một dòng `-Xlog:gc*` hoặc `-Xlog:safepoint` **mẫu** — không phải log của bạn | Đọc `gc.log` của bạn rồi nói "ZGC đi" — chọn GC là câu trả lời bằng sáu số của LAB 3, của bạn |
-| Cài `perf`, `strace`, `smem` trên máy bạn (luật 7, máy mình) | Đưa unit file hoàn chỉnh không có 3 lỗi cố ý (luật 7, server) |
-| Hỏi đúng một câu về bug concurrency: "cái gì có thể chạy đồng thời với dòng này?" (luật 2+) | Nêu giả thuyết hộ bạn khi `HUNT.md` trống |
-
-Mọi phiên AI của trục này ghi nguyên văn prompt vào `notes/ai-sessions/` như thường lệ. Câu hỏi hiệu năng vẫn đi qua ngưỡng cửa luật 3: một phép đo trước, rồi mới hỏi.
+Được giải thích cơ chế, cùng đọc log/số đo thật, nhận gợi ý và review có bằng chứng. Người học tự viết phần đang rèn. Setup được hướng dẫn trực tiếp; chỉ bài Bug Hunt ghi rõ mới cài lỗi. Không dùng luật vùng cấm hoặc R0–R4 của giáo án cũ. [Luật hiện hành](/he-thong-hoc).
 
 ## → Tiếp theo
 

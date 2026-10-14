@@ -1,0 +1,46 @@
+# Kotlin/Java — nền tảng chuyên môn chính
+
+Mục tiêu là viết và debug Kotlin/Java cho **game server và ứng dụng Android**, giải thích cơ chế bằng code của mình. Bạn đã biết cú pháp Kotlin, nên không đi lại một khoá nhập môn. Mỗi mục dưới đây gắn vào một ticket; không học cả bảng trước khi code.
+
+## Học bằng đối chiếu hành vi
+
+| Khi gặp | Kotlin cần hiểu | Java cần đối chiếu | Thí nghiệm phải tự làm |
+|---|---|---|---|
+| K01: parse và tính số lượng | Nullable, kiểu số, kiểm tra biên | Primitive/reference, parse, exception | Input sai, sát giới hạn; dự đoán rồi chạy |
+| K02: định danh mặt hàng | `data class`, `==`/`===`, hash, read-only collection | `equals`/`hashCode`, reference, mutable collection | Hai object cùng dữ liệu; thay key ảnh hưởng tra cứu ra sao |
+| K03: chuyển kho | `val`, aliasing, shallow/deep copy, mutation | `final` reference và trạng thái object | Hai nơi cùng giữ một object; test từ chối không đổi trạng thái |
+| K04: file/I/O | Kết quả lỗi, exception, quản lý resource | Exception và resource lifecycle | File thiếu/hỏng, lỗi ghi; test logic không chạm đĩa |
+| K05: báo cáo | Lambda, generics, collection/sequence khi cần | Generic types, loop, stream khi cần | Hai cách cùng hành vi; nêu chi phí và đo khi có câu hỏi |
+| Android có mạng | Suspend, scope, cancellation, dispatcher | Thread, executor, interruption | Rời màn hình lúc tải; quan sát công việc và kết quả |
+| Server nhiều client | Shared state, coroutine không tự bảo đảm atomicity | JMM, synchronization, atomics | Tái hiện một race; giải thích interleaving trước khi sửa |
+
+## J01–J04 — Java có bài tự triển khai
+
+Đối chiếu phạm vi với [JetBrains](https://kotlinlang.org/education/) và [Dev.java](https://dev.java/learn/); cách chia bài dưới đây là lựa chọn của chương trình. Mỗi bài thay một phần giờ trong chặng, không cộng thêm một khoá Java song song.
+
+| Bài / lúc mở | Yêu cầu tự làm | Nghiệm thu |
+|---|---|---|
+| **J01 — sau K02, trong P0** | Viết một hành vi nhỏ đã hiểu bằng Java: chẳng hạn kiểm tra một lệnh nhập/xuất | Chạy cùng case với Kotlin; tự giải thích kiểu, null/lỗi; tự sửa một điều kiện |
+| **J02 — P1** | Model một phần Kho đồ bằng Java, dùng collection; kiểm tra object cùng dữ liệu, trùng mã và đổi tên | Test equality/hash và mutation; nêu hành vi khi dùng dữ liệu làm key; đọc stack trace của một lỗi thật hoặc lab có lỗi đã công bố |
+| **J03 — P1** | Kotlin gọi một API Java nhỏ có khả năng trả null; thêm một thao tác đọc resource trong bài riêng | Dự đoán compiler/runtime, xử lý lỗi và đóng resource; test các đường thành công/thất bại |
+| **J04 — P3, sau S03** | Tự làm một endpoint Java/Spring có cùng hợp đồng với endpoint Kotlin, gọi dữ liệu SQL; sửa một yêu cầu mới | Test hợp đồng và lỗi; giải thích DI/transaction boundary; không chuyển đổi tự động hoặc viết lại toàn server |
+
+### Bắt đầu J01
+
+Sau khi K02 đã ổn, chọn **một** hành vi nhỏ bạn đã tự viết bằng Kotlin, mô tả input/output và case lỗi. Viết lại bằng Java trong bài tập riêng, chạy cùng tập ví dụ. Không dùng bộ chuyển đổi tự động cho lượt học này.
+
+Nộp: hai cách biểu diễn kiểu/lỗi, một chỗ khác biệt về null hoặc equality và lý do bạn chọn cách nào. Nếu chưa biết cú pháp Java, tra docs và hỏi ví dụ nhỏ ở domain khác; không học lại toàn bộ chương trình Kotlin bằng Java.
+
+J02–J03 tiếp tục ở P1 trên các bài nhỏ. Java và Kotlin dùng lại tập case hoặc hợp đồng hành vi; không cần dùng chung mọi kiểu dữ liệu. Bài Java phải có code người học tự viết, không chỉ lời giải thích sự khác nhau.
+
+## Mỗi chủ đề sâu đến đâu
+
+**Bắt buộc:** tự giải thích bằng một trường hợp đúng và một trường hợp lỗi; biết nơi áp dụng; sửa được một biến thể. Ví dụ với hash, mục tiêu là hiểu tính nhất quán giữa equality và lookup, không thuộc toàn bộ mã nguồn hash table.
+
+**Mốc bắt buộc tiếp theo:** generic types và chi phí collections ở K05; thread, shared state và ownership trước S05; visibility/atomicity/ordering ở P3; allocation/GC và profiling cơ bản ở P4. Mỗi mốc cần một dự đoán, thí nghiệm và lời giải thích; không đợi vô tình gặp bug.
+
+**Mở rộng khi có nhu cầu:** bytecode, class loading, JIT/GC chi tiết và internals framework. Chọn một câu hỏi kiểm chứng được trên app/server; không đọc hết JVM trước API đầu tiên.
+
+**Điểm dừng:** khi đã giải thích được hiện tượng, test bắt được lỗi và biết giới hạn, quay lại sản phẩm. [Luật mentor](/he-thong-hoc) cho phép giải thích trực tiếp; code bài đang học vẫn do bạn viết.
+
+Tra cứu: [Kotlin Core I](/phase-0/kotlin-core-1), [Core II](/phase-0/kotlin-core-2); chọn đúng mục, không làm toàn bộ bài phụ.

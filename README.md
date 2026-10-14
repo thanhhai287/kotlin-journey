@@ -1,136 +1,34 @@
-# 🚀 Hành trình Game Server của Hải
+# Hành trình Kotlin/Java của Hải
 
-Tài liệu học tập và tracker tiến độ cho lộ trình **27 tháng: từ "biết cú pháp Kotlin" đến
-Game Server / Backend Engineer**. Dựng bằng [Nextra](https://nextra.site), deploy trên
-[Vercel](https://vercel.com).
+Site tài liệu học bằng thực hành, dùng Nextra 2 / Next.js 14. **Kotlin/Java là nền chuyên môn chính cho game server và ứng dụng Android; fullstack web chỉ phụ trợ.** Người học đã rõ cú pháp Kotlin cơ bản, chưa tự hoàn thiện chương trình nhỏ, có 9–12 giờ/tuần.
 
-🌐 **Site:** _cập nhật URL sau khi deploy_ · 📅 **W1 = Thứ Hai 07/09/2026** → 03/12/2028 · 📍 **Đang ở:** Phase 0, W1
+## Bắt đầu
 
-**Ba con số:** 117 tuần lịch · 97 tuần chạy · **1.100h** giờ đồng hồ tại bàn.
-Nhịp 11,3h/tuần chạy — giữ được 15h/tuần thì về đích sớm hơn ~5,5 tháng.
+- [Xưởng thực hành K01–K06](pages/phase-0/xuong-thuc-hanh.mdx): Kho đồ từ một luồng nhập/xuất tới core dùng được trên Android.
+- [Luật hướng dẫn](pages/he-thong-hoc.mdx): giải thích cơ chế trực tiếp, trợ giúp H0–H3, tự code, review và thử biến thể.
+- [Roadmap](pages/roadmap.mdx): CLI/core → Android → game server → đồng thời/dữ liệu → đo và đào sâu. Đi tiếp bằng cổng năng lực, không dự báo tổng số tháng.
+- [Kotlin/Java](pages/kotlin-java-core.mdx) · [Android](pages/android-core.mdx) · [Game server/backend](pages/backend-core.mdx) · [Web phụ trợ](pages/web-phu-tro.mdx).
+- [Cơ sở thiết kế](pages/co-so-thiet-ke.mdx): nguồn đã đối chiếu, phần đã xem, quyết định và giới hạn.
+- [Bốn tuần đầu](pages/phase-0/lich-14-tuan.mdx): 9 giờ nền/tuần, tối đa 3 giờ linh hoạt; review tuần 2 và 4.
+- [Tiến độ](pages/progress.mdx): hành vi, test, giải thích, mức trợ giúp và chuyển giao; không tự đánh dấu đã học.
 
-## 🎯 Lộ trình này đánh cược vào cái gì
+Giáo án và luật được sửa ngày **14/10/2026** theo phản hồi người học. Các lab chuyên sâu cũ giữ để tra cứu, không cộng thêm vào lịch mới. Tiến độ trước thay đổi được lưu ở [docs/history](docs/history/progress-before-2026-10-14.md), không bị xoá hoặc biến thành thành tích mới.
 
-Một sản phẩm duy nhất chạy public — **CARO**, game cờ caro online async có economy thật cộng một
-chế độ **ARENA realtime 20Hz** — tự tay dựng từ socket thô lên tới báo cáo load test hai máy.
-Cửa xin việc là **backend chung** ở một công ty bất kỳ tại Việt Nam; game là vỏ. Studio game là
-đích của năm 3–4, vì ở Việt Nam gần như không tồn tại cửa Junior game backend.
-
-| Phase | Tuần | Giờ | Tên gọi |
-|---|---|---|---|
-| **P0** | W1–15 | 116h | Kotlin viết được, không chỉ đọc được |
-| **P1** | W16–35 | 187h | Server đầu tiên, người thật chơi qua web |
-| **P2** | W36–64 | 282h | Dữ liệu bền + client + kênh apply mở |
-| **P3** | W65–85 | 209h | ARENA + kinh tế + netcode thật |
-| **P4** | W86–109 | 234h | Spring Boot + chịu tải + phân tán + apply |
-| **P5** | W110–117 | 72h | Đi làm hoặc sửa-và-apply-lại |
-
-## 📚 Nội dung
-
-Markdown sources trong [`pages/`](pages/):
-
-| File | Trang |
-|---|---|
-| [`index.mdx`](pages/index.mdx) | Trang chủ — toạ độ hiện tại, ba sự thật, **Ngày 1 = 90 phút** |
-| [`nghe-backend-game.mdx`](pages/nghe-backend-game.mdx) | Nghề backend game — hai nhánh, thị trường VN, stack, mốc thời gian trung thực |
-| [`roadmap.mdx`](pages/roadmap.mdx) | Roadmap 27 tháng — 6 phase, thang 12 bậc, danh sách cắt, DP0–DP8 |
-| [`he-thong-hoc.mdx`](pages/he-thong-hoc.mdx) | Hệ thống học & luật AI — nhịp buổi tối, ba nghi thức, hợp đồng với AI |
-| [`nen-tang-he-thong.mdx`](pages/nen-tang-he-thong.mdx) | Nền tảng hệ thống — Linux, kernel, thread, `epoll`, signal, cgroup |
-| [`android-core.mdx`](pages/android-core.mdx) | Android core — Binder, Zygote, ART, Looper, vòng đời tiến trình |
-| [`backend-core.mdx`](pages/backend-core.mdx) | Backend core — API, mô hình dữ liệu, danh tính, vận hành |
-| [`phase-0/`](pages/phase-0/) | **Tài liệu Phase 0 đầy đủ** — 11 trang, xem bảng dưới |
-| [`phase-1.mdx`](pages/phase-1.mdx) | Phase 1 — khoá cho đến khi tốt nghiệp Phase 0 |
-| [`progress.mdx`](pages/progress.mdx) | Tiến độ — bảng tuần, số liệu hệ thống, G1–G6, nhật ký |
-| [`mo-rong.mdx`](pages/mo-rong.mdx) | Mở rộng — ẩn khỏi nav, chỉ mở khi số cho phép |
-
-### Phase 0 — Kotlin viết được (W1–15, 116h)
-
-| File | Trang |
-|---|---|
-| [`phase-0/index.mdx`](pages/phase-0/index.mdx) | Tổng quan — Ngày 1, ramp 6→8→10, 10 module, 10 lỗ hổng điển hình |
-| [`phase-0/lich-14-tuan.mdx`](pages/phase-0/lich-14-tuan.mdx) | Lịch 14 tuần — việc phải xong từng tuần |
-| [`phase-0/meta-skills.mdx`](pages/phase-0/meta-skills.mdx) | Meta-skills — IOSTV, đọc error, debug, đọc docs, git, đọc số đo |
-| [`phase-0/kotlin-core-1.mdx`](pages/phase-0/kotlin-core-1.mdx) | Kotlin Core I — module 4.1–4.5 (W1–6) |
-| [`phase-0/kotlin-core-2.mdx`](pages/phase-0/kotlin-core-2.mdx) | Kotlin Core II — module 4.6–4.8 (W7–9) |
-| [`phase-0/concurrency-nhap-mon.mdx`](pages/phase-0/concurrency-nhap-mon.mdx) | Concurrency nhập môn — lost update thấy tận mắt |
-| [`phase-0/game-loop-co-ban.mdx`](pages/phase-0/game-loop-co-ban.mdx) | Game loop & state machine — fixed timestep, seeded RNG |
-| [`phase-0/byte-bit-so.mdx`](pages/phase-0/byte-bit-so.mdx) | Byte, bit & số — tràn số, toán tử bit, endian |
-| [`phase-0/bai-tap.mdx`](pages/phase-0/bai-tap.mdx) | Bài tập — kata, Error Zoo, Docs Quest, decomposition drill |
-| [`phase-0/projects.mdx`](pages/phase-0/projects.mdx) | Hai project — Túi đồ & Ví CLI, `caro-engine` + `caro-cli` |
-| [`phase-0/tot-nghiep.mdx`](pages/phase-0/tot-nghiep.mdx) | Tốt nghiệp — 10 tiêu chí, vấn đáp 12 câu, benchmark |
-
-Thứ tự và nhãn sidebar: [`pages/_meta.json`](pages/_meta.json) và
-[`pages/phase-0/_meta.json`](pages/phase-0/_meta.json).
-
-## ✅ Cách đánh dấu tiến độ
-
-Checkbox trong site là **markdown GFM thuần**. Đánh dấu bằng cách sửa file `.mdx`:
-
-```
-- [ ] Việc chưa xong
-- [x] Việc đã xong
-```
-
-Rồi commit. **Mỗi lần tick là một commit** — và commit chính là bằng chứng, đúng nguyên tắc
-"đo bằng chứng cứ, không đo bằng cảm tính". Tiến độ nằm trong git history, không nằm trong
-localStorage, nên nó theo bạn qua mọi máy và không bao giờ mất.
-
-Không có checklist nào đứng trước **Ngày 1**. Bản trước có 27 ô và một bài test 12 câu chặn
-trước dòng code đầu tiên — đó là nguyên nhân 5 tuần ở 0h, và cả hai đã bị xoá.
-
-## 🛠️ Tech stack
-
-- [Next.js 14](https://nextjs.org) + [Nextra 2](https://nextra.site) (`nextra-theme-docs`), pages router
-- TypeScript · cấu hình theme: [`theme.config.tsx`](theme.config.tsx)
-- Deploy: Vercel — auto-deploy mỗi `git push` về `main`
-
-## 🔐 Bảo mật phụ thuộc
-
-`npm audit` báo **9 lỗ hổng** (8 high, 1 moderate). Đánh giá thật, không phải trấn an:
-
-| Gói | Vì sao không với tới được ở site này |
-|---|---|
-| `next` | Toàn bộ advisory thuộc App Router, Server Components, Server Actions, `next/image`, middleware, rewrite có host do kẻ tấn công điều khiển, custom server, i18n. Site này dùng **pages router**, không có thứ nào trong số đó, và cả 23 route đều prerender tĩnh |
-| `js-yaml`, `cross-spawn`, `execa`, `clipboardy`, `title` | Chỉ chạy lúc build. Đầu vào là chính file `.mdx` trong repo này |
-| `mermaid`, `dompurify` | Nextra 2 đóng gói sẵn. Site không có một sơ đồ mermaid nào |
-
-Đã vá bằng `overrides` (12 → 9). Dải khai trong `package.json` và phiên bản thực tế resolve về:
-
-| Gói | Override | Resolve về |
-|---|---|---|
-| `postcss` | `^8.5.28` | 8.5.28 (từ 8.4.31) |
-| `nanoid` | `^3.3.18` | 3.3.18 |
-| `dompurify` | `^3.4.13` | 3.4.14 |
-
-Build vẫn xanh sau khi vá — kiểm bằng `npm ls postcss nanoid dompurify`.
-
-Chín cái còn lại chỉ hết khi nâng **Nextra 2 → 4** (kéo theo Next 16, chuyển sang App Router, đổi định dạng `theme.config`) — đó là một dự án riêng, không phải sửa vặt. Chạy `npm audit` trước khi quyết định nâng.
-
-## 💻 Local dev
+## Local development
 
 ```bash
-npm install     # lần đầu
-npm run dev     # http://localhost:3000
-npm run build   # build production (Vercel chạy lệnh này)
+npm install
+npm run dev
+python3 scripts/mdxlint.py pages
+npm run build
 ```
 
-## ✏️ Sửa nội dung
+Nội dung ở `pages/*.mdx`; thứ tự sidebar ở các `_meta.json`; theme/SEO ở `theme.config.tsx`. Không có Kotlin project trong repo này. Code bài học ở repo của người học, do người học triển khai.
 
-1. Sửa file `.mdx` trong `pages/`
-2. Kiểm tra MDX: `python3 scripts/mdxlint.py pages` — phải ra `OK: 0 problem(s)`
-3. `git add . && git commit -m "..." && git push`
-4. Site update sau khoảng 30 giây
+## Sửa nội dung
 
-> ⚠️ Nội dung `.mdx` chạy qua MDX v2: mọi ký tự `<`, `{`, `}` trong văn xuôi phải nằm trong
-> backtick hoặc code fence, nếu không build sẽ vỡ. Viết `` `List<T>` ``, đừng viết trần.
-> Script [`scripts/mdxlint.py`](scripts/mdxlint.py) bắt đúng lỗi này mà không cần Node.
+Giữ MDX/GFM thuần. Bọc `<`, `{`, `}` trong code span/fence nếu dùng trong văn xuôi. Trang mới phải đăng ký trong `_meta.json`. Chạy MDX check rồi production build trước khi bàn giao. Giữ các dependency overrides; cập nhật framework là việc riêng.
 
-Thêm trang mới thì phải đăng ký slug trong `_meta.json` tương ứng, nếu không nó không hiện
-trong sidebar.
+Tiến độ là nội dung có bằng chứng, chỉnh trong file và commit khi cần; không bắt mỗi tick là một commit. Push lên `main` có cấu hình auto-deploy Vercel, nên không tự push trong tác vụ sửa tài liệu nếu chưa được yêu cầu.
 
-## 🤝 Vai trò của AI trong repo này
-
-Hợp đồng đầy đủ ở trang [Hệ thống học & luật AI](pages/he-thong-hoc.mdx). Tóm tắt: AI là
-**mentor / examiner / reviewer — không bao giờ là author**, cộng thang R0–R4 dạy dùng AI đúng cách từ P2. Vùng AI-free suốt 27 tháng: vòng
-tick, serialize gói tin, session/connection, mọi thứ chạm shared state, reconnect và state sync.
-Site này chứa tài liệu và đề bài; code Kotlin nằm ở repo project riêng và phải do người học tự gõ.
+Hướng dẫn agent hiện hành: [AGENTS.md](AGENTS.md); Claude dùng [CLAUDE.md](CLAUDE.md). Cả hai cùng dẫn về một hợp đồng học, không giữ hai bộ luật cạnh tranh.

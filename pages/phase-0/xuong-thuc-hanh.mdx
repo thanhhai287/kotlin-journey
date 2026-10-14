@@ -1,0 +1,101 @@
+# Xưởng thực hành — Kho đồ bằng Kotlin
+
+**Bắt đầu tại K01 vì bạn đã rõ cú pháp cơ bản.** Cùng một nghiệp vụ sẽ chạy trên CLI, Android, rồi backend. Các ticket dưới đây không có lời giải mẫu; bạn quyết định cách tổ chức code. Tên hàm, class và thư viện không phải tiêu chí chấm.
+
+## Cách làm một ticket
+
+Đọc đúng ticket đang làm → ghi 3 ví dụ và điều chưa rõ → tự chọn một phần nhỏ để chạy → kiểm chứng → review → tự làm một thay đổi. Chia ticket thành các lát vừa một buổi; lịch thử dành khoảng một tuần cho mỗi ticket đầu, rồi điều chỉnh bằng kết quả thật, không chấm tốc độ. Chưa quen test runner thì dùng case chạy tay có kết quả mong đợi; từ K02 chuyển dần sang test tự động, setup được trợ giúp.
+
+**Nộp:** code/commit, lệnh chạy, case đã thử, một quyết định có lý do và chỗ đang vướng. AI phản hồi theo [luật hướng dẫn](/he-thong-hoc), tối đa 3 điểm mỗi vòng. Chỉ đọc phần lý thuyết phục vụ ticket hiện tại.
+
+## K01 — Một kho có thể nhập và xuất
+
+**Người dùng:** tôi muốn biết mình còn bao nhiêu đồ và không vô tình tạo số lượng âm. Phiên bản đầu quản lý một mặt hàng duy nhất. Dữ liệu chỉ cần sống trong lần chạy hiện tại.
+
+**Yêu cầu:** bắt đầu với 10 đơn vị. Người dùng xem tồn, nhập thêm, xuất bớt và thoát. Mỗi thao tác nhận số lượng nguyên dương. Lệnh sai, số không hợp lệ hoặc xuất quá tồn phải báo lý do và cho thao tác tiếp; thất bại không đổi tồn. Tự chọn giới hạn tồn tối đa, ghi rõ và từ chối phép nhập vượt giới hạn. Bạn tự chọn định dạng menu/lệnh.
+
+| Từ trạng thái nào | Thao tác | Mong đợi |
+|---|---|---|
+| Tồn 10 | Nhập 5 | Tồn 15 |
+| Tồn 15 | Xuất 4 | Tồn 11 |
+| Tồn 11 | Xuất 12 | Báo thiếu hàng, tồn vẫn 11 |
+| Tồn 11 | Nhập `abc`, `0`, `-2` (thử riêng từng case) | Báo lỗi, tồn vẫn 11, chương trình tiếp tục |
+| Tồn 11 | Xuất 11 | Tồn 0; xem kho vẫn hoạt động |
+| Đang sát giới hạn bạn chọn | Nhập vượt giới hạn | Báo lỗi, không tràn và không đổi tồn |
+
+**Bạn tự quyết định:** dữ liệu nào cần nhớ, chỗ nào đọc input, chỗ nào đổi tồn; các lỗi nào cần phân biệt. Trước khi code, chọn 3 case trong bảng và ghi kết quả bạn dự đoán. Không cần phác toàn bộ kiến trúc.
+
+**Nghiệm thu:** chạy được cả chuỗi thao tác trên; thêm ít nhất một case của riêng bạn; chỉ ra được nơi đảm bảo thao tác thất bại không đổi tồn. Case chạy tay được chấp nhận ở ticket này.
+
+**Chỉ mở khi cần:** [4.2 — kiểu và hàm](/phase-0/kotlin-core-1), 4.3 — parse/null; [Meta-skills](/phase-0/meta-skills) khi chưa biết chia bài hoặc thu nhỏ lỗi.
+
+**Sau bản đầu, tự làm biến thể:** người dùng được sửa một lần nhập nhầm bằng một thao tác điều chỉnh có lý do. Bạn chốt rõ “điều chỉnh” có thể làm gì, viết 2 case rồi sửa code. Nếu chưa vững bản đầu, hoãn biến thể tới buổi sau.
+
+## K02 — Nhiều mặt hàng, tên không phải danh tính
+
+**Vấn đề mới:** kho có nhiều mặt hàng; hai món có thể trùng tên nhưng khác mã. Người dùng thêm mặt hàng, liệt kê và nhập/xuất bằng mã. Mã phải duy nhất và không đổi khi sửa tên. Chốt cách so sánh mã hoa/thường và ghi rõ.
+
+**Case bắt buộc:** hai mã khác nhau cùng tên vẫn giữ tồn riêng; mã trùng bị từ chối; mã không tồn tại không tạo hàng mới ngầm; đổi tên không làm mất tồn; kho rỗng hiển thị rõ. Mọi hành vi K01 vẫn đúng cho từng mặt hàng.
+
+**Quyết định của bạn:** cách lưu tập mặt hàng, kiểm tra trùng, biểu diễn mặt hàng và lỗi. Nêu hai cách lưu có thể dùng và vì sao chọn một; không bắt dùng `Map`, `sealed class` hay interface chỉ để đủ bài.
+
+**Nghiệm thu:** các case trên có test tự động cho logic chính; chạy mà không phải gõ menu. Giải thích identity khác equality bằng chính dữ liệu của mình. Chỉ học `data class`, `equals`/`hashCode` và collection ở mức cần cho quyết định hiện tại.
+
+**Nền tảng cần kiểm:** so cách tìm mã bằng duyệt danh sách và bằng bảng tra trên một bộ dữ liệu nhỏ. Dự đoán công việc tăng thế nào khi số mặt hàng tăng, phân biệt chi phí trung bình với bảo đảm mọi trường hợp. Đây là thí nghiệm chọn cấu trúc dữ liệu, không bắt viết hai bản ứng dụng hoặc benchmark vài mili giây.
+
+**Biến thể sau review:** tìm theo một phần tên, kết quả có thứ tự xác định và không làm thay đổi kho.
+
+## K03 — Hai kho, chuyển hàng không mất dữ liệu
+
+**Vấn đề mới:** người dùng chuyển hàng giữa kho A và B. Mỗi kho có giới hạn tổng số đơn vị, chưa có khái niệm ô/stack. Một lần chuyển thành công phải giảm bên gửi và tăng bên nhận đúng lượng. Bị từ chối thì cả hai giữ nguyên. Bài này chạy **một luồng**, chưa giải quyết nhiều request đồng thời.
+
+| Trạng thái | Thao tác | Mong đợi |
+|---|---|---|
+| A có 8 bút, B có 2; B còn chỗ cho 3 | Chuyển 3 | A còn 5, B có 5 |
+| Cùng trạng thái ban đầu | Chuyển 4 | Từ chối, A vẫn 8, B vẫn 2 |
+| A không đủ hàng | Chuyển vượt tồn | Cả hai giữ nguyên |
+| A và B là cùng một kho | Chuyển | Từ chối, trạng thái không đổi |
+
+**Nghiệm thu tối thiểu:** test thành công và các lỗi đầu vào; tổng hàng từng mã được bảo toàn qua chuỗi thao tác. Thao tác bị từ chối giữ nguyên cả hai kho. Giải thích reference/mutation trên dữ liệu của mình và phạm vi đảm bảo của bản một luồng; không gọi nó là an toàn đồng thời hoặc chống được mọi lỗi bất ngờ.
+
+**Mở rộng sau khi bản tối thiểu đã vững:** lỗi xuất hiện giữa quá trình cập nhật thì trạng thái có thể ra sao? Tạo một cách gây lỗi có kiểm soát trong test và tìm cách giữ bất biến trong phạm vi lỗi đó. Mentor được giải thích atomicity/copy; bạn tự chọn và kiểm chứng cách làm. Bài mở rộng này không chặn lịch 4 tuần. Transaction lưu bền và cạnh tranh nhiều request học ở S03/S07.
+
+**Biến thể:** đổi giới hạn kho đích mà không thay quy tắc bảo toàn. Test cũ vẫn xanh.
+
+## K04 — Lưu, tắt, mở lại
+
+**Vấn đề mới:** trạng thái kho phải còn sau khi thoát bình thường và mở lại. Bạn chọn định dạng file và tự phân biệt không có file, file rỗng, dữ liệu hỏng, không có quyền ghi.
+
+**Yêu cầu:** lưu/tải khứ hồi giữ mã, tên và tồn; tên có Unicode và dấu phân cách không bị mất; dữ liệu hỏng không được âm thầm biến thành kho rỗng rồi ghi đè bản cũ. Thất bại phải được báo. Ghi rõ giới hạn khi tiến trình bị tắt giữa lúc ghi; chưa yêu cầu đảm bảo mất điện.
+
+**Nghiệm thu:** test round-trip và file hỏng; chứng minh lỗi I/O không làm test nghiệp vụ phải đọc ổ đĩa; README giải thích cách tái hiện lỗi và quyết định xử lý. Chỉ học interface khi cần tách I/O, không dựng nhiều tầng trước.
+
+**Biến thể sau bản tối thiểu, có thể dời sau tuần 4:** thêm một trường tùy chọn và đọc được file cũ. Bạn phải chốt giá trị mặc định và kiểm tra nó.
+
+## K05 — Lịch sử giúp truy tìm lỗi
+
+**Vấn đề mới:** người dùng muốn biết tồn thay đổi từ đâu. Ghi lịch sử thao tác thành công, mặt hàng, số lượng và thứ tự; thao tác bị từ chối không được giả làm thao tác thành công. Chọn rõ lịch sử có cần tồn tại sau restart ở bản này hay chưa.
+
+**Yêu cầu:** xem biến động của một mã; báo cáo tổng nhập/xuất theo mã trong phạm vi bạn định nghĩa. Không sửa dữ liệu gốc khi lọc hoặc sắp xếp báo cáo.
+
+**Nghiệm thu:** test không có lịch sử, nhiều mã, nhiều giao dịch cùng mã, nhập rồi xuất hết; đối chiếu một báo cáo tính tay với kết quả code. Nêu chi phí duyệt và vùng dữ liệu tạm của cách làm; chưa benchmark nếu chưa có câu hỏi hiệu năng.
+
+**Biến thể:** thêm lọc theo loại thao tác mà không sao chép toàn bộ xử lý báo cáo.
+
+## K06 — Bàn giao core cho Android
+
+**Vấn đề mới:** giao diện sắp đổi từ menu sang màn hình. Logic nhập/xuất/chuyển không được phụ thuộc `readln`, `println`, Activity, mạng hoặc ổ đĩa. Cách tách module/hàm là quyết định của bạn.
+
+**Yêu cầu:** chạy bộ test nghiệp vụ độc lập với CLI; một đoạn gọi thử khác có thể dùng core mà không giả lập bàn phím. Mô tả dữ liệu UI cần để hiển thị thành công, rỗng và lỗi. Không cần viết Android ngay trong ticket này.
+
+**Nghiệm thu:** bản clone mới chạy được theo README; test cũ xanh; tự xử lý một yêu cầu thay đổi do reviewer chọn sau khi nộp. Đọc [Kotlin & Java nền tảng](/kotlin-java-core) để chọn một phần nhỏ viết lại bằng Java và so hành vi, không rewrite cả ứng dụng.
+
+**Đầu ra:** tag `v1.0` của Kho đồ CLI và core có thể đưa vào [chặng Android](/phase-1). Không cần chờ đủ 14 tuần.
+
+## Một lời giải thích tốt trông như thế nào
+
+“Code chạy” chỉ cho biết những case đã thử đi qua. **Bất biến** là điều bạn muốn luôn đúng qua mọi thao tác hợp lệ, ví dụ tồn không âm hoặc chuyển hàng không tạo thêm hàng. Khi một yêu cầu mới xuất hiện, bất biến giúp bạn biết điều gì phải giữ lại trong thiết kế và test.
+
+Phân biệt **validation** (dữ liệu có được chấp nhận không) với **thay đổi trạng thái** (sau khi chấp nhận thì hệ thống đổi ra sao). Đây là hai trách nhiệm để suy nghĩ, không phải yêu cầu phải có hai class. Bạn kiểm chứng ranh giới bằng một case bị từ chối: trạng thái trước và sau có giống nhau không?
+
+Khi chưa hiểu khái niệm, hỏi trực tiếp. Bạn không phải tự đoán ra mọi thứ ngành phần mềm đã biết; phần bạn cần tự làm là áp dụng, kiểm chứng và chịu trách nhiệm cho quyết định trong chương trình của mình.

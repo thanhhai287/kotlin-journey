@@ -1,38 +1,8 @@
-# Kotlin Core II — module 4.6–4.8
+# Kotlin Core II — hàm, lỗi và ranh giới
 
-Trang này sở hữu 11h cuối của Kotlin Core: module 4.6, 4.7, 4.8. Mở nó vào buổi INPUT đầu tuần 7 và đóng lại cuối tuần 9 — nửa đầu (4.1–4.5) nằm ở [Kotlin Core I](/phase-0/kotlin-core-1). Kotlin Core sau khi cắt còn **31h** = 20h trang I + 11h trang này.
+Mở khi [K04–K06](/phase-0/xuong-thuc-hanh) cần xử lý I/O, lỗi hoặc tách trách nhiệm. Lambda/extension ở 4.6; generic/exception/Result ở 4.7; interface/composition ở 4.8. Ví dụ minh hoạ giúp hiểu cơ chế, không phải cấu trúc bắt buộc cho bài.
 
----
-
-| Module | Nội dung | Giờ | Tuần |
-|---|---|---|---|
-| 4.6 | Lambda, extension, higher-order, `let`/`apply` | 6h | W7 |
-| 4.7 | Generics đọc-hiểu, exception, `Result` | 3h | W8 |
-| 4.8 | Interface + composition | 2h | W9 |
-| | **Tổng** | **11h** | **W7–W9** |
-
-**Ngưỡng ra của cả trang:** bài tự kiểm của module 4.8 ở **W9** — đưa phần đọc file của bài Tier 2 ra sau một interface, test phần logic chạy xanh mà không chạm ổ đĩa, toàn bộ test cũ vẫn xanh (đề đầy đủ ở mục 4.8 bên dưới).
-
-Bài Tier 2 `CSV → log trận` ([Bài tập & drill](/phase-0/bai-tap)) làm ở **W7**, ngay sau module 4.6. Nó là **nguyên liệu** của cổng ra, không phải cổng ra: nó xảy ra trước cả 4.7 lẫn 4.8 nên không kiểm được hai module đó. Không có bài Tier 2 thì ba module này chỉ là chữ — và cũng không có gì để refactor ở W8 và W9.
-
-Hai khối từng nằm ở trang này đã đi nơi khác — đừng tìm chúng ở đây:
-
-| Nội dung cũ | Giờ | Bây giờ ở đâu |
-|---|---|---|
-| Coroutines nhập môn | 8h | [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) — W9, học cùng thread và lost update |
-| Kata tốc độ + vấn đáp | 5h | [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) — module 0.10, W14 |
-| **Tổng chuyển đi** | **13h** | Không giờ nào bị cắt — chỉ đổi trang chủ quản |
-
-Ba tuần này còn việc khác ngoài 11h của trang. Cộng đủ mới ra tổng tuần — và không tuần nào được vượt trần bậc:
-
-| Tuần | Bậc (trần) | Việc của trang này | Việc khác trong tuần | Tổng giờ module |
-|---|---|---|---|---|
-| W7 | 8h | 4.6 — 6h | bài Tier 2 "đọc log trận → `groupBy`" 2h trong buổi LONG BUILD 3h (1h còn lại của buổi đó thuộc 4.6) | **8h** |
-| W8 | 8h | 4.7 — 3h | [module 0.7 Byte, bit & số](/phase-0/byte-bit-so) 5h | **8h** |
-| W9 | 10h | 4.8 — 2h | [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) 8h | **10h** |
-| | | **11h** | **15h** | **26h** |
-
-W8 còn hai mốc không tính vào giờ module vì chúng nằm gọn trong buổi đã có: **blank-file #2** chiếm 45' đầu buổi READ, và **DP1** (cổng lên bậc) là một quyết định cuối tuần — cuối mọi tuần, không riêng tuần này. Lịch đầy đủ ở [Lịch 14 tuần](/phase-0/lich-14-tuan).
+Bài tập và số tuần/giờ bên dưới là tham khảo từ giáo án trước; không cần làm bài Tier 2 trước khi dùng interface, không cần dùng scope function chỉ để “idiomatic”. Cổng hiện tại ở [Tốt nghiệp P0](/phase-0/tot-nghiep), trợ giúp theo [luật mới](/he-thong-hoc).
 
 ## 4.6. Lambda, extension, higher-order, `let`/`apply` — 5h, tuần 7
 
@@ -166,7 +136,7 @@ val ketQua: Result<Int> = runCatching { "12a".toInt() }
 
 *Đóng trang này. Gõ lại hai đoạn trên từ trí nhớ, đoán output trước khi chạy.*
 
-**Luật cứng của module: cấm nuốt exception bằng catch rỗng.** Mọi `catch` phải hoặc xử lý có nghĩa (trả giá trị mặc định *có chủ đích*, báo người dùng), hoặc log rồi rethrow. Catch rỗng không sửa bug — nó chôn bug xuống ba tầng đất, để dữ liệu sai âm thầm lan ra và phát nổ ở chỗ khác, khó lần hơn gấp mười. Khi chấm Project 2, catch rỗng bị trừ thẳng vào mục chất lượng code. Không thương lượng.
+**Luật cứng của module: cấm nuốt exception bằng catch rỗng.** Mọi `catch` phải hoặc xử lý có nghĩa (trả giá trị mặc định *có chủ đích*, báo người dùng), hoặc log rồi rethrow. Catch rỗng không sửa bug — nó chôn bug xuống ba tầng đất, để dữ liệu sai âm thầm lan ra và phát nổ ở chỗ khác, khó lần hơn gấp mười. Khi review, giải thích lỗi đã được xử lý có chủ đích thế nào và test hành vi đó.
 
 ### ⚠️ Bẫy
 
@@ -242,7 +212,7 @@ Ví dụ này ở **domain khác** với bài tự kiểm bên dưới — cố 
 
 ### 🏁 Bài tự kiểm
 
-**Đây là ngưỡng ra của cả trang.** Trong bài Tier 2 (đã làm ở W7), đưa phần đọc file ra sau một interface (bản thật đọc CSV, bản test trả danh sách cứng trong code). Đạt khi: test của phần logic chạy xanh mà **không chạm ổ đĩa**, và toàn bộ test cũ vẫn xanh.
+**Bài luyện tuỳ chọn về ranh giới I/O.** Trong bài Tier 2 (đã làm ở W7), đưa phần đọc file ra sau một interface (bản thật đọc CSV, bản test trả danh sách cứng trong code). Đạt khi: test của phần logic chạy xanh mà **không chạm ổ đĩa**, và toàn bộ test cũ vẫn xanh.
 
 - [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤30)
 
@@ -257,10 +227,6 @@ Ví dụ này ở **domain khác** với bài tự kiểm bên dưới — cố 
 2. Composition cho bạn khả năng gì mà kế thừa không cho — nhất là lúc chương trình *đang chạy*?
 3. Trong bài tự kiểm, ranh giới bạn cắt nằm ở đâu, và bạn biết cắt đúng nhờ dấu hiệu nào?
 
-## → Tiếp theo
+## Quay lại sản phẩm
 
-Xong bài tự kiểm 4.8 — cuối tuần 9 — nghĩa là phần cú pháp Kotlin của Phase 0 đã đóng. Từ tuần 10 trở đi trang này không còn việc gì cho bạn.
-
-- Ngay trong tuần 9 — thread, race, `suspend`: [Concurrency nhập môn](/phase-0/concurrency-nhap-mon)
-- Bài Tier 2 `CSV → log trận` ở tuần 7 — nguyên liệu cho cổng ra của trang: [Bài tập & drill](/phase-0/bai-tap)
-- Tuần 10 mở Project 1: [Hai project CLI](/phase-0/projects)
+Dùng kiến thức vừa đọc để giải quyết [K04–K06](/phase-0/xuong-thuc-hanh). Giải thích ranh giới mới giải quyết vấn đề gì và chạy lại test cũ.

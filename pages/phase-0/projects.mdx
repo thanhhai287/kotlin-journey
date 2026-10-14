@@ -1,310 +1,41 @@
-# Hai project của Phase 0
+# Một sản phẩm, nhiều cách dùng
 
-Trang này chứa đề bài đầy đủ, định nghĩa hoàn thành và rubric chấm điểm của hai project Phase 0. Mở nó khi bước vào **tuần 5** (Project 1) và **tuần 11** (Project 2) — sửa 05/10/2026, bản trước mở ở W10 và W12. Trước đó, việc của bạn nằm ở [Bài tập & drill](/phase-0/bai-tap) và ba trang nền [Concurrency nhập môn](/phase-0/concurrency-nhap-mon), [Game loop & state machine](/phase-0/game-loop-co-ban), [Byte, bit & số](/phase-0/byte-bit-so).
+**Kho đồ** là sản phẩm thực hành chính: bắt đầu bằng CLI Kotlin, đưa lên Android, nối backend JVM, rồi thêm trang web nhỏ. Nghiệp vụ cũ phải tiếp tục đúng khi giao diện và nơi lưu dữ liệu thay đổi. CARO và game server nối tiếp sau nền app/core; không cần làm game loop trước khi qua P0. Kho đồ cũng là bài toán túi vật phẩm/economy của game, chưa có tiền thật.
 
----
+## P0 — Kho đồ CLI và core
 
-**Luật sắt của cả roadmap:** không bắt đầu project mới khi project hiện tại chưa đạt định nghĩa hoàn thành, hoặc chưa bị chính thức khai tử kèm một retro note. Nghĩa trang side-project dở dang là mẫu số chung của mọi lộ trình thất bại — repo của bạn không góp thêm mộ nào vào đó.
+Đề cụ thể ở [K01–K06](/phase-0/xuong-thuc-hanh). Phạm vi: mặt hàng có mã/tên/tồn, hai kho, nhập/xuất/chuyển, lưu/tải, lịch sử và báo cáo đơn giản. Chưa có tài khoản, mạng, thanh toán hay nhiều người dùng đồng thời.
 
-Cả hai project đều lên GitHub **public từ ngày đầu**. Không có chuyện "để đẹp rồi mới đăng" — quá trình build lộn xộn chính là thứ đáng xem nhất.
-
-| Project | Tuần | Giờ | Tag | Sống tiếp ở đâu |
-|---|---|---|---|---|
-| 1 — Túi đồ & Ví CLI | **W5–10** | **14** | `v1.0` | Domain model tái dùng ở P3, module economy |
-| 2 — `caro-engine` + `caro-cli` | **W11–14** | **23** | `v1.0` | `caro-engine` nhúng vào server P1, chạy tới tháng 26 |
-
-Giờ là giờ đồng hồ tại bàn theo [Lịch 14 tuần](/phase-0/lich-14-tuan). Blank-file #3 (W10), #4 (W12) và #5 (W14) rơi đúng vào ba tuần project — không hoãn vì "đang bận project".
-
-**Project 1 mở sớm — sửa 05/10/2026.** Bản trước mở nó ở W10, nghĩa là chín tuần đầu mọi buổi BUILD làm bài tập minh hoạ chứ không có thứ gì **phải tiếp tục chạy** — đúng hình dạng tutorial hell. Nay nó mở ngay sau 4.4 và chạy song song với 4.5–4.8: **module là buổi INPUT, dự án là buổi BUILD**, và lý thuyết được kéo vào khi dự án đòi. Bài tập "Túi đồ bằng `fold`" của 4.5 và bài Tier 2 ở W7 làm **thẳng trong dự án này**, không phải bài rời.
-
-## Vì sao đổi đề tài
-
-Bản cũ của trang này là Sổ Chi Tiêu CLI và Flashcard Từ Vựng CLI. Hai đề đó không đổ. Chúng bị thay vì một lý do duy nhất: **đề mới ship vào sản phẩm thật, đề cũ không đi đâu cả.**
-
-| | Đề cũ | Đề mới | Số phận sau Phase 0 |
-|---|---|---|---|
-| Project 1 | Sổ Chi Tiêu | Túi đồ & Ví | Model tồn kho + chuyển nguyên tử lấy lại nguyên xi ở P3 module economy |
-| Project 2 | Flashcard + API dictionary | `caro-engine` + `caro-cli` | Engine chạy vào server từ tháng 6, sống đến tháng 26. Flashcard không chạy vào đâu |
-
-Khung của trang — luật sắt DoD, `BACKLOG.md` theo IOSTV, rubric 100 điểm, tuần cuối AI-free, checklist tag `v1.0` — giữ nguyên. Kỹ năng từ đề cũ (parse input ác, lưu file, persistence) vẫn nằm trong đề mới, chỉ đổi domain. Cái mất duy nhất là bài HTTP — nó chuyển sang Phase 1, nơi có Ktor client và timeout thật.
-
-## 🛠️ Project 1: Túi đồ & Ví CLI — tuần 5–10, 14h
-
-Project đầu tiên bạn tự build từ số 0. Nó không dạy Kotlin mới — mọi thứ cần dùng bạn đã học ở tuần 1–9. Nó tồn tại để bạn đi trọn một vòng: nhận đề → phân rã → build → test → tag. Trải nghiệm đó, không phải kiến thức, mới là sản phẩm chính.
-
-### Đề bài
-
-App console quản lý túi đồ và ví vàng của một nhân vật game:
-
-1. **Thêm / xoá / stack vật phẩm.** Mỗi vật phẩm có: tên, số lượng, giới hạn stack.
-2. **Hai túi**, mỗi túi có ví vàng riêng. Tối thiểu: túi nhân vật và kho.
-3. **Chuyển vật phẩm và vàng giữa hai túi — nguyên tử.** Hoặc cả hai bên đổi đúng, hoặc không bên nào đổi. Lỗi giữa chừng — túi đích đầy, vàng âm, file ghi hỏng — không được làm mất đồ, không được nhân đôi đồ.
-4. **Lưu file** (CSV hoặc JSON — bạn chọn): trạng thái hai túi sống giữa hai lần chạy chương trình.
-5. **Menu vòng lặp:** chương trình chạy cho đến khi người dùng chọn thoát.
-
-Bảng ví dụ hành vi. Đây là hành vi bắt buộc, còn giao diện menu trông thế nào là quyết định của bạn:
-
-| Tình huống | Chương trình phải làm gì |
-|---|---|
-| Thêm 30 bình máu vào túi A đang có 80, stack 99 | Kết quả theo quy tắc bạn đã chọn — và quy tắc đó có trong README |
-| Gõ chữ `abc` vào ô số lượng | Báo lỗi dễ hiểu, cho nhập lại — không crash, không stack trace đỏ |
-| Chuyển 500 vàng khi ví chỉ còn 200 | Từ chối kèm lý do — hai ví giữ nguyên |
-| Chuyển 3 kiếm sang túi B khi B chỉ còn 1 ô trống, kiếm không stack | Từ chối toàn bộ — không có chuyện "sang được 1, kẹt 2" |
-| Cộng vàng vượt giới hạn kiểu dữ liệu | Không lặng lẽ thành số âm — bạn đã học vì sao ở [Byte, bit & số](/phase-0/byte-bit-so) |
-| File dữ liệu bị xoá trong lúc chương trình đang chạy | Xử lý có chủ đích — bạn quyết định hành vi và ghi nó vào README |
-| Xem túi rỗng | Thông báo rỗng tử tế — không in bảng trống vô nghĩa |
-
-### Phạm vi khoá cứng
-
-Scope creep là kẻ giết project số một. Phạm vi ở trên là **trần**, không phải sàn:
-
-- **Không** nhiều nhân vật, không đăng nhập, không mật khẩu.
-- **Không** màu mè terminal, không ASCII art, không thư viện TUI.
-- **Không** shop, không giá cả, không chỉ số sức mạnh vật phẩm.
-- **Không** thêm bất kỳ feature nào ngoài đề trước khi đạt định nghĩa hoàn thành. Ý tưởng hay đến đâu cũng chỉ được ghi vào mục "Còn thiếu gì" của README rồi để đó.
-
-14h rải trên sáu tuần W5–10, không phải một khối: W5 BACKLOG + walking skeleton, W6 nạp 4.5 Collections vào (log giao dịch, `fold`), W7 nạp Tier 2, W8–9 tuần khít bậc nên dự án chỉ nhận commit nhỏ, W10 đóng tới `v1.0`. Hết W10 chưa đạt: không âm thầm kéo dài — mang lên bảng tuần Chủ nhật, cắt phạm vi có ghi chép, không cắt chất lượng.
-
-### Định nghĩa hoàn thành
-
-Tick đủ mới được gọi là xong. Mỗi lần tick là một lần sửa file này và commit — commit chính là bằng chứng:
-
-- [ ] `BACKLOG.md` nộp **trước khi viết dòng code đầu tiên** — tôi review nó theo tiêu chí ở mục dưới
-- [ ] Nhập bậy không crash — đã thử tối thiểu: chữ vào ô số, số âm, số vượt giới hạn kiểu, xoá file dữ liệu giữa chừng
-- [ ] ≥8 test qua hết, viết theo công thức 3 tầng: happy / edge / error
-- [ ] **Test nguyên tử:** 1.000 lần chuyển xen lỗi cố ý — tổng vàng hai ví trước và sau bằng nhau, tổng từng loại vật phẩm bằng nhau, **0 lệch** — kết quả: ____ / 1.000
-- [ ] `git log --oneline` có ≥10 commit có nghĩa trên ≥2 branch — người lạ đọc log kể lại được quá trình build
-- [ ] README đủ 5 mục: là gì / chạy thế nào / cấu trúc code / quyết định đáng chú ý / còn thiếu gì
-- [ ] Đã `git tag v1.0`
-
-Project 1 không có mục demo cho người ngoài — mốc ngoài của Phase 0 nằm ở Project 2. DoD này thấp hơn bản cũ (≥15 commit, ≥4 branch) có chủ đích. Trải trên sáu tuần thì số commit tự nhiên cao hơn — nhưng ngưỡng vẫn là ngưỡng, không nâng theo.
-
-**Vì sao 1.000 lần chuyển là tiêu chí số một:** đây là phiên bản mức-file của G5 ở P3 — 10.000 request mua, 20% trùng, lệch bằng 0. Nếu ở mức file, một luồng, không mạng mà bạn còn làm mất vàng, thì ở mức server bạn không có cơ hội. Cách bơm lỗi cố ý là của bạn — một cờ, một `Random(seed)` quyết định bước nào ném exception, một file ghi hỏng — miễn là lỗi xảy ra **giữa** hai nửa của một lần chuyển.
-
-### BACKLOG.md cần có gì
-
-Quy trình phân rã IOSTV nằm ở [Meta-skills](/phase-0/meta-skills) — đọc lại trước khi viết. Áp vào project này, `BACKLOG.md` đạt chuẩn khi có đủ:
-
-| Phần | Đạt khi |
-|---|---|
-| **I** — đề viết lại bằng lời của bạn | 3–5 câu, kèm **3 cặp ví dụ input → output bằng số thật** — một cặp phải là một lần chuyển thất bại giữa chừng |
-| **O** — dữ liệu cần "nhớ" | Liệt kê bằng lời: chương trình phải nhớ những gì, mỗi thứ gồm trường nào, có trạng thái nào. Chưa phải code |
-| **S** — hành vi | Mỗi hành vi một dòng dạng "nhận X, trả về Y" — mỗi dòng sẽ thành một hàm |
-| **T** — thứ tự walking skeleton | Việc đầu tiên cho ra chương trình **chạy được trong 30 phút**, dù mới chỉ in menu rồi thoát |
-| **V** — chia nhỏ | ≥10 việc, không việc nào ước lượng quá 30 phút, ước lượng ghi cạnh từng việc |
-
-Quy tắc vàng của IOSTV áp dụng nguyên văn: không viết được ví dụ cụ thể = chưa hiểu đề = cấm code. Khi build, một việc trong BACKLOG tương ứng 1–3 commit — đó là cách git history của bạn tự kể chuyện.
-
-### Các quyết định bạn phải tự chọn
-
-Đề bài cố ý bỏ ngỏ những điểm sau. Chúng là bài tập thiết kế: tự chọn, tự chịu, và ghi **quyết định kèm lý do** vào README mục "Quyết định đáng chú ý":
-
-1. **CSV hay JSON?** Nếu CSV: tên vật phẩm chứa dấu phẩy (`Kiếm gỗ, cũ`) thì chuyện gì xảy ra? Nếu JSON: tự parse hay dùng thư viện?
-2. **Vàng lưu kiểu gì, tràn số ở đâu?** `Int` chịu được tối đa bao nhiêu vàng? `Long` thì sao? Cộng hai số dương ra số âm xảy ra ở dòng nào trong code của bạn, và ai chịu trách nhiệm chặn nó — hàm cộng, hàm chuyển, hay hàm đọc file? Kiến thức nằm ở [Byte, bit & số](/phase-0/byte-bit-so).
-3. **Chuyển nguyên tử bằng cách nào?** Copy cả hai túi, sửa trên bản copy, thành công mới ghi đè? Hay ghi log ý định trước rồi làm? Mỗi cách đổi lấy điều gì khi file ghi hỏng ngay giữa chừng?
-4. **Vật phẩm là tập đóng hay mở?** `enum` cố định hay chuỗi tự do — mỗi lựa chọn đổi lấy điều gì khi thêm loại vật phẩm mới?
-5. **File có một dòng hỏng thì sao?** Bỏ qua dòng đó và báo số dòng lỗi, hay dừng cả chương trình? Người dùng cần biết gì?
-6. **Xoá vật phẩm định danh bằng gì?** Hai stack kiếm giống hệt nhau trong cùng một túi — làm sao phân biệt?
-
-Nếu bạn định hỏi tôi đáp án: sai cửa. Đây chính là phần "tự build" của project. Tôi chỉ review lựa chọn của bạn *sau khi* bạn đã chọn và nêu được lý do. Model bạn vẽ ở tuần 5 là model bạn gặp lại ở P3 module economy với Postgres thay cho file — vẽ cho tử tế.
-
-## 🛠️ Project 2: `caro-engine` + `caro-cli` — tuần 11–14, 23h
-
-Capstone của Phase 0. W11 BACKLOG + ADR luật cờ + bàn cờ/luật/win-check, W12 đóng engine (replay, seed, 20 case biên), W13 mở `caro-cli` + xuất JSON + dựng trang tĩnh (mốc ngoài #1), W14 `caro-cli` `v1.0` trong chế độ AI-free. Rubric dưới đây là **thang tự chấm chất lượng, không phải một cổng riêng** — cổng tốt nghiệp duy nhất của Phase 0 là bảng 10 tiêu chí ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep).
-
-**Sự thật:** đây là dòng code đầu tiên của bạn chạy production. Bạn viết `caro-engine` ở tháng 3; tháng 6 nó nằm trong CARO server và nhận nước đi của người lạ. Cách bạn cắt module hôm nay quyết định bạn khổ bao nhiêu ở tháng 9.
-
-### Đề bài — hai module, ranh giới là luật
-
-Một repo, một build Gradle, **hai module riêng biệt**:
-
-| | `caro-engine` | `caro-cli` |
+| Mốc | Hành vi | Bằng chứng |
 |---|---|---|
-| Là gì | Luật cờ và trạng thái phiên — thuần logic | Console và mọi thứ chạm thế giới ngoài |
-| Dependency | **0** — chỉ Kotlin stdlib | Được phép có thư viện |
-| I/O | **0** — không file, không `println`, không giờ hệ thống, không `Random()` không seed | Toàn bộ I/O nằm ở đây |
-| Số phận | Nhúng vào server P1, sống tới tháng 26 | Chết khi web client ra đời ở P1 — và không sao cả |
+| `v0.1` | K01–K02: nhập/xuất nhiều mặt hàng, lỗi không phá trạng thái | Demo, test nghiệp vụ, một biến thể tự làm |
+| `v0.2` | K03–K05: chuyển, lưu/tải và báo cáo | Case bảo toàn, file hỏng, kết quả tính tay khớp |
+| `v1.0` | K06: core dùng độc lập với CLI; J01 Java nhỏ đã có | Clone mới chạy theo README, test xanh, cổng P0 |
 
-`caro-engine` không biết `caro-cli` tồn tại. Kiểm tra ranh giới: `grep` source của engine tìm `println`, `readLine`, `File`, `System.` — phải ra 0 dòng. Drill "tách `caro-engine` thành module" ở [Bài tập & drill](/phase-0/bai-tap) chuẩn bị cho đúng việc này.
+Tag là nhãn sản phẩm, không phải điểm số. Không bắt đủ số commit hoặc branch. Giữ commit có ý nghĩa để đọc lại quá trình sửa; không cần mỗi checkbox một commit.
 
-**`caro-engine` phải có:**
+## Quyết định người học giữ
 
-1. **Bàn 15×15.** Hai bên, đi luân phiên, ô đã có quân không đi lại được.
-2. **Luật thắng chốt cứng: đúng 5 quân liên tiếp thì thắng, overline (6 quân trở lên) cũng thắng.** Bốn hướng: ngang, dọc, hai chéo. Không luật chặn hai đầu, không luật cấm ba-ba, không biến thể. Bạn viết một ADR trong `notes/ADR.md` ghi vì sao chọn bản dễ — gợi ý: bản dễ có 20 case biên kiểm được trong một buổi, bản khó thì không.
-3. **State machine phiên.** Trận ở trạng thái nào, sự kiện nào hợp lệ ở đó, chuyển sang đâu. Dùng sealed class như ở [Kotlin Core I](/phase-0/kotlin-core-1) mục 4.4 — đi khi trận đã kết thúc là lỗi engine trả về, không phải exception.
-4. **Replay từ log nước đi.** Đầu vào là danh sách nước đi theo thứ tự; đầu ra là bàn cờ và trạng thái phiên. Cùng log → cùng bàn cờ, mọi lần.
-5. **Seeded RNG cho máy đi ngẫu nhiên.** Máy nhận `Random(seed)` từ ngoài, chọn một ô trống. Cùng seed + cùng log người đi → máy đi y hệt. Đây là bài `Random(seed)` ở [Game loop & state machine](/phase-0/game-loop-co-ban) đặt vào sản phẩm.
+Bạn chọn kiểu dữ liệu, cách biểu diễn lỗi, cấu trúc lưu mặt hàng, cách chia hàm/module, định dạng file và chiến lược cập nhật. Ghi ngắn **đã chọn gì, vì sao, giới hạn nào chấp nhận** khi một quyết định ảnh hưởng hành vi. Không cần ADR cho mọi tên biến.
 
-**`caro-cli` phải có:**
+Không chặn dòng code đầu tiên bằng BACKLOG dài. Trước mỗi ticket chỉ cần viết lại yêu cầu, 3 ví dụ và bước nhỏ đầu tiên. Đề mơ hồ thì chốt giả định, không đoán âm thầm.
 
-1. **Người vs máy**, máy đi bằng seed — người dùng nhập seed hoặc CLI sinh seed và in ra để tái lập.
-2. **Hai người cùng máy**, luân phiên gõ nước đi.
-3. **Lưu / tải phiên** — phiên dở sống giữa hai lần chạy. Lưu bàn cờ hay log nước đi? Engine đã trả lời hộ bạn ở mục 4.
-4. **Xuất JSON "thế cờ hôm nay"** — một file mô tả một thế cờ (bàn, bên đi tiếp, nước đi cuối, ngày). Trang tĩnh ở mốc ngoài #1 đọc file này, nên phần này phải xong trong **W13**, không để sang W14.
+## Từ core sang ứng dụng thật
 
-### Phạm vi cắt bằng dao
-
-Ba thứ đắt nhất đã bị bỏ có chủ đích. Không thêm lại chúng dưới bất kỳ tên nào:
-
-| Không có | Vì sao | Đi đâu |
+| Chặng | Giữ lại | Việc mới |
 |---|---|---|
-| **Undo** | Undo, state machine và replay cùng đụng vào một chỗ — tuần 13 không phải lúc | Không đi đâu. Server không có undo |
-| **HTTP** | Tải từ mạng cần timeout, fallback offline, log lỗi mạng — cần Ktor client | P1 module Ktor: `caro-cli` tải JSON từ GitHub raw của chính repo, timeout 3 giây, offline → fallback local |
-| **Biến thể luật** | Mỗi biến thể nhân đôi số case biên | Không đi đâu, trừ khi ADR nói khác |
+| Android cục bộ | Quy tắc kho và test quan trọng | Form, danh sách, state/lifecycle, lưu cục bộ |
+| Backend Java/Kotlin | Yêu cầu, ví dụ và bất biến; code dùng lại nếu phù hợp | API, SQL/transaction, phân quyền, request đồng thời |
+| Android có mạng | UI và nghiệp vụ hiển thị | Loading/error/retry, cancellation, stale data |
+| Web phụ trợ | Cùng hợp đồng API | Một màn quản trị, form và trạng thái mạng |
 
-Cộng thêm luật của Project 1: không máy đi thông minh, không màu, không ASCII art, không thư viện TUI. 23h được định giá **sau khi** đã cắt ba hạng mục trên. Thêm lại một hạng mục là tự vay tuần của P1 — W15 đã tiêu từ 18/09.
+Không ép chia sẻ mọi class/DTO giữa Android và server. Hợp đồng dữ liệu cần rõ; mã dùng chung chỉ tách khi đã có nhu cầu và test bảo vệ. Không thêm KMP, microservices hoặc framework mới để “đúng kiến trúc”.
 
-### Yêu cầu bắt buộc
+## Hoàn thành mỗi tính năng
 
-- [ ] `BACKLOG.md` theo IOSTV nộp **trước khi code** — W11 dành cho việc này, cùng ADR luật cờ
-- [ ] `caro-engine` là module Gradle riêng, **0 dependency, 0 I/O** — `grep` chứng minh
-- [ ] Có persistence — phiên dở sống giữa hai lần chạy
-- [ ] **Test tái lập:** cùng seed + cùng log → cùng bàn cờ, chạy **100/100** lần, có test tự động — kết quả: ____ / 100
-- [ ] **20 case biên win-check có test** — số case đã có: ____ / 20
-- [ ] ≥12 test cho core logic tổng cộng — win-check và state machine là ứng viên số một: chúng thuần, dễ test, và dễ sai
-- [ ] Git history sạch: commit có nghĩa, khớp thứ tự BACKLOG, có feature branch
-- [ ] README đủ 5 mục — cả hai module có mục "chạy thế nào" riêng
-- [ ] ≥1 feature dùng thư viện **tự học không tutorial** — chỉ ở `caro-cli`, không bao giờ ở `caro-engine`
-- [ ] Mốc ngoài #1 (**làm ở W13**, 1,5h): trang tĩnh public hiển thị "thế cờ hôm nay" từ JSON do `caro-cli` xuất, link đã gửi cho 3 người — tên 3 người ghi vào `PROGRESS.md`
-- [ ] W14 — tuần cuối — **AI-free cho việc build `caro-cli`**, đúng ba ngoại lệ có tên ở luật riêng bên dưới
+- Hành vi đúng với case bình thường, biên và lỗi đã chốt.
+- Có test quan trọng; test cũ không hỏng sau yêu cầu đổi.
+- Người khác chạy được bằng hướng dẫn ngắn; lỗi đã biết được ghi rõ.
+- Bạn giải thích được một quyết định và xử lý một biến thể độc lập.
 
-### Tái lập là gì — hiểu khái niệm, đừng xin code
-
-Một engine **tái lập được** khi đầu ra chỉ phụ thuộc vào đầu vào — không phụ thuộc giờ hệ thống, thứ tự thread, hay một `Random()` không ai kiểm soát. Với cờ caro: đầu vào là **seed + log nước đi**, đầu ra là **bàn cờ + trạng thái phiên**.
-
-**Vì sao đây là tiêu chí số một:** khi hai người chơi qua server P1 cãi nhau "tôi thắng rồi mà", thứ duy nhất server tin là log nước đi chạy qua engine. Ở P3 ARENA, cùng ý tưởng này gọi là determinism và được đo bằng hash. Bạn tập nó hôm nay trên 225 ô để không phải học nó dưới áp lực ở **P3 (W68–84), tháng 16–20**.
-
-Bảng hành vi hợp lệ. Cách hiện thực là quyết định của bạn:
-
-| Sự kiện | Hành vi hợp lệ |
-|---|---|
-| Replay log 30 nước, chạy 100 lần | 100 bàn cờ giống hệt, cùng bên đi tiếp |
-| Log có nước đi vào ô đã có quân | Engine từ chối, trả về lỗi có tên — không exception, không im lặng bỏ qua |
-| Log có nước đi sau khi trận đã kết thúc | Engine từ chối — trạng thái phiên không cho phép |
-| Bàn đầy 225 ô, chưa ai thắng | Hoà, trạng thái phiên chuyển đúng |
-
-Sáu câu hỏi thiết kế bạn phải tự trả lời trong BACKLOG — và tôi sẽ hỏi xoáy từng câu khi review:
-
-1. Phiên cần lưu gì để tái lập được — bàn cờ hay log nước đi? Nếu chỉ một, cái nào, và cái còn lại suy ra bằng cách nào?
-2. Seed nằm ở đâu trong dữ liệu phiên? Tải lại phiên dở mà quên seed thì máy đi khác — test nào bắt được lỗi đó?
-3. Win-check quét cả bàn hay chỉ quét quanh ô vừa đi? Hai cách khác gì nhau về số case biên phải test?
-4. 20 case biên của bạn là những case nào? Gợi ý các nhóm: sát biên, góc, chéo ngược, đúng 5, overline 6 và 7, 5 quân bị chặn hai đầu (vẫn thắng theo luật đã chốt), 4 quân, hai đường 4 cắt nhau, ô ngoài bàn, ô đã có quân, nước đi sau khi kết thúc, bàn đầy.
-5. Sau này đổi định dạng log, phiên đã lưu còn đọc được không? Bạn gặp lại câu này ở P2 khi phiên nằm trong Postgres.
-6. Máy đi ngẫu nhiên dùng PRNG nào — `kotlin.random.Random(seed)` hay `java.util.Random(seed)`? Cái nào chỉ hứa cùng chuỗi **trong cùng phiên bản Kotlin**, và điều đó nghĩa gì với một log lưu từ tháng trước? Tên thuật toán bạn chọn ghi vào BACKLOG và README.
-
-### Trang tĩnh "thế cờ hôm nay" — mốc ngoài #1, làm ở W13
-
-`caro-cli` xuất một file JSON. Một trang tĩnh **một file** đọc JSON đó và vẽ bàn cờ. Đặt lên Vercel, gửi link cho 3 người. Đó là toàn bộ.
-
-Trang này không nằm trong rubric chấm code — nó là **bằng chứng ngoài** đầu tiên của 27 tháng: trang tĩnh W13 → lobby `websocat` W27 → `v0.1` web W38. Bằng chứng ngoài giữ bạn ở bàn hiệu quả hơn mọi lời tự hứa. Nhưng "không đầu tư" không có nghĩa là "không có giờ và không có luật". Bốn thứ đã chốt sẵn để mục này không nuốt mất tuần thi:
-
-| Điều | Chốt |
-|---|---|
-| Tuần | **W13, không phải W14.** W14 là tuần AI-free; HTML, JS và deploy không phải nội dung học của Phase 0, không đưa vào phòng thi |
-| Giờ | **1,5h**, nằm trong 20h của Project 2 — cắt từ phần W13, không phải giờ thêm và không đụng vào 4h dự phòng |
-| Luật AI | Vercel, GitHub integration, domain: thuộc "máy của bạn" theo Luật 7 — **AI hướng dẫn từng bước**. Khung HTML+JS: AI cấp mẫu có **ba lỗi cố ý**, bạn tìm, sửa và giải thích |
-| Cơ chế | `caro-cli` ghi `the-co.json` vào **chính repo của trang tĩnh**, commit cùng `index.html`; trang gọi `fetch('./the-co.json')` — cùng origin, không CORS, không backend |
-
-Khung dưới đây là mẫu Luật 7: **đúng ba lỗi cố ý**, không hơn không kém. Chép vào `index.html`, deploy, rồi sửa cho tới khi bàn 15×15 hiện đúng. Ba lỗi nằm ở ba chỗ: một đường dẫn, một chỗ quên `await`, một vòng lặp lệch một ô. Sửa xong ghi vào README một dòng mỗi lỗi: triệu chứng là gì, vì sao. Khung lấy ba trường `ban`, `benDiTiep`, `ngay` làm ví dụ — JSON của bạn đặt tên khác thì sửa khung cho khớp, đó là quyết định của bạn ở câu 1 bên dưới.
-
-```html
-<!doctype html>
-<meta charset="utf-8">
-<title>Thế cờ hôm nay</title>
-<style>
-  table { border-collapse: collapse }
-  td { width: 22px; height: 22px; border: 1px solid #ccc; text-align: center }
-</style>
-<h1>Thế cờ hôm nay</h1>
-<p id="trangthai">Đang tải…</p>
-<table id="ban"></table>
-<script>
-  const N = 15;
-  async function load() {
-    try {
-      const res = await fetch('./the_co.json');
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = res.json();
-      ve(data);
-      document.getElementById('trangthai').textContent =
-        'Bên đi tiếp: ' + data.benDiTiep + ' · ngày ' + data.ngay;
-    } catch (e) {
-      document.getElementById('trangthai').textContent = 'Không đọc được thế cờ: ' + e.message;
-    }
-  }
-  function ve(data) {
-    const t = document.getElementById('ban');
-    for (let r = 0; r < N; r++) {
-      const tr = t.insertRow();
-      for (let c = 0; c <= N; c++) {
-        tr.insertCell().textContent = data.ban[r][c] || '';
-      }
-    }
-  }
-  load();
-</script>
-```
-
-Ba câu phải tự trả lời trước — ba câu này là phần Kotlin của mục, không ai làm hộ:
-
-1. JSON cần đúng những trường gì để một trang không biết gì về engine vẫn vẽ được bàn cờ?
-2. Engine 0 dependency thì ai chuyển trạng thái phiên thành JSON — và bạn tách phần đó khỏi engine bằng cách nào?
-3. JSON hỏng hoặc thiếu trường, trang tĩnh hiện gì? Không được hiện một bàn cờ sai mà không nói — khung trên đã có sẵn chỗ cho câu trả lời, bạn kiểm nó bằng cách xoá một trường trong `the-co.json` rồi tải lại.
-
-### Bề mặt API và ADR — hợp đồng 22 tháng
-
-`caro-engine` sau `v1.0` có một **bề mặt API** — tập hàm và kiểu dữ liệu mà `caro-cli`, rồi server P1, rồi mọi thứ sau đó gọi vào. Mục tiêu: **đổi bề mặt này không quá 3 lần trong 22 tháng**, mỗi lần một ADR ghi vì sao.
-
-**Vì sao:** đây là câu chuyện phỏng vấn thật — "tôi viết engine này tháng 3, tháng 6 nó vào server, đổi API ≤3 lần, đây là ADR". Cách rẻ nhất để đạt: bề mặt càng nhỏ càng tốt. Engine chỉ biết bàn cờ, nước đi, trạng thái — người chơi, tên, điểm, thời gian là việc của lớp ngoài.
-
-### Rubric 100 điểm
-
-**Đạt: ≥70 điểm và không hạng mục nào 0 điểm.** Bạn tự chấm theo đúng bảng này cuối W14, trước buổi Examiner mode, và ghi điểm từng hạng mục kèm lý do trừ điểm vào retro note. Dưới 70 không chặn bảng 10 tiêu chí — nó định nghĩa việc phải sửa trong W15 buffer:
-
-| Hạng mục | Điểm | Tiêu chí |
-|---|---|---|
-| Chạy đúng + chịu được input ác | 30 | Đủ flow của đề; file phiên hỏng xử lý tử tế; log nước đi bậy bị từ chối có tên; seed + log tái lập 100/100 |
-| Phân rã & BACKLOG khớp git history | 20 | Đọc `git log` thấy đúng thứ tự việc trong BACKLOG |
-| Chất lượng code | 20 | Đặt tên rõ, tách hàm, model đúng, ranh giới engine/cli sạch, **không `!!`**, không catch rỗng |
-| Test | 10 | Test behavior, không test implementation; 20 case biên có mặt |
-| Git | 10 | Commit có nghĩa, branch hợp lý |
-| README + nói được | 10 | Người lạ chạy được cả hai module trong 3 lệnh |
-
-Để ý rubric không có mục "dùng thư viện xịn" hay "UI đẹp", còn 30 điểm lớn nhất nằm ở "chịu được input ác". Đó là tuyên bố về thứ tự ưu tiên của cả roadmap: một app khiêm tốn mà không đổ, giá trị hơn một app hoành tráng sập khi gặp một dòng log lạ.
-
-### Luật tuần cuối: AI-free cho việc build, ba ngoại lệ có tên
-
-AI-free của W14 áp cho **việc BUILD `caro-cli`** — viết code, viết test, viết README, tự chấm rubric: **cấm AI tuyệt đối, kể cả hỏi khái niệm**. Không sinh code (điều này vốn cấm từ đầu), không nhờ giải thích lỗi, không "chỉ hỏi một câu lý thuyết thôi". Công cụ được phép: docs chính thức, debugger, `notes/ERRORS.md` và journal của chính bạn. Xuất JSON và trang tĩnh đã xong ở W13 nên nằm ngoài vùng cấm — nếu W14 bạn vẫn đang dựng trang tĩnh thì bạn đang trễ lịch: ghi vào bảng tuần, đừng mở AI.
-
-W14 đồng thời là tuần thi, nên có **đúng ba phiên AI có tên** — không có phiên thứ tư:
-
-| Phiên | AI làm gì | Bạn làm gì | File prompt nguyên văn |
-|---|---|---|---|
-| 1. Blank-file #5 | Chọn ngẫu nhiên 1 thành phần để viết lại từ file trắng | Chọn xong là đóng phiên, rồi tự viết | `notes/ai-sessions/w14-blank-file.md` |
-| 2. Examiner mode | Đóng vai giám khảo kiểm hiện vật của repo | Chạy theo prompt ở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep) | `notes/ai-sessions/w14-examiner.md` |
-| 3. Vấn đáp 12 câu | Hỏi xoáy 2 tầng "tại sao" | Trả lời, ngưỡng ≥10/12 | `notes/ai-sessions/w14-van-dap.md` |
-
-Đúng ba file đó trong `notes/ai-sessions/` của W14, không có file thứ tư. Ba phiên này **không tính** vào ô "chạm vùng AI-free" của bảng tuần — mà ô đó tuần này phải bằng **0**. Luật đầy đủ ở [Hệ thống học & luật AI](/he-thong-hoc).
-
-**Vì sao:** Blank-file #5 rơi vào W14 và **phải pass** — đây là lượt duy nhất trong 5 lượt không được phép trượt. W14 là phòng thi. Nếu bạn không thể hoàn thiện project của chính mình trong một tuần không AI, project đó chưa phải của bạn — và tốt hơn là biết điều đó bây giờ, khi còn 22 tháng để sửa, thay vì biết trong 15 phút đầu của buổi phỏng vấn thật.
-
-## 🏁 Checklist trước khi tag v1.0
-
-Dùng chung cho cả hai project. Chép checklist này vào README của repo project và tick tại đó; bản dưới đây tick khi **cả hai** project đã qua:
-
-- [ ] Chạy được từ clone → run trong ≤3 lệnh, lệnh ghi sẵn trong README
-- [ ] README đủ 5 mục: là gì / chạy thế nào / cấu trúc code / quyết định đáng chú ý / còn thiếu gì
-- [ ] Có screenshot hoặc GIF demo trong README
-- [ ] Test cho toàn bộ business logic — chạy pass toàn bộ; clone vào một thư mục mới rồi `./gradlew test` xanh, không dựa vào state của thư mục đang làm
-- [ ] Xử lý tử tế cả ba trạng thái: đang chờ / lỗi / rỗng (file rỗng, túi rỗng, log nước đi rỗng)
-- [ ] Nhập bậy không crash — đã thử ≥5 loại input ác, liệt kê chúng trong README
-- [ ] Git history sạch: người lạ đọc `git log --oneline` kể lại được quá trình build
-- [ ] Zero `!!`, zero catch rỗng — đã grep toàn bộ source để chứng minh
-- [ ] 1 retro note trong journal: nếu làm lại sẽ làm khác gì
-- [ ] Đã `git tag v1.0` và push tag lên GitHub; `BACKLOG.md` khoá tại thời điểm tag
-
-Chưa đủ 10 mục thì project chưa xong — và theo luật sắt đầu trang, chưa có project tiếp theo.
-
-## → Tiếp theo
-
-Project 2 đã tag `v1.0` → mở [Tốt nghiệp Phase 0](/phase-0/tot-nghiep): bảng 10 tiêu chí — cổng duy nhất của phase — trong đó tag `v1.0` cả hai repo, test seed 100/100, 20 case biên và trang tĩnh đã nằm sẵn. Điểm rubric tự chấm bạn mang theo vào buổi Examiner mode, nó không phải điều kiện mở cổng. Còn nếu bạn đang ở tuần 1–9: quay lại [Lịch 14 tuần](/phase-0/lich-14-tuan) — hai project này đợi bạn ở tuần 10 và tuần 12. `caro-engine` sống tiếp thế nào sau W14: [Roadmap 27 tháng](/roadmap), thang 12 bậc.
+[Tiêu chí tốt nghiệp P0](/phase-0/tot-nghiep) là cổng sang Android, không có một rubric điểm số thứ hai.

@@ -1,17 +1,25 @@
 {
-  "index": "Trang chủ",
-  "nghe-backend-game": "Nghề backend game",
-  "roadmap": "Roadmap 26 tháng",
-  "he-thong-hoc": "Hệ thống học & luật AI",
-  "nguon-hoc": "Nguồn học",
-  "phase-0": "Phase 0 — Kotlin viết được",
-  "phase-1": "Phase 1 — 🔒 Chưa mở",
-  "nen-tang-he-thong": "Nền tảng hệ thống — 🔒 từ P1",
-  "backend-core": "Backend core — 🔒 từ P1",
-  "android-core": "Android core — 🔒 từ P2",
-  "progress": "Tiến độ",
+  "index": "Bắt đầu buổi học",
+  "phase-0": "Thực hành Kotlin",
+  "he-thong-hoc": "Cách học & luật hướng dẫn",
+  "roadmap": "Lộ trình game server & Android",
+  "co-so-thiet-ke": "Cơ sở thiết kế & nguồn",
+  "kotlin-java-core": "Nền Kotlin/Java",
+  "phase-1": "Thực hành Android",
+  "android-core": "Nền Android",
+  "backend-core": "Game server & backend",
+  "progress": "Tiến độ theo năng lực",
+  "nguon-hoc": "Nguồn tra cứu",
+  "web-phu-tro": "Web — phụ trợ",
+  "nghe-backend-game": "Định hướng chuyên môn",
+  "nen-tang-he-thong": "Lab hệ thống — tra cứu",
+  "tham-khao": "Tài liệu chuyên sâu",
   "mo-rong": {
-    "title": "Mở rộng",
+    "title": "Mở rộng khi cần",
+    "display": "hidden"
+  },
+  "lich-su-hoc": {
+    "title": "Lịch sử giáo án",
     "display": "hidden"
   }
 }

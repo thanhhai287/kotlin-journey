@@ -1,0 +1,79 @@
+# Cơ sở thiết kế — nguồn, lựa chọn và cách kiểm chứng
+
+**Đối chiếu nguồn ngày 14/10/2026.** Bản trước chủ yếu là tổng hợp kinh nghiệm, chưa chứng minh được thứ tự học hoặc quỹ 1.100 giờ. Bản này bổ sung đối chiếu nguồn gốc, thay dự báo dài hạn bằng thử nghiệm 4 tuần, và liên kết kiến thức với bài tự triển khai.
+
+Không có nguồn nào dưới đây xác nhận đây là chương trình “tốt nhất” cho riêng bạn. Đây là phương án phù hợp với thông tin hiện có; kết quả tự làm sau tuần 2 và 4 sẽ quyết định điều chỉnh.
+
+## Hồ sơ dùng để thiết kế
+
+| Bạn đã xác nhận | Hệ quả trong chương trình |
+|---|---|
+| Biết cú pháp Kotlin, chưa tự hoàn thiện chương trình nhỏ | Bắt đầu bằng một chương trình chạy trọn luồng; không bắt học lại khoá cú pháp |
+| Có 9–12 giờ/tuần | Lập lịch nền 9 giờ; tối đa 3 giờ linh hoạt dành cho việc đang làm |
+| Muốn tư duy và code nhiều hơn, được giải thích cơ chế | Giao hành vi và tiêu chí; bạn tự triển khai; mentor giải thích, review và giảm dần trợ giúp |
+| Kotlin/Java sâu nhất; game server và Android là hướng chính | Một nền JVM, hai nơi áp dụng; Java có bài triển khai riêng; web chỉ là client phụ |
+| Cần sâu ở nền tảng thực sự cần thiết | Có mốc bắt buộc về dữ liệu, thuật toán, state, lỗi, mạng và đồng thời; internals nâng cao mở sau |
+
+## Các nguồn đã kiểm tra
+
+Các mã N01–N15 giúp truy từ quyết định về nguồn. “Đã xem đề cương” không có nghĩa đã học hết khoá hoặc đọc hết sách. Tài liệu framework dùng để kiểm tra cách làm và API; không dùng riêng nó để suy ra toàn bộ lộ trình nghề nghiệp.
+
+### Giáo trình và khung năng lực
+
+| Mã / nguồn gốc | Phần đã xem | Dùng vào đâu và giới hạn |
+|---|---|---|
+| **N01 — [JetBrains: Kotlin for Education](https://kotlinlang.org/education/)** | Danh mục của bộ Programming in Kotlin: kiểu, OOP, generics, collections, testing, concurrency và JVM | Đối chiếu độ phủ nền Kotlin. Chưa thẩm định toàn bộ slide/bài thi; không sao chép thứ tự học kỳ |
+| **N02 — [Dev.java: Learn Java](https://dev.java/learn/)** | Mục lục ngôn ngữ, collections, exceptions, concurrency và công cụ JVM | Nguồn chính khi làm J01–J04. Đây là tài liệu học Java, không phải lộ trình game server |
+| **N03 — [University of Helsinki: Java MOOC](https://java-programming.mooc.fi/)** | Đề cương; bài [Introduction to testing](https://java-programming.mooc.fi/part-6/3-introduction-to-testing/); mục [Larger exercises](https://java-programming.mooc.fi/part-7/3-larger-exercises/) | Tham khảo cách đưa debug/test vào chương trình và tăng phạm vi bài. Trang chính ghi rõ khoá đã ngừng bảo trì; không buộc dùng tooling cũ hoặc học lại 14 phần |
+| **N04 — [UC Berkeley CS61B, Spring 2025](https://sp25.datastructur.es/)** | Lịch học/lab/project, nhất là references, testing/debugging, collections và asymptotics | Bổ sung bài cấu trúc dữ liệu và lý giải chi phí. Đây là bản 2025, không khẳng định bản mới nhất; không bê toàn bộ khối lượng môn học vào lịch 9 giờ |
+| **N05 — [Google: Android Basics with Compose](https://developer.android.com/courses/android-basics-compose/course)** | Đề cương các unit: UI/state, lifecycle, mạng, lưu dữ liệu, tác vụ nền | Kiểm tra thứ tự phụ thuộc A01–A07. Bỏ phần cú pháp đã biết; tham khảo unit đang cần thay vì xem hết lời giải app mẫu |
+| **N06 — [ACM/IEEE-CS/AAAI: CS2023, bản cuối](https://ieeecs-media.computer.org/media/education/reports/CS2023.pdf)** | Mục lục, phần Competency Framework ở trang in 41–45 và [chỉ mục lĩnh vực](https://csed.acm.org/knowledge-areas/) | Đối chiếu năng lực theo nhiệm vụ và tránh bỏ sót nền tảng. Không xem chương trình cá nhân này tương đương bằng CS; không chuyển giờ giảng đại học thành giờ tự học |
+
+### Tài liệu cơ chế và triển khai
+
+| Mã / nguồn gốc | Phần đã xem | Dùng vào đâu và giới hạn |
+|---|---|---|
+| **N07 — [MIT: Missing Semester, bản 2020](https://missing.csail.mit.edu/2020/)** | Đề cương shell, Git, debugging/profiling và build/test | Chọn kỹ năng công cụ phục vụ lỗi đang gặp; không yêu cầu thành thạo shell/Vim trước K01 |
+| **N08 — [OSTEP, Remzi và Andrea Arpaci-Dusseau](https://pages.cs.wisc.edu/~remzi/OSTEP/)** | Mục lục process/memory, concurrency, persistence | Chọn chương cho lab JVM/server ở P2–P4. Mới đối chiếu mục lục, không tuyên bố đã thẩm định toàn bộ sách |
+| **N09 — [Beej's Guide to Network Programming](https://beej.us/guide/bgnet/html/split/)** | Cấu trúc sách; mục sockets, client/server, blocking, partial send và đóng gói dữ liệu | Làm lab luồng byte/framing trước room. Ví dụ gốc dùng C; lab của bạn dùng JVM, không mở thêm khoá C |
+| **N10 — [Ktor: Create RESTful APIs](https://ktor.io/docs/server-create-restful-apis.html)** | Luồng tutorial về route, JSON, xử lý request và kiểm thử | Tra cho S01–S02; yêu cầu Kho đồ và case do bạn tự triển khai, không lấy việc chạy tutorial làm cổng đạt |
+| **N11 — [PostgreSQL: Tutorial](https://www.postgresql.org/docs/current/tutorial.html)** | Mục lục SQL, quan hệ, ràng buộc và transaction | S03/A07 rồi S07; chọn tài liệu đúng phiên bản khi cài. Tutorial không bao quát hết isolation/thiết kế database |
+| **N12 — [Spring: Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)** | Phạm vi và ví dụ REST service trong guide | Một lát Java/Spring ở J04 sau khi đã hiểu HTTP. Không phải căn cứ để bắt học hai framework ngay từ đầu |
+| **N13 — [Gabriel Gambetta: Client-Server Game Architecture](https://www.gabrielgambetta.com/client-server-game-architecture.html)** | Bài mở đầu chuỗi Fast-Paced Multiplayer | Đối chiếu server nắm trạng thái và ảnh hưởng độ trễ. Chuỗi netcode của tác giả, không phải giáo trình đầy đủ về vận hành/economy |
+| **N14 — [Glenn Fiedler: Fix Your Timestep!](https://gafferongames.com/post/fix_your_timestep/)** | Bài về bước mô phỏng và tình trạng không theo kịp thời gian | Lab tick ở P4 có phép đo. Không mặc định một tần số tick cho mọi game |
+
+### Cơ sở cho cách hướng dẫn
+
+**N15 — [IES/What Works Clearinghouse: Organizing Instruction and Study to Improve Student Learning](https://ies.ed.gov/ncee/wwc/PracticeGuide/1)**, hướng dẫn năm 2007. Đã xem phần khuyến nghị và mức bằng chứng: học cách quãng, xen kẽ ví dụ đã giải với bài tự làm, gợi nhớ và câu hỏi yêu cầu giải thích. Đây là tổng hợp giáo dục nói chung, không phải thử nghiệm riêng cho người lớn học Kotlin.
+
+Áp dụng thận trọng: khi thiếu kiến thức, mentor giải thích kèm một ví dụ khác bài; sau đó bạn tự áp dụng và thử lại ở buổi sau. **Tỷ lệ 70/30, thang H0–H3, buổi 2 giờ và mốc review hai tuần là lựa chọn tổ chức**, không phải con số được nghiên cứu trên xác nhận.
+
+## Từ nguồn tới quyết định cụ thể
+
+Các bài Kho đồ/CARO, tiêu chí và lịch dưới đây do chương trình này thiết kế cho bạn; không phải bài được các đơn vị trên phê duyệt.
+
+| Căn cứ đối chiếu | Quyết định của chương trình | Hiện vật kiểm chứng |
+|---|---|---|
+| N01–N04, N06 | Từ biết cú pháp sang chương trình nhỏ, có debug/test; Java học qua một hành vi đã hiểu | K01 chạy trọn luồng; K02 có test; J01 chạy cùng bộ case |
+| N04, N06 | Dạy cấu trúc dữ liệu và chi phí trong sản phẩm, có mốc bắt buộc | K02 so sánh tìm bằng danh sách/bảng tra; K05 lý giải số lần duyệt; S04 kiểm tra luật trên bàn cờ |
+| N05 | UI/state trước; sau đó mạng, SQL và Room. P1 chỉ dùng cơ chế lưu nhỏ đã hiểu từ P0 | A03 phân biệt xoay màn hình/process death; S01+A06 có request thật; S03+A07 có truy vấn và cache |
+| N08–N11 | Tách lỗi đầu vào, lỗi I/O và lỗi đồng thời thành các bước tăng dần | K03 một luồng; K04 file hỏng; S03 rollback; S05 xác định nơi sở hữu state trước khi nhận hai client |
+| N13–N14 | CARO theo lượt trước mô phỏng realtime | S04 luật thuần; S05 hai client; P4 đo tick và phản ứng khi quá tải |
+| N15 | Có giải thích/ví dụ hỗ trợ, rồi giảm trợ giúp và kiểm tra chuyển giao | Một biến thể chưa làm y nguyên, ghi mức trợ giúp và lý do quyết định |
+
+## Những thay đổi so với bản trước
+
+1. **Bỏ dự báo 1.100 giờ/27 tháng khỏi kế hoạch hiện hành.** Chưa có dữ liệu tốc độ tự triển khai của bạn để bảo vệ con số đó. Chỉ lập [4 tuần gần nhất](/phase-0/lich-14-tuan): 36 giờ nền, tối đa 12 giờ linh hoạt.
+2. **Không học lại nhập môn Kotlin.** K01 chính là lần kiểm tra điểm xuất phát bằng sản phẩm. Thiếu khái niệm nào thì giải thích và luyện đúng phần đó.
+3. **Java có đầu ra bắt buộc, không chỉ đọc đối chiếu.** J01 sau K02; các bài sau tăng dần sang model/interop và Java backend. Không đổi ngôn ngữ liên tục trước khi có một luồng Kotlin chạy được.
+4. **Nền tảng có lịch quay lại.** Reference/equality và collection ở P0; lifecycle ở P1; SQL, mạng và shared state ở P2; isolation/JMM ở P3; profiling/timestep ở P4. Không đợi vô tình gặp bug mới học chúng.
+5. **Giảm độ khó nhảy cóc.** K03 bắt buộc bảo toàn dữ liệu khi từ chối đầu vào; lỗi bất ngờ giữa cập nhật là phần mở rộng. Transaction lưu bền và cạnh tranh nhiều request học riêng sau đó.
+6. **Android được phát triển thành app thật.** Có UI/lifecycle, mạng, dữ liệu và performance; không thu nhỏ thành demo tượng trưng. Web không có khung giờ bắt buộc, chỉ mở một flow quản trị khi có nhu cầu.
+
+## Cách biết chương trình đang phù hợp
+
+Cuối tuần 2, xem bạn tự hoàn thiện được luồng nào, có tìm nguyên nhân lỗi bằng quan sát không, và có đổi một yêu cầu nhỏ mà không cần lời giải không. Cuối tuần 4, kiểm tra lại một phần đã học sau khoảng nghỉ và chọn phạm vi kế tiếp. Dùng code, test, lời giải thích và cảm nhận hứng thú; không chỉ đếm giờ.
+
+Nếu hai buổi không tạo được hành vi mới: giảm kích thước ticket hoặc dạy phần tiên quyết còn thiếu. Nếu tự làm được biến thể dễ dàng: bỏ phần lặp và đi tiếp. Nếu chán CLI: sau K02 có thể dành một buổi xem dữ liệu trên Android, thay một buổi trong lịch; bài đó là trải nghiệm sớm, không tự xác nhận đã đạt lifecycle hoặc cổng P0.
+
+**Đọc tiếp:** [Roadmap và các cổng](/roadmap) · [4 tuần đầu](/phase-0/lich-14-tuan) · [Luật mentor](/he-thong-hoc) · [Nguồn mở theo ticket](/nguon-hoc).
