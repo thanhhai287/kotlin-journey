@@ -1,6 +1,6 @@
 # Cơ sở thiết kế — nguồn, lựa chọn và cách kiểm chứng
 
-**Đối chiếu nguồn ngày 14/10/2026.** Bản trước chủ yếu là tổng hợp kinh nghiệm, chưa chứng minh được thứ tự học hoặc quỹ 1.100 giờ. Bản này bổ sung đối chiếu nguồn gốc, thay dự báo dài hạn bằng thử nghiệm 4 tuần, và liên kết kiến thức với bài tự triển khai.
+**Đối chiếu ban đầu 14/10/2026; rà soát bổ sung 15/10/2026.** Bản trước chủ yếu là tổng hợp kinh nghiệm, chưa chứng minh được thứ tự học hoặc quỹ 1.100 giờ. Trang này ghi nguồn gốc, phạm vi đã đọc và quyết định thiết kế. [Báo cáo rà soát](/ra-soat-lo-trinh) ghi các vấn đề tìm thấy và sửa trong lần bổ sung.
 
 Không có nguồn nào dưới đây xác nhận đây là chương trình “tốt nhất” cho riêng bạn. Đây là phương án phù hợp với thông tin hiện có; kết quả tự làm sau tuần 2 và 4 sẽ quyết định điều chỉnh.
 
@@ -16,7 +16,7 @@ Không có nguồn nào dưới đây xác nhận đây là chương trình “t
 
 ## Các nguồn đã kiểm tra
 
-Các mã N01–N15 giúp truy từ quyết định về nguồn. “Đã xem đề cương” không có nghĩa đã học hết khoá hoặc đọc hết sách. Tài liệu framework dùng để kiểm tra cách làm và API; không dùng riêng nó để suy ra toàn bộ lộ trình nghề nghiệp.
+N01–N15 là sổ đối chiếu ngày 14/10; N16–N21 là nguồn đọc thêm ngày 15/10. “Đã xem đề cương” không có nghĩa đã học hết khoá hoặc đọc hết sách. Lượt mới không tái thẩm định toàn bộ nguồn cũ. Tài liệu framework dùng để kiểm tra cơ chế/API; không dùng riêng nó để suy ra toàn bộ lộ trình nghề nghiệp. Ngày ở đây là ngày rà soát, không phải ngày xuất bản hay bảo đảm nội dung trên web sẽ giữ nguyên.
 
 ### Giáo trình và khung năng lực
 
@@ -48,6 +48,25 @@ Các mã N01–N15 giúp truy từ quyết định về nguồn. “Đã xem đ�
 
 Áp dụng thận trọng: khi thiếu kiến thức, mentor giải thích kèm một ví dụ khác bài; sau đó bạn tự áp dụng và thử lại ở buổi sau. **Tỷ lệ 70/30, thang H0–H3, buổi 2 giờ và mốc review hai tuần là lựa chọn tổ chức**, không phải con số được nghiên cứu trên xác nhận.
 
+Lần đọc lại N15 ngày 15/10 phân biệt mức bằng chứng của từng khuyến nghị: cách quãng và xen kẽ ví dụ/bài làm ở mức **Moderate**; gợi nhớ bằng quiz (5b) và câu hỏi giải thích sâu ở mức **Strong**; câu hỏi trước bài (5a) ở mức **Minimal**. Không gom tất cả thành “nghiên cứu chứng minh”.
+
+### Nguồn bổ sung cho rà soát kỹ thuật
+
+| Mã / nguồn gốc | Phần thực sự đối chiếu | Điều chỉnh và giới hạn |
+|---|---|---|
+| **N16 — Gradle/Kotlin tooling:** [Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), [compatibility](https://docs.gradle.org/current/userguide/compatibility.html), [JVM target/toolchain](https://kotlinlang.org/docs/gradle-configure-project.html), [Kotlin + JUnit](https://kotlinlang.org/docs/jvm-test-using-junit.html) | Cách gọi build, JDK chạy Gradle khác toolchain/target, cấu hình runner | Thêm kiểm môi trường và xác nhận test được chạy ở K02. Chưa có repo Kotlin của người học để chọn/kiểm một bộ phiên bản cụ thể; không nâng dependency website |
+| **N17 — Kotlin/JVM:** [collections](https://kotlinlang.org/docs/collections-overview.html), [data class copy](https://kotlinlang.org/docs/data-classes.html), [cancellation](https://kotlinlang.org/docs/cancellation-and-timeouts.html), [shared state](https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html) | Read-only/mutable, shallow copy, hủy hợp tác, atomicity và confinement | Sửa các trang core/concurrency: view chỉ đọc không đảm bảo bất biến, copy không tách mọi state, `suspend` không tự đổi thread. Bài kiểm dùng hành vi và lịch xen kẽ; không đòi race hiện trong số lần cố định |
+| **N18 — Android:** [save UI state](https://developer.android.com/topic/libraries/architecture/saving-states), [coroutine practices](https://developer.android.com/kotlin/coroutines/coroutines-best-practices), [ANR](https://developer.android.com/topic/performance/anrs/diagnose-and-fix-anrs), [Doze](https://developer.android.com/training/monitoring-device-state/doze-standby) | Bảng state/lifecycle, main-safety/cancellation, timeout theo loại ANR, hạn chế tác vụ nền | Tách recreation, process death và dữ liệu lưu bền; sửa lời hứa giữ socket/timeout chung. Lab phải ghi thiết bị/API và thao tác; chưa chạy thử app trên thiết bị trong đợt rà soát này |
+| **N19 — Server/dữ liệu:** [PostgreSQL isolation](https://www.postgresql.org/docs/current/transaction-iso.html), [constraints](https://www.postgresql.org/docs/current/ddl-constraints.html), [HTTP idempotency](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2), [OWASP object authorization](https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/), [Ktor WebSockets](https://ktor.io/docs/server-websockets.html) | Read Committed/retry, ràng buộc dữ liệu, ý nghĩa retry HTTP, quyền trên từng đối tượng, giới hạn frame | Thêm case commit rồi mất response, key trùng khác nội dung, sai quyền và client chậm. Các nguồn xác định rủi ro/cơ chế; không tự cung cấp một kiến trúc room hoặc bảo đảm exactly-once |
+
+Các nguồn bổ sung cho số/byte, đồng hồ, random và JVM internals được dẫn ngay tại lab tương ứng. Chỉ tra phần phục vụ câu hỏi hiện tại; danh mục này không tạo môn học mới.
+
+### Hai nghiên cứu về học lập trình
+
+**N20 — [Margulieux, Morrison & Decker (2020), subgoal-labeled worked examples](https://link.springer.com/article/10.1186/s40594-020-00222-7).** Đã đọc thiết kế, kết quả và giới hạn: 265 sinh viên CS1 Java, nghiên cứu bán thực nghiệm. Nhóm dùng ví dụ có nhãn mục tiêu từng bước làm quiz gần bài học tốt hơn và ít trượt/bỏ học hơn; điểm thi trung bình không tăng có ý nghĩa thống kê. Không phân nhóm ngẫu nhiên; có giảng viên can thiệp thuộc nhóm nghiên cứu. Dùng để cân nhắc giải thích mục đích từng bước trong **ví dụ khác bài**; không suy ra phải chia sẵn ticket hoặc cấm học qua tự làm.
+
+**N21 — [Sentance, Waite & Kallia (2019), PRIMM](https://primmportal.com/wp-content/uploads/2020/10/teaching-computer-programming-with-primm-a-sociocultural-perspective.pdf).** Đã xem thiết kế, kết quả và giới hạn của chuỗi dự đoán → chạy → tìm hiểu → sửa → tự tạo: 493 học sinh nhóm can thiệp, 180 đối chứng; nhóm can thiệp đạt post-test tốt hơn. Nghiên cứu Python ở lứa tuổi 11–14, 8–12 tuần, không phân nhóm ngẫu nhiên; chưa chứng minh hiệu quả với người lớn tự học Kotlin/AI. Áp dụng thành thí nghiệm nhỏ khi bí, rồi quay lại tự triển khai; không bắt lặp nghi thức mọi buổi.
+
 ## Từ nguồn tới quyết định cụ thể
 
 Các bài Kho đồ/CARO, tiêu chí và lịch dưới đây do chương trình này thiết kế cho bạn; không phải bài được các đơn vị trên phê duyệt.
@@ -60,6 +79,8 @@ Các bài Kho đồ/CARO, tiêu chí và lịch dưới đây do chương trình
 | N08–N11 | Tách lỗi đầu vào, lỗi I/O và lỗi đồng thời thành các bước tăng dần | K03 một luồng; K04 file hỏng; S03 rollback; S05 xác định nơi sở hữu state trước khi nhận hai client |
 | N13–N14 | CARO theo lượt trước mô phỏng realtime | S04 luật thuần; S05 hai client; P4 đo tick và phản ứng khi quá tải |
 | N15 | Có giải thích/ví dụ hỗ trợ, rồi giảm trợ giúp và kiểm tra chuyển giao | Một biến thể chưa làm y nguyên, ghi mức trợ giúp và lý do quyết định |
+| N16–N19 | Xác định ranh giới bảo đảm của công cụ/API, biến hiểu nhầm thành case | Runner bắt assertion sai; tách lifecycle; test sai quyền, timeout sau commit và cạnh tranh |
+| N15, N20–N21 | Phân biệt áp dụng ngay sau hỗ trợ với tự làm ở buổi sau | Dùng lại một biến thể độc lập trong review/cổng; không lấy điểm bài vừa luyện để suy ra đã nhớ lâu |
 
 ## Những thay đổi so với bản trước
 

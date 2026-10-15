@@ -1,6 +1,6 @@
 # Học bằng triển khai — luật hướng dẫn
 
-**Cập nhật 14/10/2026.** Bạn đã rõ cú pháp Kotlin cơ bản, chưa tự hoàn thiện chương trình nhỏ và có 9–12 giờ/tuần. Từ đây, đơn vị học là một tính năng chạy được, một lỗi tìm ra nguyên nhân, hoặc một yêu cầu thay đổi xử lý được. Trục chính là **Kotlin/Java để xây game server và ứng dụng Android**; web chỉ phụ trợ.
+**Rà soát 15/10/2026; giữ hồ sơ đã xác nhận ngày 14/10.** Bạn đã rõ cú pháp Kotlin cơ bản, chưa tự hoàn thiện chương trình nhỏ và có 9–12 giờ/tuần. Từ đây, đơn vị học là một tính năng chạy được, một lỗi tìm ra nguyên nhân, hoặc một yêu cầu thay đổi xử lý được. Trục chính là **Kotlin/Java để xây game server và ứng dụng Android**; web chỉ phụ trợ.
 
 Trang này thay các luật cũ về hỏi ngược mặc định, chờ đủ 30 phút, cấm giải thích trong cả tuần và hoàn thành giáo trình theo lịch. Luật áp dụng cho bài học của bạn; sửa tài liệu và công cụ của site vẫn là công việc bình thường.
 
@@ -57,6 +57,8 @@ Mỗi vòng tối đa 3 nhận xét quan trọng, theo mẫu: **vị trí/hành 
 
 Ví dụ nhận xét: “BLOCKER: với số lượng âm, tồn kho tăng sau lệnh xuất. Quy tắc bảo toàn trạng thái bị phá. Hãy thêm case này và kiểm tra nơi nhận dữ liệu không đáng tin.” Đây là phản hồi có ích hơn chỉ hỏi “em thấy ổn chưa?”.
 
+Chấm theo hợp đồng đã chốt, không thêm điều kiện ngầm hoặc ép sở thích kiến trúc thành BLOCKER. Nếu chưa có bug thật, ghi “chưa thấy lỗi trong các case đã kiểm”; có thể dùng một bài Bug Hunt được ghi nhãn để luyện chẩn đoán. Không tạo lỗi trong sản phẩm rồi gọi đó là lỗi người học.
+
 Với concurrency, AI được giải thích xen kẽ thực thi và giả thuyết race; bạn tự vẽ một thứ tự chạy, tái hiện và kiểm tra cách sửa. Với hiệu năng, AI được giúp thiết kế phép đo và đọc kết quả thật, nhưng không kết luận nút thắt khi chưa có dữ liệu.
 
 ### 5. Phân biệt luyện tập và kiểm tra
@@ -99,6 +101,8 @@ TIẾP: file hoặc hành vi cụ thể sẽ làm ở buổi sau.
 ```
 
 Sau 2–3 ticket, chọn một phần nhỏ đã học để viết lại hoặc đổi yêu cầu trong 30–45 phút. Dùng kết quả để chọn bài tiếp, không bắt viết lại cả project. Sai thì sửa một lỗ hổng và thử biến thể khác ở buổi sau.
+
+**Dùng lại bằng chứng, không nhân số bài kiểm tra.** Một biến thể độc lập có thể đồng thời phục vụ review tuần 2/4 và một mục cổng P0 nếu đúng phạm vi. Biến thể vừa làm ngay sau H3 cho biết bạn áp dụng được với hỗ trợ gần đó; ở buổi sau mới kiểm lại khả năng nhớ và tự quyết định. Không cần biến thể riêng cho mọi mục nếu một thay đổi đã kiểm được nhiều năng lực. Khoảng 30–45 phút giới hạn phạm vi, không chấm tốc độ; hết lượt thì nộp phần dở và mở hỗ trợ lại.
 
 Từ khi một phần đã được kiểm tra độc lập, có thể dùng AI cho việc lặp lại ngoài mục tiêu học, với phạm vi rõ và tự đọc/test toàn bộ diff. Không có chỉ tiêu “phải bắt được N lỗi AI”: phản hồi đúng cũng có thể đúng. Trong phần đang rèn, người học vẫn tự viết.
 

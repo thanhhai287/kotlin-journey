@@ -1,6 +1,6 @@
 # Một sản phẩm, nhiều cách dùng
 
-**Kho đồ** là sản phẩm thực hành chính: bắt đầu bằng CLI Kotlin, đưa lên Android, nối backend JVM, rồi thêm trang web nhỏ. Nghiệp vụ cũ phải tiếp tục đúng khi giao diện và nơi lưu dữ liệu thay đổi. CARO và game server nối tiếp sau nền app/core; không cần làm game loop trước khi qua P0. Kho đồ cũng là bài toán túi vật phẩm/economy của game, chưa có tiền thật.
+**Kho đồ** là sản phẩm thực hành chính: bắt đầu bằng CLI Kotlin, đưa lên Android rồi nối backend JVM. Trang web nhỏ chỉ thêm khi có nhu cầu quản trị hoặc demo. Nghiệp vụ cũ phải tiếp tục đúng khi giao diện và nơi lưu dữ liệu thay đổi. CARO và game server nối tiếp sau nền app/core; không cần làm game loop trước khi qua P0. Kho đồ cũng là bài toán túi vật phẩm/economy của game, chưa có tiền thật.
 
 ## P0 — Kho đồ CLI và core
 
@@ -25,9 +25,11 @@ Không chặn dòng code đầu tiên bằng BACKLOG dài. Trước mỗi ticket
 | Chặng | Giữ lại | Việc mới |
 |---|---|---|
 | Android cục bộ | Quy tắc kho và test quan trọng | Form, danh sách, state/lifecycle, lưu cục bộ |
-| Backend Java/Kotlin | Yêu cầu, ví dụ và bất biến; code dùng lại nếu phù hợp | API, SQL/transaction, phân quyền, request đồng thời |
-| Android có mạng | UI và nghiệp vụ hiển thị | Loading/error/retry, cancellation, stale data |
+| Android nối backend JVM ở P2 | Yêu cầu, ví dụ, bất biến và UI; code dùng lại nếu phù hợp | S01–S03/A06–A07: API thật, loading/error, SQL/Room; học và kiểm chứng từng lát xuyên client/server |
+| Backend khi lỗi và cạnh tranh ở P3 | Hợp đồng đã có và test hành vi | Retry/idempotency, transaction/isolation, kiểm tra quyền và nhiều request; Java/Spring nhỏ ở J04 |
 | Web phụ trợ | Cùng hợp đồng API | Một màn quản trị, form và trạng thái mạng |
+
+Đây là các chặng có điều kiện theo [Roadmap](/roadmap), không là danh sách cùng triển khai một lúc. Quyền truy cập và nơi sở hữu shared state phải có ngay khi chức năng có người dùng hoặc kết nối đồng thời; P3 đào sâu kiểm chứng lỗi, không trì hoãn bảo vệ cơ bản tới lúc đó.
 
 Không ép chia sẻ mọi class/DTO giữa Android và server. Hợp đồng dữ liệu cần rõ; mã dùng chung chỉ tách khi đã có nhu cầu và test bảo vệ. Không thêm KMP, microservices hoặc framework mới để “đúng kiến trúc”.
 
@@ -36,6 +38,6 @@ Không ép chia sẻ mọi class/DTO giữa Android và server. Hợp đồng d�
 - Hành vi đúng với case bình thường, biên và lỗi đã chốt.
 - Có test quan trọng; test cũ không hỏng sau yêu cầu đổi.
 - Người khác chạy được bằng hướng dẫn ngắn; lỗi đã biết được ghi rõ.
-- Bạn giải thích được một quyết định và xử lý một biến thể độc lập.
+- Bạn giải thích được một quyết định; ở mốc review đã chọn, xử lý một biến thể độc lập chỉ dùng kiến thức đã học.
 
-[Tiêu chí tốt nghiệp P0](/phase-0/tot-nghiep) là cổng sang Android, không có một rubric điểm số thứ hai.
+[Tiêu chí tốt nghiệp P0](/phase-0/tot-nghiep) là cổng sang Android, không có một rubric điểm số thứ hai. Một demo/test/biến thể phù hợp có thể làm bằng chứng cho ticket, review và cổng; không cộng ba lần kiểm tra cùng một hành vi.

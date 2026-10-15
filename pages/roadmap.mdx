@@ -21,7 +21,7 @@ Mỗi thời điểm có một ticket chính. Giữ yêu cầu, code và test c�
 | **P4 — đo và đào sâu** | JVM/concurrency/profiling; mô phỏng tick nhỏ; Android performance; vận hành | Tái hiện → giải thích → sửa → đo lại một vấn đề; nêu giới hạn giàn đo và hành vi khi quá tải | N02, N07–N09, N14 |
 | **P5 — dùng thật và hoàn thiện** | Phản hồi người dùng, bug, tài liệu, hồ sơ dự án | Người khác chạy/dùng được; tự xử lý một yêu cầu mới và giải thích đánh đổi | Tiêu chí tổng hợp của chương trình |
 
-Các mã N01–N15 được giải thích trong [sổ đối chiếu](/co-so-thiet-ke). Hoạt động test/review xuyên suốt; không dồn tới cuối dự án. Cổng chỉ kiểm phần đã học, thiếu mục nào sửa đúng mục đó.
+Các mã nguồn được giải thích trong [sổ đối chiếu](/co-so-thiet-ke); [bản rà soát 15/10/2026](/ra-soat-lo-trinh) ghi vấn đề và cải tiến cụ thể. Hoạt động test/review xuyên suốt; không dồn tới cuối dự án. Cổng chỉ kiểm phần đã học, thiếu mục nào sửa đúng mục đó. Bằng chứng đúng phạm vi được dùng lại giữa review và cổng, không nhân số lượt thi.
 
 ## Kế hoạch gần: 4 tuần, 9 giờ nền mỗi tuần
 
@@ -46,9 +46,9 @@ Chi tiết từng buổi ở [Lịch 4 tuần](/phase-0/lich-14-tuan). Nếu tic
 | K02, K05 | List/Map/Set, equality/hash, generics, độ phức tạp cơ bản | So hai cách tra mã; nêu số lần duyệt và bộ nhớ thêm khi dữ liệu tăng |
 | K04–K06 | Lỗi, I/O, resource, phân rã, build/test/Git | File hỏng không bị ghi đè ngầm; core test được; người khác chạy theo README |
 | P1 | State ownership, lifecycle, scope/cancellation, main thread | Tách test xoay màn hình, process death và tác vụ bị hủy |
-| P2 trước room | Process/thread, byte stream/framing, protocol, hàng đợi và shared state | Lab tách/gộp dữ liệu; vẽ thứ tự hai lệnh; chọn cách giữ state nhất quán |
+| P2 trước room | Process/thread, byte stream/framing, protocol, hàng đợi và shared state | Lab tách/gộp dữ liệu; vẽ thứ tự hai lệnh; chọn cách giữ state nhất quán; giới hạn message/hàng đợi và xử lý client chậm |
 | P2–P3 | SQL, khóa/ràng buộc, transaction/isolation, quyền trên server | Rollback, hai giao dịch cạnh tranh, retry, sai quyền có case thật |
-| P3 | JMM: visibility/atomicity/ordering; timeout, idempotency | Tái hiện một race; giải thích vì sao cách sửa bảo vệ bất biến |
+| P3 | JMM: visibility/atomicity/ordering; timeout, idempotency | Tái hiện một race có kiểm soát; retry sau khi server đã commit nhưng client chưa nhận kết quả; cùng khóa nhưng khác nội dung bị từ chối |
 | P4 | Memory/allocation/GC, profiling, timestep, đo hiệu năng | Baseline và kết quả sau sửa; không lấy con số của bài viết làm thành tích |
 
 Logic điều kiện, tập hợp, số học giới hạn và bất biến học ngay trên Kho đồ; toạ độ/mảng và thuật toán kiểm tra thắng học ở CARO; tốc độ/thời gian và thống kê phép đo học ở realtime. Cây/đồ thị, xác suất sâu hơn mở khi yêu cầu cần; không bắt học toàn bộ toán/thuật toán đại học trước app.
@@ -58,6 +58,8 @@ Logic điều kiện, tập hợp, số học giới hạn và bất biến họ
 [J01–J04](/kotlin-java-core) đưa Java vào sau một phần Kotlin đã chạy: hàm nhỏ → model/equality → interop → lát backend. Với Kotlin, đào sâu cả ngôn ngữ và JVM; với Java, phải tự triển khai và debug được, không chỉ đọc cú pháp tương đương.
 
 Backend khởi đầu bằng **một framework: Ktor**. Java/Spring vào sau HTTP và transaction, trên một chức năng nhỏ có cùng hợp đồng. Android dùng Compose, học UI/state trước; P1 lưu nhỏ bằng cơ chế đã hiểu, đầy đủ SQL/Room nối ở P2. Đây là lựa chọn giảm số khái niệm mới cùng lúc, không phải thứ tự bắt buộc cho mọi người.
+
+**Trình tự P2 cụ thể:** S01 có API đọc → lát A06 đọc trên Android → S02 cập nhật có kiểm tra → lát A06 gửi thay đổi → S03 SQL/transaction ở server → A07 Room/cache → S04–S05 CARO/room. Làm xong lát đang chọn mới mở lát kế; server/client là hai phía của cùng hợp đồng. S01 có thể dùng kho giả trên máy học. Ngay khi thêm nhiều người, server phải xác thực phiên và kiểm quyền trên đúng kho/room; không tin `ownerId` do client gửi. S06–S07 mới tăng độ khó retry/reconnect/cạnh tranh.
 
 ## Phần mở rộng và giới hạn phạm vi
 

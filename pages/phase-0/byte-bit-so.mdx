@@ -1,250 +1,86 @@
-# Byte, bit & số
+# Byte, bit và số — chọn đúng mức cần dùng
 
-> **Tra cứu theo nhu cầu.** Ticket hiện tại ở [Xưởng thực hành](/phase-0/xuong-thuc-hanh), cổng hiện tại ở [Tốt nghiệp P0](/phase-0/tot-nghiep). Số tuần/giờ/ngưỡng của phần lab dưới đây thuộc giáo án trước, không là nghĩa vụ thêm. Được hỏi giải thích và gợi ý theo [luật mới](/he-thong-hoc).
+**K01–K03:** đọc phần giới hạn số để bảo vệ dữ liệu. **P2 trước protocol/room:** mở byte, endian và buffer. **P4 sau đo đạc:** cân nhắc nén bit. Không cần tự viết codec hay học toàn bộ trang trước chương trình đầu tiên; kế hoạch hiện tại ở [Lịch 4 tuần](/phase-0/lich-14-tuan).
 
-Trang này tồn tại vì hai câu hỏi rất cụ thể mà bạn sẽ bị hỏi đúng hai lần trong 27 tháng: **"vàng trong game lưu kiểu gì để không tràn"** và **"làm sao nhét trạng thái 4 entity vào 60 byte"**. Câu một trả lời ở Project 1 — tháng 3, W10–11. Câu hai ở ARENA — P3, W68–84. Mở trang này ở **tuần 8**, ngay sau khi xong module 4.6 ở tuần 7.
+## 1. Miền giá trị và overflow
 
----
+| Kiểu số nguyên có dấu | Số bit | Miền giá trị |
+|---|---|---|
+| `Byte` | 8 | −128 đến 127 |
+| `Short` | 16 | −32.768 đến 32.767 |
+| `Int` | 32 | −2.147.483.648 đến 2.147.483.647 |
+| `Long` | 64 | −9.223.372.036.854.775.808 đến 9.223.372.036.854.775.807 |
 
-| | |
+Trên JVM, phép cộng/trừ/nhân số nguyên thông thường không tự ném lỗi khi tràn. Giá trị giữ lại theo độ rộng của kiểu; `Int.MAX_VALUE + 1` quay về `Int.MIN_VALUE`. Đổi sang `Long` sau khi phép tính `Int` đã tràn không khôi phục được kết quả. Ép về kiểu nhỏ hơn cũng có thể mất dữ liệu. [Kotlin — Numbers](https://kotlinlang.org/docs/numbers.html#data-overflow)
+
+**Tách ba giới hạn:** kiểu số biểu diễn được bao nhiêu; nghiệp vụ cho phép bao nhiêu; phép tính trung gian có vừa kiểu đang dùng không. `Long` tăng miền biểu diễn nhưng không thay validation và không loại hết overflow. JVM có các phép `Math.addExact`, `subtractExact`, `multiplyExact` để báo tràn bằng exception; chọn chúng hoặc kiểm tra biên phù hợp với hợp đồng lỗi. [JDK — Math](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Math.html)
+
+Tồn kho hoặc vàng nguyên có thể dùng số nguyên với đơn vị rõ ràng. Nếu có phần lẻ cố định, biểu diễn bằng đơn vị nhỏ nhất là một lựa chọn; vẫn phải chốt quy tắc làm tròn và giới hạn. `Double` không biểu diễn chính xác mọi số thập phân, nên không phù hợp khi hợp đồng đòi phép tính thập phân chính xác. Với thang đo thập phân cần linh hoạt, `BigDecimal` là lựa chọn khác; không có một kiểu đúng cho mọi miền nghiệp vụ. [Kotlin — Floating-point types](https://kotlinlang.org/docs/numbers.html#floating-point-types), [JDK — BigDecimal](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html)
+
+**Tự kiểm gần ticket:** chọn một giá trị sát giới hạn đã khai báo, một phép tính có trung gian vượt giới hạn và một input vượt miền kiểu. Dự đoán rồi chạy; khi lệnh bị từ chối, kiểm dữ liệu trước/sau. Không cần làm codec để hiểu các case này.
+
+## 2. Bit, byte và dịch bit
+
+Một byte có 8 bit; hai chữ số hex biểu diễn đúng 8 bit. Kotlin `Byte` có dấu: mẫu bit `0xFF` tương ứng −1 khi đọc như `Byte`. Khi cần giá trị byte không dấu 0–255, `b.toInt() and 0xFF` loại các bit dấu được mở rộng khi chuyển lên `Int`.
+
+| Phép | Tác dụng |
 |---|---|
-| **Mã module** | 0.7 |
-| **Giờ** | 5h |
-| **Tuần** | W8 (bậc 8h — chia tuần với module 4.7 (3h): 0.7 (5h) = INPUT 2h + BUILD 2h + 1h đầu buổi LONG BUILD; 4.7 (3h) = 2h còn lại của buổi LONG BUILD + 1h buổi READ sau blank-file #2. Cộng 5h + 3h = 8h, khít bậc 8h. Blank-file #2 (45') là nghi thức, nằm **ngoài** 8h này — buổi READ tuần chẵn kéo dài thành 1h45'. Buổi CN 30' chỉ dành cho bảng tuần + public log, không phải giờ module) |
-| **Ngưỡng** | Tự viết `encodeInt`/`decodeInt`, round-trip 100.000 giá trị ngẫu nhiên = 0 lỗi, có test |
-| **Phụ thuộc** | 4.1–4.6 (kiểu dữ liệu, hàm, extension) |
-| **Nuôi cho** | Project 1 (W10–11) · P1 module 1.5 · P3 module 3.1 (W68–84) |
+| `shl` | Dịch trái; các bit vượt độ rộng bị mất |
+| `shr` | Dịch phải, điền bit dấu |
+| `ushr` | Dịch phải, điền bit 0 |
+| `and` | Giữ các bit được cả hai toán hạng bật; dùng mask |
+| `or` | Ghép/bật bit |
+| `xor` | Bật bit ở chỗ hai toán hạng khác nhau |
+| `inv()` | Đảo bit trong độ rộng kiểu |
 
-## 🎯 Sau module này bạn làm được
+Ví dụ `-8 shr 1` là −4, còn `-8 ushr 1` trên `Int` là 2.147.483.644. `shr` với số âm làm tròn như phép chia cho lũy thừa 2 về phía âm vô cùng, khác phép chia nguyên Kotlin làm tròn về 0. Các phép bit được tài liệu hoá cho `Int`/`Long`. [Kotlin — Bitwise operations](https://kotlinlang.org/docs/numbers.html#bitwise-operations)
 
-- [ ] Nói được `Int` tràn ở con số nào, và chứng minh bằng một dòng code chạy được
-- [ ] Chọn kiểu dữ liệu cho ví vàng và bảo vệ lựa chọn đó bằng hai lý do kỹ thuật
-- [ ] Đóng gói 3 giá trị nhỏ vào 1 `Int` và giải nén lại đúng — kể cả khi bit cao bằng 1
-- [ ] Đọc một dump hex và chỉ ra 4 byte nào là con số nào
-- [ ] Giải thích big endian bằng câu "nếu hai đầu không thống nhất thì cái gì hỏng"
+Chọn `shr` hay `ushr` theo cách giải thích bit và mask; không có luật “giải nén luôn chỉ được dùng `ushr`”. Hai cách có thể cho cùng kết quả sau mask phù hợp. Trường có dấu còn cần khôi phục dấu đúng độ rộng. Khi đóng gói, kiểm miền input trước: mask một giá trị quá lớn có thể âm thầm cắt dữ liệu thay vì báo lỗi.
 
-## 🌱 Vì sao module này tồn tại
+**Lab tuỳ chọn:** dùng một trường vài bit, thử giá trị nhỏ nhất/lớn nhất, ngoài miền và mẫu có bit cao bật. Giải thích những bit được giữ hoặc loại; chưa cần nén nhiều entity khi chưa đo kích thước gói tin.
 
-Bạn đang học Kotlin ở tầng `data class` và `List`. Ở tầng đó, số là số và không có gì để nghĩ. Nhưng server không gửi `data class` qua dây — nó gửi **byte**. Và ví vàng của người chơi không phải "một số" — nó là một con số cụ thể, có trần, có kiểu, và có một chỗ để tràn.
+## 3. Endian là hợp đồng của định dạng
 
-**Sự thật:** ba lỗi đắt nhất của backend game — mất tiền, gói tin rác, state to gấp mười lần cần thiết — đều nằm ở tầng này. Không có tầng này thì tháng 3 bạn chọn kiểu cho ví vàng bằng cảm tính, và ở P3 bạn không có gì để nén.
+Một số 32 bit như 500, tức `0x000001F4`, có thể ghi thành:
 
-## Số: bù hai và chỗ tràn
+| Thứ tự byte | Dãy byte |
+|---|---|
+| Big endian | `00 00 01 F4` |
+| Little endian | `F4 01 00 00` |
 
-`Int` là 32 bit. `Long` là 64 bit. Cả hai lưu số âm bằng **bù hai** (twos complement): bit cao nhất là bit dấu, và số âm được biểu diễn bằng "đảo mọi bit rồi cộng 1". Hệ quả trực tiếp: dải giá trị không đối xứng — phía âm nhiều hơn phía dương đúng một giá trị.
+`ByteBuffer` mới có byte order big endian mặc định; thứ tự trong protocol phải được xác định bởi đặc tả, không suy từ CPU hoặc mặc định thư viện. Trong **lab tự thiết kế này**, chọn big endian để hai phía thống nhất. Định dạng khác có thể dùng little endian hoặc cách mã hoá không phải số nguyên cố định 4 byte. [JDK — ByteBuffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/ByteBuffer.html)
 
-| Kiểu | Bit | Nhỏ nhất | Lớn nhất |
-|---|---|---|---|
-| `Byte` | 8 | -128 | 127 |
-| `Short` | 16 | -32.768 | 32.767 |
-| `Int` | 32 | -2.147.483.648 | 2.147.483.647 |
-| `Long` | 64 | -9.223.372.036.854.775.808 | 9.223.372.036.854.775.807 |
+Đọc dãy big endian trên như little endian tạo `0xF4010000`, tức −201.261.056 dưới dạng `Int`. Đây vẫn là một giá trị hợp lệ của kiểu; validation theo nghiệp vụ/protocol phải phát hiện nếu nó là độ dài không hợp lệ. Không mặc định “không exception nghĩa là dữ liệu đúng”.
 
-**Lab bắt buộc — 15 phút.** Chạy và nhìn tận mắt, đừng đọc rồi tin:
+## 4. `ByteBuffer`: position, limit, capacity
 
-```kotlin
-fun main() {
-    var v = Int.MAX_VALUE
-    println(v)      // 2147483647
-    v += 1
-    println(v)      // nó âm. Runtime không exception. (Compiler chỉ cảnh báo khi cả hai vế là hằng số — với biến thì im lặng hoàn toàn.)
-    println(Int.MIN_VALUE == v)
-}
-```
+`ByteBuffer` là vùng dữ liệu có trạng thái đọc/ghi; có thể được cấp phát trên heap, direct hoặc ánh xạ file. Nó không luôn là một `ByteArray` có thể lấy ra. `position` là vị trí tiếp theo của thao tác relative; `limit` là giới hạn hiện tại; `capacity` là sức chứa. [JDK — Buffer](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/Buffer.html)
 
-JVM **không** ném exception khi `Int` tràn. Nó quay vòng, im lặng, và ví của người chơi âm 2 tỉ vàng. Đây chính là bug bạn phải tự tạo và tự chặn ở Project 1.
-
-**Vì sao dùng `Long` cho tiền tệ trong game:** vàng là đại lượng tích luỹ. Một shop bán skin 500.000 vàng, một sự kiện thưởng 10 triệu — `Int` cạn ở 2,1 tỉ, tức khoảng vài nghìn giao dịch của một người chơi chăm. `Long` cạn ở 9,2 tỉ tỉ; không ai chạm tới. Chi phí đổi kiểu: 4 byte mỗi con số. Chi phí không đổi: sửa production khi ví đã âm.
-
-**Vì sao không dùng `Double`:** `Double` là dấu phẩy động nhị phân. Nó không lưu được `0,1` chính xác, và từ 2^53 trở lên nó không còn lưu chính xác cả **số nguyên**. Tiền phải cộng trừ đúng tuyệt đối. Luật sắt, không thương lượng: **tiền lưu bằng số nguyên của đơn vị nhỏ nhất** — 1 vàng = 1 đơn vị, cần lẻ thì nhân 100 rồi vẫn là `Long`. `Double` cho tiền là bug chưa xảy ra.
-
-## Toán tử bit
-
-| Toán tử | Làm gì | Dùng thật để |
+| Tình huống với buffer capacity 8 | position | limit |
 |---|---|---|
-| `shl` | Dịch trái n bit | Đặt một giá trị vào đúng ô của nó |
-| `shr` | Dịch phải **có dấu** — nhân bản bit dấu vào bên trái | Chia 2^n cho số có dấu, làm tròn về −∞ (`-7 shr 1 = -4`, khác `-7 / 2 = -3`) |
-| `ushr` | Dịch phải **không dấu** — nhét 0 vào bên trái | Giải nén, luôn dùng cái này |
-| `and` | Giữ bit chung | Mask: cắt lấy đúng n bit thấp; hỏi một cờ |
-| `or` | Bật bit | Ghép các mảnh lại; bật một cờ |
-| `xor` | Đảo bit nào khác nhau | Bật/tắt luân phiên; checksum thô |
-| `inv` | Đảo mọi bit | Tạo mask "trừ cái này ra" |
+| Vừa `allocate(8)` | 0 | 8 |
+| Ghi một `Int` bằng `putInt` | 4 | 8 |
+| `flip()` | 0 | 4 |
+| Đọc một `Int` bằng `getInt` | 4 | 4 |
+| `clear()` để chuẩn bị ghi tiếp | 0 | 8 |
 
-**`shr` khác `ushr` ở đâu — con số cụ thể:**
+`flip()` chỉnh con trỏ/giới hạn để đọc phần vừa ghi; nó không chuyển một cờ “chế độ chỉ đọc”. `clear()` không xóa byte cũ. Nếu còn dữ liệu chưa đọc mà cần nhận tiếp, xem `compact()`; dùng `clear()` lúc đó có thể đánh mất ranh giới dữ liệu chưa xử lý. Đọc/ghi relative vượt limit gây lỗi buffer, không tự cấp thêm dung lượng. [JDK — Buffer operations](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/Buffer.html)
 
-```text
--8 shr  1  =  -4            (bit dấu được nhân bản, kết quả vẫn âm)
--8 ushr 1  =  2147483644    (bit dấu bị coi như dữ liệu thường)
-```
+**Tự kiểm:** từ bảng trên, dự đoán điều gì xảy ra nếu bỏ `flip()`, đọc thêm một số, hoặc gọi `clear()` rồi đọc. Chạy từng tình huống riêng, đối chiếu position/limit; không cần viết socket ngay.
 
-Với số dương hai cái cho kết quả giống hệt nhau. Đó là lý do bug này sống sót qua test: bạn test bằng `x = 100` và nó xanh, rồi vỡ khi giá trị thật có bit cao bằng 1. **Luật sắt:** giải nén dữ liệu thì dùng `ushr`; chia số học cho số có dấu thì dùng `shr`. Không có trường hợp thứ ba.
+## 5. Lab codec khi P2 thực sự cần byte stream
 
-**Dùng thật 1 — cờ bài (flags).** Bốn trạng thái buff/debuff trong 1 `Int` thay vì 4 field `Boolean`:
+**Hành vi:** mã hoá một `Int` thành 4 byte big endian và giải mã ở một offset đã chỉ định. Bạn tự chọn cách triển khai và hợp đồng lỗi cho offset âm hoặc thiếu byte; mentor được giải thích cơ chế, không đưa toàn bộ codec.
 
-```kotlin
-const val CHOANG  = 1 shl 0   // 0001
-const val TRUNGDOC = 1 shl 1  // 0010
-const val KHIEN   = 1 shl 2   // 0100
+**Kiểm chứng cần cả hai chiều và một chuẩn độc lập:**
 
-var trangThai = 0
-trangThai = trangThai or CHOANG            // bật
-val dangChoang = trangThai and CHOANG != 0 // hỏi
-trangThai = trangThai and CHOANG.inv()     // tắt
-trangThai = trangThai xor TRUNGDOC         // đảo
-```
+- Case biên: 0, −1, 1, `Int.MIN_VALUE`, `Int.MAX_VALUE`; kết quả encode dài đúng 4 byte.
+- Golden case: 500 phải thành `00 00 01 F4`; decode dãy đó phải ra 500. Round-trip riêng lẻ không bắt được trường hợp cả encoder và decoder cùng dùng sai endian.
+- Offset khác 0, phần đuôi không đủ 4 byte, offset âm; không đọc nhầm vùng và không tràn trong phép tính kiểm tra biên.
+- So với `ByteBuffer` được khai báo cùng byte order, rồi thêm giá trị ngẫu nhiên với seed được ghi lại. Số lượng case là lựa chọn giàn kiểm thử; 100.000 case xanh không là chứng minh mọi giá trị đều đúng.
 
-**Dùng thật 2 — đóng gói nhiều giá trị nhỏ vào một số.** Toạ độ `x` (0–1023, 10 bit), `y` (0–1023, 10 bit), máu `hp` (0–255, 8 bit) nhét vừa 1 `Int`:
+Framing là bước kế tiếp, khác với codec số: dữ liệu đến có thể thiếu header, thiếu body hoặc chứa nhiều message nối tiếp. Quy định độ dài tối đa **trước khi cấp phát**, cách xử lý header hỏng và số byte cần giữ lại. Lab byte stream giúp hiểu cơ chế; không bắt viết lại phần framing của HTTP/WebSocket mà framework đã xử lý.
 
-```kotlin
-val goi = (x shl 22) or (y shl 12) or hp   // x: bit 22–31, y: bit 12–21, hp: bit 0–7; bit 8–11 còn trống
+## Quay lại sản phẩm
 
-val xRa  = (goi ushr 22) and 0x3FF   // 0x3FF = 1023 = 10 bit 1
-val yRa  = (goi ushr 12) and 0x3FF
-val hpRa = goi and 0xFF
-```
-
-Đây chính là hạt giống của `BitWriter`/`BitReader` ở P3 (W68–84). Khác biệt duy nhất: ở đó bạn ghi liên tiếp qua ranh giới byte, không dừng ở 32 bit.
-
-## Hex và đọc dump byte
-
-Một byte = 8 bit = đúng 2 chữ số hex. Đó là toàn bộ lý do hex tồn tại: nó cắt gọn theo byte, còn hệ 10 thì không. Trong Kotlin viết `0xFF`, `0x3FF`; in dạng bù hai bằng `Integer.toHexString(v)` hoặc `"%08x".format(v)` (từng byte: `"%02x".format(b)`). Đừng dùng `toString(16)` để đọc dump: nó in số âm thành `-8`, không phải `fffffff8`.
-
-Đọc dump này — 12 byte đầu của một gói tin:
-
-```text
-offset  hex                                        ascii
-0000    00 00 01 F4  00 00 00 07  4B 4F 54 4C      ....  ....  KOTL
-```
-
-| Vùng | Byte | Nghĩa |
-|---|---|---|
-| 0–3 | `00 00 01 F4` | Một `Int` = 500 (0x1F4). Ở protocol thật đây thường là **độ dài phần thân** |
-| 4–7 | `00 00 00 07` | Một `Int` = 7. Ví dụ: mã loại message |
-| 8–11 | `4B 4F 54 4C` | Bốn ký tự ASCII: `K` `O` `T` `L` |
-
-Việc của bạn không phải thuộc bảng ASCII. Việc của bạn là nhìn một khối hex và **cắt được nó thành trường**, vì đó là thứ bạn sẽ làm với `tcpdump` ở P1 module 1.2.
-
-## `ByteArray` và `ByteBuffer`
-
-`ByteArray` là mảng byte thô. `ByteBuffer` là `ByteArray` cộng thêm hai con trỏ, và mọi lỗi của người mới đều nằm ở hai con trỏ đó: **position** (đang đứng ở đâu) và **limit** (được phép đi tới đâu).
-
-```kotlin
-val buf = java.nio.ByteBuffer.allocate(8)
-buf.putInt(500)
-buf.putInt(7)
-buf.flip()
-val a = buf.getInt()
-val b = buf.getInt()
-```
-
-| Sau lệnh | position | limit | Nói bằng lời |
-|---|---|---|---|
-| `allocate(8)` | 0 | 8 | Buffer rỗng, sẵn sàng **ghi** 8 byte |
-| `putInt(500)` | 4 | 8 | Đã ghi 4 byte, con trỏ ghi đứng ở byte thứ 4 |
-| `putInt(7)` | 8 | 8 | Đầy |
-| `flip()` | 0 | 8 | **Đổi chế độ ghi sang đọc**: limit = position cũ, position về 0 |
-| `getInt()` | 4 | 8 | Trả về 500 |
-| `getInt()` | 8 | 8 | Trả về 7 |
-
-**`flip()` là "tôi ghi xong rồi, giờ đọc lại từ đầu, chỉ đọc đúng phần vừa ghi".** Quên `flip()` thì bạn đọc phần đuôi rỗng — ra 0, hoặc ném `BufferUnderflowException`. Đây là lỗi số một khi bắt đầu viết protocol, và bạn sẽ gặp lại nó ở P1 module 1.2 khi làm việc với `Selector`.
-
-## Big endian vs little endian
-
-Một `Int` có 4 byte. Gửi byte nào trước?
-
-| Kiểu | 500 (0x000001F4) được xếp là | Ai dùng |
-|---|---|---|
-| **Big endian** | `00 00 01 F4` — byte nặng nhất đi trước | Mạng. `ByteBuffer` của JVM **mặc định** big endian |
-| **Little endian** | `F4 01 00 00` — byte nhẹ nhất đi trước | x86 và phần lớn ARM lưu trong RAM như vậy |
-
-Big endian được gọi là **network byte order** vì các protocol Internet chốt nó từ những năm 1980 và không đổi nữa. Lý do sống sót của quy ước này không phải kỹ thuật — nó là **có một quy ước**.
-
-**Chuyện gì xảy ra nếu hai đầu không thống nhất:** server ghi 500 theo big endian, client đọc theo little endian. Client không báo lỗi. Byte trên dây là `00 00 01 F4` — đúng như server ghi. Client đọc chúng theo thứ tự ngược, ghép thành `0xF4010000`, và ra **-201.261.056** như một `Int` hợp lệ. Rồi nó dùng con số đó làm độ dài gói tin, hoặc làm số vàng. Đây là loại bug không có stack trace: không crash, không exception, chỉ có dữ liệu sai đi tiếp vào hệ thống.
-
-**Luật:** trên dây luôn big endian, khai báo tường minh, và ghi vào `README` của protocol. Không bao giờ "để mặc định vì máy tôi chạy đúng".
-
-## 🔒 Ngưỡng đạt — `encodeInt` / `decodeInt`
-
-Viết hai hàm này, đúng chữ ký này, trong module của Project 1:
-
-```kotlin
-fun encodeInt(v: Int): ByteArray          // 4 byte, big endian
-fun decodeInt(b: ByteArray, off: Int = 0): Int
-```
-
-**Tự triển khai, được giải thích.** Mentor giải thích endian, signed/unsigned và gợi một thí nghiệm; bạn tự viết hàm của bài và kiểm chứng round-trip. Chỉ lượt kiểm tra độc lập đã chốt trước mới tạm dừng gợi ý.
-
-Gợi ý duy nhất được phép nói ra: `Byte` trong Kotlin **có dấu**. Khi giải mã, mỗi byte phải nâng lên `Int` rồi mới mask: `b.toInt() and 0xFF` (viết `b and 0xFF` thẳng trên `Byte` không compile — `0xFF` không nằm trong dải `Byte`). Vì `toInt()` mở rộng dấu (sign-extend), byte 0x80..0xFF thành số âm 32-bit và mang theo một đống bit 1 vào kết quả nếu không mask.
-
-Test bắt buộc:
-
-```kotlin
-@Test
-fun roundTrip100k() {
-    val rng = kotlin.random.Random(42)
-    repeat(100_000) {
-        val v = rng.nextInt()
-        assertEquals(v, decodeInt(encodeInt(v)))
-    }
-}
-
-@Test
-fun bienPhaiDung() {
-    for (v in listOf(0, -1, 1, Int.MIN_VALUE, Int.MAX_VALUE)) {
-        assertEquals(v, decodeInt(encodeInt(v)))
-        assertEquals(4, encodeInt(v).size)
-    }
-}
-```
-
-- [ ] 100.000 round-trip = 0 lỗi — số lần chạy: ____, số lỗi: ____
-- [ ] 5 case biên xanh
-- [ ] Seed cố định (`Random(42)`) để test lặp lại được — không dùng `Random.Default` / `Random.nextInt()` (không seed)
-
-## ⚠️ Bẫy thường gặp
-
-| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
-|---|---|---|
-| Quên `and 0xFF` khi decode | Quen nghĩ byte là 0–255 | Round-trip đúng với số nhỏ, sai với số có byte từ 128 trở lên |
-| Dùng `shr` thay `ushr` khi giải nén | Hai toán tử cho kết quả y hệt nhau với số dương | Test xanh, production sai đúng lúc giá trị lớn |
-| Quên `flip()` | Không có mô hình position/limit trong đầu | Đọc ra 0, hoặc `BufferUnderflowException` |
-| `Double` cho vàng | "Số thực thì tổng quát hơn" | Tổng **đúng** khi chỉ cộng/trừ số nguyên (mọi số nguyên ≤ 2^53 lưu chính xác) — nhưng lệch ngay khi xuất hiện phần lẻ (`0.1 + 0.2 != 0.3`), phép chia (chia 100 vàng cho 3 người) hay thuế theo %. Bug ẩn tới lúc thiết kế đổi, không phải sau N giao dịch. Lab: `var v = 0.0; repeat(10) { v += 0.1 }; println(v == 1.0)` → `false` |
-| `Int` cho tiền tích luỹ | Đủ dùng lúc test | Ví âm ở mốc 2.147.483.647 |
-| Endian mặc định theo máy | Chạy đúng vì cả hai đầu cùng một máy | Vỡ đúng lúc client thật kết nối lần đầu |
-| Nén bit khi chưa cần | Thấy hay | Code khó đọc mà gói tin chưa bao giờ là nút cổ chai. Nén ở P3, sau khi **đo** |
-
-## 🏁 Bài tự kiểm
-
-Xoá `encodeInt`/`decodeInt`. Hôm sau, từ file trống, không internet, không AI: viết lại cả hai hàm và cả hai test.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu dưới 25)
-
-Ba câu trả lời miệng, mỗi câu một hơi:
-
-- [ ] `Int.MAX_VALUE + 1` ra gì, và vì sao JVM không báo lỗi?
-- [ ] `shr` khác `ushr` ở đâu, và cái nào dùng khi giải nén?
-- [ ] Server ghi big endian, client đọc little endian — triệu chứng đầu tiên người chơi thấy là gì?
-
-## 📦 Dùng ở đâu về sau
-
-| Khi | Ở đâu | Bạn cần lại đúng cái gì |
-|---|---|---|
-| Tháng 3 — W10–11 | [Project 1 — Túi đồ & Ví CLI](/phase-0/projects) | Câu "vàng lưu kiểu gì, tràn số ở đâu" là một trong 6 quyết định tự chọn. Ngưỡng: 1.000 lần chuyển xen lỗi cố ý, tổng vàng bảo toàn, 0 lệch |
-| P1 — module 1.5 | Ktor + protocol | **Framing length-prefix**: 4 byte đầu gói là độ dài phần thân — chính là `encodeInt` bạn vừa viết, big endian |
-| P3 — W68–84, module 3.1 | ARENA, `BitWriter`/`BitReader` | Nén state 4 entity xuống dưới 60 byte, fuzz round-trip 100k = 0 lỗi, nhỏ hơn JSON ít nhất 60% |
-
-Ba dòng này là lý do 5h ở đây không phải kiến thức trang trí. Bạn viết `encodeInt` một lần ở tuần 8, và nó vẫn còn chạy trong server ở P3.
-
-## 📚 Đọc gì
-
-- [Kotlin — Bitwise operations](https://kotlinlang.org/docs/numbers.html#operations-on-numbers) — chỉ đọc bảng toán tử, đừng đọc phần unsigned types
-- Javadoc `java.nio.ByteBuffer` — đọc đúng 3 method: `flip`, `clear`, `order`
-- Wikipedia *Two's complement* — chỉ mục "Converting from twos complement representation"
-
-Không đọc thêm gì khác ở tuần 8. Phần còn lại của chủ đề này mở ra ở P1 module 1.2 khi bạn có một socket thật để nhìn byte chạy qua.
-
-## → Tiếp theo
-
-- Cùng tuần 8: [Kotlin Core II](/phase-0/kotlin-core-2) — 4.7 generics đọc-hiểu và `Result` (3h) ở 2h còn lại của buổi LONG BUILD + 1h buổi READ sau blank-file #2, cộng blank-file #2 (45' đầu buổi READ, nghi thức, ngoài giờ module) và **DP1** (cổng lên bậc, chấm cuối mọi tuần). Cả tuần: 5h + 3h = **8h** giờ module, khít bậc 8h; buổi CN 30' vẫn chỉ là bảng tuần + public log — không nhét thêm gì vào W8: bài Tier 2 nằm ở tuần 7, Bug Hunt Kata #2 ở tuần 11
-- Tuần 9: [Concurrency nhập môn](/phase-0/concurrency-nhap-mon) — nơi bạn thấy tận mắt 4 thread làm mất một biến đếm
-- Tuần 10–11: [Project 1 — Túi đồ & Ví CLI](/phase-0/projects) — chỗ `Long` và tràn số phải trả lời bằng test, không bằng ý kiến
+K01–K03 quay lại kiểm tra miền số; K04 quay lại định dạng file và hành vi lỗi; P2 nối với [Backend core](/backend-core). Nén bit chỉ mở khi có yêu cầu hoặc số đo; không có ngưỡng gói tin, lịch tuần hay thời gian viết lại thuộc lòng áp cho mọi người.

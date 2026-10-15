@@ -8,11 +8,11 @@
 |---|---|---|
 | S01 — một API đọc kho | Client Android đọc dữ liệu, thấy rõ thành công/rỗng/lỗi | Theo dõi request/response; phân biệt lỗi mạng và lỗi nghiệp vụ |
 | S02 — cập nhật có kiểm tra | Nhập/xuất qua API; server kiểm tra dữ liệu kể cả khi UI đã kiểm | Input sai không đổi state; hai request không cùng phá bất biến; chốt cách tuần tự hoá/bảo vệ cập nhật ngay từ bản in-memory |
-| S03 — lưu bằng SQL | Dữ liệu sống qua restart; schema có ràng buộc cần thiết | Migration từ dữ liệu cũ, transaction lỗi rollback, test tích hợp |
+| S03 — lưu bằng SQL | Dữ liệu sống qua restart; schema có ràng buộc cần thiết | Migration từ dữ liệu cũ, transaction lỗi rollback, test tích hợp; hai request cạnh tranh vẫn giữ bất biến như S02 |
 | S04 — luật CARO thuần | Bàn 15×15, luân phiên, ít nhất 5 quân liên tiếp thắng; không luật chặn hai đầu | Test biên/góc/ô trùng/sai lượt; không I/O trong luật game; replay cùng log cho cùng kết quả |
-| S05 — room hai client | Join, gửi nước đi, nhận state; server nắm luật và danh tính phiên | Hai client hoàn tất trận; hai lệnh tới gần nhau vẫn đúng; client không tự nhận vai người khác; chốt chủ sở hữu state trước khi nhận lệnh |
-| S06 — ngắt rồi nối | Timeout, reconnect, đồng bộ lại trạng thái | Không tự nhận lệnh cũ là lệnh mới; mô tả thứ tự và cách nhận biết trùng |
-| S07 — economy/vật phẩm | Chuyển đồ có lưu bền, retry và thao tác đồng thời | Tổng đồ bảo toàn; request trùng không thực hiện hai lần; phân quyền được kiểm trên server |
+| S05 — room hai client | Join, gửi nước đi, nhận state; server nắm luật và danh tính phiên | Hai client hoàn tất trận; lệnh gần nhau vẫn đúng; không giả vai hoặc sửa room khác; message quá lớn và client đọc chậm có cách xử lý giới hạn bộ nhớ |
+| S06 — ngắt rồi nối | Timeout, reconnect, đồng bộ lại trạng thái | Thử mất response sau khi server đã xử lý; lệnh trùng không thành nước mới; chốt thứ tự, phiên và thời hạn nhận biết trùng |
+| S07 — economy/vật phẩm | Chuyển đồ có lưu bền, retry và thao tác đồng thời | Tổng đồ bảo toàn; request trùng cả sau restart không chuyển hai lần trong phạm vi cam kết; cùng mã lệnh nhưng payload khác bị phát hiện; test sai quyền |
 
 S01–S05 nằm ở P2; S06–S07 đào sâu ở P3. S01 đi cùng A06 để có app gọi API sớm; S03 cung cấp nền SQL trước A07/Room. Mỗi ticket chia thành lát vừa một buổi, không giao cả server trong một đề.
 
@@ -20,11 +20,17 @@ Nguồn theo việc: [Ktor REST API](https://ktor.io/docs/server-create-restful-
 
 ## Cơ chế cần học và điểm dừng
 
-**HTTP:** hiểu method/status, dữ liệu đầu vào, hợp đồng lỗi, timeout và ranh giới tin cậy trên request thật. **Socket/WebSocket:** hiểu message của ứng dụng khác luồng byte, lifecycle kết nối, disconnect và giới hạn dữ liệu. Viết một lab framing nhỏ trước khi dựa vào thư viện, không tự viết cả HTTP/WebSocket stack như điều kiện làm server đầu tiên.
+**HTTP:** hiểu method/status, dữ liệu đầu vào, hợp đồng lỗi, timeout và ranh giới tin cậy trên request thật. **TCP** cung cấp luồng byte có thứ tự, không giữ ranh giới từng lần gửi. **WebSocket** có framing riêng do thư viện xử lý; ứng dụng vẫn phải chốt schema, loại lệnh và giới hạn message. Trước S05, viết một lab TCP nhỏ nhận dữ liệu tách/gộp và EOF giữa message, rồi dùng Ktor WebSocket cho room; không tự viết cả HTTP/WebSocket stack. [TCP manual](https://man7.org/linux/man-pages/man7/tcp.7.html), [Ktor WebSockets](https://ktor.io/docs/server-websockets.html).
 
 **Dữ liệu:** khóa, ràng buộc, transaction và index trên schema mình dùng. Học isolation bằng hai thao tác cùng cập nhật; học `EXPLAIN` khi query có vấn đề. Không thêm Redis để tránh hiểu SQL.
 
+`BEGIN`/`COMMIT` không tự làm chuỗi đọc–kiểm tra–ghi an toàn ở mọi isolation level. Khi chuyển S02 sang SQL, chạy lại case cạnh tranh trên database thật và giải thích cơ chế bảo vệ. Đến S07, thêm rollback giữa chuyển đồ, deadlock/serialization failure và retry có giới hạn của **toàn giao dịch** khi thích hợp. [PostgreSQL isolation](https://www.postgresql.org/docs/current/transaction-iso.html).
+
 **Đồng thời:** ai sở hữu state room, những thao tác nào có thể xen kẽ, invariant nào phải giữ. Dùng một ví dụ race và test/quan sát để giải thích visibility, atomicity và ordering. Coroutine không thay thế tư duy về shared state. Bảo vệ cập nhật bắt đầu từ S02, quyền điều khiển người chơi bắt đầu ở S05; P3 đào sâu JMM/isolation, không phải lần đầu mới xử lý tính đúng.
+
+**Danh tính và quyền:** S01–S03 có thể bắt đầu với một kho giả trên máy học. Ngay khi nhiều người có dữ liệu riêng hoặc room có vai trò, server phải xác thực phiên và kiểm quyền trên từng đối tượng; `playerId` do client gửi không là bằng chứng danh tính. Thử dùng phiên A truy cập kho/room của B. Dùng thư viện/cơ chế chuẩn, không tự chế thuật toán mật mã. Trước khi cho người khác truy cập qua mạng không tin cậy, thêm TLS, secret ngoài repository và log không chứa token. [OWASP: object authorization](https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/).
+
+**Giới hạn tải từ S05:** giới hạn kích thước và tốc độ lệnh, số phần tử hàng đợi; chốt ứng xử khi client đọc chậm hoặc hàng đợi đầy. Không im lặng bỏ lệnh nghiệp vụ; snapshot có thể gộp chỉ khi hợp đồng cho phép. Backpressure là vấn đề tính ổn định của room đầu tiên, không đợi bài realtime.
 
 **Vận hành:** cấu hình, secret, log hữu ích, graceful shutdown, test tích hợp, backup/restore. Khi có câu hỏi tốc độ, thiết kế giàn đo rồi mới tối ưu.
 

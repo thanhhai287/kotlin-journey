@@ -22,7 +22,7 @@ Mục tiêu là viết và debug Kotlin/Java cho **game server và ứng dụng 
 |---|---|---|
 | **J01 — sau K02, trong P0** | Viết một hành vi nhỏ đã hiểu bằng Java: chẳng hạn kiểm tra một lệnh nhập/xuất | Chạy cùng case với Kotlin; tự giải thích kiểu, null/lỗi; tự sửa một điều kiện |
 | **J02 — P1** | Model một phần Kho đồ bằng Java, dùng collection; kiểm tra object cùng dữ liệu, trùng mã và đổi tên | Test equality/hash và mutation; nêu hành vi khi dùng dữ liệu làm key; đọc stack trace của một lỗi thật hoặc lab có lỗi đã công bố |
-| **J03 — P1** | Kotlin gọi một API Java nhỏ có khả năng trả null; thêm một thao tác đọc resource trong bài riêng | Dự đoán compiler/runtime, xử lý lỗi và đóng resource; test các đường thành công/thất bại |
+| **J03 — P1** | Kotlin gọi một API Java nhỏ có khả năng trả null; thêm một thao tác đọc resource trong bài riêng | Phân biệt platform type với nullable; đối chiếu `use`/`try-with-resources`; test đường thành công/thất bại và đóng resource |
 | **J04 — P3, sau S03** | Tự làm một endpoint Java/Spring có cùng hợp đồng với endpoint Kotlin, gọi dữ liệu SQL; sửa một yêu cầu mới | Test hợp đồng và lỗi; giải thích DI/transaction boundary; không chuyển đổi tự động hoặc viết lại toàn server |
 
 ### Bắt đầu J01
@@ -32,6 +32,19 @@ Sau khi K02 đã ổn, chọn **một** hành vi nhỏ bạn đã tự viết b�
 Nộp: hai cách biểu diễn kiểu/lỗi, một chỗ khác biệt về null hoặc equality và lý do bạn chọn cách nào. Nếu chưa biết cú pháp Java, tra docs và hỏi ví dụ nhỏ ở domain khác; không học lại toàn bộ chương trình Kotlin bằng Java.
 
 J02–J03 tiếp tục ở P1 trên các bài nhỏ. Java và Kotlin dùng lại tập case hoặc hợp đồng hành vi; không cần dùng chung mọi kiểu dữ liệu. Bài Java phải có code người học tự viết, không chỉ lời giải thích sự khác nhau.
+
+### Những khác biệt cần kiểm chứng, không dịch máy móc
+
+| Ở bài | Cần đối chiếu bằng một case nhỏ |
+|---|---|
+| J01 | Java `==` trên reference kiểm identity; Kotlin `==` gọi equality xử lý null. Không dùng `==` Java để so nội dung chuỗi |
+| J02 | `final` reference và Kotlin `val` không đóng băng object. Equality/hash phải nhất quán; key mutable có thể phá lookup |
+| J03 | Java thiếu nullability annotation có thể tạo platform type. Kotlin không bắt xử lý checked exception như Java; resource vẫn phải đóng trên đường lỗi |
+| J04 | Thread/coroutine hay framework không tự mở rộng một phép atomic thành transaction của nhiều dữ liệu |
+
+[Kotlin — Equality](https://kotlinlang.org/docs/equality.html), [Calling Java from Kotlin](https://kotlinlang.org/docs/java-interop.html), [Java — Object contracts](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html)
+
+Không thêm toàn bộ bảng này vào J01. Dùng từng hàng đúng mốc; biến thể nhỏ có hành vi khác giúp phát hiện bạn đang dựa vào thói quen của ngôn ngữ kia ở đâu.
 
 ## Mỗi chủ đề sâu đến đâu
 

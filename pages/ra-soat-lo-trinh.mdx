@@ -1,0 +1,66 @@
+# Rà soát lộ trình — 15/10/2026
+
+**Kết luận: giữ hướng học qua sản phẩm Kotlin/Java, nhưng cần sửa độ nhất quán của giáo án, hợp đồng bài tập và một số giải thích kỹ thuật.** Với điểm xuất phát đã biết cú pháp nhưng chưa tự hoàn thiện chương trình, chưa có căn cứ để chuyển sang học thêm nhiều khoá hoặc mở Android/backend cùng lúc. Việc cần quan sát đầu tiên vẫn là một chương trình nhỏ do bạn tự làm.
+
+Đây là đánh giá tài liệu và thiết kế chương trình, **chưa phải đánh giá năng lực của bạn**. Chưa có repo Kotlin/Java, kết quả test, bản chạy Android hoặc số đo server do bạn cung cấp trong phiên này. Không chấm điểm năng lực, dự báo ngày đi làm hay ghi nhận hoàn thành ticket từ việc sửa website.
+
+## Phạm vi và cách đối chiếu
+
+Rà soát luật mentor, roadmap, lịch bốn tuần, các ticket và cổng P0, Java/Android/backend, ngân hàng bài phụ và các trang tham khảo. Với kỹ thuật, đối chiếu tài liệu của Kotlin, Gradle, Android, PostgreSQL, HTTP và OWASP. Với cách học, đối chiếu IES và hai nghiên cứu về học lập trình. [Sổ nguồn](/co-so-thiet-ke) ghi rõ phần đọc, kết quả, giới hạn và điều chúng ta tự thiết kế.
+
+Không coi giáo trình đại học là danh sách khoá bổ sung; không coi API docs là bằng chứng cho lịch học tối ưu. Đợt này kiểm nội dung và build website, chưa thực nghiệm mọi lab hoặc tái thẩm định toàn bộ giáo trình liên kết. Các ngưỡng người dùng, FPS, thời lượng và cấu hình máy chỉ được kết luận khi có phép đo tương ứng.
+
+## Những điểm nên giữ
+
+| Lựa chọn | Đánh giá và điều kiện |
+|---|---|
+| Kho đồ từ CLI → Android → server | Có thể giữ nghiệp vụ và test qua nhiều bối cảnh. Chia sẻ hợp đồng có ích; không ép chia sẻ mọi class hoặc dựng nhiều module từ đầu |
+| Kotlin trước, Java qua J01–J04 | Phù hợp việc bạn đã biết Kotlin. Java phải có phần tự viết/debug, nhưng chỉ mở sau một hành vi Kotlin đã vững |
+| Android và game server cùng là hướng chính | Giữ cả hai trong đường dài, học tuần tự theo tiên quyết. Khi một chặng kéo dài, dời chặng sau thay vì chia đôi mọi buổi |
+| Ktor trước, Spring ở lát Java sau | Giảm số framework mới cùng lúc. Đây là lựa chọn giảng dạy, không phải kết luận Ktor vượt Spring cho mọi công việc |
+| Bốn tuần thử, 9 giờ nền và tối đa 3 giờ linh hoạt | Đủ cụ thể để bắt đầu và xem lại. Chưa có dữ liệu để xác nhận vừa sức hoặc dự báo tổng số tháng |
+| Giải thích trực tiếp, tự viết, review có bằng chứng | Giữ sự chủ động mà vẫn hỗ trợ kiến thức còn thiếu. Ví dụ có trợ giúp và bài kiểm tra độc lập cần được ghi khác nhau |
+
+## Vấn đề tìm thấy và thay đổi đã thực hiện
+
+“Ưu tiên cao” dưới đây nghĩa là có thể dạy sai hoặc chấm sai; “ưu tiên tiếp” là điểm làm việc triển khai/đánh giá khó hơn. Đây là mức ưu tiên sửa tài liệu, không phải lỗi của người học.
+
+| Ưu tiên / vị trí | Bằng chứng trong bản trước | Cải tiến |
+|---|---|---|
+| Cao — bài phụ và lab cũ | Banner nói bỏ lịch cũ nhưng thân còn tuần cố định, FizzBuzz tối đa 5 phút, Error Zoo phải đủ số lỗi và cấm hỏi trước giả thuyết | Bỏ luật cạnh tranh với mentor; chọn bài theo lỗ hổng, nghiệm thu bằng hành vi; chỉ giới hạn trợ giúp trong lượt kiểm tra đã chốt |
+| Cao — core Kotlin/JVM | Các giải thích về copy, lỗi, concurrency chưa nêu đủ phạm vi bảo đảm; bài race đòi lỗi xuất hiện trong số lần chạy cố định | Làm rõ read-only/immutable, shallow copy, `Result`, cancellation và atomicity; kiểm bằng quan sát/lịch xen kẽ thay vì may rủi scheduler |
+| Cao — Android chuyên sâu | Lẫn activity recreation với process death; khái quát timeout ANR và độ sống socket quá rộng | Tách state theo vòng đời/lưu bền, ghi cách thử và giới hạn; tác vụ nền phải xét hệ điều hành và thiết bị |
+| Cao — game loop | Khẳng định variable timestep luôn sai, fixed timestep bảo đảm drift và seed ngăn gian lận | Nêu điều kiện ổn định, quá tải và replay; seed giúp tái lập, không tự tạo tính an toàn |
+| Cao — đề K02–K04 | Chưa rõ tồn khi thêm hàng, danh mục giữa hai kho, hay trạng thái nào phải lưu | Chốt hành vi, mã chung/tồn riêng, sức chứa, cả A/B và kiểm dữ liệu hợp lệ sau khi đọc file; không cung cấp cấu trúc lời giải |
+| Cao — server/dữ liệu | Có nhắc auth/transaction/retry nhưng thiếu một số case kiểm ranh giới | Thêm quyền trên từng kho/room, timeout sau commit, lệnh trùng khác nội dung, client chậm và giới hạn hàng đợi |
+| Tiếp — K05 | “Tổng nhập/xuất” chưa tách chuyển nội bộ và tồn đầu kỳ | Ghi phạm vi báo cáo, thời điểm bắt đầu lịch sử và đối chiếu biến động với tồn; không bịa lịch sử trước tính năng |
+| Tiếp — test/build bài học | Có setup runner nhưng chưa chỉ cách phát hiện test không được chạy | Xác nhận runner bằng test thử thất bại rồi thành công; ghi môi trường và dùng Wrapper của project |
+| Tiếp — review/cổng | Biến thể mỗi ticket, review hai tuần và cổng có thể bị hiểu thành các kỳ thi cộng thêm | Dùng lại bằng chứng đúng phạm vi; phân biệt làm ngay sau H3 với tự làm ở buổi sau; cho phép Bug Hunt có nhãn khi chưa có bug thật |
+
+## Độ sâu kỹ thuật cần đạt, theo đúng thời điểm
+
+Ở P0, ưu tiên dữ liệu đúng và khả năng tự sửa yêu cầu: giới hạn số, mã/danh tính, mutation/equality, collection, lỗi và I/O. Không bắt làm inheritance, interface hay pattern nếu chưa có nhu cầu. Tách core để kiểm thử là một kết quả cần đạt; số lớp không phải điểm số. [Xưởng thực hành](/phase-0/xuong-thuc-hanh), [Kotlin/Java](/kotlin-java-core).
+
+Kotlin có kiểu collection chỉ đọc và `data class.copy()`, nhưng hai cơ chế này không đồng nghĩa mọi dữ liệu bên trong đã bất biến hoặc tách biệt. Trang core nay yêu cầu dự đoán và kiểm chứng aliasing trước khi dùng copy để bảo vệ state. [Kotlin collections](https://kotlinlang.org/docs/collections-overview.html), [data classes](https://kotlinlang.org/docs/data-classes.html).
+
+Ở Android, tách state giao diện, state phục hồi và dữ liệu nghiệp vụ lưu bền. Cần kiểm riêng xoay màn hình, hệ thống kết thúc tiến trình và người dùng đóng ứng dụng; một thao tác thử không đại diện cho mọi tình huống. Bài async phải chỉ ra scope sở hữu tác vụ và xử lý cancellation. [Android: saving UI states](https://developer.android.com/topic/libraries/architecture/saving-states), [chặng Android](/phase-1).
+
+Ở server, giới hạn tin cậy và cạnh tranh xuất hiện khi có nhiều client. SQL transaction là công cụ; tính đúng còn phụ thuộc isolation, ràng buộc và các thao tác thực tế. Với retry, client không nhận response chưa đủ để biết server chưa ghi dữ liệu. Các case S03/S06/S07 phải quan sát cả dữ liệu và kết quả trả về. [PostgreSQL isolation](https://www.postgresql.org/docs/current/transaction-iso.html), [backend core](/backend-core).
+
+Kiến thức hệ thống vẫn có mốc quay lại ở P2–P4. JVM memory/JMM, framing, backpressure, timestep và profiling phục vụ câu hỏi cụ thể; C/assembly, lock-free, Kafka/Kubernetes hoặc Android internals sâu không trở thành cổng ngầm trước app đầu tiên. Các trang tham khảo đã chuyển sang “mở khi nào → kiểm điều gì → dừng ở đâu”.
+
+## Cách học: kết luận có căn cứ và phần còn thử nghiệm
+
+Có cơ sở để kết hợp giải thích/ví dụ với tự làm, rồi gợi nhớ và thử lại. Điều đó không chứng minh rằng người mới phải tự phát minh mọi cơ chế, cũng không chứng minh xem một lời giải là đã biết tự triển khai. Chương trình giữ ví dụ khác domain, giảm trợ giúp và kiểm lại sau một khoảng nghỉ. Kết quả nghiên cứu và giới hạn áp dụng đã tách ở N15, N20–N21 trong [sổ nguồn](/co-so-thiet-ke).
+
+Lịch 9 giờ, thang H0–H3, tối đa ba nhận xét mỗi vòng và lượt 30–45 phút là quyết định tổ chức. Chúng cần thay đổi nếu bằng chứng cho thấy không phù hợp. Không lấy tốc độ gõ, số commit, số test hoặc đọc hết chương làm đại diện cho năng lực.
+
+**Vấn đề còn phải quan sát:** bạn tự chia một yêu cầu tới đâu; có đoán và kiểm nguyên nhân lỗi không; mức trợ giúp nào đang hữu ích; có tự làm được biến thể ở buổi sau không; phần CLI có còn đủ hứng thú không. Chưa có dữ liệu thì để ngỏ, không lấp bằng điểm số chủ quan.
+
+## Áp dụng từ buổi tiếp theo
+
+1. Giữ **K01** là đề kế tiếp nếu chưa có sản phẩm tương đương. Làm một luồng, thử case và mang bằng chứng tới review; không cần đọc hết báo cáo hoặc nguồn trước khi code.
+2. Dùng [lịch bốn tuần](/phase-0/lich-14-tuan) như dự kiến. Môi trường, debug và review đều nằm trong quỹ giờ; chưa vững ticket thì dời việc sau.
+3. Cuối tuần 2 và 4, chọn một bằng chứng đã làm và một biến thể phù hợp để quyết định tiếp/thu nhỏ/ôn lại. Chỉ mở một ticket tại mỗi thời điểm.
+
+Không đổi hướng chỉ vì tài liệu tham khảo nhiều. Lần sửa tiếp theo nên dựa trên code, test, lời giải thích và trải nghiệm thật của bạn trong [Tiến độ](/progress).

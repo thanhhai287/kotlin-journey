@@ -25,6 +25,16 @@ Android là **hướng chính** cùng game server, dùng Kotlin/Java làm nền.
 
 A07 ban đầu chỉ cache để đọc: hiển thị đó là bản đã lưu, không âm thầm cho sửa offline rồi giả báo server đã nhận. Đồng bộ ghi offline là yêu cầu mở rộng sau khi hiểu retry/xung đột. Room dùng SQLite trên thiết bị; PostgreSQL thuộc server, không phải cùng một database.
 
+Ở A06, timeout sau khi gửi có thể mang nghĩa **chưa biết server đã xử lý hay chưa**. Không tự retry thao tác tăng/giảm kho khi chưa có hợp đồng chống lặp; đọc lại trạng thái hoặc báo chưa xác định theo hợp đồng. Khi S06–S07 thêm retry, thử cả trường hợp server xử lý xong nhưng response bị mất. Idempotency mô tả hiệu ứng khi lặp yêu cầu, không phải mọi response giống từng byte. [HTTP semantics §9.2.2](https://www.rfc-editor.org/rfc/rfc9110.html#section-9.2.2).
+
+Khi thêm danh tính, cache thuộc tài khoản nào phải rõ: đổi tài khoản không được thấy bản kho riêng của người trước. Với migration, kiểm dữ liệu cũ còn đọc đúng; xoá database để hết crash không phải một migration giữ dữ liệu.
+
+## State và tác vụ có chủ sở hữu
+
+ViewModel sống theo owner của nó; rời một màn hình không luôn đồng nghĩa ViewModel đã bị xoá. Tách **tác vụ tạo dữ liệu** khỏi **UI đang quan sát dữ liệu**: UI ngừng nhận không tự chứng minh upstream đã dừng. Dùng cơ chế thu thập state theo lifecycle phù hợp và kiểm log ở app của mình. [ViewModel overview](https://developer.android.com/topic/libraries/architecture/viewmodel), [coroutines với lifecycle](https://developer.android.com/topic/libraries/architecture/coroutines).
+
+Tại P1 chỉ cần phân biệt một tác vụ thuộc màn hình với dữ liệu đã lưu. Khi yêu cầu thật cần hoàn tất công việc dù process bị kết thúc, khảo sát API background work phù hợp; coroutine trong process hay foreground service không phải bảo đảm chạy mãi. Không mở WorkManager/FCM như ticket bắt buộc trước khi có yêu cầu đó. [Background tasks](https://developer.android.com/develop/background-work/background-tasks).
+
 ## Khi nối game server
 
 App là client gửi ý định, server quyết định tính hợp lệ của lệnh game. Một nút bị vô hiệu trên UI không thay được kiểm tra trên server. Viết case gửi lại lệnh, sai lượt, mất kết nối và nhận trạng thái mới sau reconnect.

@@ -1,274 +1,81 @@
-# Concurrency nhập môn — module 0.5, 8h, tuần 9
+# Concurrency nhập môn — ownership, race và cancellation
 
-> **Tra cứu theo nhu cầu.** Ticket hiện tại ở [Xưởng thực hành](/phase-0/xuong-thuc-hanh), cổng hiện tại ở [Tốt nghiệp P0](/phase-0/tot-nghiep). Số tuần/giờ/ngưỡng của phần lab dưới đây thuộc giáo án trước, không là nghĩa vụ thêm. Được hỏi giải thích và gợi ý theo [luật mới](/he-thong-hoc).
+**Mở đúng lúc cần.** P1 cần scope/cancellation trước tác vụ bất đồng bộ Android; P2 cần thread, shared state và ownership trước room nhiều client; P3 đào sâu JMM. Lab này không là cổng P0 hoặc nghĩa vụ thêm trong [lịch 4 tuần](/phase-0/lich-14-tuan). K03 hiện tại chỉ yêu cầu nghiệp vụ **một luồng**.
 
-Trang này trả lời một câu: *chuyện gì xảy ra khi hai luồng code cùng chạm vào một biến?* Mở nó ở tuần 9, sau khi xong 4.8 ở [Kotlin Core II](/phase-0/kotlin-core-2) — và mở lại đúng một lần nữa ở P1, module 1.3, để thấy mình đã hiểu sai chỗ nào.
+Tiên quyết: hiểu hàm, reference/mutation, đọc stack trace và chạy test nhỏ. Không cần học hết interface, game loop hoặc JMM trước khi nhận giải thích đầu tiên. Chọn một lab phù hợp; không triển khai cả ba cách đồng bộ trong một buổi.
 
----
+## 1. Ba câu hỏi trước khi thêm tác vụ
 
-| Mục | Giá trị |
-|---|---|
-| Module | 0.5 — Concurrency nhập môn |
-| Giờ | 8h, tuần 9 (bậc ramp 10h) |
-| Đứng trước | 4.8 interface + composition — xong rồi mới vào đây |
-| Dẫn tới | 0.6 game loop (W10) · P1 module 1.3 "JMM trước actor" · 1.4 coroutines & structured concurrency |
-| Ngưỡng | 1 commit có test race **đỏ**, 1 commit làm nó **xanh** — tiêu chí 6 bảng tốt nghiệp, tiền thân G1 |
-| Nguồn | *Java Concurrency in Practice* ch.2 mục 2.1–2.3 (≈8 trang; đọc **sau** lab, không đọc trước) |
+1. Ai sở hữu state, và có những đường nào được đọc/ghi nó?
+2. Những bước nào phải được nhìn như một thao tác hoàn chỉnh?
+3. Tác vụ thuộc vòng đời nào, ai chờ, hủy và xử lý lỗi của nó?
 
-## 🎯 Sau module này bạn làm được
+Concurrency là nhiều công việc có thời gian sống chồng lấn; parallelism là thực thi đồng thời trên nhiều tài nguyên xử lý. Một thread vẫn có thể có race logic khi các coroutine xen kẽ qua điểm suspension. Nhiều thread làm vấn đề thêm visibility và thứ tự bộ nhớ. “Không tạo Thread trực tiếp” không chứng minh code không có shared state.
 
-- [ ] Tạo 4 `Thread` bằng tay, `join` cả 4, và nói đúng thứ tự dòng in ra
-- [ ] Chạy counter 4 thread và ghi lại **con số thật** máy bạn trả về — không phải con số kỳ vọng
-- [ ] Giải thích bằng lời thường, không dùng thuật ngữ, vì sao `counter++` bị mất số
-- [ ] Sửa cùng một bug bằng 3 cách khác nhau và nói cái giá của từng cách
-- [ ] Viết một hàm `suspend`, `launch` nó trong `runBlocking`, huỷ nó bằng `cancel`
-- [ ] Có 2 commit trong repo: test đỏ, rồi test xanh
+## 2. `Thread`, `join` và lost update
 
-## 🌱 Vì sao gặp concurrency ngay từ Phase 0
+`start()` cho thread được lên lịch chạy; gọi `run()` trực tiếp chỉ là lời gọi trên thread hiện tại. `join()` chờ thread kết thúc và tạo bảo đảm nhìn thấy các hành động của thread đã join. Nó **không** sửa những update bị mất khi các worker chạy đồng thời. [JDK — Thread](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Thread.html), [Memory consistency properties](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html#MemoryVisibility)
 
-Một game server là một cái máy có nhiều thứ chạy **cùng lúc**: 50 người gửi nước đi, vòng tick đang tính, một kết nối vừa rớt, log đang ghi. Toàn bộ P1–P4 xây trên việc bạn hiểu điều đó bằng cơ thể, không bằng định nghĩa.
+`counter++` gồm đọc, tính rồi ghi; cả chuỗi không tự nguyên tử. Ví dụ một thứ tự chạy có thể xảy ra:
 
-**Sự thật:** bug concurrency không bao giờ hiện ra khi bạn test một mình. Một client, một request, một thread — mọi thứ chạy đúng. Nó chỉ nổ khi có người thứ hai, và khi đó bạn không tái hiện được. Đây là loại bug đắt nhất bạn sẽ gặp trong nghề, và cách rẻ nhất để học nó là **tự tay gây ra một lần** trong console, tuần 9, khi chưa có gì để mất.
-
-**Vì sao chỉ 8h:** module này mở cửa, không bước sâu. Mô hình bộ nhớ, `Dispatchers`, `Channel`, actor — tất cả nằm ở P1 (1.3, 1.4), khi bạn đã có một server thật để đặt chúng vào. Ở đây chỉ cần: thấy bug, gọi được tên, sửa được, và biết mình *chưa* biết gì.
-
-| Phần | Giờ | Đầu ra |
-|---|---|---|
-| `Thread` + `join` | 1 | Chương trình 4 thread in ra đúng dự đoán |
-| Lab lost update | 1,5 | Bảng 5 lần chạy, số thật |
-| Vì sao sai + 3 cách sửa | 2 | 3 bản sửa, mỗi bản chạy đúng 400.000 |
-| Coroutine mức dùng được | 2 | `suspend`/`launch`/`runBlocking`/`cancel` chạy trong console |
-| Test race đỏ → xanh | 1 | 2 commit |
-| Đọc JCiP ch.2 mục 2.1–2.3 | 0,5 | Ghi 3 dòng: câu nào trong sách khớp với số bạn đo được |
-
-## `Thread` là gì
-
-Một `Thread` là một dòng thực thi độc lập: có con trỏ lệnh riêng, stack riêng, chạy song song với `main`. JVM giao thread cho hệ điều hành xếp lịch — bạn **không** kiểm soát thread nào chạy trước, chạy bao lâu, bị ngắt ở đâu. Đó là toàn bộ nguồn gốc rắc rối.
-
-```kotlin
-import kotlin.concurrent.thread
-
-fun main() {
-    val t = thread {
-        repeat(3) { println("worker $it") }
-    }
-    println("main vẫn chạy")
-    t.join()            // main đứng chờ tới khi t xong
-    println("main kết thúc")
-}
-```
-
-Chạy 5 lần. Dòng "main vẫn chạy" đứng ở đâu so với "worker 0"? Không cố định — và đó là điểm cần thấy. `join` là cách duy nhất trong trang này để **chắc chắn** một thread đã xong.
-
-*Đóng trang này. Gõ lại từ trí nhớ. Rồi viết bản 4 thread, mỗi thread in tên mình 3 lần, `join` cả 4.*
-
-## ⚠️ Lab trung tâm: lost update thấy tận mắt
-
-**Luật sắt:** làm lab này **trước khi** đọc bất kỳ dòng giải thích nào bên dưới. Đọc trước thì bạn biết đáp án mà không thấy hiện tượng — và bạn sẽ quên nó đúng lúc cần.
-
-Đề: một biến đếm, 4 thread, mỗi thread tăng nó 100.000 lần. Kỳ vọng: 400.000.
-
-```kotlin
-import kotlin.concurrent.thread
-
-var counter = 0
-
-fun main() {
-    val threads = List(4) {
-        thread { repeat(100_000) { counter++ } }
-    }
-    threads.forEach { it.join() }
-    println("Kỳ vọng 400000 — nhận được $counter")
-}
-```
-
-Chạy **5 lần**, ghi số thật:
-
-| Lần | Con số máy bạn in ra |
-|---|---|
-| 1 | ____ |
-| 2 | ____ |
-| 3 | ____ |
-| 4 | ____ |
-| 5 | ____ |
-
-- [ ] 5 lần đã chạy, 5 con số đã ghi vào journal
-- [ ] Số nhỏ nhất: ____ · Số lớn nhất: ____ · Có lần nào đúng 400.000 không: ____
-
-Nếu cả 5 lần đều đúng 400.000: không phải code đúng — là mỗi thread chạy xong trước khi thread kế kịp khởi động. Tăng lên 1.000.000 lần mỗi thread, chạy lại. Race chưa được kích không có nghĩa là race không có.
-
-Bạn vừa thấy: một dòng code trông vô hại, không exception, không cảnh báo, compile sạch — trả về kết quả sai, và **mỗi lần sai một kiểu**. Đây là lý do trang này tồn tại.
-
-## Vì sao nó sai: đọc-sửa-ghi không nguyên tử
-
-`counter++` trông như một việc. Với máy, nó là **ba việc**: đọc giá trị hiện tại, cộng 1, ghi lại. Giữa ba việc đó, hệ điều hành có quyền tạm dừng thread này và cho thread khác chạy — hoặc, trên máy đa nhân như máy bạn, thread B đang chạy **cùng lúc** trên core khác và cũng vừa đọc đúng giá trị đó. Không cần ai bị tạm dừng, chỉ cần hai core. Vì vậy tắt preemption hay tăng priority không hết race.
-
-| Bước | Thread A | Thread B | `counter` |
+| Bước | Thread A | Thread B | Giá trị dùng chung |
 |---|---|---|---|
-| 1 | đọc → 41 | | 41 |
-| 2 | | đọc → 41 | 41 |
-| 3 | cộng → 42 | | 41 |
-| 4 | | cộng → 42 | 41 |
-| 5 | ghi 42 | | 42 |
-| 6 | | ghi 42 | **42** |
+| 1 | Đọc 41 | | 41 |
+| 2 | | Đọc 41 | 41 |
+| 3 | Tính 42, ghi | | 42 |
+| 4 | | Tính từ giá trị đã đọc, ghi 42 | 42 |
 
-Hai lần tăng, kết quả tăng một. Lần tăng của A bị B ghi đè — **lost update**. Nhân chuyện này lên vài nghìn lần trong 400.000 lần tăng, bạn có con số trong bảng của mình.
+Hai lần tăng nhưng chỉ còn 42. Bảng này minh hoạ lost update; nó không mô tả toàn bộ hành vi được phép của chương trình có data race.
 
-Giờ mới gọi tên: đoạn "đọc-sửa-ghi" là một **read-modify-write**. Nó không **nguyên tử** (atomic) — có thể bị cắt đôi. Hai thread cùng chạy read-modify-write trên một biến chia sẻ là một **race condition**. Kết quả phụ thuộc vào ai chạy trước, mà ai chạy trước thì không ai quyết.
+`@Volatile` hỗ trợ visibility/ordering và truy cập riêng lẻ, **không** biến đọc–sửa–ghi thành một thao tác nguyên tử. Chọn cách bảo vệ theo bất biến cần giữ. [Kotlin — Shared mutable state](https://kotlinlang.org/docs/shared-mutable-state-and-concurrency.html)
 
-**Sự thật:** trong game server, `counter` là số vàng trong ví, là số người trong phòng, là số nước đã đi. Lost update ở đó không in ra "399.812" — nó in ra "người chơi mất 500 vàng và không ai biết vì sao".
+| Cách | Bảo vệ gì | Giới hạn |
+|---|---|---|
+| `synchronized` cùng monitor | Vùng đọc/kiểm tra/ghi trong critical section | Mọi đường truy cập liên quan phải tuân theo cùng khóa; tránh I/O dài và suspension trong vùng khóa |
+| `AtomicInteger.incrementAndGet()` | Một phép tăng của một biến | Hai biến atomic không tự tạo transaction; `get()` rồi `set()` vẫn là hai thao tác |
+| Một owner xử lý lệnh tuần tự | State chỉ do owner cập nhật qua protocol rõ ràng | Không để reference mutable thoát ra ngoài; cần giới hạn hàng đợi, xử lý lỗi và shutdown |
+| Coroutine `Mutex` | Vùng bảo vệ trong code coroutine | Chờ khóa bằng suspension; vẫn cần cùng khóa và ranh giới critical section đúng |
 
-## 🛠️ Ba cách sửa và cái giá của từng cách
+Đây là các lựa chọn, không phải thứ tự “cũ → mới”. Chuyển nhiều tài khoản còn phải xét bất biến của cả thao tác; persistence/transaction là một tầng khác với thread safety.
 
-Sửa cùng một bug bằng cả ba cách. Mỗi bản phải chạy 5 lần liên tiếp, lần nào cũng ra đúng 400.000.
+### Lab nhỏ về race
 
-| Cách | Làm gì | Cái giá | Khi nào dùng |
-|---|---|---|---|
-| `synchronized` | Bọc read-modify-write trong khoá: một thread vào, thread khác đứng ngoài chờ | Thread chờ nhau → chậm; quên bọc một chỗ là race quay lại; hai khoá lồng nhau → có thể kẹt vĩnh viễn (deadlock, gặp thật ở 1.3) | Cần bảo vệ **nhiều** biến cùng lúc, hoặc đoạn logic dài |
-| `AtomicInteger` | Thay `Int` bằng lớp có phép tăng nguyên tử ở mức CPU: `incrementAndGet()` | Chỉ nguyên tử **một** phép trên **một** biến; hai `AtomicInteger` cùng nhau vẫn race; đọc-rồi-ghi hai bước vẫn race | Đúng một bộ đếm, một cờ |
-| Tách dữ liệu, không chia sẻ | Mỗi thread đếm vào biến **riêng**; `join` xong mới cộng lại ở `main` | Phải thiết kế lại: dữ liệu nào thuộc ai; không phải bài nào cũng tách được | **Mặc định của server CARO ở 1.6**: mỗi phòng là một actor, không thread nào chạm state của phòng khác |
+**Hành vi:** vài worker cùng tăng một counter; sau khi mọi worker kết thúc, đối chiếu số thật với số lần tăng dự kiến. Tự viết, ghi cấu hình và kết quả quan sát; không được ghi rằng máy đã tái hiện nếu chưa thấy.
 
-```kotlin
-class Counter {
-    private var value = 0
-    @Synchronized fun tang() { value++ }
-    @Synchronized fun giaTri() = value
-}
-```
+**Nghiệm thu:** giải thích một interleaving mất update; sửa bằng một cơ chế phù hợp và nêu vì sao nó bảo vệ toàn bộ thao tác. Một lần đúng hoặc nhiều lần đúng liên tiếp không chứng minh bản cũ an toàn. Không yêu cầu race phải xuất hiện trong 3 lần, không dùng số phút/commit để chấm.
 
-*Đóng trang. Gõ lại. Rồi tự viết bản `AtomicInteger` và bản tách dữ liệu mà không nhìn.*
+Nếu race khó hiện, mentor giải thích cách điều khiển thứ tự bằng barrier/latch trong **lab có chủ đích**, hoặc thu nhỏ mô hình đọc–ghi. Phải ghi đó là mô hình đã được điều phối; thêm `sleep` chỉ làm thay đổi xác suất và không là cơ chế đồng bộ. Test tự động cần timeout và cleanup để thất bại không làm treo suite. Chỉ thiết kế lịch xen kẽ khi tiên quyết đã rõ; không chờ may rủi để được sang bài khác.
 
-**Vì sao cách 3 quan trọng nhất:** hai cách đầu là *sửa* race. Cách 3 là *không có* race — vì không có gì để tranh. Đó là hướng toàn bộ kiến trúc server sẽ đi: không share state, mọi thứ đi qua message. Bạn học tên của nó ở cuối trang, học thật ở 1.4 và 1.6.
+## 3. Coroutine không phải thread mới
 
-## Coroutine nhập môn — chỉ ở mức dùng được
-
-Thread platform tốn stack riêng (reserve ~1MB ảo, không commit hết), tạo và huỷ đều đi qua kernel — vài trăm còn ổn, vài nghìn vẫn chạy được, vài chục nghìn thì không. Server thật cần mười nghìn kết nối "đang chờ nước đi" — không thể mỗi kết nối một thread OS đứng chờ. Coroutine (và từ JDK 21, virtual thread — gặp ở 2.5) là cách để **tạm dừng một việc mà không giữ thread OS**.
-
-| Từ khoá | Nghĩa ở mức dùng được |
+| Thành phần | Cần hiểu |
 |---|---|
-| `suspend` | Hàm có thể **tạm dừng rồi quay lại**, thread được thả ra làm việc khác trong lúc đó |
-| `runBlocking` | Cầu nối: chặn thread hiện tại (thường là `main`) cho tới khi mọi coroutine bên trong xong. Chỉ dùng ở `main` và test |
-| `launch` | Khởi động một coroutine, **không chờ** nó, trả về `Job` |
-| `delay` | Tạm dừng coroutine mà không chặn thread — khác `Thread.sleep`, thứ chặn hẳn thread |
-| `cancel` | Yêu cầu `Job` dừng. Chỉ có tác dụng tại điểm coroutine đang suspend (`delay`, v.v.) |
+| `suspend` | Hàm được phép suspension; không tự chuyển nền, không hứa không block |
+| `launch` / `Job` | Tạo công việc thuộc scope; có thể chờ hoặc yêu cầu hủy qua Job |
+| `delay` | Chờ mà không chặn thread; khác với `Thread.sleep` |
+| Dispatcher | Quy định cách thực thi continuation; coroutine không nhất thiết gắn mãi một thread |
+| Scope và parent Job | Xác định ownership, vòng đời, quan hệ hoàn tất và hủy |
+| `runBlocking` | Cầu nối từ code blocking sang suspend; chặn thread gọi tới khi công việc trong scope xong |
 
-Thêm `kotlinx-coroutines-core` vào `build.gradle.kts` — việc cài đặt máy mình, AI được hướng dẫn toàn phần theo Luật 7.
+Chọn dispatcher theo loại công việc và hợp đồng API; không đổi tất cả sang một dispatcher để “hết race”. Một thread có thể tránh truy cập song song, nhưng kiểm tra rồi suspension rồi cập nhật vẫn có thể bị lệnh khác xen vào. [Coroutine context and dispatchers](https://kotlinlang.org/docs/coroutine-context-and-dispatchers.html)
 
-```kotlin
-import kotlinx.coroutines.*
+`runBlocking` hữu ích ở biên console hoặc một số test/callback blocking. Không gọi nó trên Android main thread hoặc bên trong suspend function chỉ để chờ hàm suspend khác. Test coroutine có thể dùng `runTest`; thời gian ảo của test không chứng minh code an toàn trên nhiều thread. [runBlocking API](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/run-blocking.html), [runTest API](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test/kotlinx.coroutines.test/run-test.html)
 
-suspend fun taiDuLieu(ten: String): String {
-    delay(1000)
-    return "$ten xong"
-}
+Structured concurrency cần được dạy ngay khi mở coroutine: tác vụ có owner, con hoàn tất trước khi scope hoàn tất, cancellation từ cha lan xuống con. Không dùng `GlobalScope` làm mặc định. Học supervisor khi có yêu cầu cho phép lỗi của một con không hủy các con khác; không mặc định mọi lỗi và mọi loại Job lan giống nhau. [Coroutine basics](https://kotlinlang.org/docs/coroutines-basics.html)
 
-fun main() = runBlocking {
-    val job = launch {
-        repeat(10) { i ->
-            println("tick $i")
-            delay(300)
-        }
-    }
-    println(taiDuLieu("A"))
-    job.cancel()
-    job.join()
-    println("đã huỷ: ${job.isCancelled}")
-}
-```
+## 4. Cancellation là hợp tác
 
-Trước khi chạy: ghi ra giấy có bao nhiêu dòng `tick` sẽ in. Chạy. Sai thì mental model sai — đọc lại bảng từ khoá, không đọc thêm docs.
+`cancel()` gửi yêu cầu hủy, không cưỡng bức dừng CPU hoặc tự rollback side effect. Những API như `delay` hỗ trợ kiểm tra cancellation. Code tính toán không suspend vẫn có thể hợp tác qua `ensureActive()` hoặc `isActive`; `yield()` còn cho công việc khác cơ hội chạy. Vì vậy “chỉ dừng ở điểm suspend” là mô hình thiếu. [ensureActive API](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/ensure-active.html)
 
-**Coroutine không xoá race.** Hai coroutine cùng `add` vào một `MutableList` từ hai thread khác nhau vẫn hỏng y như `counter++`. Coroutine giải quyết bài "chờ mà không tốn thread", **không** giải quyết bài "hai người cùng ghi một chỗ". Đây là câu vấn đáp tốt nghiệp — ghi nhớ.
+Một hàm được đánh dấu `suspend` không đồng nghĩa mọi lời gọi của nó đều suspend hoặc kiểm tra hủy. Blocking I/O cũng không tự bị ngắt bởi `cancel()`; phải dùng API hỗ trợ hủy hoặc cơ chế phù hợp với thư viện. Dùng `cancelAndJoin()` khi cần yêu cầu hủy rồi chờ kết thúc; cleanup có thể chạy trong `finally`. Nếu bắt `CancellationException`, truyền nó ra ngoài sau phần xử lý cần thiết. [Cancellation and timeouts](https://kotlinlang.org/docs/cancellation-and-timeouts.html)
 
-*Đóng trang. Gõ lại. Thay `delay(1000)` bằng `Thread.sleep(1000)` rồi đoán số dòng `tick` — chạy kiểm chứng.*
+**Lab theo vòng đời:** tạo một tác vụ nhỏ thuộc scope, yêu cầu hủy, quan sát khi nào hoàn tất và cleanup có chạy không. Biến thể: một đoạn tính toán không có `delay` nhưng có kiểm tra hủy. Tiêu chí là giải thích và kiểm chứng quyền sở hữu, không phải cố đoán thứ tự mọi dòng log từ nhiều coroutine.
 
-## 📦 Chỉ giới thiệu tên — học thật ở P1
+## 5. Đủ để quay lại sản phẩm khi
 
-Bạn sẽ gặp các từ này trong docs ngay tuần này. Biết tên để không hoảng. **Không học sâu bây giờ.**
+- Chỉ được state thuộc ai và một thứ tự xen kẽ có thể phá bất biến.
+- Giải thích cơ chế sửa, với mọi đường đọc/ghi liên quan; có case kiểm chứng và nêu giới hạn của test.
+- Phân biệt `cancel` với đã kết thúc; chỉ được scope, đường cleanup và lỗi nào phải truyền tiếp.
+- Tự làm một thay đổi nhỏ đã chốt, với mức trợ giúp được ghi đúng.
 
-| Tên | Một câu | Học thật ở |
-|---|---|---|
-| `Dispatchers` | Quyết định coroutine chạy trên **thread nào** | 1.4 |
-| Structured concurrency | Coroutine con thuộc về scope cha; huỷ cha thì con chết theo | 1.4 |
-| `Channel` | Ống dẫn message giữa hai coroutine — thay vì share biến, gửi tin | 1.4 |
-| Actor model | Một coroutine sở hữu state, người khác chỉ gửi message qua `Channel` — cách 3 ở trên, phiên bản có tên | 1.4, dùng ở 1.6 |
-| JMM, happens-before | Luật của JVM về việc thread này **thấy** thay đổi của thread kia khi nào | 1.3 |
-
-**Vì sao hoãn:** viết code shared-state trước khi hiểu mô hình bộ nhớ là "lắp ráp trước, hiểu sau" — đúng cái bệnh cả lộ trình này đang chữa. Bạn sẽ vào 1.3 với một server thật đang chạy, và mỗi luật JMM sẽ ứng với một bug bạn đã tự gây. Học bây giờ là học thuộc; học ở đó là học được.
-
-K01–K06 hiện chạy một luồng. Chưa cần thêm `Mutex`/`Channel` khi chưa có thao tác đồng thời; tới Android/server, chọn chúng theo ownership và lifecycle thực tế.
-
-## 🏁 Ngưỡng đạt: 1 commit đỏ, 1 commit xanh
-
-Đây là tiêu chí 6 trong bảng [tốt nghiệp Phase 0](/phase-0/tot-nghiep) và là tiền thân của **G1** ở P1 — nơi bạn phải làm lại đúng việc này trên server thật, kèm 3 câu giải thích.
-
-1. Viết `Counter` với `tang()` **chưa** bảo vệ. Viết test JUnit5: 4 thread, 100.000 lần, `assertEquals(400_000, ...)`. Dùng `@RepeatedTest(20)` để test không xanh nhờ may mắn.
-2. Chạy. Test **phải đỏ**. Đỏ thật, không phải compile lỗi. Nếu xanh: tăng số lần, tăng số thread, chạy lại — race chưa kích không phải race không có.
-3. Commit nguyên trạng: `test(race): counter 4 thread — đỏ`.
-4. Sửa bằng `synchronized` **hoặc** `AtomicInteger` — đúng chữ của tiêu chí 6 trong bảng tốt nghiệp. Cách 3 (tách dữ liệu) vẫn phải làm ở bài tự kiểm, nhưng commit xanh dùng một trong hai cách đầu để test giữ nguyên chữ ký `Counter`. Chạy 20 lần xanh hết.
-5. Commit: `fix(race): ... — xanh`, trong message ghi **một câu** vì sao cách này, không phải hai cách kia.
-
-- [ ] Commit đỏ — hash: ____
-- [ ] Commit xanh — hash: ____
-- [ ] Cách đã chọn và một câu lý do đã nằm trong commit message
-
-Không có commit đỏ thì commit xanh vô nghĩa — bằng chứng là **cặp** commit, không phải bản sửa. Đo bằng chứng cứ, không đo bằng cảm tính.
-
-## Trợ giúp khi học concurrency
-
-AI được giải thích atomicity, visibility, interleaving, cancellation và giúp thu nhỏ hiện tượng. Bạn tự dự đoán một lịch thực thi, chạy/quan sát và triển khai cách sửa. Review nêu bằng chứng và lý do, không chỉ hỏi ngược hoặc gửi patch. Trong lượt kiểm tra độc lập, tạm dừng trợ giúp tới khi nộp; sau đó giải thích lại ngay. [Luật đầy đủ](/he-thong-hoc).
-
-## ⚠️ Bẫy thường gặp
-
-| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
-|---|---|---|
-| Chạy lab một lần, thấy 400.000, kết luận "máy tôi không bị" | Thread xong trước khi thread kế khởi động | Tăng số lần lên 10× thì số bắt đầu lệch |
-| Tưởng `launch` xong là code trong đó đã chạy xong | Cả đời quen code tuần tự | Dòng in *sau* `launch` hiện *trước* nội dung trong `launch` |
-| `delay` và `Thread.sleep` "như nhau" | Cả hai đều "dừng 1 giây" | Đổi `delay` thành `Thread.sleep`, bản đồng thời chậm ngang bản tuần tự |
-| Hai `AtomicInteger` = an toàn | Nghĩ atomic là tính chất của lớp, không phải của **phép** | Kiểm tra `a` rồi ghi `b` — race nằm giữa hai dòng |
-| `synchronized` mọi hàm cho chắc | Sợ | Chương trình chậm hơn bản 1 thread; hai khoá lồng nhau → treo |
-| Tưởng coroutine tự an toàn với shared state | Docs nói "lightweight", không nói "safe" | `MutableList` bị hỏng dù không có `Thread` nào trong code |
-| `cancel()` mà coroutine không dừng | Không có điểm suspend trong vòng lặp | Vòng `while (true)` không `delay` chạy tới chết |
-
-## 🏁 Bài tự kiểm
-
-Không mở trang này, không internet, không AI. Bấm giờ.
-
-| # | Đề | Đạt khi | Thời gian thực tế |
-|---|---|---|---|
-| 1 | Viết từ file trống: counter 4 thread, chạy, đọc số | Số lệch 400.000 xuất hiện trong ≤3 lần chạy | ____ phút (mục tiêu ≤10) |
-| 2 | Vẽ bảng thread A/B sáu bước cho `counter++` trên giấy | Đúng thứ tự, chỉ đúng bước mất update | ____ phút (mục tiêu ≤5) |
-| 3 | Sửa bằng 3 cách, mỗi cách một file | Cả 3 xanh 5 lần liên tiếp; nói cái giá của từng cách trong một câu | ____ phút (mục tiêu ≤20) |
-| 4 | Nhận đề `runBlocking` + 2 `launch` + `delay` (AI sinh đề — được phép), đoán thứ tự in ra giấy, chạy đối chiếu | Đúng 100% | ____ phút (mục tiêu ≤15) |
-| 5 | Viết coroutine đếm `tick` vô hạn với `delay`, huỷ sau 1 giây | Dừng đúng; giải thích vì sao bỏ `delay` thì không dừng | ____ phút (mục tiêu ≤10) |
-
-- [ ] 5/5 đạt · Tổng thời gian: ____ phút
-
-Trượt bài nào: làm lại bài đó vào buổi kế, không đọc lại lý thuyết trước — thử trước, đọc sau.
-
-## 📚 Đọc gì
-
-- *Java Concurrency in Practice* ch.2 (Thread Safety) **chỉ mục 2.1–2.3** (≈8 trang) — đọc **sau** lab, 30', ghi 3 dòng. Phần còn lại của ch.2, ch.3 (Sharing Objects — đã chạm vào memory visibility), ch.16 và JLS §17.4 dành cho 1.3: đánh dấu, chưa mở.
-- [Coroutines basics](https://kotlinlang.org/docs/coroutines-basics.html) — chỉ tới hết `launch`.
-- [Cancellation](https://kotlinlang.org/docs/cancellation-and-timeouts.html) — chỉ mục đầu tiên, tới `cancel` và `join`.
-- Các trang Dispatchers, Channels, Flow: **chưa phải bây giờ**.
-
-## Explain-back
-
-1. `counter++` là mấy việc với CPU? Kể tên từng việc và chỉ chỗ thread khác có thể chen vào.
-2. Vì sao `AtomicInteger` sửa được bài counter nhưng không sửa được "kiểm tra vàng rồi trừ vàng"?
-3. Hai coroutine cùng `add` vào một `MutableList` — có hỏng không? Vì sao coroutine không tự cứu bạn?
-4. Vì sao roadmap bắt bạn thấy lost update **trước** khi học JMM, thay vì học luật trước rồi làm lab?
-
-Các câu sau dùng tự kiểm khi bạn chọn lab concurrency: giải thích một interleaving, hủy scope cha ảnh hưởng gì tới con, và khi nào cần Channel/dispatcher. Đây không phải kỳ thi 12 câu của P0; cổng hiện tại ở [Tốt nghiệp P0](/phase-0/tot-nghiep).
-
-**Đủ cho mức nhập môn — hai câu đó, mỗi câu một đoạn:**
-
-- **Huỷ scope cha:** mọi coroutine `launch` trong một scope là **con** của `Job` scope đó. `cancel()` trên cha chuyển `Job` cha sang trạng thái huỷ rồi truyền xuống từng con; mỗi con dừng tại **điểm suspend kế tiếp** bằng cách ném `CancellationException`, và cha chỉ coi như xong khi mọi con đã dừng. Con không có điểm suspend thì không dừng — đúng cái bẫy cuối bảng trên.
-- **`Channel`, actor, `Dispatchers` — một câu mỗi thứ, và vì sao hoãn:** `Dispatchers` quyết định coroutine chạy trên **thread nào**; actor là **một** coroutine sở hữu state, người khác chỉ gửi message chứ không chạm — cách 3 ở trên có tên; `Channel` là ống dẫn message giữa hai coroutine — thay vì share biến, gửi tin. Hoãn vì ba thứ đó là *thiết kế* shared-state: viết chúng trước khi hiểu JMM là "lắp ráp trước, hiểu sau", và thiết kế cần một server thật để thử sai — bạn có nó ở P1, mỗi luật JMM sẽ ứng với một bug bạn đã tự gây. Toàn bộ đáp án nằm ở bảng "Chỉ giới thiệu tên" và đoạn **Vì sao hoãn** ngay dưới bảng đó.
-
-## → Tiếp theo
-
-- Tuần 10: [Game loop & state machine](/phase-0/game-loop-co-ban) — vòng lặp có `dt`, một thread, không share state; chính là cách 3 đem vào thực tế
-- Tuần 10–11: [Project 1 — Túi đồ & Ví CLI](/phase-0/projects) — chuyển vàng nguyên tử giữa hai túi, cùng từ "nguyên tử" bạn vừa học nhưng ở tầng logic, không phải tầng thread
-- Kiểm lại tiêu chí 6 và 3 câu vấn đáp concurrency: [Tốt nghiệp Phase 0](/phase-0/tot-nghiep)
+Đây là tiêu chí cho lab được chọn, không thêm một kỳ thi P0. Đọc sâu JMM ở P3 khi đã có tình huống để giải thích; cơ chế tối thiểu phải hiểu trước khi vận hành room ở [Backend core](/backend-core). Mentor hướng dẫn trực tiếp theo [luật hiện tại](/he-thong-hoc).

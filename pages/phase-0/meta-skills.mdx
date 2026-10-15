@@ -53,6 +53,14 @@ Từ K02, tự viết test nghiệp vụ bằng JUnit; setup runner được hư
 
 Bài K01 có thể bắt đầu bằng bảng case chạy tay. Khi hành vi đã rõ, chuyển case quan trọng thành test tự động; không để cấu hình chặn lần chạy đầu tiên.
 
+### Môi trường và test runner phải kiểm được
+
+Repo này là website tài liệu; chạy Kotlin/Java trong repo bài học riêng. Khi setup, ghi JDK đang dùng, phiên bản Gradle Wrapper, Kotlin plugin và lệnh chạy/test trong README. IDE chạy được nhưng terminal không chạy được là một vấn đề môi trường cần giải quyết trực tiếp, không phải bài đo tư duy nghiệp vụ.
+
+Với Gradle, dùng Wrapper của project (`./gradlew` hoặc `gradlew.bat`). JDK chạy Gradle, JDK toolchain để compile/test và bytecode target là các lựa chọn liên quan nhưng khác nhau; kiểm bảng tương thích cho phiên bản thực tế. Giữ phiên bản đang chạy ổn trong ticket, chỉ đổi khi có lý do và chạy lại kiểm chứng. [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), [bảng tương thích](https://docs.gradle.org/current/userguide/compatibility.html), [Kotlin JVM target/toolchain](https://kotlinlang.org/docs/gradle-configure-project.html).
+
+Từ K02, xem báo cáo runner để biết test nào thực sự được chạy. Trong một test thử riêng, đặt assertion sai rồi chạy lệnh test: nó phải báo thất bại; sửa lại thì xanh. Sau đó giữ test nghiệp vụ của bạn. `BUILD SUCCESSFUL` với 0 test hoặc test bị skip chưa kiểm chứng gì. Mentor có thể giúp cấu hình JUnit; không tự viết bộ test nghiệm thu thay người học. [Tích hợp Kotlin và JUnit](https://kotlinlang.org/docs/jvm-test-using-junit.html).
+
 ## 5. Tra docs để giải quyết một câu hỏi
 
 Trước khi mở docs, viết câu hỏi cụ thể: “hàm này trả gì khi không tìm thấy?”, “có đổi collection gốc không?”, “tác vụ sống theo scope nào?”. Đọc signature, hợp đồng và phần ví dụ liên quan. Tạo input của riêng mình để kiểm tra, rồi áp dụng vào ticket.

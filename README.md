@@ -9,10 +9,11 @@ Site tài liệu học bằng thực hành, dùng Nextra 2 / Next.js 14. **Kotli
 - [Roadmap](pages/roadmap.mdx): CLI/core → Android → game server → đồng thời/dữ liệu → đo và đào sâu. Đi tiếp bằng cổng năng lực, không dự báo tổng số tháng.
 - [Kotlin/Java](pages/kotlin-java-core.mdx) · [Android](pages/android-core.mdx) · [Game server/backend](pages/backend-core.mdx) · [Web phụ trợ](pages/web-phu-tro.mdx).
 - [Cơ sở thiết kế](pages/co-so-thiet-ke.mdx): nguồn đã đối chiếu, phần đã xem, quyết định và giới hạn.
+- [Rà soát 15/10/2026](pages/ra-soat-lo-trinh.mdx): kết luận, lỗi nội dung tìm thấy, cải tiến kỹ thuật/đánh giá và điều còn cần bằng chứng người học.
 - [Bốn tuần đầu](pages/phase-0/lich-14-tuan.mdx): 9 giờ nền/tuần, tối đa 3 giờ linh hoạt; review tuần 2 và 4.
 - [Tiến độ](pages/progress.mdx): hành vi, test, giải thích, mức trợ giúp và chuyển giao; không tự đánh dấu đã học.
 
-Giáo án và luật được sửa ngày **14/10/2026** theo phản hồi người học. Các lab chuyên sâu cũ giữ để tra cứu, không cộng thêm vào lịch mới. Tiến độ trước thay đổi được lưu ở [docs/history](docs/history/progress-before-2026-10-14.md), không bị xoá hoặc biến thành thành tích mới.
+Giáo án và luật đổi hướng ngày **14/10/2026**, rà soát toàn diện ngày **15/10/2026**. Các lab chuyên sâu được chỉnh thành tài liệu tra cứu theo tiên quyết, bỏ quy định lịch/giờ cũ trong thân bài. Tiến độ trước thay đổi được lưu ở [docs/history](docs/history/progress-before-2026-10-14.md), không bị xoá hoặc biến thành thành tích mới.
 
 ## Local development
 

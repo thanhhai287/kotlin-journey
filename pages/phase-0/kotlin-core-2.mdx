@@ -1,232 +1,89 @@
 # Kotlin Core II — hàm, lỗi và ranh giới
 
-Mở khi [K04–K06](/phase-0/xuong-thuc-hanh) cần xử lý I/O, lỗi hoặc tách trách nhiệm. Lambda/extension ở 4.6; generic/exception/Result ở 4.7; interface/composition ở 4.8. Ví dụ minh hoạ giúp hiểu cơ chế, không phải cấu trúc bắt buộc cho bài.
+Mở khi [K04–K06](/phase-0/xuong-thuc-hanh) cần xử lý I/O, lỗi hoặc tách trách nhiệm. Lambda/extension ở 4.6; generic/exception/Result ở 4.7; interface/composition ở 4.8. Đây là tài liệu tham chiếu, không là một khoá học cộng vào lịch. Chọn một cơ chế rồi quay lại ticket.
 
-Bài tập và số tuần/giờ bên dưới là tham khảo từ giáo án trước; không cần làm bài Tier 2 trước khi dùng interface, không cần dùng scope function chỉ để “idiomatic”. Cổng hiện tại ở [Tốt nghiệp P0](/phase-0/tot-nghiep), trợ giúp theo [luật mới](/he-thong-hoc).
+## 4.6. Lambda, extension và scope functions
 
-## 4.6. Lambda, extension, higher-order, `let`/`apply` — 5h, tuần 7
+Function type như `(Int) -> Boolean` mô tả hàm nhận `Int`, trả `Boolean`. Higher-order function nhận hoặc trả hàm. Khi tham số cuối là hàm, lambda tương ứng có thể đặt ngoài ngoặc; đó là trailing lambda. Lambda có receiver cho phép dùng `this` của receiver trong thân; đây là cơ chế thường gặp ở Compose và Ktor, không phải cú pháp riêng của framework. [Higher-order functions and lambdas](https://kotlinlang.org/docs/lambdas.html)
 
-### 🎯 Sau module này bạn làm được
-
-- [ ] Viết một higher-order function nhận lambda làm tham số cuối, gọi nó bằng cú pháp trailing lambda
-- [ ] Viết 2 extension function dùng lại được cho mọi project sau: `String.chuanHoaSdt()` và `Long.formatVnd()`
-- [ ] Cầm 12 dòng Ktor routing thật, chỉ đúng từng trailing lambda và nói receiver của nó là gì
-- [ ] Nói được khi nào dùng `let`, khi nào dùng `apply` — và vì sao chưa được đụng `run`/`with`/`also`
-
-### 🌱 Vì sao module này tồn tại
-
-Ở C/Java kiểu trường học, muốn hàm đổi hành vi thì bạn truyền cờ boolean hoặc viết thêm một hàm gần giống. Kotlin coi **hàm là giá trị** — bạn truyền thẳng hành vi vào làm tham số. Nhưng lý do thật để học kỹ module này nằm ở Phase 1: **toàn bộ bề mặt Ktor viết bằng trailing lambda và lambda-với-receiver**. `embeddedServer`, `install`, `routing`, mỗi handler — tất cả cùng một hình dạng. Giải mã được cú pháp này bây giờ thì tháng thứ 5 bạn mở docs Ktor ra và *đọc được*; không thì Ktor trông như một ngôn ngữ khác và bạn dừng lại đúng chỗ server bắt đầu.
-
-### Nội dung cốt lõi
-
-- Function type: `(Int) -> Boolean` là một kiểu dữ liệu như `String` — biến giữ được, tham số nhận được
-- Lambda: `{ x -> x * 2 }` — khi chỉ có 1 tham số, dùng `it`
-- Higher-order function: hàm nhận hàm hoặc trả hàm
-- **Trailing lambda** — luật cú pháp: lambda là **tham số cuối** thì được kéo ra ngoài ngoặc; nếu là tham số duy nhất thì bỏ luôn ngoặc
-- Extension function: "mọc" hàm mới lên kiểu có sẵn, bên trong `this` là giá trị đứng trước dấu chấm. Nó không sửa class gốc — chỉ là hàm tĩnh được cú pháp hoá đẹp
+Ví dụ nhỏ ở domain số đo nhiệt độ:
 
 ```kotlin
-val ten1 = dsNguoiChoi.map({ p -> p.ten })  // hợp lệ, nhưng không ai viết vậy
-val ten2 = dsNguoiChoi.map { it.ten }       // trailing lambda — dạng bạn gặp 100 lần/ngày
+val nhietDo = listOf(18, 24, 31)
+val nong = nhietDo.filter { it >= 30 }
 ```
 
-*Đóng trang này. Gõ lại hai đoạn trên từ trí nhớ. Gõ lại không nổi = chưa hiểu, đọc lại.*
+Giải thích `it` thuộc lambda nào và lambda trả kiểu gì. Với lambda lồng nhau, đặt tên tham số khi dễ nhầm; không cần viết DSL riêng để đọc được code dùng receiver.
 
-**Lambda-với-receiver, và nó dùng ở đâu thật — 30 phút**
+Extension không sửa class gốc và không có quyền đọc thành viên private. Việc chọn extension dựa vào **kiểu receiver ở thời điểm biên dịch**, không tự đa hình theo kiểu object lúc chạy; member có chữ ký phù hợp được ưu tiên. [Extensions](https://kotlinlang.org/docs/extensions.html)
 
-`apply` không phải phép màu: nó là hàm nhận một lambda mà bên trong lambda đó `this` được gán sẵn thành object bạn gọi. Đó gọi là **lambda-với-receiver**. Cùng một cơ chế, phóng to lên quy mô framework, chính là cái người ta gọi là DSL.
+| Hàm | Object trong block | Trả về |
+|---|---|---|
+| `let` | `it` | Kết quả block |
+| `run` | `this` | Kết quả block |
+| `with` | `this` | Kết quả block; object truyền làm đối số |
+| `apply` | `this` | Object ban đầu |
+| `also` | `it` | Object ban đầu |
+
+Scope function không thêm khả năng đặc biệt vào object; nó tổ chức lời gọi và giá trị trả về. `let` không chỉ dành cho null, và `apply` không làm object immutable. Không cần dùng đủ năm hàm hoặc cấm ba hàm theo phase: chọn cách người đọc dễ theo dõi. [Scope functions](https://kotlinlang.org/docs/scope-functions.html)
+
+**Tự kiểm:** thay một lambda ngắn bằng hàm có tên, giữ nguyên kết quả. Hoặc đọc một đoạn Compose/Ktor đang dùng, chỉ receiver và giá trị trả về; chưa cần mở framework mới chỉ để làm bài này.
+
+## 4.7. Generics, lỗi và resource
+
+### Generics vừa đủ để dùng đúng
+
+`List<T>` ghi quan hệ giữa kiểu phần tử và API. Đọc signature bằng receiver → tham số → kết quả. `out` mô tả khả năng cung cấp giá trị của kiểu, `in` mô tả khả năng nhận; quy tắc variance giữ việc thay thế kiểu an toàn. Vì có thể ghi phần tử, `MutableList<Con>` không tự thay cho `MutableList<Cha>` được.
+
+Trên JVM, phần lớn type arguments bị xóa lúc chạy: không thể kiểm mọi `List<String>` chỉ bằng một phép `is`. `reified` giúp một số kiểm tra kiểu trong inline function, không tự xác thực kiểu của mọi phần tử lồng nhau. Chỉ đào sâu khi gặp casting/interop; không cần tự viết một thư viện generic trong P0. [Kotlin — Generics](https://kotlinlang.org/docs/generics.html)
+
+**Tự kiểm:** đọc signature của một hàm bạn dùng, rồi thay kiểu input. Giải thích vì sao compiler chấp nhận hoặc từ chối, thay vì ép cast để hết báo lỗi.
+
+### Chọn hợp đồng lỗi từ hành vi
+
+| Trường hợp | Lựa chọn có thể phù hợp | Phải làm rõ |
+|---|---|---|
+| Không tìm thấy, chỉ cần biết có/không | Nullable | Null có phân biệt được với lỗi đọc dữ liệu không? |
+| Lệnh bị từ chối vì quy tắc nghiệp vụ | Kiểu kết quả riêng, có thể là sealed | Người gọi cần biết những lý do nào? |
+| API dùng exception, muốn mang lỗi thành giá trị | `Result<T>` | Ở đâu xử lý thất bại, có giữ nguyên nguyên nhân không? |
+| Vi phạm tiền điều kiện của hàm | `require` | Thất bại ném `IllegalArgumentException` |
+| Trạng thái không hợp lệ để tiếp tục | `check` | Thất bại ném `IllegalStateException` |
+| File/mạng lỗi | Bắt exception phù hợp ở ranh giới xử lý | Báo lỗi, thử lại hay dừng; trạng thái nào phải giữ? |
+
+Đây là gợi ý thiết kế, không phải luật “mọi lỗi phải thành Result”. Kotlin không có checked exceptions; gọi hàm không buộc phải `catch`. `Result` cũng **không ép** người gọi xử lý thất bại: có thể bỏ qua kết quả hoặc gọi `getOrThrow()`. Compiler không thay thế test hợp đồng. [Exceptions](https://kotlinlang.org/docs/exceptions.html), [Result API](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-result/)
+
+Input sai là một tình huống dự kiến của CLI. `require` có thể bảo vệ hàm nội bộ nhưng không tự biến lỗi thành thông báo thân thiện hoặc giữ vòng lặp chạy; nơi gọi phải có hợp đồng phù hợp. Không dùng catch quanh cả chương trình để mọi lỗi đều thành “input sai”.
+
+`runCatching` bắt mọi `Throwable`, gồm cả `CancellationException` và các `Error` của JVM. Trong coroutine, không chuyển cancellation thành thất bại nghiệp vụ rồi tiếp tục: nếu bắt trúng thì truyền cancellation ra ngoài. Chọn phạm vi bắt hẹp và loại lỗi có thể xử lý. `getOrNull()` có thể hợp lệ nếu chủ đích là gộp các thất bại thành “không có”, nhưng sẽ làm mất nguyên nhân nếu sau đó bạn cần chẩn đoán. [runCatching API](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/run-catching.html), [Coroutine cancellation](https://kotlinlang.org/docs/cancellation-and-timeouts.html)
+
+### Đóng resource và giữ dữ liệu
+
+Garbage collector thu hồi bộ nhớ, không thay hợp đồng đóng file/socket. Kotlin/JVM có `use` cho resource phù hợp: đóng khi block xong cả đường thành công lẫn exception. Java có `try-with-resources`. Không trả một sequence đọc lười ra ngoài khi reader của nó đã đóng. [Kotlin — use](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/use.html), [Java — try-with-resources](https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html)
+
+K04 cần phân biệt thiếu file lần đầu, file hỏng và ghi thất bại. Báo lỗi không đồng nghĩa rollback; `try/catch` không tự hoàn tác các thay đổi đã thực hiện. Giữ test nghiệp vụ tách khỏi test I/O, nêu rõ giới hạn khi chương trình dừng giữa lúc ghi. Cơ chế lưu bền và transaction học ở chặng có yêu cầu tương ứng.
+
+**Tự kiểm:** chọn một đường lỗi thật trong ticket, dự đoán trạng thái sau lỗi, rồi tạo case chứng minh. Nếu chưa có lỗi thật để review, mentor có thể giao một lab có lỗi được ghi rõ; không tự nhận mình từng gặp một bug chưa xảy ra.
+
+## 4.8. Interface và composition
+
+Interface mô tả hợp đồng có thể được thực hiện theo nhiều cách. Composition là nhận hoặc chứa một thành phần để dùng hành vi của nó. Cả hai hữu ích khi có một ranh giới cần thay thế, như nguồn thời gian thật và thời gian test. Không cần giải cùng bài hai lần bằng kế thừa chỉ để được phép dùng composition.
+
+Ví dụ về ngày hẹn, tách biệt với bài Kho đồ:
 
 ```kotlin
-routing {
-    get("/health") {
-        call.respondText("ok")
-    }
+interface NguonNgay {
+    fun homNay(): java.time.LocalDate
 }
 ```
 
-Đọc đoạn trên bằng ba câu, không thêm khái niệm mới nào:
+Hợp đồng vẫn cần nói rõ múi giờ và ý nghĩa “hôm nay”; chỉ có interface chưa đủ làm thiết kế đúng. Bạn tự viết một implementation cho bài minh hoạ nếu cần, rồi quay lại chọn ranh giới trong sản phẩm.
 
-1. `routing` là một hàm, tham số cuối của nó là một lambda → lambda được kéo ra ngoài ngoặc, ngoặc rỗng nên bỏ luôn
-2. Bên trong lambda đó `this` là object định tuyến của Ktor, nên `get(...)` gọi được mà không cần tên biến nào đứng trước
-3. `get` cũng nhận một lambda cuối; bên trong lambda ấy `this` lại là một object khác — object đại diện cho **một request đang xử lý** — nên `call` có sẵn ở đó
+Kotlin làm class và thành viên final mặc định; `open` cho phép kế thừa/override. Kế thừa hợp lý khi thực sự bảo toàn hợp đồng của kiểu cha. Composition thường làm sự phụ thuộc dễ thay thế hơn, nhưng không tự giảm coupling nếu interface vẫn mang chi tiết không cần thiết. [Interfaces](https://kotlinlang.org/docs/interfaces.html), [Inheritance](https://kotlinlang.org/docs/inheritance.html)
 
-**Sự thật:** không có cú pháp riêng nào cho "routing" trong Kotlin. Tên kiểu của receiver đổi theo phiên bản Ktor; cơ chế thì không đổi từ ngày đầu. Việc của bạn ở tuần 7 là **đọc được**, không phải tự viết DSL — tự viết DSL không nằm trong Phase 0.
+Không tạo interface cho mọi class. Ngược lại, một interface chỉ có một implementation production vẫn có thể hữu ích ở biên I/O hoặc với test double. Nếu một hàm hoặc dữ liệu đầu vào đã đủ tách logic khỏi file, chưa cần thêm tầng.
 
-**Luật chống loạn scope function** — đây là **chính kiến**, không phải gợi ý:
-
-| Scope function | Phase 0 | Dùng khi |
-|---|---|---|
-| `let` | Dùng | Biến đổi giá trị nullable: `email?.let { ... }` |
-| `apply` | Dùng | Cấu hình object vừa tạo xong |
-| `run` / `with` / `also` | Chỉ đọc-hiểu | **Cấm chủ động dùng trong Phase 0** |
-
-Vì sao cấm: năm hàm gần giống nhau, chỉ khác ở chỗ `it` hay `this` và trả về cái gì — dùng lẫn lộn tạo ra chuỗi mà chính người viết đọc lại không giải thích nổi. `let` và `apply` phủ trên 90% nhu cầu thật. Ba cái còn lại: gặp trong code người khác thì tra bảng, hết.
-
-### ⚠️ Bẫy
-
-| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
-|---|---|---|
-| Nhồi scope function cho "ra vẻ Kotlin" | Code mẫu trên mạng dùng nhiều, tưởng đó là idiomatic | Chuỗi `.let`/`.apply` nhiều tầng; đọc lại không nói được `it` với `this` đang trỏ vào gì |
-| Nhầm `it` giữa hai lambda lồng nhau | Lambda trong che `it` của lambda ngoài | Compiler báo type không khớp ở chỗ "chắc chắn đúng" |
-| Viết extension cho mọi thứ | Mới học thấy hay, "xịn hoá" cả codebase | Extension chỉ được gọi đúng 1 lần, hoặc chứa logic nghiệp vụ lẽ ra thuộc về data class |
-
-### 🛠️ Bài tập
-
-- [ ] Viết lại 2 kata cũ thành extension: `String.chuanHoaSdt()` và `Long.formatVnd()` (`1250000` → `"1.250.000 ₫"`). Đạt khi: chạy qua toàn bộ test của kata gốc — 60 phút
-- [ ] Viết `fun List<NuocDi>.cuaNguoiChoi(id: Int): List<NuocDi>` rồi refactor một chỗ trong bài Collections "đọc log trận" của module 4.5 (W6) để dùng nó. Đạt khi: chỗ gọi ngắn hơn và test vẫn xanh — 30 phút
-- [ ] Higher-order đầu tay: `retry(lanThu: Int, hanhDong: () -> Boolean)` — gọi `hanhDong` tối đa `lanThu` lần, dừng ngay khi trả `true`. Đạt khi: test được cả trường hợp luôn thất bại và trường hợp thất bại 2 lần rồi thành công — 45 phút
-- [ ] Ktor routing DSL: mở trang [Routing in Ktor](https://ktor.io/docs/server-routing.html), lấy một đoạn ~12 dòng và ghi chú từng lambda: nó là tham số của hàm nào, receiver bên trong là gì, tên nào có sẵn nhờ receiver đó. Đạt khi: không sót lambda nào — 30 phút
-
-### 🏁 Bài tự kiểm
-
-Xoá bản `Long.formatVnd()` vừa viết. Hôm sau viết lại từ trí nhớ, kèm 3 test: `0`, số âm, `1000000000`.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤30)
-
-### 📚 Đọc gì
-
-- [Higher-order functions and lambdas](https://kotlinlang.org/docs/lambdas.html) — đặc biệt mục *Passing trailing lambdas* và *Function literals with receiver*
-- [Extensions](https://kotlinlang.org/docs/extensions.html)
-- [Scope functions](https://kotlinlang.org/docs/scope-functions.html) — chỉ đọc bảng chọn hàm ở đầu trang, đừng cố thuộc cả 5
-
-### Explain-back
-
-Tự trả lời bằng lời của bạn, rồi tôi sẽ hỏi xoáy 2 tầng "tại sao":
-
-1. Trailing lambda là gì? Vì sao nó khiến routing của Ktor trông như "ngôn ngữ riêng" dù chỉ là các lời gọi hàm?
-2. Lambda-với-receiver khác lambda thường ở đúng một điểm — điểm nào? `apply` và `routing` giống nhau chỗ nào?
-3. Extension function có thật sự thêm hàm vào class `String` không? Nếu không thì nó là gì?
-
-## 4.7. Generics đọc-hiểu + exception + Result — 3h, tuần 8
-
-### 🎯 Sau module này bạn làm được
-
-- [ ] Đọc một signature stdlib có `<T>` và dịch thành một câu tiếng Việt trọn nghĩa
-- [ ] Chặn input rác ngay cửa hàm bằng `require`/`check` thay vì if-return rải rác
-- [ ] Viết hàm trả `Result` để lỗi trở thành giá trị mà caller buộc phải xử lý
-
-### 🌱 Vì sao module này tồn tại
-
-Generics ở trường dạy để thi — wildcard, bounded type, vẽ sơ đồ. Phase 0 chỉ cần mức **đọc thông thạo**: không hoảng khi docs viết `Iterable<T>`, còn `in`/`out` chỉ cần nhận diện. Viết generic của riêng mình không nằm trong 3h này và cũng chưa cần đến hết Phase 0.
-
-Trọng tâm nằm ở nửa sau: **lỗi cũng là dữ liệu** — nối thẳng về sealed class ở module 4.4. Một hàm đọc file có thể thành công hoặc thất bại; cả hai đều là kết quả hợp lệ cần được model, không phải quả bom chờ nổ. Server tháng thứ 5 sống bằng đúng tư duy này: một request hỏng không được phép giết cả process.
-
-### Nội dung cốt lõi
-
-- Đọc `fun <T> ...`: `T` là chỗ trống điền kiểu — một hàm viết một lần chạy cho mọi kiểu
-- `in`/`out`: mức nhận diện khi đọc docs (`out` = kiểu chỉ đi ra, `in` = kiểu chỉ đi vào). Không cần viết được
-- `try`/`catch`/`finally`, tự định nghĩa exception
-- `require` (validate **tham số**) và `check` (validate **trạng thái**) — thất bại sớm, thất bại to
-
-```kotlin
-fun rutVang(soVang: Long) {
-    require(soVang > 0) { "Số vàng phải dương, nhận: $soVang" }
-    // tới được đây nghĩa là hợp đồng đã được kiểm
-}
-```
-
-- `runCatching` và `Result` — bọc lỗi thành giá trị:
-
-```kotlin
-val ketQua: Result<Int> = runCatching { "12a".toInt() }
-// ketQua.isFailure == true — lỗi giờ là dữ liệu cầm được, không phải bom
-```
-
-`runCatching` bắt **mọi `Throwable`** — kể cả lỗi JVM như `OutOfMemoryError`, `StackOverflowError`, và `CancellationException` của coroutine (gặp ở P1, nó phá structured concurrency). Vì thế `.getOrNull()` mà không nhìn `exceptionOrNull()` chính là catch rỗng trá hình — bị trừ điểm đúng như catch rỗng ở luật bên dưới.
-
-*Đóng trang này. Gõ lại hai đoạn trên từ trí nhớ, đoán output trước khi chạy.*
-
-**Luật cứng của module: cấm nuốt exception bằng catch rỗng.** Mọi `catch` phải hoặc xử lý có nghĩa (trả giá trị mặc định *có chủ đích*, báo người dùng), hoặc log rồi rethrow. Catch rỗng không sửa bug — nó chôn bug xuống ba tầng đất, để dữ liệu sai âm thầm lan ra và phát nổ ở chỗ khác, khó lần hơn gấp mười. Khi review, giải thích lỗi đã được xử lý có chủ đích thế nào và test hành vi đó.
-
-### ⚠️ Bẫy
-
-| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
-|---|---|---|
-| Catch rỗng cho hết crash | Muốn chương trình "chạy được" nhanh | Chương trình không crash nhưng ra số sai; block `catch` trống trơn hoặc chỉ có comment |
-| Bọc `try` quanh cả 50 dòng | Không biết dòng nào có thể ném | Không trả lời được "exception này phát sinh từ dòng nào" |
-| Bỏ qua signature khi đọc docs | Đọc Reference như Tutorial | Kéo thẳng xuống example, gặp `<T>` là đóng tab |
-
-### 🛠️ Bài tập
-
-- [ ] Dịch 5 signature stdlib (`filter`, `map`, `fold`, `firstOrNull`, `associateBy`) thành 5 câu tiếng Việt theo kỹ thuật đọc signature ở [Meta-skills](/phase-0/meta-skills). Đạt khi: mỗi câu nêu đủ receiver, tham số, kiểu trả về — 30 phút
-- [ ] Chọn một hàm trong bài Tier 2 (đã làm ở W7) đang ném exception hoặc trả `null` mập mờ, refactor thành trả `Result`. Đạt khi: chỗ gọi xử lý cả hai nhánh thành công/thất bại một cách có chủ đích — 45 phút
-
-### 🏁 Bài tự kiểm
-
-Viết `fun docLogTran(path: String): Result<KetQuaDoc>` với `data class KetQuaDoc(val nuocDi: List<NuocDi>, val soDongLoi: Int)`, xử lý tử tế cả 3 tình huống: file không tồn tại (thất bại) · dòng hỏng (bỏ qua, đếm vào `soDongLoi` — `Result<List<NuocDi>>` không có chỗ mang con số này ra ngoài, nên kiểu trả về phải đổi) · toạ độ không parse được (tính là dòng hỏng).
-
-- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤45)
-
-### 📚 Đọc gì
-
-- [Generics](https://kotlinlang.org/docs/generics.html) — đọc đến hết phần variance ở mức nhận diện rồi dừng
-- [Exceptions](https://kotlinlang.org/docs/exceptions.html)
-- [Result — API reference](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-result/) — đọc như tra cứu, chạy example trong scratch file
-
-### Explain-back
-
-1. "Lỗi cũng là dữ liệu" nghĩa là gì? `Result` khác gì ném exception, và khi nào chọn cái nào?
-2. `require` khác `check` chỗ nào? Vì sao "thất bại sớm" lại tốt hơn để lỗi lan xa rồi mới đổ?
-3. Kể một bug thật của bạn mà catch rỗng đã (hoặc sẽ) che mất nó.
-
-## 4.8. Interface + composition — 2h, tuần 9
-
-### 🎯 Sau module này bạn làm được
-
-- [ ] Giải cùng một bài bằng kế thừa rồi refactor sang composition, chỉ ra bản nào dễ thay đổi hơn và vì sao
-- [ ] Đưa phần chạm ổ đĩa ra sau một interface để test chạy được mà không cần file thật
-
-### 🌱 Vì sao module này tồn tại
-
-OOP thi cử đặt kế thừa làm trung tâm. Kotlin cố ý làm class `final` mặc định — ngôn ngữ đang nói thẳng với bạn: **kế thừa là ngoại lệ phải xin phép, không phải mặc định**. Module này chỉ có 2h và chỉ làm một việc: cắt được ranh giới giữa *cái gì* và *bằng cách nào*. Tuần sau bạn bắt đầu Project 1; tháng thứ 6 chính ranh giới này là thứ giữ `caro-engine` sạch I/O.
-
-### Nội dung cốt lõi
-
-- Interface = hợp đồng hành vi; class = một cách thực hiện hợp đồng
-- **Composition over inheritance** — không học thuộc khẩu hiệu, làm thật: giải một bài bằng kế thừa, refactor sang composition, đặt hai bản cạnh nhau so sánh
-
-```kotlin
-interface NguonThoiGian {
-    fun homNay(): LocalDate
-}
-// Code dùng NguonThoiGian không biết — và không cần biết — ngày đến từ đâu.
-// Bản thật đọc đồng hồ máy; bản test trả về ngày cố định 29/02/2024.
-// Nhờ vậy test "năm nhuận" chạy được vào bất kỳ ngày nào trong năm.
-```
-
-Ví dụ này ở **domain khác** với bài tự kiểm bên dưới — cố ý. Nó minh hoạ một điều duy nhất: interface tách *cái gì* khỏi *bằng cách nào*, và chính chỗ tách đó là nơi test chen vào được. Khi áp lên code của bạn, phần khó không phải cú pháp `interface` mà là câu hỏi: **ranh giới nên cắt ở đâu?** Cắt sai chỗ thì có interface mà vẫn không test được.
-
-*Đóng trang này. Gõ lại đoạn trên từ trí nhớ, rồi tự viết thêm một class implement nó.*
-
-### ⚠️ Bẫy
-
-| Bẫy | Vì sao mắc | Dấu hiệu nhận ra |
-|---|---|---|
-| Kế thừa để tái sử dụng code | Trường dạy kế thừa là trung tâm OOP | Class cha tên `Base...` chung chung; class con override để *vô hiệu hoá* hành vi cha |
-| Interface cho mọi class | Mới học thấy hay, "kiến trúc hoá" cả bài tập | Interface chỉ có đúng 1 class implement và sẽ mãi như vậy |
-| Tách file kiểu cắt cơ học | Tách theo số dòng, không theo trách nhiệm | Các file mới import chéo nhau lòng vòng; sửa 1 tính năng vẫn phải mở 4 file |
-
-### 🛠️ Bài tập
-
-- [ ] Bài "hai lần giải": hệ thống gửi thông báo qua email / SMS / push. Lần 1 model bằng kế thừa, lần 2 refactor sang composition + interface. Đạt khi: ở bản composition, thêm kênh Zalo không sửa một class cũ nào; viết 5 dòng so sánh hai bản — 60 phút
-
-### 🏁 Bài tự kiểm
-
-**Bài luyện tuỳ chọn về ranh giới I/O.** Trong bài Tier 2 (đã làm ở W7), đưa phần đọc file ra sau một interface (bản thật đọc CSV, bản test trả danh sách cứng trong code). Đạt khi: test của phần logic chạy xanh mà **không chạm ổ đĩa**, và toàn bộ test cũ vẫn xanh.
-
-- [ ] Đã làm — thời gian thực tế: ____ phút (mục tiêu ≤30)
-
-### 📚 Đọc gì
-
-- [Interfaces](https://kotlinlang.org/docs/interfaces.html)
-- [Inheritance](https://kotlinlang.org/docs/inheritance.html) — đọc để biết vì sao cần `open`, rồi đóng lại
-
-### Explain-back
-
-1. Vì sao Kotlin làm class `final` mặc định trong khi Java làm ngược lại? Hệ quả thực tế của mỗi lựa chọn?
-2. Composition cho bạn khả năng gì mà kế thừa không cho — nhất là lúc chương trình *đang chạy*?
-3. Trong bài tự kiểm, ranh giới bạn cắt nằm ở đâu, và bạn biết cắt đúng nhờ dấu hiệu nào?
+**Nghiệm thu của một thay đổi ranh giới:** test logic chạy không cần resource ngoài; test tích hợp vẫn kiểm cách đọc/ghi thật; thay đổi có lý do cụ thể. Không chấm theo số file/class hoặc ép “thêm chức năng không được sửa bất kỳ dòng code cũ nào”.
 
 ## Quay lại sản phẩm
 
-Dùng kiến thức vừa đọc để giải quyết [K04–K06](/phase-0/xuong-thuc-hanh). Giải thích ranh giới mới giải quyết vấn đề gì và chạy lại test cũ.
+Áp dụng một ý vào [K04–K06](/phase-0/xuong-thuc-hanh), chạy case cũ và một biến thể. [Luật mentor](/he-thong-hoc) cho phép giải thích trực tiếp; không có quota đọc thuộc, thời gian chờ hay cấm scope function theo tuần.

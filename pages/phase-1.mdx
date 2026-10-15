@@ -24,11 +24,19 @@ Xoay màn hình khi đang nhập, rời màn hình rồi trở lại, đóng/m�
 
 Học state holder/ViewModel, saved state và persistence khi cần giải quyết từng trường hợp. Nộp bảng tình huống → mong đợi → quan sát, cùng giải thích vòng đời chủ sở hữu state. Không cần đọc Binder/Zygote để hoàn thành form này.
 
+Phân biệt ba nơi giữ dữ liệu: **ViewModel** giữ state qua configuration change; **saved state** giữ lượng nhỏ đủ dựng lại UI sau khi hệ thống tái tạo; **lưu bền** giữ dữ liệu nghiệp vụ qua lần mở mới. Saved state không thay database/file và không bảo đảm khôi phục khi người dùng bỏ hẳn task. Đối chiếu [bảng vòng đời của Android](https://developer.android.com/topic/libraries/architecture/saving-states).
+
+**Nghiệm thu theo hai bước:** A03 kiểm xoay màn hình và khôi phục form sau khi process nền bị kết thúc; A04 bổ sung mở mới từ dữ liệu đã lưu. Với process death, đưa app về nền, dùng `adb shell am kill <package>` trên emulator rồi quay lại task; ghi PID trước/sau để biết process thực sự đã đổi. `Don't keep activities` chỉ thử huỷ Activity, không thay phép thử process death; force-stop cũng là tình huống khác. Công cụ và cách đọc log được hướng dẫn trực tiếp.
+
 ## A04 — Lưu cục bộ và công việc bất đồng bộ
 
 Mở app lại vẫn có kho đã lưu thành công. Khi đang lưu, có lỗi hoặc chưa có dữ liệu, UI phản ánh đúng; công việc chậm không làm màn hình đứng. Giữ phạm vi một bản lưu nhỏ bằng file trong vùng lưu trữ riêng của app, áp dụng ý tưởng K04; không cần xin quyền bộ nhớ dùng chung. Chốt dữ liệu nào cần lưu và giới hạn của cách lưu. SQL/Room học thành ticket riêng sau flow mạng ở P2, không là điều kiện xong A04.
 
 **Nghiệm thu:** thao tác lưu thất bại không giả báo thành công; test tải dữ liệu hỏng hoặc thất bại có kiểm soát. Rời màn hình lúc tác vụ chạy: giải thích ai sở hữu, ai hủy và kết quả cũ có còn cập nhật UI không. Gắn vào coroutine/scope/cancellation, không học coroutine chỉ qua in số.
+
+`suspend` không tự chuyển I/O blocking khỏi main thread. Xác định phạm vi sống của tác vụ; cancellation là hợp tác và không có nghĩa mọi thao tác đã làm được hoàn tác. Không nuốt `CancellationException` như lỗi thông thường. Chọn một case tải chậm hoặc huỷ đang lưu để kiểm chứng, thay vì thêm bài coroutine riêng. [Hướng dẫn coroutines Android](https://developer.android.com/kotlin/coroutines/coroutines-best-practices).
+
+Tại A04, kiểm thêm một lần lưu sau bị lỗi vẫn đọc lại được bản hợp lệ trước đó, và hai lần lưu gần nhau không khiến bản cũ ghi đè bản mới. Nêu rõ “lưu thành công” bảo đảm tới đâu; không đợi `onDestroy()` mới lưu vì callback đó có thể không chạy khi process bị hệ thống kết thúc. [Process lifecycle](https://developer.android.com/guide/components/activities/process-lifecycle).
 
 ## A05 — Tự thay đổi và bàn giao
 

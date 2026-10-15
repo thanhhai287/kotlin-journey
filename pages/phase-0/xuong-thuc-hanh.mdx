@@ -8,11 +8,13 @@
 
 **Nộp:** code/commit, lệnh chạy, case đã thử, một quyết định có lý do và chỗ đang vướng. AI phản hồi theo [luật hướng dẫn](/he-thong-hoc), tối đa 3 điểm mỗi vòng. Chỉ đọc phần lý thuyết phục vụ ticket hiện tại.
 
+**Hợp đồng trước, cách làm sau.** Tiêu chí bắt buộc là hành vi trong đề; phần “biến thể/mở rộng” dùng sau review, không cộng tất cả vào nghiệm thu bản đầu. Nếu chưa rõ hành vi, hỏi để chốt trước khi code. Reviewer không thêm yêu cầu ngầm khi chấm. Các lựa chọn đã chốt được giữ ở ticket sau, trừ khi đề nói rõ thay đổi.
+
 ## K01 — Một kho có thể nhập và xuất
 
 **Người dùng:** tôi muốn biết mình còn bao nhiêu đồ và không vô tình tạo số lượng âm. Phiên bản đầu quản lý một mặt hàng duy nhất. Dữ liệu chỉ cần sống trong lần chạy hiện tại.
 
-**Yêu cầu:** bắt đầu với 10 đơn vị. Người dùng xem tồn, nhập thêm, xuất bớt và thoát. Mỗi thao tác nhận số lượng nguyên dương. Lệnh sai, số không hợp lệ hoặc xuất quá tồn phải báo lý do và cho thao tác tiếp; thất bại không đổi tồn. Tự chọn giới hạn tồn tối đa, ghi rõ và từ chối phép nhập vượt giới hạn. Bạn tự chọn định dạng menu/lệnh.
+**Yêu cầu:** bắt đầu với 10 đơn vị. Người dùng xem tồn, nhập thêm, xuất bớt và thoát. Nhập/xuất nhận số lượng nguyên dương. Lệnh sai, số không hợp lệ hoặc xuất quá tồn phải báo lý do và cho thao tác tiếp; thất bại không đổi tồn. Tự chọn giới hạn tồn tối đa ít nhất là 15 để chạy được các case dưới, ghi rõ và từ chối phép nhập vượt giới hạn. Chuỗi số vượt miền biểu diễn cũng phải bị từ chối, không làm chương trình dừng. Bạn tự chọn định dạng menu/lệnh; khi input kết thúc (EOF), chương trình kết thúc thay vì lặp báo lỗi vô hạn.
 
 | Từ trạng thái nào | Thao tác | Mong đợi |
 |---|---|---|
@@ -35,6 +37,8 @@
 
 **Vấn đề mới:** kho có nhiều mặt hàng; hai món có thể trùng tên nhưng khác mã. Người dùng thêm mặt hàng, liệt kê và nhập/xuất bằng mã. Mã phải duy nhất và không đổi khi sửa tên. Chốt cách so sánh mã hoa/thường và ghi rõ.
 
+**Hợp đồng dữ liệu:** mã và tên không được rỗng hoặc chỉ có khoảng trắng; ghi rõ có bỏ khoảng trắng đầu/cuối không. Bản K02 khởi động với danh mục rỗng, thay cho một mặt hàng có sẵn ở K01. Mặt hàng mới bắt đầu với tồn 0, muốn thêm hàng dùng thao tác nhập. Giữ hành vi và giới hạn K01 cho từng mã: khi thử lại case K01, tạo mặt hàng và tồn ban đầu tương ứng. Chưa cần khôi phục dữ liệu lần chạy cũ trước K04. Sửa tên thuộc bản tối thiểu vì đề kiểm danh tính qua thao tác đó.
+
 **Case bắt buộc:** hai mã khác nhau cùng tên vẫn giữ tồn riêng; mã trùng bị từ chối; mã không tồn tại không tạo hàng mới ngầm; đổi tên không làm mất tồn; kho rỗng hiển thị rõ. Mọi hành vi K01 vẫn đúng cho từng mặt hàng.
 
 **Quyết định của bạn:** cách lưu tập mặt hàng, kiểm tra trùng, biểu diễn mặt hàng và lỗi. Nêu hai cách lưu có thể dùng và vì sao chọn một; không bắt dùng `Map`, `sealed class` hay interface chỉ để đủ bài.
@@ -48,6 +52,8 @@
 ## K03 — Hai kho, chuyển hàng không mất dữ liệu
 
 **Vấn đề mới:** người dùng chuyển hàng giữa kho A và B. Mỗi kho có giới hạn tổng số đơn vị, chưa có khái niệm ô/stack. Một lần chuyển thành công phải giảm bên gửi và tăng bên nhận đúng lượng. Bị từ chối thì cả hai giữ nguyên. Bài này chạy **một luồng**, chưa giải quyết nhiều request đồng thời.
+
+**Quy tắc bổ sung:** A và B dùng chung danh mục mã/tên của K02; cùng mã luôn là cùng mặt hàng, đổi tên không tạo hàng mới. Mỗi kho có tồn riêng; mã đã đăng ký nhưng chưa có tại kho nhận được tính là tồn 0. Mã chưa đăng ký bị từ chối. Lượng chuyển phải nguyên dương; tổng sức chứa tính trên mọi mã, đồng thời giữ giới hạn từng mã của K01. Quy tắc sức chứa cũng áp dụng khi nhập từ bên ngoài. Chọn sức chứa chứa được dữ liệu ban đầu; phép cộng kiểm tra giới hạn không được tràn số. Đây là hợp đồng nghiệp vụ, không quy định cấu trúc lưu.
 
 | Trạng thái | Thao tác | Mong đợi |
 |---|---|---|
@@ -68,6 +74,8 @@
 
 **Yêu cầu:** lưu/tải khứ hồi giữ mã, tên và tồn; tên có Unicode và dấu phân cách không bị mất; dữ liệu hỏng không được âm thầm biến thành kho rỗng rồi ghi đè bản cũ. Thất bại phải được báo. Ghi rõ giới hạn khi tiến trình bị tắt giữa lúc ghi; chưa yêu cầu đảm bảo mất điện.
 
+**Phạm vi lưu:** bản đầy đủ giữ danh mục, tồn riêng của cả A/B và các giới hạn đã chọn; nếu giới hạn nằm trong cấu hình thì README phải nêu cách khôi phục cấu hình đó. Một kho nhỏ là lát đầu để thử, không là lý do bỏ mất kho thứ hai khi nghiệm thu. File đọc được về cú pháp nhưng có mã trùng, tồn âm hoặc vượt sức chứa vẫn là dữ liệu không hợp lệ. Tải thất bại không được áp dụng một phần dữ liệu vào state đang dùng. Có thể dùng thư viện đọc/ghi định dạng; không bắt tự viết parser JSON/CSV.
+
 **Nghiệm thu:** test round-trip và file hỏng; chứng minh lỗi I/O không làm test nghiệp vụ phải đọc ổ đĩa; README giải thích cách tái hiện lỗi và quyết định xử lý. Chỉ học interface khi cần tách I/O, không dựng nhiều tầng trước.
 
 **Biến thể sau bản tối thiểu, có thể dời sau tuần 4:** thêm một trường tùy chọn và đọc được file cũ. Bạn phải chốt giá trị mặc định và kiểm tra nó.
@@ -77,6 +85,8 @@
 **Vấn đề mới:** người dùng muốn biết tồn thay đổi từ đâu. Ghi lịch sử thao tác thành công, mặt hàng, số lượng và thứ tự; thao tác bị từ chối không được giả làm thao tác thành công. Chọn rõ lịch sử có cần tồn tại sau restart ở bản này hay chưa.
 
 **Yêu cầu:** xem biến động của một mã; báo cáo tổng nhập/xuất theo mã trong phạm vi bạn định nghĩa. Không sửa dữ liệu gốc khi lọc hoặc sắp xếp báo cáo.
+
+**Chốt nghĩa của báo cáo:** ghi rõ xem từng kho hay toàn hệ thống. Chuyển A → B làm giảm A, tăng B nhưng không phải nhập thêm hoặc xuất ra khỏi toàn hệ thống. Tồn đầu kỳ không phải một giao dịch nhập mới. Nếu đã làm biến thể điều chỉnh ở K01, ghi riêng loại điều chỉnh và ảnh hưởng của nó tới tồn. Bản tối thiểu ghi lịch sử từ lúc tính năng được bật, không bịa lịch sử cho các thao tác trước đó; nếu chỉ giữ trong phiên thì báo cáo phải nói rõ phạm vi đó. Thử đối chiếu tồn đầu + biến động = tồn cuối cho một mã và cùng phạm vi.
 
 **Nghiệm thu:** test không có lịch sử, nhiều mã, nhiều giao dịch cùng mã, nhập rồi xuất hết; đối chiếu một báo cáo tính tay với kết quả code. Nêu chi phí duyệt và vùng dữ liệu tạm của cách làm; chưa benchmark nếu chưa có câu hỏi hiệu năng.
 
@@ -90,7 +100,7 @@
 
 **Nghiệm thu:** bản clone mới chạy được theo README; test cũ xanh; tự xử lý một yêu cầu thay đổi do reviewer chọn sau khi nộp. Đọc [Kotlin & Java nền tảng](/kotlin-java-core) để chọn một phần nhỏ viết lại bằng Java và so hành vi, không rewrite cả ứng dụng.
 
-**Đầu ra:** tag `v1.0` của Kho đồ CLI và core có thể đưa vào [chặng Android](/phase-1). Không cần chờ đủ 14 tuần.
+**Đầu ra:** một phiên bản Kho đồ CLI/core có lệnh chạy/test và giới hạn rõ, có thể đưa vào [chặng Android](/phase-1). Có thể đặt tag `v1.0` để lưu mốc; tag không phải bằng chứng năng lực. Không cần chờ đủ 14 tuần.
 
 ## Một lời giải thích tốt trông như thế nào
 
