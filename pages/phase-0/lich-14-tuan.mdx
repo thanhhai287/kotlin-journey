@@ -4,13 +4,24 @@
 
 ## Nhịp học thử
 
-**Mỗi tuần: 4 buổi × 2 giờ + 1 giờ review/ôn = 9 giờ.** Có thể tách một buổi thành hai phiên 60 phút. Tối đa 3 giờ thêm là phần linh hoạt để xử lý lỗi, luyện lại hoặc nghỉ; không có danh sách bài cộng thêm. Tổng 4 tuần: 36 giờ nền, tối đa 48 giờ nếu bạn muốn dùng hết phần linh hoạt.
+**Điều chỉnh 16/10/2026 theo phản hồi của bạn:** phiên học dài gây chán và khó bố trí. Mặc định thử **30–45 phút/phiên**, ngày bận chọn **15 phút hoặc nghỉ**. Gợi ý bắt đầu bốn phiên ngắn mỗi tuần, khoảng 2–3 giờ; review 10–15 phút thay phần cuối một phiên. Đây là nhịp đề xuất để thử, chưa phải lịch bạn đã xác nhận.
 
-Mỗi buổi mở đúng [ticket đang làm](/phase-0/xuong-thuc-hanh). Đọc yêu cầu, viết ví dụ, chọn một phần để chạy, rồi kiểm chứng. Khi thiếu kiến thức, hỏi giải thích ngay; khoảng 15–20 phút đọc mỗi lần là gợi ý để quay lại thí nghiệm, không phải cấm đọc sâu khi đang cần. Không mở một khoá video chạy song song.
+Quỹ 9–12 giờ/tuần đã nêu là khả năng bố trí, không phải quota phải dùng hết. **Giới hạn bạn đã xác nhận: tối đa 2 giờ mỗi tối, chỉ khi thực sự cần thiết.** Tổng thời gian bố trí gồm các phiên, nghỉ và review phải nằm trong 120 phút. Có thể thêm một phiên ngắn sau khi nghỉ để tiếp tục việc đang làm; trước khi thêm, chọn rõ mục tiêu và điểm dừng. Không mặc định học đủ 2 giờ hoặc vượt trần để xong bài. Bỏ lịch bốn buổi 2 giờ và review 1 giờ. Không có nợ giờ hoặc học bù bắt buộc.
 
-Bảng dưới là **dự kiến có điều kiện**. Chưa xong K01 thì tiếp tục K01 bằng phạm vi nhỏ hơn; không tới ngày là tự chuyển K02. J01, K04 và các biến thể được dời nếu tiên quyết chưa vững.
+Mỗi buổi mở đúng [ticket đang làm](/phase-0/xuong-thuc-hanh). Đọc yêu cầu, viết ví dụ, chọn một phần để chạy, rồi kiểm chứng. Khi thiếu kiến thức, hỏi giải thích ngay; khoảng 5–10 phút đọc/xem mỗi lượt là gợi ý để quay lại thí nghiệm, không phải cấm đọc sâu khi đang cần. Không mở một khoá video chạy song song.
 
-**Rà soát 15/10/2026:** giữ quỹ giờ và thứ tự này; sửa tiêu chí để không biến lịch tham khảo thành bài thi tốc độ. Các hàng theo buổi là gợi ý quan sát, bạn vẫn tự chọn lát triển khai và thứ tự xử lý. Biến thể chỉ mở khi bản tối thiểu đã ổn; giờ setup/debug nằm trong 9 giờ, không bị tính thành “thiếu giờ code”.
+**Tận dụng Android 007:** được xem lại một đoạn phục vụ vướng mắc của ticket, tính trong thời gian tra cứu của buổi. Đóng ví dụ rồi tự áp dụng và kiểm chứng; không thêm giờ xem bắt buộc. [Bản đánh giá 16/10 và cách chọn đoạn](/danh-gia-android-007) ghi rõ phần đã kiểm tra và giới hạn đánh giá video.
+
+Bảng dưới là **các cụm việc của ticket, không phải bài phải xong trong một phiên hay một tuần**. Mỗi cụm có thể trải qua nhiều phiên ngắn. Mốc tuần chỉ là lúc nhìn lại: tuần 2 vẫn đang K01 thì review K01, không cố nhồi K02; J01/K04 và các biến thể được dời theo tiên quyết. Giảm giờ thì phạm vi làm được trong bốn tuần cũng giảm, không giữ nguyên khối lượng để ép nhanh hơn.
+
+## Một phiên dễ bắt đầu và dễ dừng
+
+- **Mở:** đọc dòng hẹn từ phiên trước; chọn một hành vi nhỏ và một case để kiểm. Ví dụ chỉ kiểm việc từ chối một input sai có giữ nguyên tồn; chưa cần hoàn thiện mọi nhánh của K01.
+- **Làm:** tự chọn cách triển khai, chạy sớm. Một lỗi tái hiện được hoặc một cơ chế hiểu bằng thí nghiệm cũng là kết quả hữu ích; không bắt mỗi phiên phải thêm tính năng.
+- **Dừng:** khi hết khoảng thời gian đã chọn, ghi phần đã chạy, chỗ dở và thao tác tiếp. Không tự thêm biến thể hoặc kéo dài review. Phần khó tiếp tục phiên sau.
+- **Giữ hứng thú:** mentor nói rõ việc này giúp sản phẩm gì, giải thích từng ý cần dùng rồi cho thử. Nếu cách trình bày gây chán, đổi sang chạy/demo/debug cùng tính năng, không giao thêm môn.
+
+Một ticket đang làm; bạn vẫn tự phân rã và chọn cách giải. Setup/debug nằm trong phiên, không bị tính là thiếu giờ code. Các mốc 15/30–45 phút là lựa chọn thử theo phản hồi, không phải công thức tối ưu đã được nghiên cứu chứng minh.
 
 Trước lần chạy đầu, kiểm tra môi trường của **repo bài học riêng**: JDK, lệnh chạy và Gradle Wrapper nếu dùng Gradle. Mentor được giúp setup; không bắt học build system trước K01. Từ K02, xác nhận runner thật sự tìm và chạy test: một assertion cố ý sai trong test thử phải làm lệnh thất bại, sau đó sửa lại. Không coi thông báo build thành công với 0 test là đã kiểm chứng nghiệp vụ. [Cách kiểm môi trường](/phase-0/meta-skills).
 
@@ -18,13 +29,13 @@ Trước lần chạy đầu, kiểm tra môi trường của **repo bài học 
 
 **Ticket:** K01. **Kiến thức kéo vào:** parse/null, số nguyên và giới hạn, hàm, trạng thái thay đổi. Không thêm OOP hoặc kiến trúc nhiều tầng trước khi cần.
 
-| Buổi | Việc tự làm | Bằng chứng cuối buổi |
+| Cụm việc — chia qua nhiều phiên | Việc tự làm | Bằng chứng khi hoàn thiện cụm |
 |---|---|---|
-| 1 — 2 giờ | Ghi 3 ví dụ; chọn một luồng nhập/xuất/xem nhỏ nhất và triển khai | Chạy được từ đầu tới cuối luồng đã chọn; ghi phần thiếu |
-| 2 — 2 giờ | Hoàn thiện các thao tác còn lại; thử nhiều lệnh liên tiếp | Chuỗi nhập → xuất → xem → thoát đúng; input lỗi không kết thúc chương trình |
-| 3 — 2 giờ | Thử âm/0/chữ, xuất quá tồn, sát giới hạn; tìm nguyên nhân một lỗi thật nếu có | Trạng thái trước/sau case lỗi; sửa có căn cứ, không sửa mò |
-| 4 — 2 giờ | Review rồi tự sửa; viết hướng dẫn chạy; làm biến thể nhỏ nếu bản gốc đã ổn | K01 tự chạy theo yêu cầu; một quyết định được giải thích |
-| Review — 1 giờ | Demo từ lần chạy mới; giải thích một case trước khi chạy; chọn bước tiếp | Ghi phần tự làm được, mức trợ giúp và một lỗ hổng cần chữa |
+| 1 | Ghi 3 ví dụ; chọn một luồng nhập/xuất/xem nhỏ nhất và triển khai | Chạy được từ đầu tới cuối luồng đã chọn; ghi phần thiếu |
+| 2 | Hoàn thiện các thao tác còn lại; thử nhiều lệnh liên tiếp | Chuỗi nhập → xuất → xem → thoát đúng; input lỗi không kết thúc chương trình |
+| 3 | Thử âm/0/chữ, xuất quá tồn, sát giới hạn; tìm nguyên nhân một lỗi thật nếu có | Trạng thái trước/sau case lỗi; sửa có căn cứ, không sửa mò |
+| 4 | Review rồi tự sửa; viết hướng dẫn chạy; làm biến thể nhỏ nếu bản gốc đã ổn | K01 tự chạy theo yêu cầu; một quyết định được giải thích |
+| Review — dùng một phần phiên | Demo từ lần chạy mới; giải thích một case trước khi chạy; chọn bước tiếp | Ghi phần tự làm được, mức trợ giúp và một lỗ hổng cần chữa |
 
 **Đủ để sang K02:** K01 chạy được cả luồng thành công và từ chối, bạn chỉ được nơi trạng thái đổi và vì sao. Chấp nhận case chạy tay; setup IDE/Gradle được hỗ trợ trực tiếp.
 
@@ -34,13 +45,13 @@ Tra cứu vừa đủ: [Kotlin docs](https://kotlinlang.org/docs/home.html), m�
 
 **Ticket:** K02. **Kiến thức kéo vào:** identity/equality, reference, List/Map, test hành vi. Không học hết OOP mới làm model.
 
-| Buổi | Việc tự làm | Bằng chứng cuối buổi |
+| Cụm việc — chia qua nhiều phiên | Việc tự làm | Bằng chứng khi hoàn thiện cụm |
 |---|---|---|
-| 1 — 2 giờ | Chọn cách lưu; thêm/liệt kê mặt hàng; xử lý mã trùng và trùng tên | Hai mã cùng tên có tồn riêng; nêu lý do chọn cấu trúc dữ liệu |
-| 2 — 2 giờ | Nhập/xuất theo mã; giữ case K01; tách phần logic cần gọi từ test | Một hành vi chạy được không qua menu |
-| 3 — 2 giờ | Setup test runner có hướng dẫn; tự viết test thường/biên/lỗi | Test thất bại khi hành vi sai và xanh sau sửa; không chỉ kiểm chương trình “không crash” |
-| 4 — 2 giờ | Hoàn thiện sửa tên; so cách tìm theo danh sách và bảng tra; tìm theo tên nếu bản tối thiểu đã vững | Đổi tên không làm hỏng tồn; giải thích chi phí tra cứu ở mức cơ bản |
-| Review — 1 giờ | 30–45 phút làm một biến thể nhỏ chưa luyện y nguyên, rồi giải thích/review | Bằng chứng tự triển khai; quyết định giữ nhịp, giảm bài hoặc đi tiếp |
+| 1 | Chọn cách lưu; thêm/liệt kê mặt hàng; xử lý mã trùng và trùng tên | Hai mã cùng tên có tồn riêng; nêu lý do chọn cấu trúc dữ liệu |
+| 2 | Nhập/xuất theo mã; giữ case K01; tách phần logic cần gọi từ test | Một hành vi chạy được không qua menu |
+| 3 | Setup test runner có hướng dẫn; tự viết test thường/biên/lỗi | Test thất bại khi hành vi sai và xanh sau sửa; không chỉ kiểm chương trình “không crash” |
+| 4 | Hoàn thiện sửa tên; so cách tìm theo danh sách và bảng tra; tìm theo tên nếu bản tối thiểu đã vững | Đổi tên không làm hỏng tồn; giải thích chi phí tra cứu ở mức cơ bản |
+| Review — dùng một phần phiên | Một lượt độc lập 20–30 phút thay phần thực hành của một phiên; phản hồi ngắn hoặc để phiên sau | Bằng chứng tự triển khai; quyết định giữ nhịp, giảm bài hoặc đi tiếp |
 
 **Đủ để sang K03/J01:** nhiều mặt hàng đúng, logic có test, phân biệt được tên và mã. Nếu chưa đủ, tuần sau hoàn thiện K02; không mở Java để tăng tải.
 
@@ -52,13 +63,13 @@ Nếu cần đổi không khí sau K02, thay một buổi bằng việc đưa da
 
 **Ticket:** K03 phạm vi một luồng; [J01](/kotlin-java-core) chỉ khi K02 đã vững. **Kiến thức kéo vào:** bất biến, aliasing/mutation, validate trước/sau thay đổi và cách biểu diễn lỗi.
 
-| Buổi | Việc tự làm | Bằng chứng cuối buổi |
+| Cụm việc — chia qua nhiều phiên | Việc tự làm | Bằng chứng khi hoàn thiện cụm |
 |---|---|---|
-| 1 — 2 giờ | Chốt quy tắc hai kho, viết ví dụ, làm một lần chuyển hợp lệ | Tổng hàng từng mã trước/sau bằng nhau |
-| 2 — 2 giờ | Thêm thiếu hàng, sức chứa tính cả các mã khác, cùng kho và input sai | Bị từ chối thì cả hai kho giữ nguyên; không chỉ kiểm chỗ trống của một mã |
-| 3 — 2 giờ | Test chuỗi thao tác; dự đoán một trường hợp hai biến cùng tham chiếu dữ liệu | Test bảo toàn; giải thích giới hạn của bản một luồng; tự đổi giới hạn kho |
-| 4 — 2 giờ | J01: chọn một hành vi Kotlin nhỏ đã hiểu, tự viết Java với cùng case | Code Java chạy; nêu khác biệt về kiểu/null/lỗi; nếu K03 còn vướng thì tiếp tục K03 |
-| Review — 1 giờ | Thử lại một case K01/K02 sau khoảng nghỉ; giải thích rồi chạy | Phân biệt điều còn nhớ với phần cần tra; chọn phạm vi tuần 4 |
+| 1 | Chốt quy tắc hai kho, viết ví dụ, làm một lần chuyển hợp lệ | Tổng hàng từng mã trước/sau bằng nhau |
+| 2 | Thêm thiếu hàng, sức chứa tính cả các mã khác, cùng kho và input sai | Bị từ chối thì cả hai kho giữ nguyên; không chỉ kiểm chỗ trống của một mã |
+| 3 | Test chuỗi thao tác; dự đoán một trường hợp hai biến cùng tham chiếu dữ liệu | Test bảo toàn; giải thích giới hạn của bản một luồng; tự đổi giới hạn kho |
+| 4 | J01: chọn một hành vi Kotlin nhỏ đã hiểu, tự viết Java với cùng case | Code Java chạy; nêu khác biệt về kiểu/null/lỗi; nếu K03 còn vướng thì tiếp tục K03 |
+| Review — dùng một phần phiên | Thử lại một case K01/K02 sau khoảng nghỉ; giải thích rồi chạy | Phân biệt điều còn nhớ với phần cần tra; chọn phạm vi tuần 4 |
 
 Lỗi bất ngờ giữa cập nhật, rollback lưu bền và nhiều thread **không thuộc yêu cầu tối thiểu tuần này**. Tách riêng để không nhầm “đã validate” với “đã an toàn trước mọi loại lỗi”. Tra Java ở [Dev.java](https://dev.java/learn/), đúng mục cần cho J01.
 
@@ -66,19 +77,19 @@ Lỗi bất ngờ giữa cập nhật, rollback lưu bền và nhiều thread **
 
 **Ticket:** K04 nếu K03 đã ổn. **Kiến thức kéo vào:** lỗi I/O, round-trip, ranh giới logic/file và resource. Chỉ một định dạng lưu, chưa schema migration hoặc database.
 
-| Buổi | Việc tự làm | Bằng chứng cuối buổi |
+| Cụm việc — chia qua nhiều phiên | Việc tự làm | Bằng chứng khi hoàn thiện cụm |
 |---|---|---|
-| 1 — 2 giờ | Chọn định dạng; lưu và tải một kho nhỏ | Tắt bình thường rồi mở lại vẫn đúng mã/tên/tồn |
-| 2 — 2 giờ | Thêm Unicode, thiếu file, dữ liệu hỏng và ghi thất bại | Lỗi được báo; file hỏng không bị âm thầm ghi đè thành kho rỗng |
-| 3 — 2 giờ | Mở rộng lưu/tải sang cả hai kho và giới hạn; test round-trip/lỗi | Khôi phục đủ state K03; test nghiệp vụ không đọc đĩa; ghi giới hạn khi tắt giữa lúc ghi |
-| 4 — 2 giờ | Hoàn thiện phần thiếu; làm một biến thể của K01–K03 trong lượt độc lập ngắn | Tự phân rã, sửa, kiểm chứng một thay đổi chỉ dùng kiến thức đã học |
-| Review — 1 giờ | Demo, xem mức trợ giúp và cảm nhận; chọn tối đa hai ticket kế tiếp | Quyết định hoàn thiện K04, mở K05–K06 hoặc chữa một lỗ hổng cụ thể |
+| 1 | Chọn định dạng; lưu và tải một kho nhỏ | Tắt bình thường rồi mở lại vẫn đúng mã/tên/tồn |
+| 2 | Thêm Unicode, thiếu file, dữ liệu hỏng và ghi thất bại | Lỗi được báo; file hỏng không bị âm thầm ghi đè thành kho rỗng |
+| 3 | Mở rộng lưu/tải sang cả hai kho và giới hạn; test round-trip/lỗi | Khôi phục đủ state K03; test nghiệp vụ không đọc đĩa; ghi giới hạn khi tắt giữa lúc ghi |
+| 4 | Hoàn thiện phần thiếu; làm một biến thể của K01–K03 trong lượt độc lập ngắn | Tự phân rã, sửa, kiểm chứng một thay đổi chỉ dùng kiến thức đã học |
+| Review — dùng một phần phiên | Demo, xem mức trợ giúp và cảm nhận; chọn tối đa hai ticket kế tiếp | Quyết định hoàn thiện K04, mở K05–K06 hoặc chữa một lỗ hổng cụ thể |
 
 **Đích của 4 tuần:** có bằng chứng về khả năng tự xây và sửa chương trình, cùng dữ liệu để chọn nhịp tiếp theo. Không cam kết bạn đã xong P0, đủ năng lực Android hoặc sẵn sàng đi làm chỉ nhờ đủ giờ.
 
 ## Chốt quyết định ở tuần 2 và 4
 
-Review dùng phần đã học, không đợi hoàn thành đúng số ticket. Chọn một hành vi nhỏ, dự đoán case biên, chạy/test rồi tự đổi một điều kiện. Nộp cả phần dở; 30–45 phút chỉ giới hạn độ lớn của lượt kiểm tra, không là ngưỡng đỗ/trượt. Không biến biến thể ngay sau ví dụ có gợi ý thành bằng chứng đã nhớ độc lập ở buổi sau.
+Review dùng phần đã học, không đợi hoàn thành đúng số ticket. Chọn một hành vi nhỏ, dự đoán case biên, chạy/test rồi tự đổi một điều kiện. Nộp cả phần dở; 20–30 phút chỉ giới hạn độ lớn của lượt kiểm tra, không là ngưỡng đỗ/trượt. Không biến biến thể ngay sau ví dụ có gợi ý thành bằng chứng đã nhớ độc lập ở buổi sau.
 
 | Quan sát thật | Điều chỉnh kế tiếp |
 |---|---|
@@ -87,6 +98,8 @@ Review dùng phần đã học, không đợi hoàn thành đúng số ticket. C
 | Chưa chạy được vì thiếu một cơ chế | Giải thích + ví dụ khác bài; giảm lát triển khai rồi thử lại |
 | Mất phần lớn buổi vì JDK/Gradle/IDE | Sửa môi trường trực tiếp, dời kế hoạch; chưa kết luận yếu tư duy lập trình |
 | Không đủ giờ hoặc giảm hứng thú | Giảm phạm vi hoặc thay một buổi; giữ một ticket đang làm |
+
+Ở mỗi mốc, xem thêm: phiên có dễ bắt đầu không, có phải kéo dài mới được dừng không, việc nào gây chán và lần sau có dễ tiếp tục không. Nếu vẫn khó sắp xếp, giảm độ dài/phạm vi hoặc số phiên; không tự tăng tải vì chưa theo kịp bảng.
 
 Chỉ ghi **một quyết định và một việc tiếp** ở [Tiến độ](/progress). Bảng này là quy tắc điều chỉnh của chương trình, chưa phải thang đo đã được kiểm định.
 

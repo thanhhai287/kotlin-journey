@@ -1,0 +1,123 @@
+# Android 007 — đánh giá và cách dùng lại
+
+**Rà soát ngày 16/10/2026.** Android 007 có giá trị để tra cứu Kotlin/JVM, cơ chế Android và các demo ứng dụng. Với điểm xuất phát hiện tại của bạn, nên dùng từng phần khi làm ticket; chưa nên học lại toàn bộ khóa theo thứ tự. Phần cần bổ sung rõ nhất là tự triển khai, test hành vi và chuyển từ demo sang tính năng xử lý đủ tình huống.
+
+Đây là đánh giá **đề cương, source và mẫu hình video**, chưa phải đánh giá đầy đủ lời giảng. Chưa có bằng chứng để kết luận nguyên nhân bạn học chưa hiệu quả hoặc chất lượng hỗ trợ trực tiếp của giảng viên.
+
+## Đã kiểm tra được những gì?
+
+| Nguồn | Phạm vi thực sự kiểm tra | Giới hạn |
+|---|---|---|
+| [Thư mục Android007 bạn cung cấp](https://drive.google.com/drive/u/0/folders/1SoIWgRDLcQeOxGYmkDJAFFSBOW88Td9J) | Lập danh mục thư mục, source, PDF và 30 file MP4 ở thư mục gốc | Không coi mọi thư mục thực hành là bài do bạn viết; không dùng chúng để đánh dấu tiến độ |
+| [PDF đề cương](https://drive.google.com/file/d/1Nxbmt3_fVLOkj9YwRr_RZUfEifkKK3VQ/view) | Đọc toàn bộ phần đối tượng, cách tổ chức và 20 buổi dự kiến | Đề cương là kế hoạch; chưa xác minh mọi mục đều được dạy đủ trong bản ghi |
+| [Thư mục android007-source](https://drive.google.com/drive/folders/1ckBBS2FlGFTz3eSYiBRpKDw1XcCcsL5O) | Thu thập 148 file văn bản code/config/tài liệu, tìm kiếm cấu trúc; đọc sâu các nhóm coroutine, lifecycle/ViewModel, API, tìm kiếm/phân trang, Room, lưu nhỏ và test | Không đọc sâu từng dòng của cả 148 file; chưa build/chạy app khóa học trên emulator |
+| Video | Đọc metadata của 30 MP4; trích và xem 49 khung hình tại các thời điểm lấy mẫu của 19 file: Video1–12 và Video24–30 | Không có bản chép lời; chưa nghe trọn bài, chưa kiểm lời giải thích quanh mỗi khung hình. Chưa lấy được mẫu Video13–22 và Video19_b |
+| Tài liệu Android chính thức | Đối chiếu Compose/Views, kiến trúc, coroutine, lưu state và testing; dẫn tại nhận xét tương ứng | Tài liệu kỹ thuật không chứng minh khóa học hay lịch cá nhân có hiệu quả với riêng bạn |
+
+Một số yêu cầu tải video bằng công cụ nhận trang “Google Drive — Quota exceeded” trong lúc đọc tiếp; điều này không có nghĩa tài khoản hoặc trình phát Drive của bạn bị lỗi. Việc đọc liên tục bằng công cụ chưa thực hiện được, nên phần đánh giá lời giảng dừng ở giới hạn trên. Ảnh tĩnh cho biết nội dung đang hiển thị, không cho biết giảng viên giải thích đúng/sai, tốc độ nói hoặc chất lượng giải đáp. Bản đánh giá không công bố lại video, hình người tham gia hoặc toàn bộ source khóa học.
+
+Tổng thời lượng metadata khoảng **56 giờ 10 phút**, chưa loại đoạn họp hoặc bản trùng. Video16/17 và Video19_b/20 lần lượt có cùng kích thước và thời lượng; đây chỉ là dấu hiệu cần kiểm trùng, chưa đối chiếu toàn bộ nội dung. Không thấy file mang tên Video23 trong danh mục hiện có. Những điểm này cần lưu ý khi tìm bài, không đủ để kết luận khóa thiếu buổi hay thiếu chủ đề.
+
+## Giá trị kỹ thuật đáng giữ
+
+**Nền Kotlin/Java có nội dung về cơ chế.** Source có class, collection, extension, delegation, coroutine và shared state; hình Video3 cho thấy đối chiếu code Kotlin với `equals`/`hashCode` trong Java, Video4 mở tài liệu Kotlin về extension. Có ích khi cần hiểu identity, equality và cách ngôn ngữ vận hành. Với bạn, các phần này phục vụ K02/K03/J01; chưa cần xem lại cả phần OOP trước khi làm K01.
+
+**Có nội dung về coroutine và vòng đời.** Nhóm `lecture08` có ví dụ cancellation hợp tác, ném lại `CancellationException`, cleanup và data race. Trong app, `FeedCollectionsViewModel` dùng `viewModelScope`, tách cancellation khỏi lỗi tải; Fragment quan sát bằng `viewLifecycleOwner` và dọn tham chiếu view/adapter. Đây là các điểm nên học cùng tình huống thực tế, phù hợp với hướng dẫn về ownership và cancellation của [Android Developers](https://developer.android.com/kotlin/coroutines/coroutines-best-practices).
+
+**Demo API có những quyết định thiết kế đáng phân tích.** [FeedCollectionsViewModel](https://drive.google.com/file/d/13-4F4himAVYoKUbLrMMbAxz-bPJr3DPP/view) nhận service qua constructor, có trạng thái tải đầu/lỗi/nội dung, chặn tải trang tiếp khi đang tải và loại item trùng theo ID. Có thể dùng để học state transition, dependency injection bằng constructor và lý do cần test. DI không đồng nghĩa phải cài Hilt/Koin ngay.
+
+**Views/XML, Fragment và RecyclerView vẫn là kiến thức có ích.** Chúng giúp đọc dự án có sẵn và hiểu vòng đời view. Với app mới trong lộ trình này, tiếp tục dùng Compose làm hướng UI chính; chỉ học thêm Views khi cần đối chiếu hoặc bảo trì. Android có hướng dẫn chuyển đổi từng phần và tương tác giữa hai hệ UI, nên không cần bỏ toàn bộ phần nền của khóa. [Tài liệu chuyển Views sang Compose](https://developer.android.com/develop/ui/compose/migrate/migrate-xml-views-to-jetpack-compose).
+
+## Những điểm cần bổ sung hoặc dùng thận trọng
+
+### 1. Khối lượng lớn so với quỹ giờ và điểm xuất phát
+
+PDF hướng tới người đã có nền lập trình. Lịch dự kiến hai buổi mỗi tuần, mỗi buổi 3,5–5 giờ, tương đương **7–10 giờ nghe học**. Với quỹ tổng 9–12 giờ/tuần, theo lại nhịp đó sẽ chiếm phần lớn thời gian trước khi tính tự code, debug và review. Đây là vấn đề phù hợp với hoàn cảnh của bạn, chưa phải bằng chứng khóa học kém.
+
+Mật độ cũng cao: buổi 5 gom bốn Android component và notification; buổi 8 gom nhiều cơ chế concurrency; buổi 18 có Navigation, WorkManager, Startup, DataStore và nhiều mô hình kiến trúc. Các phần này có thể hữu ích như tổng quan, nhưng không nên coi việc đã nghe là đã tự vận dụng được. [Đề cương gốc](https://drive.google.com/file/d/1Nxbmt3_fVLOkj9YwRr_RZUfEifkKK3VQ/view).
+
+### 2. Thiếu bằng chứng kiểm chứng hành vi trong bản source
+
+Trong source đã thu thập, chỉ tìm thấy hai test mặc định: [phép cộng mẫu](https://drive.google.com/file/d/1C6NixjT2mTj7PHbbcnSWZd7TOnk3gYT0/view) và [package của app](https://drive.google.com/file/d/12Pp-wd_27EmVLqJLsEJmyXiXK50lWsPb/view). Chúng chưa chứng minh logic tìm kiếm, phân trang, hủy tác vụ hay phục hồi state đúng. Workflow Android chạy `assembleDebug`; build APK thành công cũng chưa chứng minh các hành vi đó.
+
+PDF có demo xuyên suốt và review app cuối khóa, nhưng chưa mô tả rõ bài tự làm và tiêu chí kiểm tra ở từng bước. Không có lịch sử bài nộp/phản hồi nên không kết luận giảng viên không giao bài hoặc không dạy test. **Điều cần bổ sung cho chương trình của bạn** là test hành vi từ K02 và tình huống lỗi/lifecycle trên Android. Cách phân biệt test logic và test trên thiết bị được trình bày trong [Android testing fundamentals](https://developer.android.com/training/testing/fundamentals).
+
+### 3. Demo có phần chưa hoàn thiện, cần đọc theo mục đích
+
+| Vị trí trong bản source | Quan sát và ý nghĩa | Khi áp dụng vào sản phẩm của bạn |
+|---|---|---|
+| [SearchViewModel](https://drive.google.com/file/d/1aoLHrXAijrycf8C3OJO1m9zs9F6tlLYz/view) | Nhánh `catch (Exception)` phát danh sách rỗng. Kênh kết quả không phân biệt được lỗi request với tìm kiếm thành công nhưng không có kết quả; cancellation cũng không được tách riêng tại đây | A06 phải kiểm riêng lỗi, kết quả rỗng và yêu cầu bị hủy; không biến lỗi mạng thành thông báo “không có dữ liệu” |
+| [FeedCollectionsViewModel](https://drive.google.com/file/d/13-4F4himAVYoKUbLrMMbAxz-bPJr3DPP/view) | Đã có state lỗi trang tiếp, nhưng nhánh retry còn TODO rồi `return` | Nếu tính năng có phân trang, chỉ nghiệm thu retry khi đã chạy/test được; A06 tối thiểu chưa bắt buộc thêm phân trang |
+| [ShareViewModel](https://drive.google.com/file/d/1mbIb8kbcAy0xtVD5aMV9POpfdyBRU_MR/view) | Có ghi/đọc `SavedStateHandle`, nhưng giá trị đọc trong `init` chỉ được log; biến `counter` vẫn khởi tạo bằng 0 | Với instance mới nhận state đã lưu, đoạn này chưa phục hồi bộ đếm. A03 cần kiểm giá trị thật sau khôi phục, không chỉ thấy có API lưu state |
+| Nhóm demo Room/lưu nhỏ | Có code minh họa API và TODO xử lý lỗi; chưa thấy bộ test migration/hành vi dữ liệu | A04 kiểm lỗi ghi/đọc trong phạm vi file nhỏ; A07 mới học Room/cache và kiểm một lần đổi schema giữ dữ liệu |
+
+Đây là nhận xét về **snapshot đang được chia sẻ**, không khẳng định bản cuối giảng viên dùng cũng còn những điểm này. Ví dụ cố tình gây race/cancellation để giải thích cơ chế không bị tính là lỗi giảng dạy. Cần phân biệt demo minh họa một API với mẫu hoàn chỉnh để đưa vào sản phẩm.
+
+### 4. Cần nối phần UI của khóa với Compose hiện tại
+
+PDF không có mục Compose rõ ràng; phần UI và các mẫu video kiểm được chủ yếu là Views/XML. Chưa đủ căn cứ nói Compose không bao giờ được nhắc trong lớp. Phần bổ sung cho A01/A02 là composable, state và tương tác UI; sau đó nối ViewModel/lifecycle ở A03. Chỉ chọn phần tương ứng trong [Android Basics with Compose](https://developer.android.com/courses/android-basics-compose/course).
+
+Ở A03, phải phân biệt xoay màn hình, process death và dữ liệu lưu bền. ViewModel không tự giữ dữ liệu qua process death; saved state dành cho lượng state nhỏ cần tái tạo UI, còn dữ liệu ứng dụng cần cơ chế lưu phù hợp. [Saving UI states](https://developer.android.com/topic/libraries/architecture/saving-states). Khóa đã có `SavedStateHandle`; việc cần làm là kiểm chứng cách dùng và giới hạn, không học lại như chưa từng được giới thiệu.
+
+### 5. Không biến danh sách công nghệ thành điều kiện học tiếp
+
+RxJava 3, Hilt, Koin, nhiều design pattern và Clean Architecture/MVI đều có trong PDF. Với người đang cần tự hoàn thiện chương trình nhỏ, học đồng thời tất cả sẽ thêm nhiều khái niệm trước khi có nhu cầu sử dụng. Giữ coroutine/Flow theo nhu cầu Android; RxJava dành cho dự án thực sự dùng Rx. Hiểu constructor injection trước, chọn framework DI khi việc quản lý phụ thuộc trở nên khó.
+
+Tài liệu kiến trúc Android khuyến nghị UI/data layer và điều chỉnh theo ứng dụng; domain layer tùy độ phức tạp/tái sử dụng, app đơn giản có thể dùng manual DI. Vì vậy không cần học đủ các mô hình trước khi xây màn hình đầu tiên. [Architecture recommendations](https://developer.android.com/topic/architecture/recommendations).
+
+Source đang dùng Kotlin 2.1.0, AGP 8.7.3, coroutines 1.9.0 và compile/target SDK 35. Đây là thông tin của bản source, không phải đề nghị dùng nguyên bộ đó cho project mới hay khẳng định chúng là mới nhất. Khi cần chạy demo, kiểm bộ JDK/Gradle/AGP tương thích; không nâng đồng loạt thư viện chỉ để xem một cơ chế. [Version catalog của khóa](https://drive.google.com/file/d/17T4Wxw2HRYrugidKXYMVETFl3_rnxXSm/view).
+
+## Chọn phần nào cho lộ trình của bạn?
+
+**“Buổi” dưới đây là số trong PDF, không phải số file video.** Chưa có mục lục đầy đủ để gán chính xác từng buổi PDF cho từng MP4. Bảng này là quyết định tổ chức của chương trình cá nhân, không phải lịch do khóa Android 007 đề xuất.
+
+| Phần trong đề cương Android 007 | Dùng khi nào | Phần cần tự làm để có bằng chứng |
+|---|---|---|
+| Buổi 1–4: Java/OOP, Kotlin, collection, Git | [K01–K03](/phase-0/xuong-thuc-hanh) lấy đúng chỗ thiếu; [J01](/kotlin-java-core) để đối chiếu Java | Chương trình Kho đồ chạy; case input lỗi; nhiều mặt hàng và test; thay đổi yêu cầu vẫn đúng |
+| Buổi 5–7: component, lifecycle, Fragment, Views | [A01–A03](/phase-1); lấy nền Activity/lifecycle. Views/RecyclerView là tham chiếu khi cần | UI Compose của bạn phản ánh đúng state; xoay/khôi phục không làm mất phần đã chốt. Chưa học cả Service/Provider để làm form |
+| Buổi 8: thread/coroutine; buổi 17: Flow | A04 cho công việc chậm; A06 cho mạng; Flow khi UI cần quan sát state | Chỉ được ai sở hữu/hủy task; UI không đứng; state khi lỗi/hủy đúng. Hoãn danh sách operator chưa dùng |
+| Buổi 9: ViewModel và lưu cục bộ | ViewModel ở A03; file nhỏ ở A04; Room dời tới A07 | Tách kiểm recreation, process death và mở lại dữ liệu đã lưu; lỗi lưu không bị báo thành công |
+| Buổi 10–11: HTTP/JSON/Retrofit/ảnh và demo tổng hợp | [A06](/android-core) sau khi có API S01, mở rộng cùng S02 | Request tới server của mình; phân biệt loading/empty/error; server từ chối yêu cầu sai và UI báo đúng |
+| Buổi 12–13: build/release, debug và cách học | Khi bàn giao app hoặc đang gặp lỗi tooling cụ thể | Có cách build/chạy lặp lại; mô tả và tái hiện được lỗi. Flavors/R8 học theo nhu cầu |
+| Buổi 14–16 và phần kiến trúc buổi 18 | Sau khi app có chức năng và một vấn đề tổ chức code rõ ràng | Giải thích thay đổi giải quyết vấn đề gì; test giữ hành vi. Chưa cần RxJava, cả hai DI framework hay nhiều lớp use case |
+| Jetpack trong buổi 18 | Navigation khi có nhiều màn; WorkManager khi có việc nền bền vững; DataStore khi có nhu cầu phù hợp | Kiểm đúng hợp đồng tính năng; không thêm thư viện vì đề cương có tên |
+| Buổi 19–20: app cuối khóa và review | Mượn ý tưởng review tại A05 và các mốc sản phẩm sau đó | Demo bản tự làm, nêu giới hạn, sửa một yêu cầu mới; review theo bằng chứng, không theo số thư viện |
+
+Phần Kotlin/JVM và concurrency còn phục vụ game server. Android component, Room và UI không thay được các bài HTTP, SQL/transaction, server kiểm quyền và room/game state ở [lộ trình server](/backend-core). Giữ hai hướng chuyên môn nối trên cùng nền tảng hiện tại.
+
+## Mốc video đã nhận diện được
+
+Các mốc là **thời điểm khung hình đã kiểm tra**, không phải điểm bắt đầu/kết thúc một bài. Khi mở, lùi lại tới đầu phần giải thích liên quan. Chưa xem liên tục nên chưa bảo đảm mỗi đoạn đủ để tự học độc lập.
+
+| File / mốc | Hình ảnh quan sát được | Có thể tra khi |
+|---|---|---|
+| [Video2](https://drive.google.com/file/d/1cB5HjE1yRBsSBAJiYTs4-zW2kmj7BULq/view), 00:58:23 | Slide null safety | K01 đang vướng null; bỏ qua nếu đã tự dùng được |
+| [Video3](https://drive.google.com/file/d/1rPIcz0SVrpYa2LU07yTsK7esnMR3JEZd/view), 01:21:16 | Code Java `equals`/`hashCode` | K02/J01 cần hiểu equality; không học thuộc code sinh ra |
+| [Video4](https://drive.google.com/file/d/1uRtlAlFSOBoyxTCjqBurZdd4YJvMKqIs/view), 01:44:29 | Tài liệu Kotlin về extension và static dispatch | Cần hiểu vì sao extension được chọn; chưa phải cổng K01 |
+| [Video5](https://drive.google.com/file/d/1JvHDwg6H6bpwEY0aQXUrAJEznZSpI6GO/view), 00:18:39; 01:33:18 | Code collection; slide delegation | K02 tra collection; delegation để sau khi có nhu cầu |
+| [Video7](https://drive.google.com/file/d/1PRBTSePFdzXOvR4AkeIZvBXPlURGPkAQ/view), 00:14:07; 01:10:36 | Slide Fragment lifecycle; demo/logcat | Đọc app dùng Fragment hoặc đối chiếu vòng đời view |
+| [Video8](https://drive.google.com/file/d/1MeadcwOCzSeEDumEqlaodpNxMjGSmfpF/view), 01:12:39; [Video9](https://drive.google.com/file/d/1YEAvXvNOCRh7eoUXNjq3DvwVtN9NHecx/view), 00:49:39 | XML layout; code cập nhật danh sách RecyclerView | Bổ sung Views khi cần; không dùng thay phần thực hành Compose |
+| [Video10](https://drive.google.com/file/d/1JzZkpZUaHbg8xfRQSq80zBz3x0o_OV50/view), 00:10:35; 01:35:16 | Thread states; code coroutine/Continuation đã decompile | A04 tra cơ chế; phần decompile để sau khi tự dùng và hiểu suspend cơ bản |
+| [Video11](https://drive.google.com/file/d/1sb2oHDGBUAZrA0Kt92ZGW3h4yZ9My-Wa/view), 00:12:14; 01:50:08 | Code CoroutineContext; demo async/await và exception | Cần giải thích context/quan hệ job, sau ví dụ bất đồng bộ nhỏ |
+
+Video24–30 dài khoảng 1–15 phút/file; các hình lấy mẫu cho thấy giao diện cuộc gọi. Chưa có âm thanh để xác định đây là thảo luận gì, nên không gán chúng thành các buổi chuyên đề cuối khóa.
+
+## Cách dùng trong phiên học ngắn
+
+Giữ [bốn tuần thử nghiệm](/phase-0/lich-14-tuan). **Bước tiếp vẫn là ticket đang làm**, chưa có bằng chứng hoàn thành thì không tự chuyển bài. Nếu chưa bắt đầu K01, bắt đầu bằng yêu cầu K01; việc từng tham dự Android 007 không tự thay thế cổng thực hành.
+
+1. Ghi một vướng mắc cụ thể trong ticket, chẳng hạn chưa hiểu kết quả null sau khi parse. Nếu không có vướng mắc, tiếp tục code.
+2. Chọn một đoạn giải thích đúng câu hỏi. Khoảng 5–10 phút là mốc nhắc quay lại thử, không phải giới hạn cứng hoặc con số đã được nghiên cứu xác nhận.
+3. Dự đoán và chạy một ví dụ nhỏ. Nếu vẫn chưa hiểu, mentor giải thích trực tiếp bằng ví dụ khác bài.
+4. Đóng ví dụ rồi tự áp dụng vào ticket. Kiểm một case thường và một case lỗi/biên liên quan; từ K02 dùng test khi phù hợp.
+5. Ở lượt review sau, đổi một điều kiện nhỏ để kiểm khả năng tự vận dụng. Không lấy việc vừa chép theo demo làm bằng chứng độc lập.
+
+Thời gian xem nằm trong phiên 30–45 phút, thay phần tra cứu/giải thích; không cộng thành khóa thứ hai hoặc yêu cầu xem hết một video. Ghi tối đa ba dòng: câu hỏi, phần đã xem, hành vi tự làm được hoặc còn vướng. Không theo dõi phần trăm video đã xem như thước đo tiến bộ.
+
+Ở review tuần 2, đối chiếu đoạn đã dùng với kết quả tự làm: nếu nhớ ví dụ nhưng chưa áp dụng được, giảm phạm vi và tăng giải thích/thực hành đúng chỗ; nếu tự làm được, bỏ phần xem trùng. Tuần 4 tiếp tục chọn theo bằng chứng, không bắt hoàn thành danh sách video.
+
+## Điều chưa thể kết luận và cách bổ sung bằng chứng
+
+Chưa đánh giá được độ chính xác của toàn bộ lời giảng, nhịp giải thích, phản hồi cá nhân, nội dung đầy đủ của phần nâng cao hoặc mức tiến bộ của bạn trong khóa cũ. **Phản hồi bổ sung ngày 16/10:** bạn xác nhận học bị chán, phiên quá dài và khó bố trí thời gian. Đây là căn cứ trực tiếp để rút ngắn phiên và cho phép dừng/nối tiếp dễ dàng. Chưa biết bạn học tới đâu hoặc vướng kỹ thuật gì; không suy ra bạn thiếu kỷ luật hay chỉ xem mà không làm.
+
+Muốn đánh giá sâu phần giảng nói, cần đọc liên tục được video/âm thanh hoặc transcript, ưu tiên một đoạn bạn từng học nhưng chưa tự áp dụng được; hiện truy cập tải video đang bị giới hạn. Một bài bạn tự làm trước đây và phản hồi đã nhận sẽ giúp kiểm tra khoảng cách giữa đề cương, cách dạy và kết quả thực tế. Khi chưa có thêm bằng chứng, kết luận hợp lý là **giữ Android 007 làm nguồn chọn lọc, dùng sản phẩm tự viết và kiểm chứng hành vi làm trục học chính**.

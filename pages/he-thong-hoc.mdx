@@ -1,6 +1,6 @@
 # Học bằng triển khai — luật hướng dẫn
 
-**Rà soát 15/10/2026; giữ hồ sơ đã xác nhận ngày 14/10.** Bạn đã rõ cú pháp Kotlin cơ bản, chưa tự hoàn thiện chương trình nhỏ và có 9–12 giờ/tuần. Từ đây, đơn vị học là một tính năng chạy được, một lỗi tìm ra nguyên nhân, hoặc một yêu cầu thay đổi xử lý được. Trục chính là **Kotlin/Java để xây game server và ứng dụng Android**; web chỉ phụ trợ.
+**Cập nhật 16/10/2026:** bạn thấy khóa Android 007 gây chán và phiên học quá dài, khó bố trí thời gian. Giáo án chuyển sang phiên ngắn, một kết quả nhỏ và điểm dừng rõ. Bạn đã rõ cú pháp Kotlin cơ bản, chưa tự hoàn thiện chương trình nhỏ; quỹ 9–12 giờ/tuần đã nêu là khả năng bố trí, không phải chỉ tiêu. Trục chính là **Kotlin/Java để xây game server và ứng dụng Android**; web chỉ phụ trợ.
 
 Trang này thay các luật cũ về hỏi ngược mặc định, chờ đủ 30 phút, cấm giải thích trong cả tuần và hoàn thành giáo trình theo lịch. Luật áp dụng cho bài học của bạn; sửa tài liệu và công cụ của site vẫn là công việc bình thường.
 
@@ -8,15 +8,16 @@ Trang này thay các luật cũ về hỏi ngược mặc định, chờ đủ 3
 
 Chọn một ticket trong [Xưởng thực hành](/phase-0/xuong-thuc-hanh). Không đọc hết cả module trước khi bắt đầu.
 
-| Trong buổi 90 phút | Làm gì | Để lại gì |
+| Ví dụ phiên 30 phút | Làm gì | Để lại gì |
 |---|---|---|
-| 10 phút | Đọc yêu cầu, viết lại bằng lời mình, chọn 3 ví dụ | Đầu vào → kết quả mong đợi; một điều còn chưa rõ |
-| 45 phút | Tự triển khai phần nhỏ nhất, chạy sớm; tra cứu đúng chỗ thiếu | Một luồng chạy được hoặc một lỗi tái hiện được |
-| 20 phút | Thử biên, debug, viết test, hỏi cơ chế đang vướng | Quan sát trước/sau; test bắt lỗi nếu đã có test runner |
-| 10 phút | Nhận giải thích/review; tự sửa hoặc thử một thay đổi nhỏ | Quyết định có lý do hoặc câu hỏi đã thu hẹp |
-| 5 phút | Ghi việc làm được và bước tiếp theo | Tối đa 3 dòng |
+| 3 phút | Đọc dòng hẹn từ phiên trước, chọn một hành vi nhỏ và cách kiểm | Một mục tiêu vừa phiên; chưa cần hoàn tất ticket |
+| 20 phút | Tự làm, chạy sớm; hỏi/tra đúng cơ chế đang thiếu | Một thay đổi nhỏ, một case hoặc lỗi tái hiện được |
+| 5 phút | Chạy case liên quan, xem kết quả hoặc nhận một nhận xét | Biết điều đã đúng và điều còn vướng |
+| 2 phút | Ghi chỗ dừng và thao tác tiếp theo | Tối đa 3 dòng để dễ quay lại |
 
-Đây là cách chia tham khảo. Một buổi 45 phút có thể chỉ làm nửa ticket; buổi 120 phút dành phần thêm cho code và kiểm chứng. Mục tiêu khoảng **70% thời gian chủ động làm**: phân tích, viết code, chạy thử, debug, test; 30% còn lại đọc và trao đổi. Không tính phút để đạt chỉ tiêu. Tỷ lệ này và thang H0–H3 là lựa chọn tổ chức, không phải tỷ lệ tối ưu đã được khoa học chứng minh. Lịch hiện tại dùng buổi 2 giờ ở [kế hoạch 4 tuần](/phase-0/lich-14-tuan).
+**Mặc định thử 30–45 phút/phiên; ngày bận chọn 15 phút hoặc nghỉ.** Không phải hoàn thành một ticket trong phiên đó. Hết thời gian thì được dừng với bản dở và ghi bước tiếp; không nối thêm bài, biến thể hay review dài để được coi là xong buổi. **Mỗi tối tối đa 2 giờ, chỉ khi thực sự cần**, tính cả nghỉ và review. Muốn tiếp tục việc đang làm thì nghỉ trước, chọn một mục tiêu nhỏ và chỉ thêm phiên trong giới hạn đó. Hết 2 giờ thì ghi chỗ dở để nối tiếp tối khác; không tự kéo dài để hoàn thành ticket.
+
+Ưu tiên phần lớn thời gian cho làm/chạy/debug; giải thích theo một câu hỏi, một ví dụ, rồi thử ngay. Khoảng 5–10 phút cho một lượt đọc/xem là mốc nhắc quay lại thao tác, không cắt ngang lời giải thích cần thiết hoặc cấm hỏi thêm. Các khoảng thời gian là lựa chọn thử theo phản hồi của bạn, chưa phải thời lượng tối ưu đã kiểm chứng. Xem [nhịp bốn tuần](/phase-0/lich-14-tuan).
 
 **Một ticket đang làm, một khoảng trống kiến thức cần lấp.** Không mở thêm Error Zoo, Docs Quest và kata cùng lúc. Bài phụ chỉ thay thế phần luyện tương ứng trong buổi, không cộng thêm nghĩa vụ.
 
@@ -86,9 +87,9 @@ Trục Kotlin/Java cần đạt mức chuyển giao, không dừng ở nhớ cú
 - Bài quá khó: giữ một luồng, ít dữ liệu hơn; giảng phần tiên quyết thiếu rồi thử lại. Không ép ngồi im đủ giờ.
 - Hai buổi không có hành vi mới chạy được: cắt ticket nhỏ hơn và kiểm tra cách hướng dẫn. Hai buổi không có ý tưởng kiểm chứng: cùng thiết kế một thí nghiệm.
 - Mất hứng: ghi điểm nào gây chán, chọn một tính năng nhìn thấy được trong cùng sản phẩm. Cảm giác là tín hiệu cần điều chỉnh, không phải bằng chứng bạn thiếu kỷ luật.
-- Ngày bận: buổi 20–30 phút sửa một lỗi nhỏ hoặc viết một case. Nghỉ được; không có nợ giờ hay nghĩa vụ commit mỗi ngày.
+- Ngày bận: phiên 15 phút dự đoán/chạy một case, tái hiện lỗi hoặc nối tiếp một phần đang dở. Nghỉ được; không có nợ giờ hay nghĩa vụ commit mỗi ngày.
 
-Nhịp đã chọn để thử: 4 buổi × 2 giờ và 1 giờ review/ôn mỗi tuần, tổng 9 giờ. Phần 0–3 giờ thêm dành cho việc đang làm, không mở thêm một khoá. Điều chỉnh sau tuần 2 và 4 bằng sản phẩm, mức tự chủ và cảm nhận; ngày tháng không tự chứng minh tiến độ.
+Gợi ý khởi động: bốn phiên 30–45 phút/tuần, khoảng 2–3 giờ; review 10–15 phút thay phần cuối một phiên. Đây là đề xuất thử, không là lịch người học đã xác nhận hoặc mức tối thiểu. Nếu muốn dùng thêm quỹ 9–12 giờ, thêm phiên tùy thời gian và hứng thú, không kéo dài phiên để đủ giờ. Review tuần 2 và 4 xem cả khả năng bắt đầu/quay lại, cảm giác chán và mức tự làm; không tự tăng tải chỉ vì đã qua một tuần.
 
 ## Đo tiến bộ ít nhưng đúng
 
@@ -100,9 +101,9 @@ HIỂU: một cơ chế/đánh đổi; mức trợ giúp H0/H1/H2/H3.
 TIẾP: file hoặc hành vi cụ thể sẽ làm ở buổi sau.
 ```
 
-Sau 2–3 ticket, chọn một phần nhỏ đã học để viết lại hoặc đổi yêu cầu trong 30–45 phút. Dùng kết quả để chọn bài tiếp, không bắt viết lại cả project. Sai thì sửa một lỗ hổng và thử biến thể khác ở buổi sau.
+Sau 2–3 ticket, chọn một phần nhỏ đã học để viết lại hoặc đổi yêu cầu trong 20–30 phút, thay phần thực hành của một phiên. Dùng kết quả để chọn bài tiếp, không bắt viết lại cả project. Sai thì sửa một lỗ hổng và thử biến thể khác ở buổi sau.
 
-**Dùng lại bằng chứng, không nhân số bài kiểm tra.** Một biến thể độc lập có thể đồng thời phục vụ review tuần 2/4 và một mục cổng P0 nếu đúng phạm vi. Biến thể vừa làm ngay sau H3 cho biết bạn áp dụng được với hỗ trợ gần đó; ở buổi sau mới kiểm lại khả năng nhớ và tự quyết định. Không cần biến thể riêng cho mọi mục nếu một thay đổi đã kiểm được nhiều năng lực. Khoảng 30–45 phút giới hạn phạm vi, không chấm tốc độ; hết lượt thì nộp phần dở và mở hỗ trợ lại.
+**Dùng lại bằng chứng, không nhân số bài kiểm tra.** Một biến thể độc lập có thể đồng thời phục vụ review tuần 2/4 và một mục cổng P0 nếu đúng phạm vi. Biến thể vừa làm ngay sau H3 cho biết bạn áp dụng được với hỗ trợ gần đó; ở buổi sau mới kiểm lại khả năng nhớ và tự quyết định. Không cần biến thể riêng cho mọi mục nếu một thay đổi đã kiểm được nhiều năng lực. Khoảng 20–30 phút giới hạn phạm vi, không chấm tốc độ; hết lượt thì nộp phần dở và mở hỗ trợ lại.
 
 Từ khi một phần đã được kiểm tra độc lập, có thể dùng AI cho việc lặp lại ngoài mục tiêu học, với phạm vi rõ và tự đọc/test toàn bộ diff. Không có chỉ tiêu “phải bắt được N lỗi AI”: phản hồi đúng cũng có thể đúng. Trong phần đang rèn, người học vẫn tự viết.
 
@@ -117,8 +118,10 @@ Từ khi một phần đã được kiểm tra độc lập, có thể dùng AI 
 ```text
 Tôi đã rõ cú pháp cơ bản, đang rèn Kotlin/Java cho game server và app Android.
 Web chỉ phụ trợ. Ticket hiện tại: ...; bản tôi đã làm: ...
-Hãy giao/tiếp tục một yêu cầu có tiêu chí kiểm chứng, không đưa lời giải.
+Hôm nay tôi có ... phút (mặc định thử 30 phút).
+Chỉ giao/tiếp tục một mục tiêu nhỏ, nêu ích lợi và cách kiểm, không đưa lời giải.
 Khi tôi hỏi kiến thức, giải thích cơ chế trực tiếp và vừa đủ.
 Khi review, nêu bằng chứng và lý do, để tôi tự sửa.
-Chỉ hỏi một câu kiểm tra hiểu mỗi lượt. Kết thúc bằng một biến thể nhỏ.
+Chỉ hỏi một câu kiểm tra hiểu mỗi lượt; không thêm bài khi hết phiên.
+Kết thúc bằng chỗ đang dở và một bước tiếp; biến thể để phiên sau khi phù hợp.
 ```

@@ -4,12 +4,14 @@
 
 Không có nguồn nào dưới đây xác nhận đây là chương trình “tốt nhất” cho riêng bạn. Đây là phương án phù hợp với thông tin hiện có; kết quả tự làm sau tuần 2 và 4 sẽ quyết định điều chỉnh.
 
+**Bổ sung 16/10/2026:** [Đánh giá Android 007](/danh-gia-android-007) đối chiếu khóa đã học với chương trình này, dựa trên PDF, các nhóm source và mẫu hình video. Trang riêng ghi độ sâu, giới hạn truy cập video, dẫn chứng và bảng chọn phần theo ticket; nguồn này không tạo thêm khóa bắt buộc hoặc thay đổi quỹ giờ.
+
 ## Hồ sơ dùng để thiết kế
 
 | Bạn đã xác nhận | Hệ quả trong chương trình |
 |---|---|
 | Biết cú pháp Kotlin, chưa tự hoàn thiện chương trình nhỏ | Bắt đầu bằng một chương trình chạy trọn luồng; không bắt học lại khoá cú pháp |
-| Có 9–12 giờ/tuần | Lập lịch nền 9 giờ; tối đa 3 giờ linh hoạt dành cho việc đang làm |
+| Có thể bố trí 9–12 giờ/tuần; ngày 16/10 xác nhận phiên dài gây chán và mỗi tối tối đa 2 giờ nếu thực sự cần | Thử phiên 30–45 phút, ngày bận 15 phút; thêm phiên chỉ trong trần 120 phút/tối gồm nghỉ và review. Quỹ tuần không là quota; review tuần 2/4 để chỉnh nhịp |
 | Muốn tư duy và code nhiều hơn, được giải thích cơ chế | Giao hành vi và tiêu chí; bạn tự triển khai; mentor giải thích, review và giảm dần trợ giúp |
 | Kotlin/Java sâu nhất; game server và Android là hướng chính | Một nền JVM, hai nơi áp dụng; Java có bài triển khai riêng; web chỉ là client phụ |
 | Cần sâu ở nền tảng thực sự cần thiết | Có mốc bắt buộc về dữ liệu, thuật toán, state, lỗi, mạng và đồng thời; internals nâng cao mở sau |
@@ -46,7 +48,7 @@ N01–N15 là sổ đối chiếu ngày 14/10; N16–N21 là nguồn đọc thê
 
 **N15 — [IES/What Works Clearinghouse: Organizing Instruction and Study to Improve Student Learning](https://ies.ed.gov/ncee/wwc/PracticeGuide/1)**, hướng dẫn năm 2007. Đã xem phần khuyến nghị và mức bằng chứng: học cách quãng, xen kẽ ví dụ đã giải với bài tự làm, gợi nhớ và câu hỏi yêu cầu giải thích. Đây là tổng hợp giáo dục nói chung, không phải thử nghiệm riêng cho người lớn học Kotlin.
 
-Áp dụng thận trọng: khi thiếu kiến thức, mentor giải thích kèm một ví dụ khác bài; sau đó bạn tự áp dụng và thử lại ở buổi sau. **Tỷ lệ 70/30, thang H0–H3, buổi 2 giờ và mốc review hai tuần là lựa chọn tổ chức**, không phải con số được nghiên cứu trên xác nhận.
+Áp dụng thận trọng: khi thiếu kiến thức, mentor giải thích kèm một ví dụ khác bài; sau đó bạn tự áp dụng và thử lại ở buổi sau. **Thang H0–H3, phiên thử 30–45 phút và mốc review hai tuần là lựa chọn tổ chức**, không phải con số được nghiên cứu trên xác nhận.
 
 Lần đọc lại N15 ngày 15/10 phân biệt mức bằng chứng của từng khuyến nghị: cách quãng và xen kẽ ví dụ/bài làm ở mức **Moderate**; gợi nhớ bằng quiz (5b) và câu hỏi giải thích sâu ở mức **Strong**; câu hỏi trước bài (5a) ở mức **Minimal**. Không gom tất cả thành “nghiên cứu chứng minh”.
 
@@ -84,7 +86,7 @@ Các bài Kho đồ/CARO, tiêu chí và lịch dưới đây do chương trình
 
 ## Những thay đổi so với bản trước
 
-1. **Bỏ dự báo 1.100 giờ/27 tháng khỏi kế hoạch hiện hành.** Chưa có dữ liệu tốc độ tự triển khai của bạn để bảo vệ con số đó. Chỉ lập [4 tuần gần nhất](/phase-0/lich-14-tuan): 36 giờ nền, tối đa 12 giờ linh hoạt.
+1. **Bỏ dự báo 1.100 giờ/27 tháng khỏi kế hoạch hiện hành.** Chưa có dữ liệu tốc độ tự triển khai của bạn để bảo vệ con số đó. Chỉ lập [4 tuần gần nhất](/phase-0/lich-14-tuan). Từ phản hồi ngày 16/10, bỏ phiên 2 giờ và tổng giờ bắt buộc; thử phiên ngắn, giảm phạm vi theo thời gian thực tế.
 2. **Không học lại nhập môn Kotlin.** K01 chính là lần kiểm tra điểm xuất phát bằng sản phẩm. Thiếu khái niệm nào thì giải thích và luyện đúng phần đó.
 3. **Java có đầu ra bắt buộc, không chỉ đọc đối chiếu.** J01 sau K02; các bài sau tăng dần sang model/interop và Java backend. Không đổi ngôn ngữ liên tục trước khi có một luồng Kotlin chạy được.
 4. **Nền tảng có lịch quay lại.** Reference/equality và collection ở P0; lifecycle ở P1; SQL, mạng và shared state ở P2; isolation/JMM ở P3; profiling/timestep ở P4. Không đợi vô tình gặp bug mới học chúng.
