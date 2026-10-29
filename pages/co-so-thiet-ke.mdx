@@ -18,7 +18,7 @@ Không có nguồn nào dưới đây xác nhận đây là chương trình “t
 
 ## Các nguồn đã kiểm tra
 
-N01–N15 là sổ đối chiếu ngày 14/10; N16–N21 là nguồn đọc thêm ngày 15/10. “Đã xem đề cương” không có nghĩa đã học hết khoá hoặc đọc hết sách. Lượt mới không tái thẩm định toàn bộ nguồn cũ. Tài liệu framework dùng để kiểm tra cơ chế/API; không dùng riêng nó để suy ra toàn bộ lộ trình nghề nghiệp. Ngày ở đây là ngày rà soát, không phải ngày xuất bản hay bảo đảm nội dung trên web sẽ giữ nguyên.
+N01–N15 là sổ đối chiếu ngày 14/10; N16–N21 là nguồn đọc thêm ngày 15/10; N22–N23 bổ sung ngày 29/10 về duy trì việc học. “Đã xem đề cương” không có nghĩa đã học hết khoá hoặc đọc hết sách. Lượt mới không tái thẩm định toàn bộ nguồn cũ. Tài liệu framework dùng để kiểm tra cơ chế/API; không dùng riêng nó để suy ra toàn bộ lộ trình nghề nghiệp. Ngày ở đây là ngày rà soát, không phải ngày xuất bản hay bảo đảm nội dung trên web sẽ giữ nguyên.
 
 ### Giáo trình và khung năng lực
 
@@ -69,6 +69,14 @@ Các nguồn bổ sung cho số/byte, đồng hồ, random và JVM internals đ�
 
 **N21 — [Sentance, Waite & Kallia (2019), PRIMM](https://primmportal.com/wp-content/uploads/2020/10/teaching-computer-programming-with-primm-a-sociocultural-perspective.pdf).** Đã xem thiết kế, kết quả và giới hạn của chuỗi dự đoán → chạy → tìm hiểu → sửa → tự tạo: 493 học sinh nhóm can thiệp, 180 đối chứng; nhóm can thiệp đạt post-test tốt hơn. Nghiên cứu Python ở lứa tuổi 11–14, 8–12 tuần, không phân nhóm ngẫu nhiên; chưa chứng minh hiệu quả với người lớn tự học Kotlin/AI. Áp dụng thành thí nghiệm nhỏ khi bí, rồi quay lại tự triển khai; không bắt lặp nghi thức mọi buổi.
 
+### Nguồn về duy trì việc học
+
+Bổ sung ngày 29/10/2026, vì điểm nghẽn quan sát được là bắt đầu và quay lại phiên học ([đánh giá 29/10](/danh-gia-hieu-qua)). Cả hai nguồn chỉ mới được đối chiếu qua tóm tắt và các bản tóm lược thứ cấp, **chưa đọc toàn văn**.
+
+**N22 — [Gollwitzer & Sheeran (2006), Implementation intentions and goal achievement: a meta-analysis](https://doi.org/10.1016/S0065-2601(06)38002-1)**, Advances in Experimental Social Psychology 38, 69–119. Tóm tắt: 94 phép kiểm độc lập, kế hoạch dạng “khi gặp tình huống X thì làm Y” có tác động trung bình tới lớn tới việc đạt mục tiêu (d = .65), gồm cả việc bắt đầu theo đuổi mục tiêu và chống phân tâm. Giới hạn: mục tiêu đủ loại, không riêng học lập trình; hiệu ứng trung bình không bảo đảm cho từng người. Dùng cho **câu hẹn bắt đầu phiên**, không thành nghi thức bắt buộc.
+
+**N23 — [Lally, van Jaarsveld, Potts & Wardle (2010), How are habits formed](https://doi.org/10.1002/ejsp.674)**, European Journal of Social Psychology 40(6), 998–1009. 96 người tự chọn một hành vi ăn uống/vận động hằng ngày trong 12 tuần, tự báo cáo mức tự động. Thời gian để đạt gần mức tự động dao động 18–254 ngày (trung vị 66, ngoại suy từ những người có đường cong khớp mô hình); bỏ lỡ một lần không ảnh hưởng đáng kể tới quá trình hình thành. Giới hạn: hành vi đơn giản chứ không phải học phức tạp, mẫu khớp mô hình nhỏ, dựa vào tự báo cáo, chưa có bản lặp lại. Dùng để giải thích vì sao **lỡ một buổi không cần bù** và vì sao ưu tiên phiên đều, ngắn; không dùng để hứa thói quen hình thành sau một số ngày cố định.
+
 ## Từ nguồn tới quyết định cụ thể
 
 Các bài Kho đồ/CARO, tiêu chí và lịch dưới đây do chương trình này thiết kế cho bạn; không phải bài được các đơn vị trên phê duyệt.
@@ -82,13 +90,15 @@ Các bài Kho đồ/CARO, tiêu chí và lịch dưới đây do chương trình
 | N13–N14 | CARO theo lượt trước mô phỏng realtime | S04 luật thuần; S05 hai client; P4 đo tick và phản ứng khi quá tải |
 | N15 | Có giải thích/ví dụ hỗ trợ, rồi giảm trợ giúp và kiểm tra chuyển giao | Một biến thể chưa làm y nguyên, ghi mức trợ giúp và lý do quyết định |
 | N16–N19 | Xác định ranh giới bảo đảm của công cụ/API, biến hiểu nhầm thành case | Runner bắt assertion sai; tách lifecycle; test sai quyền, timeout sau commit và cạnh tranh |
+| N15, N20 | Khởi động gợi nhớ 3–5 phút đầu phiên trên phần đã học; một ví dụ đã giải có nhãn mục tiêu con ở bài khác; đối chiếu cách viết sau nghiệm thu | Gợi nhớ được ghi trong dòng LÀM; [ví dụ sổ điểm](/phase-0/meta-skills#ví-dụ-đã-giải-sổ-điểm-cli) không chứa lời giải K01 |
+| N22–N23 | Câu hẹn “khi… thì…” để bắt đầu phiên; lỡ buổi không bù; thêm phiên ngắn trước khi kéo dài phiên | Ngày phiên 1 và số phiên đã bắt đầu so với dự định ở [Tiến độ](/progress) |
 | N15, N20–N21 | Phân biệt áp dụng ngay sau hỗ trợ với tự làm ở buổi sau | Dùng lại một biến thể độc lập trong review/cổng; không lấy điểm bài vừa luyện để suy ra đã nhớ lâu |
 
 ## Những thay đổi so với bản trước
 
 1. **Bỏ dự báo 1.100 giờ/27 tháng khỏi kế hoạch hiện hành.** Chưa có dữ liệu tốc độ tự triển khai của bạn để bảo vệ con số đó. Chỉ lập [4 tuần gần nhất](/phase-0/lich-14-tuan). Từ phản hồi ngày 16/10, bỏ phiên 2 giờ và tổng giờ bắt buộc; thử phiên ngắn, giảm phạm vi theo thời gian thực tế.
 2. **Không học lại nhập môn Kotlin.** K01 chính là lần kiểm tra điểm xuất phát bằng sản phẩm. Thiếu khái niệm nào thì giải thích và luyện đúng phần đó.
-3. **Java có đầu ra bắt buộc, không chỉ đọc đối chiếu.** J01 sau K02; các bài sau tăng dần sang model/interop và Java backend. Không đổi ngôn ngữ liên tục trước khi có một luồng Kotlin chạy được.
+3. **Java có đầu ra bắt buộc, không chỉ đọc đối chiếu.** J01 sau K04 (điều chỉnh 29/10 từ “sau K02” để không thêm toolchain thứ hai khi chương trình Kotlin đầu tiên chưa vững); các bài sau tăng dần sang model/interop và Java backend. Không đổi ngôn ngữ liên tục trước khi có một luồng Kotlin chạy được.
 4. **Nền tảng có lịch quay lại.** Reference/equality và collection ở P0; lifecycle ở P1; SQL, mạng và shared state ở P2; isolation/JMM ở P3; profiling/timestep ở P4. Không đợi vô tình gặp bug mới học chúng.
 5. **Giảm độ khó nhảy cóc.** K03 bắt buộc bảo toàn dữ liệu khi từ chối đầu vào; lỗi bất ngờ giữa cập nhật là phần mở rộng. Transaction lưu bền và cạnh tranh nhiều request học riêng sau đó.
 6. **Android được phát triển thành app thật.** Có UI/lifecycle, mạng, dữ liệu và performance; không thu nhỏ thành demo tượng trưng. Web không có khung giờ bắt buộc, chỉ mở một flow quản trị khi có nhu cầu.

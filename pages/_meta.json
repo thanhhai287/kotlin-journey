@@ -1,21 +1,34 @@
 {
   "index": "Bắt đầu buổi học",
   "phase-0": "Thực hành Kotlin",
+  "progress": "Tiến độ theo năng lực",
   "he-thong-hoc": "Cách học & luật hướng dẫn",
+  "-- lo-trinh": {
+    "type": "separator",
+    "title": "Lộ trình"
+  },
   "roadmap": "Lộ trình game server & Android",
-  "co-so-thiet-ke": "Cơ sở thiết kế & nguồn",
-  "ra-soat-lo-trinh": "Rà soát & cải tiến 15/10",
   "kotlin-java-core": "Nền Kotlin/Java",
   "phase-1": "Thực hành Android",
   "android-core": "Nền Android",
   "backend-core": "Game server & backend",
-  "progress": "Tiến độ theo năng lực",
-  "nguon-hoc": "Nguồn tra cứu",
-  "danh-gia-android-007": "Đánh giá Android 007",
   "web-phu-tro": "Web — phụ trợ",
-  "nghe-backend-game": "Định hướng chuyên môn",
+  "-- tra-cuu": {
+    "type": "separator",
+    "title": "Tra cứu khi cần"
+  },
+  "nguon-hoc": "Nguồn tra cứu",
   "nen-tang-he-thong": "Lab hệ thống — tra cứu",
   "tham-khao": "Tài liệu chuyên sâu",
+  "-- ho-so": {
+    "type": "separator",
+    "title": "Hồ sơ thiết kế"
+  },
+  "danh-gia-hieu-qua": "Đánh giá hiệu quả 29/10",
+  "co-so-thiet-ke": "Cơ sở thiết kế & nguồn",
+  "ra-soat-lo-trinh": "Rà soát 15/10",
+  "danh-gia-android-007": "Đánh giá Android 007",
+  "nghe-backend-game": "Định hướng chuyên môn",
   "mo-rong": {
     "title": "Mở rộng khi cần",
     "display": "hidden"

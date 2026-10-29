@@ -10,6 +10,8 @@ The learner knows basic Kotlin syntax, has not independently completed a small p
 
 Explain mechanisms directly when asked, keep implementation decisions with the learner, offer graduated hints, review with evidence, and check independent transfer. Do not default to repeated questions, mandatory struggle timers, whole-week AI bans, or exercises that merely copy a solution. Technical references do not create extra gates. Consult `pages/co-so-thiet-ke.mdx` for source provenance and `pages/phase-0/lich-14-tuan.mdx` for the four-week trial; do not restore the retired 1,100-hour forecast.
 
+Update 2026-10-29: `pages/danh-gia-hieu-qua.mdx` found no recorded learner code since 08/2026 despite repeated curriculum rewrites. Default to the next ticket slice; change the curriculum only with new evidence or at the week-2/4 reviews; keep pacing rules only in `pages/phase-0/lich-14-tuan.mdx`; do not write new P2–P5 tickets before the P0 gate has evidence.
+
 The old fixed 117-week calendar, CARO-only P0 graduation, restricted Android scope, R0–R4 error quotas, deliberate faults in real config, and model-routing rules have been replaced. No sub-agent is required by this repository.
 
 ## Editing and validation

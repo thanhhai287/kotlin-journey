@@ -21,20 +21,19 @@ Mỗi thời điểm có một ticket chính. Giữ yêu cầu, code và test c�
 | **P4 — đo và đào sâu** | JVM/concurrency/profiling; mô phỏng tick nhỏ; Android performance; vận hành | Tái hiện → giải thích → sửa → đo lại một vấn đề; nêu giới hạn giàn đo và hành vi khi quá tải | N02, N07–N09, N14 |
 | **P5 — dùng thật và hoàn thiện** | Phản hồi người dùng, bug, tài liệu, hồ sơ dự án | Người khác chạy/dùng được; tự xử lý một yêu cầu mới và giải thích đánh đổi | Tiêu chí tổng hợp của chương trình |
 
-Các mã nguồn được giải thích trong [sổ đối chiếu](/co-so-thiet-ke); [bản rà soát 15/10/2026](/ra-soat-lo-trinh) ghi vấn đề và cải tiến cụ thể. Hoạt động test/review xuyên suốt; không dồn tới cuối dự án. Cổng chỉ kiểm phần đã học, thiếu mục nào sửa đúng mục đó. Bằng chứng đúng phạm vi được dùng lại giữa review và cổng, không nhân số lượt thi.
+Các mã nguồn được giải thích trong [sổ đối chiếu](/co-so-thiet-ke); [đánh giá hiệu quả 29/10/2026](/danh-gia-hieu-qua) ghi bằng chứng, vấn đề và cải tiến gần nhất. Hoạt động test/review xuyên suốt; không dồn tới cuối dự án. Cổng chỉ kiểm phần đã học, thiếu mục nào sửa đúng mục đó. Bằng chứng đúng phạm vi được dùng lại giữa review và cổng, không nhân số lượt thi.
 
 ## Kế hoạch gần: 4 tuần thử với phiên ngắn
 
-**Cập nhật 16/10:** thử phiên 30–45 phút, ngày bận 15 phút hoặc nghỉ; một mục tiêu nhỏ và điểm dừng rõ. Gợi ý khởi động bốn phiên/tuần, review thay phần cuối một phiên. Khi thực sự cần có thể thêm phiên, nhưng **tổng mỗi tối tối đa 2 giờ, gồm nghỉ và review**; đây là trần, không phải thời lượng mặc định. Quỹ 9–12 giờ là khả năng bố trí, không phải nghĩa vụ; không cần học bù hoặc dùng hết. Các mốc ticket dưới đây chỉ là hướng đi khi đủ tiên quyết, có thể trải qua nhiều tuần với nhịp ngắn.
+Phiên ngắn, một lát mỗi phiên; thời lượng, trần mỗi tối và quy tắc thêm phiên ghi một chỗ ở [Nhịp học](/phase-0/lich-14-tuan). Thứ tự P0: **K01 → K02 → K03 → K04 → J01 → K05 → K06**, mỗi ticket chia lát trong [Xưởng thực hành](/phase-0/xuong-thuc-hanh).
 
-| Tuần kể từ buổi bắt đầu | Dự kiến | Điều muốn quan sát |
-|---|---|---|
-| 1 | K01: nhập/xuất/xem và lỗi đầu vào | Bạn tự hoàn thiện một chương trình nhỏ tới đâu? |
-| 2 | K02: nhiều mặt hàng và test tự động | Bạn chọn dữ liệu, tìm bug và đổi yêu cầu thế nào? |
-| 3 | K03 một luồng; J01 nếu K02 đã vững | Bạn hiểu reference, trạng thái và bất biến đến đâu? |
-| 4 | K04 phạm vi nhỏ; review một biến thể đã học | Bạn xử lý file/lỗi mà giữ nghiệp vụ kiểm thử được không? |
+| Mốc tính từ phiên 1 | Điều muốn quan sát |
+|---|---|
+| Vài phiên đầu | Có bắt đầu và quay lại phiên được không; K01 chạy trọn luồng tới đâu? |
+| Review tuần 2 | Bạn tự hoàn thiện K01 tới đâu; tìm bug và đổi yêu cầu thế nào; mỗi lát mất bao nhiêu phiên? |
+| Review tuần 4 | Bạn chọn dữ liệu và viết test ở K02 thế nào; giữ nhịp hay thêm phiên ngắn? |
 
-Cách chọn việc cho từng phiên ở [Lịch 4 tuần](/phase-0/lich-14-tuan). Nếu ticket chưa xong, dời việc sau; **không yêu cầu hoàn thành P0 trong 4 tuần**. K05–K06 mở sau hoặc sớm hơn theo bằng chứng. Chưa có cơ sở dự báo tổng số tháng; các con số 1.100 giờ/27 tháng chỉ còn là lịch sử.
+Với 2–3 giờ/tuần, sau bốn tuần xong K01 và đang làm K02 là bình thường; **không yêu cầu hoàn thành P0 trong 4 tuần**. Chưa có cơ sở dự báo tổng số tháng; sau review tuần 4, số phiên thật mỗi ticket mới là căn cứ ước lượng P0. Các con số 1.100 giờ/27 tháng chỉ còn là lịch sử.
 
 ## Nền tảng bắt buộc phải quay lại
 
@@ -46,7 +45,8 @@ Cách chọn việc cho từng phiên ở [Lịch 4 tuần](/phase-0/lich-14-tua
 | K02, K05 | List/Map/Set, equality/hash, generics, độ phức tạp cơ bản | So hai cách tra mã; nêu số lần duyệt và bộ nhớ thêm khi dữ liệu tăng |
 | K04–K06 | Lỗi, I/O, resource, phân rã, build/test/Git | File hỏng không bị ghi đè ngầm; core test được; người khác chạy theo README |
 | P1 | State ownership, lifecycle, scope/cancellation, main thread | Tách test xoay màn hình, process death và tác vụ bị hủy |
-| P2 trước room | Process/thread, byte stream/framing, protocol, hàng đợi và shared state | Lab tách/gộp dữ liệu; vẽ thứ tự hai lệnh; chọn cách giữ state nhất quán; giới hạn message/hàng đợi và xử lý client chậm |
+| S02, trước khi server nhận request thật | Thread, shared state, tính nguyên tử của đọc–kiểm tra–ghi; server xử lý nhiều request cùng lúc | Vẽ thứ tự xen kẽ của hai request cập nhật cùng kho; chọn cách bảo vệ cập nhật ngay ở bản in-memory |
+| P2 trước room | Process, byte stream/framing, protocol, hàng đợi | Lab tách/gộp dữ liệu; giới hạn message/hàng đợi và xử lý client chậm |
 | P2–P3 | SQL, khóa/ràng buộc, transaction/isolation, quyền trên server | Rollback, hai giao dịch cạnh tranh, retry, sai quyền có case thật |
 | P3 | JMM: visibility/atomicity/ordering; timeout, idempotency | Tái hiện một race có kiểm soát; retry sau khi server đã commit nhưng client chưa nhận kết quả; cùng khóa nhưng khác nội dung bị từ chối |
 | P4 | Memory/allocation/GC, profiling, timestep, đo hiệu năng | Baseline và kết quả sau sửa; không lấy con số của bài viết làm thành tích |
@@ -64,6 +64,8 @@ Backend khởi đầu bằng **một framework: Ktor**. Java/Spring vào sau HTT
 ## Phần mở rộng và giới hạn phạm vi
 
 Web chỉ mở khi cần một trang quản trị gọi API thật: một danh sách, một form, xử lý loading/lỗi. Không đặt quota giờ hay bắt học React; xem [Web phụ trợ](/web-phu-tro).
+
+Ở nhịp mặc định 2–3 giờ/tuần, toàn bộ P0–P5 là chặng đường dài. Độ sâu đến từ làm chắc từng chặng và quay lại cùng một nhóm nền tảng ở bối cảnh mới (CLI → Android → server), không phải mở nhiều hướng song song. Muốn nhanh hơn thì tăng tần suất phiên khi việc bắt đầu đã dễ.
 
 Nếu thiếu thời gian, cắt tính năng phụ, framework thứ hai và netcode nâng cao trước. Giữ tính đúng dữ liệu, test/debug, Kotlin/Java, Android lifecycle và cơ chế đồng thời. Auth và bảo vệ shared state bắt đầu khi tính năng có người dùng/kết nối đồng thời, không để tới P3 mới sửa một thiết kế vốn sai từ P2.
 

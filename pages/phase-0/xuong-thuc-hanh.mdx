@@ -2,11 +2,17 @@
 
 **Bắt đầu tại K01 vì bạn đã rõ cú pháp cơ bản.** Cùng một nghiệp vụ sẽ chạy trên CLI, Android, rồi backend. Các ticket dưới đây không có lời giải mẫu; bạn quyết định cách tổ chức code. Tên hàm, class và thư viện không phải tiêu chí chấm.
 
+**Bối cảnh game (bạn chọn ngày 29/10):** hình dung Kho đồ là túi đồ của nhân vật. Mã là item id, tên là tên hiển thị, giới hạn tồn là giới hạn stack; K03 chuyển đồ giữa túi và rương; K05 là nhật ký để truy một lần nhân bản đồ. Tồn âm hay chuyển đồ sinh thêm vật phẩm chính là loại lỗi “dupe” mà game server phải chặn ở [S07](/backend-core). Hợp đồng và tiêu chí của từng ticket không đổi.
+
 ## Cách làm một ticket
 
-Đọc đúng ticket đang làm → ghi 3 ví dụ và điều chưa rõ → tự chọn một phần nhỏ để chạy → kiểm chứng → review → tự làm một thay đổi. Một ticket kéo dài nhiều phiên 30–45 phút; mỗi phiên chỉ chọn một mục tiêu nhỏ và một case để kiểm. Các bước trên trải qua nhiều phiên, không phải checklist làm hết mỗi lần. Hết thời gian được dừng với phần dở; biến thể để sau khi phù hợp. Không đặt hạn một tuần/ticket hoặc chấm tốc độ. Chưa quen test runner thì dùng case chạy tay có kết quả mong đợi; từ K02 chuyển dần sang test tự động, setup được trợ giúp.
+Đọc đúng ticket đang làm → ghi 3 ví dụ và điều chưa rõ → tự chọn một phần nhỏ để chạy → kiểm chứng → review → tự làm một thay đổi. Một ticket kéo dài nhiều phiên 30–45 phút. **Mỗi ticket có danh sách lát:** mỗi lát là một kết quả nhỏ nhìn thấy được, thường 1–3 phiên; một phiên chọn một lát hoặc một phần của lát. Lát là gợi ý thứ tự, không phải cách chia code; bạn được đổi thứ tự nếu có lý do. Hết thời gian được dừng với phần dở. Không đặt hạn một tuần/ticket hoặc chấm tốc độ. Chưa quen test runner thì dùng case chạy tay có kết quả mong đợi; từ K02 chuyển dần sang test tự động, setup được trợ giúp.
+
+Chưa từng hoàn thiện chương trình nào? Đọc [ví dụ đã giải ở bài khác](/phase-0/meta-skills#ví-dụ-đã-giải-sổ-điểm-cli) khoảng 10–15 phút để thấy một chương trình “xong” trông thế nào, đóng lại rồi làm K01.
 
 **Nộp:** code/commit, lệnh chạy, case đã thử, một quyết định có lý do và chỗ đang vướng. AI phản hồi theo [luật hướng dẫn](/he-thong-hoc), tối đa 3 điểm mỗi vòng. Chỉ đọc phần lý thuyết phục vụ ticket hiện tại.
+
+**Sau nghiệm thu — đối chiếu cách viết.** Khi ticket đã được nhận và bản tự làm đã commit, xin mentor 1–2 cách viết khác cho **một** phần cụ thể (parse, tra mã, biểu diễn lỗi). Bạn giải thích khác biệt, chọn giữ hay đổi và vì sao. Bước này mở rộng vốn idiom Kotlin; không đổi trạng thái “tự làm được” vì diễn ra sau khi đã nộp.
 
 **Hợp đồng trước, cách làm sau.** Tiêu chí bắt buộc là hành vi trong đề; phần “biến thể/mở rộng” dùng sau review, không cộng tất cả vào nghiệm thu bản đầu. Nếu chưa rõ hành vi, hỏi để chốt trước khi code. Reviewer không thêm yêu cầu ngầm khi chấm. Các lựa chọn đã chốt được giữ ở ticket sau, trừ khi đề nói rõ thay đổi.
 
@@ -27,6 +33,14 @@
 
 **Bạn tự quyết định:** dữ liệu nào cần nhớ, chỗ nào đọc input, chỗ nào đổi tồn; các lỗi nào cần phân biệt. Trước khi code, chọn 3 case trong bảng và ghi kết quả bạn dự đoán. Không cần phác toàn bộ kiến trúc.
 
+**Lát K01:**
+
+1. **Chạy được:** project in tồn 10, nhận lệnh xem và thoát. Chưa có project thì đây là phiên đầu: tạo, chạy, commit.
+2. **Bản đầu trọn luồng:** nhập và xuất số hợp lệ; chuỗi nhập 5 → xuất 4 → xem → thoát đúng bảng. Đây là mốc “chương trình đầu tiên chạy trọn”, đáng ghi lại.
+3. **Từ chối không đổi tồn:** chữ, 0, số âm, xuất quá tồn, lệnh lạ; EOF kết thúc chương trình.
+4. **Giới hạn:** tồn tối đa bạn chọn, nhập vượt giới hạn, chuỗi số vượt miền biểu diễn.
+5. **Bàn giao:** README có lệnh chạy, một case của riêng bạn, chỉ ra nơi bảo đảm thất bại không đổi tồn → review.
+
 **Nghiệm thu:** chạy được cả chuỗi thao tác trên; thêm ít nhất một case của riêng bạn; chỉ ra được nơi đảm bảo thao tác thất bại không đổi tồn. Case chạy tay được chấp nhận ở ticket này.
 
 **Chỉ mở khi cần:** [4.2 — kiểu và hàm](/phase-0/kotlin-core-1), 4.3 — parse/null; [Meta-skills](/phase-0/meta-skills) khi chưa biết chia bài hoặc thu nhỏ lỗi.
@@ -43,6 +57,13 @@
 
 **Quyết định của bạn:** cách lưu tập mặt hàng, kiểm tra trùng, biểu diễn mặt hàng và lỗi. Nêu hai cách lưu có thể dùng và vì sao chọn một; không bắt dùng `Map`, `sealed class` hay interface chỉ để đủ bài.
 
+**Lát K02:**
+
+1. Thêm và liệt kê; danh mục rỗng hiển thị rõ; mã trùng bị từ chối; hai mã cùng tên giữ tồn riêng.
+2. Nhập/xuất theo mã, giữ mọi case K01; mã không tồn tại không tạo hàng mới.
+3. **Test runner:** mentor được đưa `build.gradle.kts` hoàn chỉnh và một test mẫu chạy được, vì cấu hình build là công cụ chứ không phải nội dung ticket. Xác nhận một assertion cố ý sai làm lệnh test thất bại, rồi tự viết test cho các case bắt buộc.
+4. Sửa tên giữ tồn; thí nghiệm tìm bằng duyệt danh sách và bằng bảng tra; giải thích identity/equality → review.
+
 **Nghiệm thu:** các case trên có test tự động cho logic chính; chạy mà không phải gõ menu. Giải thích identity khác equality bằng chính dữ liệu của mình. Chỉ học `data class`, `equals`/`hashCode` và collection ở mức cần cho quyết định hiện tại.
 
 **Nền tảng cần kiểm:** so cách tìm mã bằng duyệt danh sách và bằng bảng tra trên một bộ dữ liệu nhỏ. Dự đoán công việc tăng thế nào khi số mặt hàng tăng, phân biệt chi phí trung bình với bảo đảm mọi trường hợp. Đây là thí nghiệm chọn cấu trúc dữ liệu, không bắt viết hai bản ứng dụng hoặc benchmark vài mili giây.
@@ -51,16 +72,22 @@
 
 ## K03 — Hai kho, chuyển hàng không mất dữ liệu
 
-**Vấn đề mới:** người dùng chuyển hàng giữa kho A và B. Mỗi kho có giới hạn tổng số đơn vị, chưa có khái niệm ô/stack. Một lần chuyển thành công phải giảm bên gửi và tăng bên nhận đúng lượng. Bị từ chối thì cả hai giữ nguyên. Bài này chạy **một luồng**, chưa giải quyết nhiều request đồng thời.
+**Vấn đề mới:** người dùng chuyển hàng giữa kho A và B, chẳng hạn túi nhân vật và rương. Mỗi kho có giới hạn tổng số đơn vị, chưa có khái niệm ô/stack. Một lần chuyển thành công phải giảm bên gửi và tăng bên nhận đúng lượng. Bị từ chối thì cả hai giữ nguyên. Bài này chạy **một luồng**, chưa giải quyết nhiều request đồng thời.
 
 **Quy tắc bổ sung:** A và B dùng chung danh mục mã/tên của K02; cùng mã luôn là cùng mặt hàng, đổi tên không tạo hàng mới. Mỗi kho có tồn riêng; mã đã đăng ký nhưng chưa có tại kho nhận được tính là tồn 0. Mã chưa đăng ký bị từ chối. Lượng chuyển phải nguyên dương; tổng sức chứa tính trên mọi mã, đồng thời giữ giới hạn từng mã của K01. Quy tắc sức chứa cũng áp dụng khi nhập từ bên ngoài. Chọn sức chứa chứa được dữ liệu ban đầu; phép cộng kiểm tra giới hạn không được tràn số. Đây là hợp đồng nghiệp vụ, không quy định cấu trúc lưu.
 
 | Trạng thái | Thao tác | Mong đợi |
 |---|---|---|
-| A có 8 bút, B có 2; B còn chỗ cho 3 | Chuyển 3 | A còn 5, B có 5 |
+| A có 8 bình máu, B có 2; B còn chỗ cho 3 | Chuyển 3 | A còn 5, B có 5 |
 | Cùng trạng thái ban đầu | Chuyển 4 | Từ chối, A vẫn 8, B vẫn 2 |
 | A không đủ hàng | Chuyển vượt tồn | Cả hai giữ nguyên |
 | A và B là cùng một kho | Chuyển | Từ chối, trạng thái không đổi |
+
+**Lát K03:**
+
+1. Chốt quy tắc và ví dụ; một lần chuyển hợp lệ, tổng từng mã bảo toàn.
+2. Từ chối thiếu hàng, vượt sức chứa (tính mọi mã), cùng kho, lượng sai, mã chưa đăng ký; cả hai kho giữ nguyên.
+3. Test chuỗi thao tác; dự đoán rồi thử hai biến cùng tham chiếu một dữ liệu; nêu giới hạn bản một luồng → review.
 
 **Nghiệm thu tối thiểu:** test thành công và các lỗi đầu vào; tổng hàng từng mã được bảo toàn qua chuỗi thao tác. Thao tác bị từ chối giữ nguyên cả hai kho. Giải thích reference/mutation trên dữ liệu của mình và phạm vi đảm bảo của bản một luồng; không gọi nó là an toàn đồng thời hoặc chống được mọi lỗi bất ngờ.
 
@@ -76,6 +103,13 @@
 
 **Phạm vi lưu:** bản đầy đủ giữ danh mục, tồn riêng của cả A/B và các giới hạn đã chọn; nếu giới hạn nằm trong cấu hình thì README phải nêu cách khôi phục cấu hình đó. Một kho nhỏ là lát đầu để thử, không là lý do bỏ mất kho thứ hai khi nghiệm thu. File đọc được về cú pháp nhưng có mã trùng, tồn âm hoặc vượt sức chứa vẫn là dữ liệu không hợp lệ. Tải thất bại không được áp dụng một phần dữ liệu vào state đang dùng. Có thể dùng thư viện đọc/ghi định dạng; không bắt tự viết parser JSON/CSV.
 
+**Lát K04:**
+
+1. Chọn định dạng; lưu và tải khứ hồi một kho nhỏ có tên Unicode.
+2. Lỗi đọc/ghi: không có file, file rỗng, hỏng cú pháp, ghi thất bại; báo lỗi, không ghi đè bản cũ bằng kho rỗng.
+3. Dữ liệu sai nghĩa: mã trùng, tồn âm, vượt sức chứa; tải thất bại không áp dụng một phần.
+4. Đủ phạm vi: cả A/B và giới hạn; test nghiệp vụ không đọc đĩa; README cách tái hiện lỗi → review.
+
 **Nghiệm thu:** test round-trip và file hỏng; chứng minh lỗi I/O không làm test nghiệp vụ phải đọc ổ đĩa; README giải thích cách tái hiện lỗi và quyết định xử lý. Chỉ học interface khi cần tách I/O, không dựng nhiều tầng trước.
 
 **Biến thể sau bản tối thiểu, có thể dời sau tuần 4:** thêm một trường tùy chọn và đọc được file cũ. Bạn phải chốt giá trị mặc định và kiểm tra nó.
@@ -88,6 +122,12 @@
 
 **Chốt nghĩa của báo cáo:** ghi rõ xem từng kho hay toàn hệ thống. Chuyển A → B làm giảm A, tăng B nhưng không phải nhập thêm hoặc xuất ra khỏi toàn hệ thống. Tồn đầu kỳ không phải một giao dịch nhập mới. Nếu đã làm biến thể điều chỉnh ở K01, ghi riêng loại điều chỉnh và ảnh hưởng của nó tới tồn. Bản tối thiểu ghi lịch sử từ lúc tính năng được bật, không bịa lịch sử cho các thao tác trước đó; nếu chỉ giữ trong phiên thì báo cáo phải nói rõ phạm vi đó. Thử đối chiếu tồn đầu + biến động = tồn cuối cho một mã và cùng phạm vi.
 
+**Lát K05:**
+
+1. Ghi thao tác thành công theo thứ tự; xem biến động một mã.
+2. Báo cáo tổng nhập/xuất theo phạm vi đã chốt; chuyển nội bộ không thành nhập/xuất của toàn hệ thống.
+3. Đối chiếu tồn đầu + biến động = tồn cuối; test các case dưới; nêu chi phí duyệt → review.
+
 **Nghiệm thu:** test không có lịch sử, nhiều mã, nhiều giao dịch cùng mã, nhập rồi xuất hết; đối chiếu một báo cáo tính tay với kết quả code. Nêu chi phí duyệt và vùng dữ liệu tạm của cách làm; chưa benchmark nếu chưa có câu hỏi hiệu năng.
 
 **Biến thể:** thêm lọc theo loại thao tác mà không sao chép toàn bộ xử lý báo cáo.
@@ -98,7 +138,13 @@
 
 **Yêu cầu:** chạy bộ test nghiệp vụ độc lập với CLI; một đoạn gọi thử khác có thể dùng core mà không giả lập bàn phím. Mô tả dữ liệu UI cần để hiển thị thành công, rỗng và lỗi. Không cần viết Android ngay trong ticket này.
 
-**Nghiệm thu:** bản clone mới chạy được theo README; test cũ xanh; tự xử lý một yêu cầu thay đổi do reviewer chọn sau khi nộp. Đọc [Kotlin & Java nền tảng](/kotlin-java-core) để chọn một phần nhỏ viết lại bằng Java và so hành vi, không rewrite cả ứng dụng.
+**Lát K06:**
+
+1. Liệt kê chỗ core còn phụ thuộc console/file; tách để bộ test chạy không cần CLI.
+2. Một đoạn gọi thử khác dùng core; mô tả dữ liệu UI cần cho thành công/rỗng/lỗi.
+3. Clone mới theo README; xử lý yêu cầu đổi của reviewer → [cổng P0](/phase-0/tot-nghiep).
+
+**Nghiệm thu:** bản clone mới chạy được theo README; test cũ xanh; tự xử lý một yêu cầu thay đổi do reviewer chọn sau khi nộp. [J01](/kotlin-java-core) (làm sau K04) đã có một phần nhỏ viết lại bằng Java và so hành vi, không rewrite cả ứng dụng.
 
 **Đầu ra:** một phiên bản Kho đồ CLI/core có lệnh chạy/test và giới hạn rõ, có thể đưa vào [chặng Android](/phase-1). Có thể đặt tag `v1.0` để lưu mốc; tag không phải bằng chứng năng lực. Không cần chờ đủ 14 tuần.
 

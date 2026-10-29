@@ -15,7 +15,7 @@ Trên JVM, phép cộng/trừ/nhân số nguyên thông thường không tự n�
 
 **Tách ba giới hạn:** kiểu số biểu diễn được bao nhiêu; nghiệp vụ cho phép bao nhiêu; phép tính trung gian có vừa kiểu đang dùng không. `Long` tăng miền biểu diễn nhưng không thay validation và không loại hết overflow. JVM có các phép `Math.addExact`, `subtractExact`, `multiplyExact` để báo tràn bằng exception; chọn chúng hoặc kiểm tra biên phù hợp với hợp đồng lỗi. [JDK — Math](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Math.html)
 
-Tồn kho hoặc vàng nguyên có thể dùng số nguyên với đơn vị rõ ràng. Nếu có phần lẻ cố định, biểu diễn bằng đơn vị nhỏ nhất là một lựa chọn; vẫn phải chốt quy tắc làm tròn và giới hạn. `Double` không biểu diễn chính xác mọi số thập phân, nên không phù hợp khi hợp đồng đòi phép tính thập phân chính xác. Với thang đo thập phân cần linh hoạt, `BigDecimal` là lựa chọn khác; không có một kiểu đúng cho mọi miền nghiệp vụ. [Kotlin — Floating-point types](https://kotlinlang.org/docs/numbers.html#floating-point-types), [JDK — BigDecimal](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html)
+Tồn kho hoặc vàng nguyên có thể dùng số nguyên với đơn vị rõ ràng. Nếu có phần lẻ cố định, biểu diễn bằng đơn vị nhỏ nhất là một lựa chọn; vẫn phải chốt quy tắc làm tròn và giới hạn. `Double` không biểu diễn chính xác mọi số thập phân, nên không phù hợp khi hợp đồng đòi phép tính thập phân chính xác. Với thang đo thập phân cần linh hoạt, `BigDecimal` là lựa chọn khác; không có một kiểu đúng cho mọi miền nghiệp vụ. Lưu ý `BigDecimal("2.0") == BigDecimal("2.00")` là `false` vì `equals` so cả scale; so giá trị bằng `compareTo`, và cẩn thận khi dùng `BigDecimal` làm key của map. [Kotlin — Floating-point types](https://kotlinlang.org/docs/numbers.html#floating-point-types), [JDK — BigDecimal](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/math/BigDecimal.html)
 
 **Tự kiểm gần ticket:** chọn một giá trị sát giới hạn đã khai báo, một phép tính có trung gian vượt giới hạn và một input vượt miền kiểu. Dự đoán rồi chạy; khi lệnh bị từ chối, kiểm dữ liệu trước/sau. Không cần làm codec để hiểu các case này.
 
@@ -25,7 +25,7 @@ Một byte có 8 bit; hai chữ số hex biểu diễn đúng 8 bit. Kotlin `Byt
 
 | Phép | Tác dụng |
 |---|---|
-| `shl` | Dịch trái; các bit vượt độ rộng bị mất |
+| `shl` | Dịch trái; các bit vượt độ rộng bị mất. Số bước dịch chỉ lấy 5 bit thấp với `Int` (6 bit với `Long`), nên `1 shl 32 == 1` chứ không phải 0 ([Int.shl](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/shl.html)) |
 | `shr` | Dịch phải, điền bit dấu |
 | `ushr` | Dịch phải, điền bit 0 |
 | `and` | Giữ các bit được cả hai toán hạng bật; dùng mask |

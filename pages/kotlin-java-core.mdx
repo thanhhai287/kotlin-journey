@@ -20,14 +20,14 @@ Mục tiêu là viết và debug Kotlin/Java cho **game server và ứng dụng 
 
 | Bài / lúc mở | Yêu cầu tự làm | Nghiệm thu |
 |---|---|---|
-| **J01 — sau K02, trong P0** | Viết một hành vi nhỏ đã hiểu bằng Java: chẳng hạn kiểm tra một lệnh nhập/xuất | Chạy cùng case với Kotlin; tự giải thích kiểu, null/lỗi; tự sửa một điều kiện |
+| **J01 — sau K04, trong P0** | Viết một hành vi nhỏ đã hiểu bằng Java: chẳng hạn kiểm tra một lệnh nhập/xuất | Chạy cùng case với Kotlin; tự giải thích kiểu, null/lỗi; tự sửa một điều kiện |
 | **J02 — P1** | Model một phần Kho đồ bằng Java, dùng collection; kiểm tra object cùng dữ liệu, trùng mã và đổi tên | Test equality/hash và mutation; nêu hành vi khi dùng dữ liệu làm key; đọc stack trace của một lỗi thật hoặc lab có lỗi đã công bố |
 | **J03 — P1** | Kotlin gọi một API Java nhỏ có khả năng trả null; thêm một thao tác đọc resource trong bài riêng | Phân biệt platform type với nullable; đối chiếu `use`/`try-with-resources`; test đường thành công/thất bại và đóng resource |
 | **J04 — P3, sau S03** | Tự làm một endpoint Java/Spring có cùng hợp đồng với endpoint Kotlin, gọi dữ liệu SQL; sửa một yêu cầu mới | Test hợp đồng và lỗi; giải thích DI/transaction boundary; không chuyển đổi tự động hoặc viết lại toàn server |
 
 ### Bắt đầu J01
 
-Sau khi K02 đã ổn, chọn **một** hành vi nhỏ bạn đã tự viết bằng Kotlin, mô tả input/output và case lỗi. Viết lại bằng Java trong bài tập riêng, chạy cùng tập ví dụ. Không dùng bộ chuyển đổi tự động cho lượt học này.
+Sau khi K04 đã ổn (để chương trình Kotlin đã vững trước khi thêm toolchain thứ hai), chọn **một** hành vi nhỏ bạn đã tự viết bằng Kotlin, mô tả input/output và case lỗi. Viết lại bằng Java trong bài tập riêng, chạy cùng tập ví dụ. Không dùng bộ chuyển đổi tự động cho lượt học này.
 
 Nộp: hai cách biểu diễn kiểu/lỗi, một chỗ khác biệt về null hoặc equality và lý do bạn chọn cách nào. Nếu chưa biết cú pháp Java, tra docs và hỏi ví dụ nhỏ ở domain khác; không học lại toàn bộ chương trình Kotlin bằng Java.
 
@@ -50,7 +50,7 @@ Không thêm toàn bộ bảng này vào J01. Dùng từng hàng đúng mốc; b
 
 **Bắt buộc:** tự giải thích bằng một trường hợp đúng và một trường hợp lỗi; biết nơi áp dụng; sửa được một biến thể. Ví dụ với hash, mục tiêu là hiểu tính nhất quán giữa equality và lookup, không thuộc toàn bộ mã nguồn hash table.
 
-**Mốc bắt buộc tiếp theo:** generic types và chi phí collections ở K05; thread, shared state và ownership trước S05; visibility/atomicity/ordering ở P3; allocation/GC và profiling cơ bản ở P4. Mỗi mốc cần một dự đoán, thí nghiệm và lời giải thích; không đợi vô tình gặp bug.
+**Mốc bắt buộc tiếp theo:** generic types và chi phí collections ở K05; thread, shared state và ownership trước S02 (server nhận nhiều request cùng lúc ngay từ bản in-memory); visibility/atomicity/ordering ở P3; allocation/GC và profiling cơ bản ở P4. Mỗi mốc cần một dự đoán, thí nghiệm và lời giải thích; không đợi vô tình gặp bug.
 
 **Mở rộng khi có nhu cầu:** bytecode, class loading, JIT/GC chi tiết và internals framework. Chọn một câu hỏi kiểm chứng được trên app/server; không đọc hết JVM trước API đầu tiên.
 

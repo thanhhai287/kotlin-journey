@@ -4,7 +4,8 @@ Trang tra cứu cho Kotlin/Java, server và Android. **Không phải một khoá
 
 | Khi cần | Mở phần | Điểm dừng của lần học đầu |
 |---|---|---|
-| P2, trước room có hai client | S1, S3, phần ownership ở S6 | Phân biệt process/thread, thử byte stream, giữ một bất biến khi hai lệnh tới gần nhau |
+| P2, trước S02 (API cập nhật) | Phần ownership ở S6 | Giữ một bất biến khi hai request cập nhật tới gần nhau trên bản in-memory |
+| P2, trước room có hai client | S1, S3 | Phân biệt process/thread, thử byte stream |
 | P3, cạnh retry và transaction | S4, S6 | Giải thích trạng thái sau lỗi; chứng minh cơ chế bảo vệ bằng case cạnh tranh |
 | P4, có vấn đề hiệu năng thật | S2, S5; đào sâu S1/S3 | Giàn đo, giả thuyết, một thay đổi và số đo kiểm lại |
 | Android có lỗi lifecycle hoặc giật | [Android internals](/tham-khao/android-internals) | Đối chiếu runtime và lifecycle của thiết bị, không bê cờ HotSpot sang ART |

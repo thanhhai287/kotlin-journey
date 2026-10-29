@@ -1,6 +1,6 @@
 # Concurrency nhập môn — ownership, race và cancellation
 
-**Mở đúng lúc cần.** P1 cần scope/cancellation trước tác vụ bất đồng bộ Android; P2 cần thread, shared state và ownership trước room nhiều client; P3 đào sâu JMM. Lab này không là cổng P0 hoặc nghĩa vụ thêm trong [lịch 4 tuần](/phase-0/lich-14-tuan). K03 hiện tại chỉ yêu cầu nghiệp vụ **một luồng**.
+**Mở đúng lúc cần.** P1 cần scope/cancellation trước tác vụ bất đồng bộ Android; P2 cần thread, shared state và ownership **trước S02**, vì server nhận nhiều request cùng lúc ngay từ bản in-memory, chứ không đợi tới room nhiều client; P3 đào sâu JMM. Lab này không là cổng P0 hoặc nghĩa vụ thêm trong [lịch 4 tuần](/phase-0/lich-14-tuan). K03 hiện tại chỉ yêu cầu nghiệp vụ **một luồng**.
 
 Tiên quyết: hiểu hàm, reference/mutation, đọc stack trace và chạy test nhỏ. Không cần học hết interface, game loop hoặc JMM trước khi nhận giải thích đầu tiên. Chọn một lab phù hợp; không triển khai cả ba cách đồng bộ trong một buổi.
 
@@ -34,7 +34,7 @@ Hai lần tăng nhưng chỉ còn 42. Bảng này minh hoạ lost update; nó kh
 | `synchronized` cùng monitor | Vùng đọc/kiểm tra/ghi trong critical section | Mọi đường truy cập liên quan phải tuân theo cùng khóa; tránh I/O dài và suspension trong vùng khóa |
 | `AtomicInteger.incrementAndGet()` | Một phép tăng của một biến | Hai biến atomic không tự tạo transaction; `get()` rồi `set()` vẫn là hai thao tác |
 | Một owner xử lý lệnh tuần tự | State chỉ do owner cập nhật qua protocol rõ ràng | Không để reference mutable thoát ra ngoài; cần giới hạn hàng đợi, xử lý lỗi và shutdown |
-| Coroutine `Mutex` | Vùng bảo vệ trong code coroutine | Chờ khóa bằng suspension; vẫn cần cùng khóa và ranh giới critical section đúng |
+| Coroutine `Mutex` | Vùng bảo vệ trong code coroutine | Chờ khóa bằng suspension; vẫn cần cùng khóa và ranh giới critical section đúng. Không reentrant: khác `synchronized`, coroutine đang giữ khóa mà khóa lại lần nữa sẽ chờ mãi ([Mutex](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.sync/-mutex/)) |
 
 Đây là các lựa chọn, không phải thứ tự “cũ → mới”. Chuyển nhiều tài khoản còn phải xét bất biến của cả thao tác; persistence/transaction là một tầng khác với thread safety.
 
@@ -67,7 +67,7 @@ Structured concurrency cần được dạy ngay khi mở coroutine: tác vụ c
 
 `cancel()` gửi yêu cầu hủy, không cưỡng bức dừng CPU hoặc tự rollback side effect. Những API như `delay` hỗ trợ kiểm tra cancellation. Code tính toán không suspend vẫn có thể hợp tác qua `ensureActive()` hoặc `isActive`; `yield()` còn cho công việc khác cơ hội chạy. Vì vậy “chỉ dừng ở điểm suspend” là mô hình thiếu. [ensureActive API](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/ensure-active.html)
 
-Một hàm được đánh dấu `suspend` không đồng nghĩa mọi lời gọi của nó đều suspend hoặc kiểm tra hủy. Blocking I/O cũng không tự bị ngắt bởi `cancel()`; phải dùng API hỗ trợ hủy hoặc cơ chế phù hợp với thư viện. Dùng `cancelAndJoin()` khi cần yêu cầu hủy rồi chờ kết thúc; cleanup có thể chạy trong `finally`. Nếu bắt `CancellationException`, truyền nó ra ngoài sau phần xử lý cần thiết. [Cancellation and timeouts](https://kotlinlang.org/docs/cancellation-and-timeouts.html)
+Một hàm được đánh dấu `suspend` không đồng nghĩa mọi lời gọi của nó đều suspend hoặc kiểm tra hủy. Blocking I/O cũng không tự bị ngắt bởi `cancel()`; phải dùng API hỗ trợ hủy hoặc cơ chế phù hợp với thư viện. Dùng `cancelAndJoin()` khi cần yêu cầu hủy rồi chờ kết thúc; cleanup có thể chạy trong `finally`. Nhưng trong coroutine đã bị hủy, mọi lời gọi suspend trong `finally` ném ngay `CancellationException`, nên cleanup cần suspend (lưu lần cuối, đóng kết nối) phải đặt trong `withContext(NonCancellable)` ([NonCancellable](https://kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-non-cancellable/)). Nếu bắt `CancellationException`, kể cả gián tiếp qua `catch (e: Exception)`, truyền nó ra ngoài sau phần xử lý cần thiết. [Cancellation and timeouts](https://kotlinlang.org/docs/cancellation-and-timeouts.html)
 
 **Lab theo vòng đời:** tạo một tác vụ nhỏ thuộc scope, yêu cầu hủy, quan sát khi nào hoàn tất và cleanup có chạy không. Biến thể: một đoạn tính toán không có `delay` nhưng có kiểm tra hủy. Tiêu chí là giải thích và kiểm chứng quyền sở hữu, không phải cố đoán thứ tự mọi dòng log từ nhiều coroutine.
 

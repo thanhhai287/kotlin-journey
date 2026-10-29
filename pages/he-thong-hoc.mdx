@@ -4,20 +4,24 @@
 
 Trang này thay các luật cũ về hỏi ngược mặc định, chờ đủ 30 phút, cấm giải thích trong cả tuần và hoàn thành giáo trình theo lịch. Luật áp dụng cho bài học của bạn; sửa tài liệu và công cụ của site vẫn là công việc bình thường.
 
+**Tóm tắt cho bạn:** mỗi phiên làm một lát của ticket đang mở. Hỏi ngay khi thiếu kiến thức, AI giải thích cơ chế trực tiếp. Code của bài đang học do bạn viết; khi bí, nhận gợi ý tăng dần H0–H3. Review chỉ ra tối đa 3 vấn đề có bằng chứng, bạn tự sửa. Ghi 3 dòng LÀM/HIỂU/TIẾP cuối phiên. Phần còn lại của trang là hợp đồng chi tiết cho mentor.
+
 ## Một buổi có sản phẩm
 
-Chọn một ticket trong [Xưởng thực hành](/phase-0/xuong-thuc-hanh). Không đọc hết cả module trước khi bắt đầu.
+Chọn một lát của ticket trong [Xưởng thực hành](/phase-0/xuong-thuc-hanh). Không đọc hết cả module trước khi bắt đầu.
 
 | Ví dụ phiên 30 phút | Làm gì | Để lại gì |
 |---|---|---|
-| 3 phút | Đọc dòng hẹn từ phiên trước, chọn một hành vi nhỏ và cách kiểm | Một mục tiêu vừa phiên; chưa cần hoàn tất ticket |
-| 20 phút | Tự làm, chạy sớm; hỏi/tra đúng cơ chế đang thiếu | Một thay đổi nhỏ, một case hoặc lỗi tái hiện được |
+| 5 phút | Đọc dòng TIẾP của phiên trước. **Khởi động gợi nhớ:** không nhìn code cũ, viết lại một hàm nhỏ đã làm hoặc dự đoán kết quả một case cũ, rồi so với bản thật | Biết mình còn nhớ gì; chọn một hành vi nhỏ và cách kiểm cho phiên này |
+| 18 phút | Tự làm, chạy sớm; hỏi/tra đúng cơ chế đang thiếu | Một thay đổi nhỏ, một case hoặc lỗi tái hiện được |
 | 5 phút | Chạy case liên quan, xem kết quả hoặc nhận một nhận xét | Biết điều đã đúng và điều còn vướng |
 | 2 phút | Ghi chỗ dừng và thao tác tiếp theo | Tối đa 3 dòng để dễ quay lại |
 
-**Mặc định thử 30–45 phút/phiên; ngày bận chọn 15 phút hoặc nghỉ.** Không phải hoàn thành một ticket trong phiên đó. Hết thời gian thì được dừng với bản dở và ghi bước tiếp; không nối thêm bài, biến thể hay review dài để được coi là xong buổi. **Mỗi tối tối đa 2 giờ, chỉ khi thực sự cần**, tính cả nghỉ và review. Muốn tiếp tục việc đang làm thì nghỉ trước, chọn một mục tiêu nhỏ và chỉ thêm phiên trong giới hạn đó. Hết 2 giờ thì ghi chỗ dở để nối tiếp tối khác; không tự kéo dài để hoàn thành ticket.
+Khởi động gợi nhớ chỉ dùng phần đã học, sai cũng không sao: chỗ sai cho biết nên ôn gì. Ở phiên đầu tiên chưa có gì để gợi nhớ thì bỏ qua. Ngày bận, phiên 15 phút có thể chỉ gồm khởi động gợi nhớ và chạy lại một case.
 
-Ưu tiên phần lớn thời gian cho làm/chạy/debug; giải thích theo một câu hỏi, một ví dụ, rồi thử ngay. Khoảng 5–10 phút cho một lượt đọc/xem là mốc nhắc quay lại thao tác, không cắt ngang lời giải thích cần thiết hoặc cấm hỏi thêm. Các khoảng thời gian là lựa chọn thử theo phản hồi của bạn, chưa phải thời lượng tối ưu đã kiểm chứng. Xem [nhịp bốn tuần](/phase-0/lich-14-tuan).
+Thời lượng và trần mỗi tối (tối đa 2 giờ, chỉ khi thực sự cần, gồm cả nghỉ và review) được ghi một chỗ duy nhất ở [nhịp học](/phase-0/lich-14-tuan). Không phải xong một ticket trong một phiên; hết giờ được dừng với bản dở, không nối thêm bài để được coi là xong buổi.
+
+Ưu tiên phần lớn thời gian cho làm/chạy/debug; giải thích theo một câu hỏi, một ví dụ, rồi thử ngay. Khoảng 5–10 phút cho một lượt đọc/xem là mốc nhắc quay lại thao tác, không cắt ngang lời giải thích cần thiết hoặc cấm hỏi thêm.
 
 **Một ticket đang làm, một khoảng trống kiến thức cần lấp.** Không mở thêm Error Zoo, Docs Quest và kata cùng lúc. Bài phụ chỉ thay thế phần luyện tương ứng trong buổi, không cộng thêm nghĩa vụ.
 
@@ -48,7 +52,7 @@ Không có thời gian chờ bắt buộc. Bạn được hỏi ngay khi thiếu
 | H0 — tự làm | Chỉ đề và tiêu chí | Chọn cách làm, thử và ghi quan sát |
 | H1 — định hướng | Chỉ một chỗ cần quan sát hoặc một case phản ví dụ | Dự đoán rồi chạy case đó |
 | H2 — cơ chế | Giải thích nguyên nhân có thể xảy ra, phân biệt giả thuyết với kết luận | Dùng log, debugger hoặc test để kiểm tra |
-| H3 — minh hoạ | Ví dụ tối thiểu ở domain khác, hoặc cùng phân tích một bước nhỏ | Đóng ví dụ, tự triển khai lại và làm biến thể |
+| H3 — minh hoạ | Ví dụ hoàn chỉnh ngắn (khoảng 10 dòng) cho đúng cơ chế đang hỏi, ở domain khác; hoặc cùng phân tích một bước nhỏ | Đóng ví dụ, tự triển khai lại và làm biến thể |
 
 Bắt đầu ở mức bạn cần; không bắt đi đủ thang. Ghi mức trợ giúp để chọn bài ôn sau, không dùng để phạt. Nếu xem code mà vẫn không hiểu, giảm phạm vi bài trước khi tăng độ dài lời giải.
 
@@ -88,8 +92,15 @@ Trục Kotlin/Java cần đạt mức chuyển giao, không dừng ở nhớ cú
 - Hai buổi không có hành vi mới chạy được: cắt ticket nhỏ hơn và kiểm tra cách hướng dẫn. Hai buổi không có ý tưởng kiểm chứng: cùng thiết kế một thí nghiệm.
 - Mất hứng: ghi điểm nào gây chán, chọn một tính năng nhìn thấy được trong cùng sản phẩm. Cảm giác là tín hiệu cần điều chỉnh, không phải bằng chứng bạn thiếu kỷ luật.
 - Ngày bận: phiên 15 phút dự đoán/chạy một case, tái hiện lỗi hoặc nối tiếp một phần đang dở. Nghỉ được; không có nợ giờ hay nghĩa vụ commit mỗi ngày.
+- Bắt đầu phiên đã thành việc dễ: muốn tiến nhanh hơn thì thêm phiên ngắn (tần suất) trước khi kéo dài phiên. Quyết định ở review tuần 2/4, không tự tăng giữa chừng.
 
-Gợi ý khởi động: bốn phiên 30–45 phút/tuần, khoảng 2–3 giờ; review 10–15 phút thay phần cuối một phiên. Đây là đề xuất thử, không là lịch người học đã xác nhận hoặc mức tối thiểu. Nếu muốn dùng thêm quỹ 9–12 giờ, thêm phiên tùy thời gian và hứng thú, không kéo dài phiên để đủ giờ. Review tuần 2 và 4 xem cả khả năng bắt đầu/quay lại, cảm giác chán và mức tự làm; không tự tăng tải chỉ vì đã qua một tuần.
+Số phiên gợi ý, review tuần 2/4 và quy tắc thêm phiên nằm ở [nhịp học](/phase-0/lich-14-tuan).
+
+## Khi nào sửa giáo án
+
+Giáo án chỉ nên đổi khi có **bằng chứng mới**: code, test, lời giải thích, hoặc phản hồi về trải nghiệm học (chán, quá tải, khó bố trí). Mốc mặc định là review tuần 2 và 4. Khi được yêu cầu thiết kế lại mà chưa có bằng chứng mới từ các phiên học, mentor ghi yêu cầu vào mục chờ review, đề nghị một phiên 15 phút trên lát đang mở trước, rồi để người học quyết định. Không viết thêm đề cho các chặng xa (P2–P5) trước khi cổng P0 có bằng chứng.
+
+**Nếu 7 ngày không có phiên nào được ghi**, lần trao đổi tiếp theo bắt đầu bằng một phiên 15 phút làm cùng trên lát đang mở: mở project, chạy lại case cuối, làm một bước nhỏ. Không bắt đầu bằng việc xem lại kế hoạch, không trách, không cộng bài bù. Lý do: lịch sử từ 08/2026 cho thấy kế hoạch được viết lại nhiều lần trong khi chưa có phiên code nào được ghi ([đánh giá 29/10](/danh-gia-hieu-qua)).
 
 ## Đo tiến bộ ít nhưng đúng
 
@@ -111,15 +122,18 @@ Từ khi một phần đã được kiểm tra độc lập, có thể dùng AI 
 
 [Cơ sở thiết kế](/co-so-thiet-ke) ghi phạm vi bằng chứng giáo dục và giới hạn áp dụng. Trong chương trình này, mentor được minh hoạ một cơ chế bằng bài khác rồi giảm trợ giúp; người học không phải tự phát minh lại khái niệm trước khi được giải thích.
 
-Ở một buổi sau, chọn một tình huống cũ, dự đoán trước khi xem code rồi chạy kiểm chứng. Khi hiểu, chuyển sang thay điều kiện. Không cần viết lại toàn project hoặc ôn mọi chủ đề mỗi ngày; bài ôn chiếm một phần giờ đã có trong lịch.
+Ôn lại diễn ra ở **khởi động gợi nhớ** đầu phiên: chọn một tình huống cũ, ưu tiên thứ đã học cách đây vài phiên hoặc từng ghi ở dòng HIỂU. Không nhìn code, dự đoán hoặc viết lại, rồi chạy kiểm chứng. Khi đã nhớ chắc, chuyển sang thay điều kiện. Không cần viết lại toàn project hoặc ôn mọi chủ đề mỗi ngày; bài ôn chiếm một phần giờ đã có trong phiên.
+
+Sau khi một ticket được nghiệm thu, mentor có thể cho xem 1–2 cách viết khác của một phần cụ thể để người học so sánh và chọn ([đối chiếu sau nghiệm thu](/phase-0/xuong-thuc-hanh#cách-làm-một-ticket)). Vì bản tự làm đã được nộp, việc này không làm mất bằng chứng tự làm.
 
 ## Prompt bắt đầu buổi học
 
 ```text
 Tôi đã rõ cú pháp cơ bản, đang rèn Kotlin/Java cho game server và app Android.
 Web chỉ phụ trợ. Ticket hiện tại: ...; bản tôi đã làm: ...
-Hôm nay tôi có ... phút (mặc định thử 30 phút).
-Chỉ giao/tiếp tục một mục tiêu nhỏ, nêu ích lợi và cách kiểm, không đưa lời giải.
+Hôm nay tôi có ... phút (mặc định thử 30 phút). Dòng TIẾP lần trước: ...
+Mở đầu bằng một câu gợi nhớ ngắn từ phần tôi đã làm, rồi giao/tiếp tục một lát nhỏ.
+Nêu ích lợi và cách kiểm, không đưa lời giải.
 Khi tôi hỏi kiến thức, giải thích cơ chế trực tiếp và vừa đủ.
 Khi review, nêu bằng chứng và lý do, để tôi tự sửa.
 Chỉ hỏi một câu kiểm tra hiểu mỗi lượt; không thêm bài khi hết phiên.

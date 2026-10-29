@@ -54,7 +54,7 @@ Trên JVM, phần lớn type arguments bị xóa lúc chạy: không thể kiể
 
 Input sai là một tình huống dự kiến của CLI. `require` có thể bảo vệ hàm nội bộ nhưng không tự biến lỗi thành thông báo thân thiện hoặc giữ vòng lặp chạy; nơi gọi phải có hợp đồng phù hợp. Không dùng catch quanh cả chương trình để mọi lỗi đều thành “input sai”.
 
-`runCatching` bắt mọi `Throwable`, gồm cả `CancellationException` và các `Error` của JVM. Trong coroutine, không chuyển cancellation thành thất bại nghiệp vụ rồi tiếp tục: nếu bắt trúng thì truyền cancellation ra ngoài. Chọn phạm vi bắt hẹp và loại lỗi có thể xử lý. `getOrNull()` có thể hợp lệ nếu chủ đích là gộp các thất bại thành “không có”, nhưng sẽ làm mất nguyên nhân nếu sau đó bạn cần chẩn đoán. [runCatching API](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/run-catching.html), [Coroutine cancellation](https://kotlinlang.org/docs/cancellation-and-timeouts.html)
+`runCatching` bắt mọi `Throwable`, gồm cả `CancellationException` và các `Error` của JVM. `catch (e: Exception)` cũng bắt cancellation, vì `CancellationException` là lớp con của `IllegalStateException`. Trong coroutine, không chuyển cancellation thành thất bại nghiệp vụ rồi tiếp tục: bắt loại lỗi cụ thể như `IOException`, và nếu bắt trúng cancellation thì truyền nó ra ngoài. Chọn phạm vi bắt hẹp và loại lỗi có thể xử lý. `getOrNull()` có thể hợp lệ nếu chủ đích là gộp các thất bại thành “không có”, nhưng sẽ làm mất nguyên nhân nếu sau đó bạn cần chẩn đoán. [runCatching API](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/run-catching.html), [Coroutine cancellation](https://kotlinlang.org/docs/cancellation-and-timeouts.html)
 
 ### Đóng resource và giữ dữ liệu
 

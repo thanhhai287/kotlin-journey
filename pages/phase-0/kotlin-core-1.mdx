@@ -47,6 +47,7 @@ Hàm có default/named arguments giúp lời gọi rõ hơn. Chọn `val` khi kh
 | `?:` | Dùng vế phải khi vế trái null; vế phải có thể trả giá trị hoặc thoát sớm |
 | `!!` | Kiểm tra lúc chạy và ném NPE nếu null; cần bằng chứng vì sao hợp đồng cho phép |
 | `toIntOrNull()` | Trả null khi chuỗi không biểu diễn được `Int`, kể cả ngoài miền giá trị |
+| `readln()` / `readlnOrNull()` | Khi hết input (EOF), `readln()` ném exception còn `readlnOrNull()` trả null; chọn theo cách bạn muốn kết thúc vòng lặp ([readln](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.io/readln.html)) |
 | `lateinit` | Hoãn khởi tạo; đọc trước khi gán gây `UninitializedPropertyAccessException` |
 
 [Null safety](https://kotlinlang.org/docs/null-safety.html) mô tả các công cụ và những đường vẫn có thể gây lỗi. **Smart cast chỉ hoạt động khi compiler chứng minh giá trị không đổi giữa kiểm tra và sử dụng**; property mutable hoặc getter tùy biến không có bảo đảm đó. [Type checks and casts](https://kotlinlang.org/docs/typecasts.html#smart-cast-prerequisites)

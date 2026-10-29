@@ -1,12 +1,16 @@
 {
   "xuong-thuc-hanh": "Code ngay — K01 đến K06",
-  "index": "Mục tiêu chặng Kotlin",
-  "lich-14-tuan": "Bốn tuần đầu — 9–12h/tuần",
-  "projects": "Sản phẩm & phạm vi",
+  "lich-14-tuan": "Nhịp học — 4 tuần thử",
+  "meta-skills": "Phân rã, debug, test, ví dụ đã giải",
   "tot-nghiep": "Cổng năng lực",
+  "index": "Mục tiêu chặng Kotlin",
+  "projects": "Sản phẩm & phạm vi",
+  "-- tra-cuu": {
+    "type": "separator",
+    "title": "Tra cứu & bài phụ"
+  },
   "kotlin-core-1": "Tra cứu Kotlin I",
   "kotlin-core-2": "Tra cứu Kotlin II",
-  "meta-skills": "Phân rã, debug, test",
   "bai-tap": "Bài phụ khi cần",
   "concurrency-nhap-mon": "Lab concurrency",
   "byte-bit-so": "Lab byte, bit & số",

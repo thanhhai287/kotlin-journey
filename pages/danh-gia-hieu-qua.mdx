@@ -1,0 +1,90 @@
+# Đánh giá hiệu quả — 29/10/2026
+
+**Kết luận:** nội dung bài học tốt, đủ để học sâu; điểm yếu nằm ở **khoảng cách giữa kế hoạch và phiên code**. Từ 08/2026, giáo án được thiết kế lại nhiều lần nhưng chưa có phiên code nào được ghi. Vì vậy lần này **không đổi hướng và không thêm khoá học**. Các cải tiến đều nhằm làm phiên đầu tiên dễ bắt đầu hơn, mỗi phiên có kết quả rõ hơn, và bài đã học được nhớ lâu hơn.
+
+Đây là đánh giá **chương trình và cách học**, chưa phải đánh giá năng lực lập trình của bạn: chưa có code, test hay bản chạy để chấm. Không có ticket nào được đánh dấu hoàn thành từ lần sửa này.
+
+## Bằng chứng đã kiểm tra
+
+| Nguồn | Quan sát |
+|---|---|
+| [Tiến độ](/progress) | Tính tới 29/10, mọi ticket vẫn “chưa ghi nhận”, 13 ngày sau lần chỉnh 16/10 |
+| Thư mục học cũ trên máy (lập 01/08/2026) | Chỉ có kế hoạch, mẫu và nhật ký một dòng “0h”; thư mục project/kata trống; bài test đầu vào chưa làm |
+| Tìm file `.kt`/`.java` ở các vị trí dự án thường dùng | Không thấy code bài học. Máy đã cài IntelliJ IDEA và Android Studio, nên môi trường không phải rào cản chính |
+| Bản lưu tiến độ trước 14/10 | Ghi nhận “5 tuần trượt ở 0h” trước 05/09 và một tuần không commit giữa tháng 9 |
+| Lịch sử Git của site | 10 lần sửa giáo án từ 02/08 đến 16/10; khoảng 294 KB trên hơn 30 trang; quy tắc nhịp học lặp ở 11 trang |
+| Hai lượt rà soát độc lập | Một lượt về sư phạm và hiệu quả; một lượt kiểm kỹ thuật 15 trang bài học/tra cứu, đối chiếu tài liệu chính thức |
+
+Có thể bạn đã học qua Android 007 hoặc ở nơi khác mà không ghi vào đây. Kết luận dưới đây chỉ nói về **phần có bằng chứng**, không suy ra bạn thiếu kỷ luật.
+
+## Đánh giá theo từng mặt
+
+| Mặt | Đánh giá | Mức |
+|---|---|---|
+| Định hướng và yêu cầu | Kotlin/Java làm nền, Android và game server là hai nơi áp dụng, web phụ trợ: rõ và nhất quán. Phạm vi P0–P5 rộng so với 2–3 giờ/tuần mặc định, cần chấp nhận đây là đường dài | Tốt |
+| Đề bài K01–K06, A01–A07, S01–S07 | Hợp đồng theo hành vi, bất biến rõ, case lỗi sát thực tế (EOF, tràn số, tải dở dang, process death, timeout sau commit, sai quyền). Thiếu các bước nhỏ, nên mốc “xong” đến muộn | Rất tốt |
+| Luật mentor | Giải thích trực tiếp, gợi ý H0–H3, review có bằng chứng, tách luyện với kiểm tra. Thiếu một ví dụ hoàn chỉnh cho người chưa từng làm xong chương trình, và thiếu bước mở rộng idiom | Tốt |
+| Khoa học học tập | Có biến thể, cách quãng, câu hỏi giải thích. **Gợi nhớ** (nguồn N15 xếp mức Strong) chỉ xuất hiện rải rác | Trung bình |
+| Bắt đầu và duy trì phiên | Mọi quy tắc điều chỉnh đều giả định đã có phiên; không có cơ chế nào kích hoạt khi chưa bắt đầu hoặc nghỉ lâu | **Yếu nhất** |
+| Độ chính xác kỹ thuật | 0 lỗi nghiêm trọng, 3 lỗi trung bình, 6 lỗi nhẹ; các số liệu kiểm được đều đúng | Tốt |
+| Độ dễ dùng của tài liệu | Thanh điều hướng 15 mục và 12 mục phụ; nhịp học nhắc lại ở 11 trang; trang chính có 17–26 chữ “không” trên 1.000 từ. Đọc nhiều trước khi biết phiên tới làm gì | Yếu |
+| Hiệu quả thực tế với bạn | Chưa đo được vì chưa có phiên nào được ghi | Chưa đủ dữ liệu |
+
+## Phát hiện chính
+
+1. **Vòng lặp sửa kế hoạch là điểm nghẽn.** Mỗi lần sửa đều chẩn đoán đúng rằng bản trước có quá nhiều “nghi thức” trước dòng code đầu tiên, rồi lại thay bằng một bề mặt đọc lớn hơn. Đây là suy luận từ lịch sử repo; nó có thể sai nếu có phần học không được ghi lại.
+2. **Đường vào phiên đầu quá dài.** Trang chủ dẫn sang bốn trang với tổng khoảng 7.700 từ trước khi tới việc cụ thể.
+3. **Bối cảnh game chưa được dùng.** Kho đồ vốn là túi vật phẩm/economy, nhưng đề K01–K05 viết như kho hàng thông thường; lỗi “dupe” vật phẩm mới là thứ nối thẳng sang game server.
+4. **Ít luyện lặp và gợi nhớ.** Một ticket kéo dài nhiều phiên nhưng không có nhịp viết lại từ trí nhớ; người mới thiếu độ thuần thục nhiều hơn thiếu khái niệm.
+5. **Không có ví dụ đã giải hoàn chỉnh.** H3 chỉ cho ví dụ mảnh, trong khi nghiên cứu N20 cho thấy ví dụ có nhãn mục tiêu con giảm tỷ lệ bỏ học ở người mới.
+6. **J01 đặt quá sớm.** Đưa Java vào ngay sau K02 nghĩa là thêm toolchain thứ hai trước khi chương trình Kotlin đầu tiên vững.
+7. **Một mâu thuẫn tiên quyết và vài lưu ý kỹ thuật thiếu.** S02 đòi bảo vệ shared state nhưng các trang nền xếp phần này “trước S05”. Thiếu bẫy `catch (e: Exception)` bắt cancellation, `NonCancellable` cho cleanup, EOF của `readln()`, `Mutex` không reentrant, `shl` chỉ lấy 5 bit thấp, `BigDecimal.equals` so cả scale, `yyyy` với STRICT, và hai đề bài phụ còn mơ hồ.
+
+## Đã thay đổi
+
+| Thay đổi | Ở đâu | Nhằm vào |
+|---|---|---|
+| Thẻ “Phiên tới” ngắn, gồm cả phiên đầu tiên 4 bước | [Trang chủ](/) | Phát hiện 1–2 |
+| Lát nhỏ cho từng ticket; K01 có mốc “chạy trọn luồng” ở lát 2 | [Xưởng thực hành](/phase-0/xuong-thuc-hanh) | Phát hiện 2, mốc xong sớm |
+| Bối cảnh game: túi/rương, item id, giới hạn stack, lỗi dupe | Xưởng thực hành | Phát hiện 3 |
+| Khởi động gợi nhớ 3–5 phút đầu phiên; phiên 15 phút có thể chỉ gồm việc đó | [Luật mentor](/he-thong-hoc), [Nhịp học](/phase-0/lich-14-tuan) | Phát hiện 4 |
+| Ví dụ đã giải “sổ điểm CLI” ở bài khác, đã biên dịch và chạy thử; H3 được đưa ví dụ hoàn chỉnh ngắn | [Meta-skills](/phase-0/meta-skills#ví-dụ-đã-giải-sổ-điểm-cli) | Phát hiện 5 |
+| Đối chiếu cách viết sau nghiệm thu | Xưởng thực hành, Luật mentor | Chiều sâu idiom Kotlin |
+| Câu hẹn “khi… thì…”, lỡ buổi không bù, 7 ngày không phiên thì làm cùng 15 phút | Nhịp học, Luật mentor; nguồn N22–N23 ở [Cơ sở thiết kế](/co-so-thiet-ke#nguồn-về-duy-trì-việc-học) | Phát hiện 1 |
+| Giáo án chỉ đổi khi có bằng chứng mới; không viết thêm đề P2–P5 trước cổng P0 | Luật mentor, `AGENTS.md` | Phát hiện 1 |
+| Nhịp học chỉ ghi ở một trang; thêm phiên ngắn trước khi kéo dài phiên; ghi ngày phiên 1 và số phiên mỗi ticket | Nhịp học, [Tiến độ](/progress) | Độ dễ dùng; ước lượng bằng dữ liệu thật |
+| Kỳ vọng thực tế: sau 4 tuần xong K01, đang làm K02 là bình thường | Nhịp học, [Roadmap](/roadmap) | Tránh cảm giác “chậm lịch” |
+| J01 dời sau K04 | Roadmap, [Kotlin/Java](/kotlin-java-core) | Phát hiện 6 |
+| Shared state học trước S02; sửa 9 điểm kỹ thuật | Roadmap, [Backend](/backend-core), các trang lab và tra cứu | Phát hiện 7 |
+| Thanh điều hướng nhóm theo “Học / Lộ trình / Tra cứu / Hồ sơ thiết kế” | Điều hướng site | Độ dễ dùng |
+
+## Đề xuất đã cân nhắc nhưng không làm
+
+- **Thêm track CARO song song trong P0:** thêm một lựa chọn cũng là thêm việc cân nhắc, đúng kiểu hành vi đã làm chậm việc bắt đầu. CARO vẫn ở S04; nếu CLI gây chán, review tuần 2/4 có thể đổi một phiên sang Android sớm.
+- **File input/output cố định để tự chấm K01:** bạn tự chọn định dạng lệnh, nên file cố định sẽ ép một thiết kế. Bảng case và các lát đã đóng vai trò tự kiểm.
+- **Bỏ giới hạn tồn và số vượt miền khỏi K01:** giữ nguyên trong hợp đồng vì đó là bài học về dữ liệu không đáng tin; các phần này dồn vào lát 4 để mốc “chạy trọn” đến trước.
+- **Dự báo tổng số tháng:** vẫn chưa có cơ sở; số phiên thật mỗi ticket sau review tuần 4 mới là căn cứ.
+
+## Hàng chờ cho các chặng sau
+
+Chưa viết thành ticket, để không mở rộng bề mặt đọc trước khi P0 có bằng chứng. Xem lại khi qua cổng P0/P1:
+
+- **Đọc và phê bình code** ở P1, dùng các điểm đã thấy trong source Android 007 (nhánh lỗi biến thành danh sách rỗng, saved state chỉ được log mà không phục hồi).
+- **Ticket framing/protocol có tiêu chí** giữa S04 và S05, nâng từ lab đã có ở [Lab hệ thống](/nen-tang-he-thong).
+- **Một mạch cấu trúc dữ liệu cho game server** trước S04/P4: mảng hai chiều, hash map, hàng đợi, priority queue cho timer, lưới không gian.
+- **Java sâu hơn ở P2–P3:** đọc source `HashMap`/`ConcurrentHashMap`, một lát server dùng thread pool; Netty khi lab TCP/WebSocket cần hiểu pipeline và buffer.
+- **Tiêm clock/RNG** để replay xác định ở S04.
+
+## Quyết định thuộc về bạn
+
+Bạn đã trả lời ngày 29/10:
+
+- **Bối cảnh:** dùng bối cảnh game (túi/rương, item id, giới hạn stack); hợp đồng ticket không đổi.
+- **Câu hẹn:** bắt đầu vào mỗi tối; xem [Nhịp học](/phase-0/lich-14-tuan#làm-cho-việc-bắt-đầu-dễ-hơn).
+- **Nhịp:** tạm giữ nguyên gợi ý bốn phiên/tuần. Thêm phiên ngắn hay đổi một phiên sang Android sớm thì xem lại ở review tuần 4.
+
+## Việc tiếp theo
+
+Một phiên 15–30 phút: **K01 lát 1**. Tạo project, in `Tồn: 10`, commit, ghi ngày phiên 1. Không cần đọc thêm trang nào trước, kể cả trang này. Lần sửa giáo án sau nên dựa trên code, test và trải nghiệm thật ở [Tiến độ](/progress).
+
+Hồ sơ rà soát trước: [15/10/2026](/ra-soat-lo-trinh).

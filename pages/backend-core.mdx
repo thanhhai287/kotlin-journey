@@ -7,7 +7,7 @@
 | Ticket | Yêu cầu | Nghiệm thu và câu hỏi cần hiểu |
 |---|---|---|
 | S01 — một API đọc kho | Client Android đọc dữ liệu, thấy rõ thành công/rỗng/lỗi | Theo dõi request/response; phân biệt lỗi mạng và lỗi nghiệp vụ |
-| S02 — cập nhật có kiểm tra | Nhập/xuất qua API; server kiểm tra dữ liệu kể cả khi UI đã kiểm | Input sai không đổi state; hai request không cùng phá bất biến; chốt cách tuần tự hoá/bảo vệ cập nhật ngay từ bản in-memory |
+| S02 — cập nhật có kiểm tra | Nhập/xuất qua API; server kiểm tra dữ liệu kể cả khi UI đã kiểm | Input sai không đổi state; hai request không cùng phá bất biến; chốt cách tuần tự hoá/bảo vệ cập nhật ngay từ bản in-memory. Server xử lý nhiều request cùng lúc, nên một `HashMap` dùng chung không bảo vệ đã là data race; học phần ownership/atomicity của [lab concurrency](/phase-0/concurrency-nhap-mon) trước ticket này |
 | S03 — lưu bằng SQL | Dữ liệu sống qua restart; schema có ràng buộc cần thiết | Migration từ dữ liệu cũ, transaction lỗi rollback, test tích hợp; hai request cạnh tranh vẫn giữ bất biến như S02 |
 | S04 — luật CARO thuần | Bàn 15×15, luân phiên, ít nhất 5 quân liên tiếp thắng; không luật chặn hai đầu | Test biên/góc/ô trùng/sai lượt; không I/O trong luật game; replay cùng log cho cùng kết quả |
 | S05 — room hai client | Join, gửi nước đi, nhận state; server nắm luật và danh tính phiên | Hai client hoàn tất trận; lệnh gần nhau vẫn đúng; không giả vai hoặc sửa room khác; message quá lớn và client đọc chậm có cách xử lý giới hạn bộ nhớ |

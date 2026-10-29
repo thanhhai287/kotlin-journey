@@ -37,7 +37,7 @@ Chọn một bài phù hợp lỗ hổng, làm trong 20–30 phút rồi xem c�
 
 ### 2. Chuẩn hoá chuỗi số điện thoại
 
-**Đề:** chuẩn hoá theo hợp đồng bài tập: nhận 10 chữ số ASCII bắt đầu bằng `0`, hoặc `84`/`+84` theo sau bởi 9 chữ số với chữ số đầu khác `0`; cho phép dấu cách và dấu gạch ngang giữa các nhóm số. Trả về 10 chữ số bắt đầu bằng `0`, hoặc báo không hợp lệ. Dấu `+` chỉ được xuất hiện ở đầu tiền tố `+84`; chữ và ký tự khác bị từ chối. Đây là bài xử lý chuỗi, **không xác minh số được cấp phát hoặc đang hoạt động**.
+**Đề:** chuẩn hoá theo hợp đồng bài tập: nhận 10 chữ số ASCII bắt đầu bằng `0`, hoặc `84`/`+84` theo sau bởi 9 chữ số với chữ số đầu khác `0`; cho phép **một** dấu cách hoặc gạch ngang nằm giữa hai chữ số (kể cả ngay sau tiền tố `84`/`+84`); phân cách ở đầu, ở cuối hoặc hai phân cách liền nhau bị từ chối. Trả về 10 chữ số bắt đầu bằng `0`, hoặc báo không hợp lệ. Dấu `+` chỉ được xuất hiện ở đầu tiền tố `+84`; chữ và ký tự khác bị từ chối. “Chữ số ASCII” nghĩa là chỉ `0`–`9`: `Char.isDigit()` nhận cả chữ số Unicode khác (ví dụ chữ số full-width), nên hãy thêm một case như vậy. Dạng bắt đầu bằng `0` nhận đúng 10 chữ số, nên `00…` chỉ hợp lệ nếu bạn chủ động chốt như vậy và ghi rõ. Đây là bài xử lý chuỗi, **không xác minh số được cấp phát hoặc đang hoạt động**.
 
 **Ví dụ:**
 
@@ -55,6 +55,8 @@ Chọn một bài phù hợp lỗ hổng, làm trong 20–30 phút rồi xem c�
 ### 3. Kiểm tra ngày hợp lệ
 
 **Đề:** kiểm tra ngày theo định dạng chính xác `dd/MM/yyyy`, năm từ 0001 đến 9999, dùng quy tắc lịch Gregory cho toàn bộ phạm vi. Chuỗi sai định dạng trả về không hợp lệ. Chọn một trong hai mục tiêu trước buổi: **luyện điều kiện** thì tự xử lý lịch; **luyện API** thì dùng thư viện ngày giờ với chế độ kiểm tra nghiêm ngặt. Không trộn hai mục tiêu thành hai bài bắt buộc.
+
+Bẫy khi luyện API: với `java.time`, dùng mẫu `dd/MM/uuuu` cùng `ResolverStyle.STRICT`. Mẫu `yyyy` là năm theo kỷ nguyên; ở chế độ STRICT, nếu không có kỷ nguyên thì mọi ngày đều bị từ chối. Bỏ STRICT thì chế độ SMART mặc định âm thầm đổi `31/04/2026` thành 30/04. `java.time` dùng lịch ISO (Gregory áp cho mọi năm); `SimpleDateFormat`/`GregorianCalendar` chuyển sang lịch Julius trước năm 1582 nên không khớp hợp đồng. [ResolverStyle](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/format/ResolverStyle.html).
 
 **Ví dụ:**
 
@@ -238,7 +240,7 @@ fun main() {
 
 ### Con số 7 — Đếm lượt còn lại
 
-**Hợp đồng:** đếm từ 10 về 0 và kết thúc; mỗi vòng phải tiến gần điều kiện dừng. Dừng chương trình bằng IDE nếu nó lặp mãi.
+**Hợp đồng:** in “Còn N lượt” cho N từ 10 xuống 1 (không in dòng 0) rồi kết thúc; mỗi vòng phải tiến gần điều kiện dừng. Dừng chương trình bằng IDE nếu nó lặp mãi.
 
 ```kotlin
 fun main() {

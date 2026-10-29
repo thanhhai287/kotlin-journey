@@ -59,6 +59,8 @@ Repo này là website tài liệu; chạy Kotlin/Java trong repo bài học riê
 
 Với Gradle, dùng Wrapper của project (`./gradlew` hoặc `gradlew.bat`). JDK chạy Gradle, JDK toolchain để compile/test và bytecode target là các lựa chọn liên quan nhưng khác nhau; kiểm bảng tương thích cho phiên bản thực tế. Giữ phiên bản đang chạy ổn trong ticket, chỉ đổi khi có lý do và chạy lại kiểm chứng. [Gradle Wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), [bảng tương thích](https://docs.gradle.org/current/userguide/compatibility.html), [Kotlin JVM target/toolchain](https://kotlinlang.org/docs/gradle-configure-project.html).
 
+Trên Windows, console có thể hiện sai chữ có dấu dù chương trình đúng. Đó thường là encoding của terminal, không phải lỗi logic: thử `chcp 65001` trước khi chạy, hoặc chạy trong cửa sổ Run của IDE; ghi cách đã dùng vào README.
+
 Từ K02, xem báo cáo runner để biết test nào thực sự được chạy. Trong một test thử riêng, đặt assertion sai rồi chạy lệnh test: nó phải báo thất bại; sửa lại thì xanh. Sau đó giữ test nghiệp vụ của bạn. `BUILD SUCCESSFUL` với 0 test hoặc test bị skip chưa kiểm chứng gì. Mentor có thể giúp cấu hình JUnit; không tự viết bộ test nghiệm thu thay người học. [Tích hợp Kotlin và JUnit](https://kotlinlang.org/docs/jvm-test-using-junit.html).
 
 ## 5. Tra docs để giải quyết một câu hỏi
@@ -84,6 +86,111 @@ README ngắn: chương trình làm gì, chạy/test thế nào, quyết định
 Ghi workload, môi trường, thời lượng, số lần chạy và kết quả. Đổi một yếu tố rồi đo lại. Trung bình, percentile và worst case trả lời các câu khác nhau; không lấy một lần chạy hoặc cảm giác UI mượt làm bằng chứng kết luận.
 
 Khi học server, ghi đường đi client → server → database để không nhầm thời gian mạng với thời gian xử lý. Khi học Android, phân biệt UI thread bị chặn, mạng chậm và dữ liệu cập nhật sai. Chỉ chọn công cụ sau khi câu hỏi đã rõ.
+
+## Ví dụ đã giải: sổ điểm CLI
+
+Ví dụ **ở bài khác**, dành cho người chưa từng hoàn thiện chương trình: nó cho thấy một chương trình nhỏ “xong” gồm những phần nào. Đọc 10–15 phút, dự đoán output của vài lệnh rồi chạy thử, sau đó đóng lại trước khi làm K01. Mã đã được biên dịch và chạy thử bằng Kotlin 2.3 ngày 29/10/2026.
+
+**Hợp đồng:** `diem N` ghi một điểm nguyên từ 0 đến 10; `tb` in trung bình; `thoat` kết thúc. Lệnh sai báo lý do và không đổi dữ liệu; hết input (EOF) thì dừng.
+
+```kotlin
+sealed interface Lenh {
+    data class ThemDiem(val diem: Int) : Lenh
+    data object TrungBinh : Lenh
+    data object Thoat : Lenh
+    data class Loi(val lyDo: String) : Lenh
+}
+
+// Hàm thuần: không đọc bàn phím, không in, nên test thẳng được.
+fun docLenh(dong: String): Lenh {
+    val phan = dong.trim().split(Regex("\\s+"))
+    return when (phan[0]) {
+        "diem" -> {
+            val so = phan.getOrNull(1)?.toIntOrNull() // chữ hoặc số vượt miền Int -> null
+            when {
+                phan.size != 2 -> Lenh.Loi("Cú pháp: diem <0-10>")
+                so == null -> Lenh.Loi("Điểm phải là số nguyên")
+                so !in 0..10 -> Lenh.Loi("Điểm phải từ 0 đến 10")
+                else -> Lenh.ThemDiem(so)
+            }
+        }
+        "tb" -> Lenh.TrungBinh
+        "thoat" -> Lenh.Thoat
+        else -> Lenh.Loi("Lệnh không rõ: ${phan[0]}")
+    }
+}
+
+// State chỉ đổi qua một cửa, và chỉ sau khi lệnh đã hợp lệ.
+class BangDiem {
+    private val ds = mutableListOf<Int>()
+    fun them(diem: Int) { ds.add(diem) }
+    fun trungBinh(): Double? = if (ds.isEmpty()) null else ds.average()
+}
+
+// I/O ở rìa; EOF thì dừng thay vì lặp báo lỗi.
+fun main() {
+    val bang = BangDiem()
+    while (true) {
+        print("> ")
+        val dong = readlnOrNull() ?: break
+        when (val lenh = docLenh(dong)) {
+            is Lenh.ThemDiem -> { bang.them(lenh.diem); println("Đã ghi ${lenh.diem}") }
+            Lenh.TrungBinh -> println(bang.trungBinh()?.let { "Trung bình: %.2f".format(it) } ?: "Chưa có điểm")
+            Lenh.Thoat -> break
+            is Lenh.Loi -> println("Lỗi: ${lenh.lyDo}")
+        }
+    }
+}
+```
+
+```kotlin
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNull
+
+class DocLenhTest {
+    @Test
+    fun nhanDiemHopLe() {
+        assertEquals(Lenh.ThemDiem(7), docLenh("  diem   7 "))
+    }
+
+    @Test
+    fun tuChoiChuVaSoVuotMien() {
+        assertIs<Lenh.Loi>(docLenh("diem abc"))
+        assertIs<Lenh.Loi>(docLenh("diem 99999999999"))
+    }
+
+    @Test
+    fun tuChoiNgoaiKhoangVaThieuThamSo() {
+        assertIs<Lenh.Loi>(docLenh("diem 11"))
+        assertIs<Lenh.Loi>(docLenh("diem -1"))
+        assertIs<Lenh.Loi>(docLenh("diem"))
+        assertIs<Lenh.Loi>(docLenh(""))
+    }
+
+    @Test
+    fun trungBinh() {
+        val bang = BangDiem()
+        assertNull(bang.trungBinh())
+        bang.them(7)
+        bang.them(8)
+        assertEquals(7.5, bang.trungBinh())
+    }
+}
+```
+
+| Mục tiêu con | Ở đâu trong code | Vì sao làm vậy |
+|---|---|---|
+| 1. Chốt hợp đồng và ví dụ | Đoạn “Hợp đồng” ở trên | Biết thế nào là xong trước khi code |
+| 2. Phân loại input | `docLenh` trả về `Lenh` | Không chạm bàn phím/màn hình nên test trực tiếp được |
+| 3. Kiểm tra trước, đổi state sau | `them` chỉ được gọi với `Lenh.ThemDiem` | Lệnh lỗi không có đường nào chạm tới dữ liệu |
+| 4. I/O ở rìa, EOF rõ ràng | `main`, `readlnOrNull() ?: break` | `readln()` ném exception khi hết input; `readlnOrNull()` trả `null` |
+| 5. Test case biên | `DocLenhTest` | Chữ, số vượt miền `Int`, ngoài khoảng, thiếu tham số, bảng rỗng |
+
+Trong Gradle, test trên chạy với `testImplementation(kotlin("test"))` và `tasks.test { useJUnitPlatform() }`; xem [Kotlin và JUnit](https://kotlinlang.org/docs/jvm-test-using-junit.html).
+
+**Ví dụ này không làm thay K01:** không có hai thao tác ngược chiều, không có thiếu hàng, giới hạn tồn hay phép cộng có thể tràn. `sealed interface` chỉ là một cách biểu diễn, K01 không bắt dùng. Muốn kiểm mình đã hiểu, sửa chính ví dụ: thêm lệnh `xoa` bỏ điểm vừa ghi, quyết định hành vi khi bảng rỗng và viết test cho nó.
 
 ## Quay lại ticket
 

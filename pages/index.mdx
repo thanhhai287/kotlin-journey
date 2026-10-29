@@ -1,18 +1,27 @@
 # Kotlin/Java — tự xây game server và ứng dụng Android
 
-**Bạn đã rõ cú pháp, chưa tự hoàn thiện chương trình nhỏ và có 9–12 giờ/tuần. Bài tiếp theo là triển khai một tính năng.** Trục chuyên môn chính: **Kotlin/Java để làm game server và ứng dụng Android**. Nền backend JVM phục vụ hướng đó; fullstack web chỉ phụ trợ cho demo và quản trị.
+**Bạn đã rõ cú pháp, chưa tự hoàn thiện chương trình nhỏ.** Trục chuyên môn chính: **Kotlin/Java để làm game server và ứng dụng Android**; fullstack web chỉ phụ trợ. Việc cần làm bây giờ chỉ là **phiên tiếp theo**.
 
-## Bắt đầu buổi tới
+## Phiên tới — 15 đến 30 phút
 
-Mở **[Xưởng thực hành — Kho đồ](/phase-0/xuong-thuc-hanh)** và làm ticket **K01: nhập và xuất kho có kiểm tra dữ liệu**. Dự án đi từ Kotlin CLI → Android → API Java/Kotlin → web nhỏ. Mỗi bước giữ lại phần đã viết để bạn thấy tác dụng của việc thiết kế và test.
+**Chưa có project Kho đồ (phiên đầu tiên):**
 
-Buổi đầu: chọn 3 ví dụ, tự code một luồng, thử input lỗi rồi mang code và quan sát tới review. Chưa cần dựng kiến trúc, đọc hết giáo trình hoặc làm lại bài cú pháp. Nếu đã làm được K01, dùng tiêu chí kiểm chứng để sang K02.
+1. Mở IntelliJ IDEA, tạo project Kotlin tên `kho-do`. Vướng JDK/Gradle thì hỏi mentor ngay; đó là việc setup, không phải bài kiểm tra.
+2. Viết `main` in ra `Tồn: 10` và chạy được.
+3. Khởi tạo Git, commit lần đầu.
+4. Ghi 3 dòng LÀM/HIỂU/TIẾP trong project và ghi ngày hôm nay là ngày phiên 1 ở [Tiến độ](/progress).
 
-**Phiên hôm nay:** chọn 30 phút (hoặc 15 phút khi bận), một hành vi nhỏ của ticket và một case để thử. Dừng được với phần dở; ghi một bước để lần sau nối tiếp. Không cần đọc hết trang hoặc xong cả ticket. [Cách chia phiên](/phase-0/lich-14-tuan).
+Đó là lát 1 của [K01](/phase-0/xuong-thuc-hanh). Không cần đọc thêm trang nào trước. Muốn biết một chương trình nhỏ “xong” trông thế nào, xem [ví dụ đã giải](/phase-0/meta-skills#ví-dụ-đã-giải-sổ-điểm-cli) sau khi đã chạy được dòng đầu tiên.
 
-## Ngày 1 — chỉ dành cho người chưa chạy được Kotlin
+**Đã có project:** đọc dòng TIẾP → khởi động gợi nhớ 3–5 phút → làm một [lát của ticket đang mở](/phase-0/xuong-thuc-hanh) → ghi 3 dòng.
 
-Nếu chưa có môi trường, cài JDK và IDE, tạo một chương trình tự in một dòng rồi chạy. AI hỗ trợ setup trực tiếp. **Bạn đã qua phần này thì bỏ qua.** Không có tag hoặc bài thi đầu vào chặn việc làm ticket.
+```text
+LÀM: ticket/lát ...; chạy được ...; case/commit ...; còn vướng ...
+HIỂU: cơ chế/đánh đổi ...; trợ giúp H0–H3
+TIẾP: mở file ... để thử/sửa hành vi ...
+```
+
+Thời lượng phiên và trần mỗi tối ở [Nhịp học](/phase-0/lich-14-tuan). Khi làm với AI, dùng [prompt bắt đầu buổi học](/he-thong-hoc#prompt-bắt-đầu-buổi-học).
 
 ## Học theo thứ tự ưu tiên
 
@@ -21,35 +30,31 @@ Nếu chưa có môi trường, cài JDK và IDE, tạo một chương trình t�
 | **Kotlin/Java** | Tự viết, giải thích hành vi, debug, test và xử lý yêu cầu đổi | Core nghiệp vụ, JVM backend, Android |
 | **Android** | UI/state, lifecycle, coroutine/cancellation, lưu cục bộ, mạng, kiểm thử | App Kho đồ dùng được trên thiết bị |
 | **Game server / backend JVM** | HTTP, socket, state machine, đồng thời, SQL/transaction, auth, vận hành | Luật game chạy trên server, dữ liệu và economy đáng tin cậy |
-| **Web phụ trợ** | HTML/CSS/JS, form, HTTP, state bất đồng bộ, giao diện dùng được | Trang quản trị nhỏ gọi cùng API |
+| **Web phụ trợ** | HTML/CSS/JS, form, HTTP, state bất đồng bộ | Trang quản trị nhỏ gọi cùng API |
 
 Không học ba nền tảng cùng một buổi. [Roadmap](/roadmap) chia thành các chặng có sản phẩm và cổng năng lực; không bắt chờ đủ tuần để học tiếp.
 
-## Cách mentor làm việc từ 14/10/2026
+## Cách mentor làm việc
 
 - Giao yêu cầu và tiêu chí; bạn tự phân rã và triển khai.
-- Giải thích cơ chế khi bạn cần, chỉ đào sâu phần phục vụ nền tảng hoặc việc đang làm.
+- Giải thích cơ chế trực tiếp khi bạn cần, kèm ví dụ ở bài khác.
 - Gợi ý tăng dần khi bí; không đưa sẵn lời giải hay hỏi ngược liên tục.
 - Review lỗi cụ thể và lý do; bạn tự sửa, thêm test và thử yêu cầu mới.
-- Phân biệt buổi luyện có trợ giúp với lượt kiểm tra độc lập ngắn.
+- Sau khi ticket được nghiệm thu, cho xem cách viết khác để bạn so sánh.
 
-[Luật đầy đủ và prompt học](/he-thong-hoc) · [Ghi tiến độ theo năng lực](/progress).
+[Luật đầy đủ](/he-thong-hoc) · [Tiến độ theo năng lực](/progress).
 
 ## Mở tài liệu theo vấn đề
 
 | Đang cần | Trang |
 |---|---|
 | Một việc cụ thể để code ngay | [Xưởng thực hành](/phase-0/xuong-thuc-hanh) |
-| Đường đi từ CLI lên Android và backend | [Roadmap](/roadmap) |
-| Nguồn nào và vì sao chọn thứ tự này? | [Cơ sở thiết kế và đối chiếu nguồn](/co-so-thiet-ke) |
-| Rà soát thấy vấn đề gì và đã sửa thế nào? | [Đánh giá toàn diện 15/10/2026](/ra-soat-lo-trinh) |
-| Chia 9–12 giờ/tuần thành việc gì? | [Bốn tuần đầu](/phase-0/lich-14-tuan) |
-| Chọn kiểu, xử lý null, model dữ liệu, collections | [Kotlin Core I](/phase-0/kotlin-core-1) |
+| Thời lượng phiên, review tuần 2/4 | [Nhịp học](/phase-0/lich-14-tuan) |
+| Cách chia bài, debug, test; ví dụ đã giải | [Meta-skills](/phase-0/meta-skills) |
+| Chọn kiểu, null, model dữ liệu, collections | [Kotlin Core I](/phase-0/kotlin-core-1) |
 | Hàm, lỗi, interface và ranh giới I/O | [Kotlin Core II](/phase-0/kotlin-core-2) |
-| Cách chia bài, debug và tự kiểm chứng | [Meta-skills](/phase-0/meta-skills) |
+| Đường đi từ CLI lên Android và backend | [Roadmap](/roadmap) |
 | Nền Java/JVM cần học cùng Kotlin | [Kotlin & Java nền tảng](/kotlin-java-core) |
 | Android: từ tính năng tới cơ chế | [Android core](/android-core) |
 | API, dữ liệu và vận hành | [Backend core](/backend-core) |
-| Giao diện web phụ trợ | [Web phụ trợ](/web-phu-tro) |
-
-Kế hoạch hiện hành là **4 tuần thử với phiên 30–45 phút**, ngày bận 15 phút hoặc nghỉ; review sau tuần 2 và 4. **Mỗi tối tối đa 2 giờ nếu thực sự cần, gồm nghỉ và review.** Quỹ 9–12 giờ/tuần không phải chỉ tiêu cần dùng hết. Bỏ dự báo cũ 27 tháng/1.100h vì chưa có dữ liệu tốc độ học của bạn. Tuần 1 tính từ khi bắt đầu, không tự gán tiến độ theo ngày lịch.
+| Vì sao chương trình được thiết kế như vậy? | [Đánh giá hiệu quả 29/10](/danh-gia-hieu-qua) · [Cơ sở thiết kế](/co-so-thiet-ke) |
